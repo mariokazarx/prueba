@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <h:head>
+        <title>Nueva Escala</title>
+                <style type="text/css">
+            .ui-widget {
+                font-size: 90%;
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <h:form id="frmescala">
+            <h:panelGrid columns="3">
+                <p:outputLabel for="txtNombre" value="Nombre: " />
+                <p:inputText id="txtNombre" value="#{mbvEscala.escala.nombre}" />
+                <p:message for="txtNombre"/>
+                <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
+                <p:inputTextarea id="txtDescripcion" value="#{mbvEscala.escala.descripcion}" autoResize="false" rows="5" cols="22" />
+                <p:message for="txtDescripcion"/>
+                <p:outputLabel for="txtMin" value="Nota Minima:" />
+                <p:inputText id="txtMin" value="#{mbvEscala.escala.min}"/>
+                <p:message for="txtMin"/>
+                <p:outputLabel for="txtMax" value="Nota Maxima:" />
+                <p:inputText id="txtMax" value="#{mbvEscala.escala.max}" />
+                <p:message for="txtMax"/>
+                <p:outputLabel for="txtMinaprob" value="Nota Minima Aprobacion:" />
+                <p:inputText id="txtMinaprob" value="#{mbvEscala.escala.notaminimaaprob}"/>
+                <p:message for="txtMinaprob"/>
+                <h:panelGroup></h:panelGroup>
+                <p:commandButton value="Registrar Escala" actionListener="#{mbvEscala.insertar}" ajax="true"  />
+            </h:panelGrid> 
+        </h:form>
+    </h:body>
+</html>

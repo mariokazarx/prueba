@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='iso-8859-1' ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head >
+        <meta content='text/html; charset=iso-8859-1' http-equiv="Content-Type"/>
+        <link href="./../resources/css/default.css" rel="stylesheet" type="text/css" />
+        <link href="./../resources/css/cssLayout.css" rel="stylesheet" type="text/css" />
+        <title>Sistema de Registro y Control</title>
+    </h:head>
+    <h:body rendered="false">
+        <center>
+            <h1>NO SE ENCUENTRA AUTENTICADO EN EL SISTEMA</h1>
+          
+        </center>
+    </h:body>
+
+    <h:body style="background-color: #dddddd" rendered="true">
+        <p:layout fullPage="true">
+            <p:layoutUnit position="west" size="20%"  header="Menu Principal"  collapsible="true" id="left1">
+                <div id="left">
+                    <ui:insert name="left"><br></br>
+                        <center>
+                            <h:form>
+                                <p:panelMenu style="width:80%" id="menuPpal">
+                                    <p:submenu label="Departamentos"> 
+                                        <p:menuitem value="Crear Departamento" /> 
+                                    </p:submenu>
+                                </p:panelMenu>
+                            </h:form>
+                        </center>
+                    </ui:insert>
+                </div>
+            </p:layoutUnit>
+
+            <p:layoutUnit position="center" id="content1">
+                <div id="top">
+                    <ui:insert name="top">
+                        <h:panelGrid columns="2">
+                            <!--<p:graphicImage value="/resources/img/grias.jpg"  height="60" width="100%"/>-->
+                            <h:outputLabel value="Bienvenido a Maskana" />
+                        </h:panelGrid>
+                    </ui:insert>
+                </div>
+                <div id="center_content">
+                            <h:form>
+                                <p:menubar>  
+                                    <p:submenu label="Configuracion" icon="ui-icon-gear"> 
+                                        <p:submenu label="Escalas">
+                                            <p:menuitem value="Listar Escalas" url="../Usuarios/Aplicaciones.xhtml" />  
+                                            <p:separator />  
+                                            <p:menuitem value="Nueva Esacala" outcome="/configuracion/escalas.xhtml"/>
+                                        </p:submenu>
+                                        <p:menuitem value="Aplicaciones Perfil" url="../Usuarios/Aplicaciones.xhtml" />  
+                                        <p:separator />  
+                                        <p:menuitem value="Seguridad Perfil" url="../Usuarios/Seguridad.xhtml"/>  
+                                    </p:submenu>  
+                                <p:menuitem value="Cerrar Sesion"/>  
+                              
+                                </p:menubar>
+                            </h:form>
+                    <ui:insert name="content">Content</ui:insert>
+                </div>
+            </p:layoutUnit>
+        </p:layout>
+    </h:body>
+</html>
