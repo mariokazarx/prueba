@@ -7,17 +7,19 @@
       xmlns:f="http://java.sun.com/jsf/core">
 
     <body>
+
         <ui:composition template="./../plantilla.xhtml">
+
             <ui:define name="content">
                 <h:form id="frmListaEscala">
-                    <p:commandButton value="Nueva Escala" icon="ui-icon-document" actionListener="#{mbvEscala.newEscala}">
-                        <p:ajax event="dialogReturn" listener="#{mbvEscala.closeDialog}" update="frmListaEscala" />
+                    <p:commandButton value="Nueva Escala" icon="ui-icon-document" actionListener="#{mbvcriterioevaluacion.newCriterioEval}">
+                        <p:ajax event="dialogReturn" listener="#{mbvcriterioevaluacion.closeDialog}" update="frmListaEscala" />
                     </p:commandButton>
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
-                    <p:dataTable id="tablaListaEscala" var="item" value="#{mbvEscala.escalas}" paginator="true" rows="10" selection="#{mbvEscala.escala}" selectionMode="single" lazy="true" rowKey="#{item.escalaId}" >
+                    <p:dataTable id="tablaListaEscala" var="item" value="#{mbvcriterioevaluacion.criterioseval}" paginator="true" rows="10" selection="#{mbvcriterioevaluacion.criterioeval}" selectionMode="single" lazy="true" rowKey="#{item.criterioevaluacionId}" >
                         <p:ajax event="rowSelect" update=":frmListaEscala:panelDetalleEscala" oncomplete="PF('dialogoDetalleEscala').show()"/>
                         <f:facet name="header">
-                            Lista de Escalas
+                            Criterios de valiacion
                         </f:facet>
                         <p:column headerText="Nombre" filterBy="nombre">
                             <h:outputText value="#{item.nombre}"/>
@@ -25,14 +27,11 @@
                         <p:column headerText="Descripcion" filterBy="descripcion">
                             <h:outputText value="#{item.descripcion}"/>
                         </p:column>
-                        <p:column headerText="Nota minima" filterBy="min">
-                            <h:outputText value="#{item.min}"/>
+                        <p:column headerText="Criterio de aprobacion" filterBy="max">
+                            <h:outputText value="#{mbvcriterioevaluacion.getNombreFcriterio(item.formacriterioevaluacionId)}"/>
                         </p:column>
-                        <p:column headerText="Nota maxima" filterBy="max">
-                            <h:outputText value="#{item.max}"/>
-                        </p:column>
-                        <p:column headerText="Nota minima aprobacion" filterBy="minaprob">
-                            <h:outputText value="#{item.notaminimaaprob}"/>
+                        <p:column headerText="Minimo para aprobar" filterBy="min">
+                            <h:outputText value="#{item.minaprob}"/>
                         </p:column>
                         <p:column>
                             <p:commandButton value="Editar" icon="ui-icon-pencil" actionListener="#{mbvEscala.cargarEscala(item.escalaId)}"/>
@@ -63,9 +62,7 @@
                         <p:outputPanel id="panelEditarEscala" >
                             <h:panelGrid columns="3">
                                 <p:outputLabel for="txtNombre" value="Nombre: " />
-                                <p:inputText id="txtNombre" value="#{mbvEscala.escala.nombre}">
-                                    <f:validator validatorId="validatorVacio"/>
-                                </p:inputText>
+                                <p:inputText id="txtNombre" value="#{mbvEscala.escala.nombre}"/>
                                 <p:message for="txtNombre"/>
                                 <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
                                 <p:inputTextarea id="txtDescripcion" autoResize="false" rows="5" cols="22" value="#{mbvEscala.escala.descripcion}"/>
@@ -86,6 +83,7 @@
                     </p:dialog>
                 </h:form>
             </ui:define>
+
         </ui:composition>
 
     </body>

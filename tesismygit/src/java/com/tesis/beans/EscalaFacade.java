@@ -5,9 +5,11 @@
 package com.tesis.beans;
 
 import com.tesis.entity.Escala;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -26,5 +28,8 @@ public class EscalaFacade extends AbstractFacade<Escala> {
     public EscalaFacade() {
         super(Escala.class);
     }
-    
+    public List<Escala> findAllOrder() {
+        Query cq = em.createNamedQuery("Escala.findAllOrder");
+        return cq.getResultList();
+    }
 }

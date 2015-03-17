@@ -30,7 +30,7 @@
                 <p:inputText id="txtMinaprob" value="#{mbvEscala.escala.notaminimaaprob}"/>
                 <p:message for="txtMinaprob"/>
                 <h:panelGroup></h:panelGroup>
-                <p:commandButton value="Registrar Escala" actionListener="#{mbvEscala.insertar}" ajax="true"  />
+                <p:commandButton value="Registrar Escala" actionListener="#{mbvEscala.insertar}" ajax="true" update="frmescala" />
             </h:panelGrid> 
         </h:form>
     </h:body>

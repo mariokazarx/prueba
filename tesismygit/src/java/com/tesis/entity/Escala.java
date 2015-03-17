@@ -18,6 +18,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -32,6 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Escala.findAll", query = "SELECT e FROM Escala e"),
+    @NamedQuery(name = "Escala.findAllOrder", query = "SELECT e FROM Escala e ORDER BY e.escalaId DESC"),
     @NamedQuery(name = "Escala.findByEscalaId", query = "SELECT e FROM Escala e WHERE e.escalaId = :escalaId"),
     @NamedQuery(name = "Escala.findByNombre", query = "SELECT e FROM Escala e WHERE e.nombre = :nombre"),
     @NamedQuery(name = "Escala.findByDescripcion", query = "SELECT e FROM Escala e WHERE e.descripcion = :descripcion"),
@@ -53,6 +55,7 @@ public class Escala implements Serializable {
     @Size(max = 200)
     @Column(name = "descripcion", length = 200)
     private String descripcion;
+    @Min(value=0,message="Este campo debe ser mayor o igual que 0")
     @Basic(optional = false)
     @NotNull
     @Column(name = "min", nullable = false)

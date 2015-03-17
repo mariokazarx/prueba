@@ -7,6 +7,7 @@ package com.tesis.managedbeans;
 import com.tesis.beans.EscalaFacade;
 import com.tesis.entity.Escala;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,16 +59,38 @@ public class mbvEscala implements Serializable {
     @PostConstruct
     public void inicioPagina(){
         this.escala=new Escala();
-        this.escalas=this.escalaEjb.findAll();
+        this.escalas=this.escalaEjb.findAllOrder();
     }
     
     public void insertar(){
         try{
             escalaEjb.create(escala);
+            RequestContext.getCurrentInstance().closeDialog(this);
+            System.out.print("error");
+          //  FacesContext.getCurrentInstance().
+           //             addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Escala creada Satisfactoriamente", ""));
+            //nicioPagina();
+        }catch(Exception e){
+            System.out.print("error");
+            // FacesContext.getCurrentInstance().
+              //          addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+        }
+    }
+    public void closeDialog() {
+        inicioPagina();
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Escala Registrada", "exitosamente"); 
+        FacesContext.getCurrentInstance().addMessage(null, message);
+    }
+
+    public void actualizar(){
+        try{
+            System.out.print("ok"+escala.getDescripcion());
+            escalaEjb.edit(escala);
             FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Escala creada Satisfactoriamente", ""));
             inicioPagina();
         }catch(Exception e){
+            System.out.print("fail"+e.getMessage());
              FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
         }
@@ -82,7 +105,7 @@ public class mbvEscala implements Serializable {
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
         }
     }
-    public void newEscala() {
+    public void newEscala(){
         Map<String,Object> options = new HashMap<String, Object>();
         /*options.put("contentHeight", 340);
         options.put("height", 400);
