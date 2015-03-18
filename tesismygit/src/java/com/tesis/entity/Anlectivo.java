@@ -16,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
@@ -28,12 +29,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Entity
 @Table(name = "anlectivo", catalog = "prueba", schema = "public", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"anio"})})
+    @UniqueConstraint(columnNames = {"anio"}),
+    @UniqueConstraint(columnNames = {"configuracion_id"})})
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Anlectivo.findAll", query = "SELECT a FROM Anlectivo a"),
     @NamedQuery(name = "Anlectivo.findByAnlectivoId", query = "SELECT a FROM Anlectivo a WHERE a.anlectivoId = :anlectivoId"),
-    @NamedQuery(name = "Anlectivo.findByEstado", query = "SELECT a FROM Anlectivo a WHERE a.estado = :estado"),
+    @NamedQuery(name = "Anlectivo.findByEstadocopiado", query = "SELECT a FROM Anlectivo a WHERE a.estadocopiado = :estadocopiado"),
     @NamedQuery(name = "Anlectivo.findByAnio", query = "SELECT a FROM Anlectivo a WHERE a.anio = :anio"),
     @NamedQuery(name = "Anlectivo.findByDescripcion", query = "SELECT a FROM Anlectivo a WHERE a.descripcion = :descripcion")})
 public class Anlectivo implements Serializable {
@@ -46,8 +48,8 @@ public class Anlectivo implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 2)
-    @Column(name = "estado", nullable = false, length = 2)
-    private String estado;
+    @Column(name = "estadocopiado", nullable = false, length = 2)
+    private String estadocopiado;
     @Basic(optional = false)
     @NotNull
     @Column(name = "anio", nullable = false)
@@ -55,8 +57,11 @@ public class Anlectivo implements Serializable {
     @Size(max = 200)
     @Column(name = "descripcion", length = 200)
     private String descripcion;
-    @JoinColumn(name = "configuracion_id", referencedColumnName = "configuracion_id", nullable = false)
+    @JoinColumn(name = "estado_aniolectivo_id", referencedColumnName = "estado_aniolectivo_id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private EstadoAniolectivo estadoAniolectivoId;
+    @JoinColumn(name = "configuracion_id", referencedColumnName = "configuracion_id", nullable = false)
+    @OneToOne(optional = false, fetch = FetchType.LAZY)
     private Configuracion configuracionId;
 
     public Anlectivo() {
@@ -66,9 +71,9 @@ public class Anlectivo implements Serializable {
         this.anlectivoId = anlectivoId;
     }
 
-    public Anlectivo(Integer anlectivoId, String estado, int anio) {
+    public Anlectivo(Integer anlectivoId, String estadocopiado, int anio) {
         this.anlectivoId = anlectivoId;
-        this.estado = estado;
+        this.estadocopiado = estadocopiado;
         this.anio = anio;
     }
 
@@ -80,12 +85,12 @@ public class Anlectivo implements Serializable {
         this.anlectivoId = anlectivoId;
     }
 
-    public String getEstado() {
-        return estado;
+    public String getEstadocopiado() {
+        return estadocopiado;
     }
 
-    public void setEstado(String estado) {
-        this.estado = estado;
+    public void setEstadocopiado(String estadocopiado) {
+        this.estadocopiado = estadocopiado;
     }
 
     public int getAnio() {
@@ -102,6 +107,14 @@ public class Anlectivo implements Serializable {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public EstadoAniolectivo getEstadoAniolectivoId() {
+        return estadoAniolectivoId;
+    }
+
+    public void setEstadoAniolectivoId(EstadoAniolectivo estadoAniolectivoId) {
+        this.estadoAniolectivoId = estadoAniolectivoId;
     }
 
     public Configuracion getConfiguracionId() {

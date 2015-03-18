@@ -52,14 +52,14 @@ public class Asignatura implements Serializable {
     @Size(max = 200)
     @Column(name = "descripcion", length = 200)
     private String descripcion;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "asignaturaId", fetch = FetchType.LAZY)
-    private List<Asignaturaciclo> asignaturacicloList;
     @JoinColumn(name = "configuracion_id", referencedColumnName = "configuracion_id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Configuracion configuracionId;
     @JoinColumn(name = "area_id", referencedColumnName = "area_id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Area areaId;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "asignaturaId", fetch = FetchType.LAZY)
+    private List<Asignaturacurso> asignaturacursoList;
 
     public Asignatura() {
     }
@@ -97,15 +97,6 @@ public class Asignatura implements Serializable {
         this.descripcion = descripcion;
     }
 
-    @XmlTransient
-    public List<Asignaturaciclo> getAsignaturacicloList() {
-        return asignaturacicloList;
-    }
-
-    public void setAsignaturacicloList(List<Asignaturaciclo> asignaturacicloList) {
-        this.asignaturacicloList = asignaturacicloList;
-    }
-
     public Configuracion getConfiguracionId() {
         return configuracionId;
     }
@@ -120,6 +111,15 @@ public class Asignatura implements Serializable {
 
     public void setAreaId(Area areaId) {
         this.areaId = areaId;
+    }
+
+    @XmlTransient
+    public List<Asignaturacurso> getAsignaturacursoList() {
+        return asignaturacursoList;
+    }
+
+    public void setAsignaturacursoList(List<Asignaturacurso> asignaturacursoList) {
+        this.asignaturacursoList = asignaturacursoList;
     }
 
     @Override

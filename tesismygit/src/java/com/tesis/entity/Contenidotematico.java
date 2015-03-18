@@ -63,9 +63,9 @@ public class Contenidotematico implements Serializable {
     @JoinColumn(name = "estado", referencedColumnName = "estadocontenidotematico_id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Estadocontenidotematico estado;
-    @JoinColumn(name = "asignaturaciclo_id", referencedColumnName = "asignaturaciclo_id", nullable = false)
+    @JoinColumn(name = "asignaturacurso_id", referencedColumnName = "asignaturacurso_id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Asignaturaciclo asignaturacicloId;
+    private Asignaturacurso asignaturacursoId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "contenidotematicoId", fetch = FetchType.LAZY)
     private List<Logro> logroList;
 
@@ -133,12 +133,12 @@ public class Contenidotematico implements Serializable {
         this.estado = estado;
     }
 
-    public Asignaturaciclo getAsignaturacicloId() {
-        return asignaturacicloId;
+    public Asignaturacurso getAsignaturacursoId() {
+        return asignaturacursoId;
     }
 
-    public void setAsignaturacicloId(Asignaturaciclo asignaturacicloId) {
-        this.asignaturacicloId = asignaturacicloId;
+    public void setAsignaturacursoId(Asignaturacurso asignaturacursoId) {
+        this.asignaturacursoId = asignaturacursoId;
     }
 
     @XmlTransient

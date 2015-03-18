@@ -51,13 +51,11 @@ public class Ciclo implements Serializable {
     @Size(max = 200)
     @Column(name = "descripcion", length = 200)
     private String descripcion;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cicloId", fetch = FetchType.LAZY)
-    private List<Asignaturaciclo> asignaturacicloList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cicloId", fetch = FetchType.LAZY)
-    private List<Matricula> matriculaList;
     @JoinColumn(name = "configuracion", referencedColumnName = "configuracion_id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Configuracion configuracion;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cicloId", fetch = FetchType.LAZY)
+    private List<Curso> cursoList;
 
     public Ciclo() {
     }
@@ -95,30 +93,21 @@ public class Ciclo implements Serializable {
         this.descripcion = descripcion;
     }
 
-    @XmlTransient
-    public List<Asignaturaciclo> getAsignaturacicloList() {
-        return asignaturacicloList;
-    }
-
-    public void setAsignaturacicloList(List<Asignaturaciclo> asignaturacicloList) {
-        this.asignaturacicloList = asignaturacicloList;
-    }
-
-    @XmlTransient
-    public List<Matricula> getMatriculaList() {
-        return matriculaList;
-    }
-
-    public void setMatriculaList(List<Matricula> matriculaList) {
-        this.matriculaList = matriculaList;
-    }
-
     public Configuracion getConfiguracion() {
         return configuracion;
     }
 
     public void setConfiguracion(Configuracion configuracion) {
         this.configuracion = configuracion;
+    }
+
+    @XmlTransient
+    public List<Curso> getCursoList() {
+        return cursoList;
+    }
+
+    public void setCursoList(List<Curso> cursoList) {
+        this.cursoList = cursoList;
     }
 
     @Override

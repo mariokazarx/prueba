@@ -12,7 +12,7 @@
 
             <ui:define name="content">
                 <h:form id="frmListaEscala">
-                    <p:commandButton value="Nueva Escala" icon="ui-icon-document" actionListener="#{mbvcriterioevaluacion.newCriterioEval}">
+                    <p:commandButton value="Nueva Criterio de Evaluacion" icon="ui-icon-document" actionListener="#{mbvcriterioevaluacion.newCriterioEval}">
                         <p:ajax event="dialogReturn" listener="#{mbvcriterioevaluacion.closeDialog}" update="frmListaEscala" />
                     </p:commandButton>
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
@@ -42,17 +42,15 @@
                         <p:outputPanel id="panelDetalleEscala">
                             <p:panelGrid columns="2">
                                 <p:outputLabel value="Id"/>
-                                <h:outputText value="#{mbvEscala.escala.escalaId}"/>
+                                <h:outputText value="#{mbvcriterioevaluacion.criterioeval.criterioevaluacionId}"/>
                                 <p:outputLabel value="Nombre"/>
-                                <h:outputText value="#{mbvEscala.escala.nombre}"/>
+                                <h:outputText value="#{mbvcriterioevaluacion.criterioeval.nombre}"/>
                                 <p:outputLabel value="Descripcion"/>
-                                <h:outputText value="#{mbvEscala.escala.descripcion}"/>
-                                <p:outputLabel value="Nota minima"/>
-                                <h:outputText value="#{mbvEscala.escala.min}"/>
-                                <p:outputLabel value="Nota Maxima"/>
-                                <h:outputText value="#{mbvEscala.escala.max}"/>
-                                <p:outputLabel value="Nota minima aprobacion"/>
-                                <h:outputText value="#{mbvEscala.escala.notaminimaaprob}"/>
+                                <h:outputText value="#{mbvcriterioevaluacion.criterioeval.descripcion}"/>
+                                <p:outputLabel value="Criterio de aprobacion"/>
+                                <h:outputText value="#{mbvcriterioevaluacion.getNombreFcriterio()}"/>
+                                <p:outputLabel value="Minimo para aprobar"/>
+                                <h:outputText value="#{mbvcriterioevaluacion.criterioeval.minaprob}"/>
                             </p:panelGrid>
                         </p:outputPanel>
                     </p:dialog>                   

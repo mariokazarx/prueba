@@ -8,6 +8,7 @@ import com.tesis.beans.CriterioevaluacionFacade;
 import com.tesis.beans.FormacriterioevaluacionFacade;
 import com.tesis.entity.Criterioevaluacion;
 import com.tesis.entity.Formacriterioevaluacion;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +26,7 @@ import org.primefaces.context.RequestContext;
  */
 @ManagedBean
 @ViewScoped
-public class mbvcriterioevaluacion {
+public class mbvcriterioevaluacion implements Serializable {
 
     /**
      * Creates a new instance of mbvcriterioevaluacion
@@ -101,6 +102,14 @@ public class mbvcriterioevaluacion {
     public String getNombreFcriterio(Formacriterioevaluacion fcriterioid){
         return this.fcriterioejb.find(fcriterioid.getFormacriterioevaluacionId()).getNombre();
     }
+    public String getNombreFcriterio(){
+        try {
+            return this.criterioeval.getFormacriterioevaluacionId().getNombre();
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+        
+    }
     public void insertar(){
         try{
             
@@ -150,6 +159,6 @@ public class mbvcriterioevaluacion {
         options.put("modal", true);
         options.put("draggable", true);
         options.put("resizable", true);
-        RequestContext.getCurrentInstance().openDialog("newcriterio",options,null);
+        RequestContext.getCurrentInstance().openDialog("newcriterioeval",options,null);
     }
 }

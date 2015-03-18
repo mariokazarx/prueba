@@ -66,9 +66,9 @@ public class Notafinal implements Serializable {
     @JoinColumn(name = "estudiante_id", referencedColumnName = "estudiante_id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Estudiante estudianteId;
-    @JoinColumn(name = "asignaturaciclo_id", referencedColumnName = "asignaturaciclo_id", nullable = false)
+    @JoinColumn(name = "asignaturacurso_id", referencedColumnName = "asignaturacurso_id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Asignaturaciclo asignaturacicloId;
+    private Asignaturacurso asignaturacursoId;
 
     public Notafinal() {
     }
@@ -139,12 +139,12 @@ public class Notafinal implements Serializable {
         this.estudianteId = estudianteId;
     }
 
-    public Asignaturaciclo getAsignaturacicloId() {
-        return asignaturacicloId;
+    public Asignaturacurso getAsignaturacursoId() {
+        return asignaturacursoId;
     }
 
-    public void setAsignaturacicloId(Asignaturaciclo asignaturacicloId) {
-        this.asignaturacicloId = asignaturacicloId;
+    public void setAsignaturacursoId(Asignaturacurso asignaturacursoId) {
+        this.asignaturacursoId = asignaturacursoId;
     }
 
     @Override

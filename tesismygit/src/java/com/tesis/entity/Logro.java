@@ -57,11 +57,11 @@ public class Logro implements Serializable {
     @Size(min = 1, max = 200)
     @Column(name = "titulo", nullable = false, length = 200)
     private String titulo;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "logroId", fetch = FetchType.LAZY)
+    private List<Logronota> logronotaList;
     @JoinColumn(name = "contenidotematico_id", referencedColumnName = "contenidotematico_id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Contenidotematico contenidotematicoId;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "logroId", fetch = FetchType.LAZY)
-    private List<Logronota> logronotaList;
 
     public Logro() {
     }
@@ -108,14 +108,6 @@ public class Logro implements Serializable {
         this.titulo = titulo;
     }
 
-    public Contenidotematico getContenidotematicoId() {
-        return contenidotematicoId;
-    }
-
-    public void setContenidotematicoId(Contenidotematico contenidotematicoId) {
-        this.contenidotematicoId = contenidotematicoId;
-    }
-
     @XmlTransient
     public List<Logronota> getLogronotaList() {
         return logronotaList;
@@ -123,6 +115,14 @@ public class Logro implements Serializable {
 
     public void setLogronotaList(List<Logronota> logronotaList) {
         this.logronotaList = logronotaList;
+    }
+
+    public Contenidotematico getContenidotematicoId() {
+        return contenidotematicoId;
+    }
+
+    public void setContenidotematicoId(Contenidotematico contenidotematicoId) {
+        this.contenidotematicoId = contenidotematicoId;
     }
 
     @Override

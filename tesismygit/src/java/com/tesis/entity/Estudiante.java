@@ -80,18 +80,18 @@ public class Estudiante implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "estudianteId", fetch = FetchType.LAZY)
     private List<Nota> notaList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "estudianteId", fetch = FetchType.LAZY)
-    private List<Documento> documentoList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "estudianteId", fetch = FetchType.LAZY)
     private List<Notafinal> notafinalList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "estudianteId", fetch = FetchType.LAZY)
-    private List<Matricula> matriculaList;
     @JoinColumn(name = "tipo_usuario_id", referencedColumnName = "tipo_usuario_id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private TipoUsuario tipoUsuarioId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "estudianteId", fetch = FetchType.LAZY)
-    private List<Notafinalrecuperacion> notafinalrecuperacionList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "estudianteId", fetch = FetchType.LAZY)
     private List<Logronota> logronotaList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "estudianteId", fetch = FetchType.LAZY)
+    private List<Documento> documentoList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "estudianteId", fetch = FetchType.LAZY)
+    private List<Matricula> matriculaList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "estudianteId", fetch = FetchType.LAZY)
+    private List<Notafinalrecuperacion> notafinalrecuperacionList;
 
     public Estudiante() {
     }
@@ -176,30 +176,12 @@ public class Estudiante implements Serializable {
     }
 
     @XmlTransient
-    public List<Documento> getDocumentoList() {
-        return documentoList;
-    }
-
-    public void setDocumentoList(List<Documento> documentoList) {
-        this.documentoList = documentoList;
-    }
-
-    @XmlTransient
     public List<Notafinal> getNotafinalList() {
         return notafinalList;
     }
 
     public void setNotafinalList(List<Notafinal> notafinalList) {
         this.notafinalList = notafinalList;
-    }
-
-    @XmlTransient
-    public List<Matricula> getMatriculaList() {
-        return matriculaList;
-    }
-
-    public void setMatriculaList(List<Matricula> matriculaList) {
-        this.matriculaList = matriculaList;
     }
 
     public TipoUsuario getTipoUsuarioId() {
@@ -211,21 +193,39 @@ public class Estudiante implements Serializable {
     }
 
     @XmlTransient
-    public List<Notafinalrecuperacion> getNotafinalrecuperacionList() {
-        return notafinalrecuperacionList;
-    }
-
-    public void setNotafinalrecuperacionList(List<Notafinalrecuperacion> notafinalrecuperacionList) {
-        this.notafinalrecuperacionList = notafinalrecuperacionList;
-    }
-
-    @XmlTransient
     public List<Logronota> getLogronotaList() {
         return logronotaList;
     }
 
     public void setLogronotaList(List<Logronota> logronotaList) {
         this.logronotaList = logronotaList;
+    }
+
+    @XmlTransient
+    public List<Documento> getDocumentoList() {
+        return documentoList;
+    }
+
+    public void setDocumentoList(List<Documento> documentoList) {
+        this.documentoList = documentoList;
+    }
+
+    @XmlTransient
+    public List<Matricula> getMatriculaList() {
+        return matriculaList;
+    }
+
+    public void setMatriculaList(List<Matricula> matriculaList) {
+        this.matriculaList = matriculaList;
+    }
+
+    @XmlTransient
+    public List<Notafinalrecuperacion> getNotafinalrecuperacionList() {
+        return notafinalrecuperacionList;
+    }
+
+    public void setNotafinalrecuperacionList(List<Notafinalrecuperacion> notafinalrecuperacionList) {
+        this.notafinalrecuperacionList = notafinalrecuperacionList;
     }
 
     @Override

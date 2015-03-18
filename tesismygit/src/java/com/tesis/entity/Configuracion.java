@@ -19,6 +19,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -71,13 +72,13 @@ public class Configuracion implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "configuracionId", fetch = FetchType.LAZY)
     private List<Area> areaList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "configuracionId", fetch = FetchType.LAZY)
-    private List<Anlectivo> anlectivoList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "configuracionId", fetch = FetchType.LAZY)
     private List<Asignatura> asignaturaList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "configuracion", fetch = FetchType.LAZY)
-    private List<Ciclo> cicloList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "configuracionId", fetch = FetchType.LAZY)
     private List<Periodo> periodoList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "configuracion", fetch = FetchType.LAZY)
+    private List<Ciclo> cicloList;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "configuracionId", fetch = FetchType.LAZY)
+    private Anlectivo anlectivo;
 
     public Configuracion() {
     }
@@ -159,21 +160,21 @@ public class Configuracion implements Serializable {
     }
 
     @XmlTransient
-    public List<Anlectivo> getAnlectivoList() {
-        return anlectivoList;
-    }
-
-    public void setAnlectivoList(List<Anlectivo> anlectivoList) {
-        this.anlectivoList = anlectivoList;
-    }
-
-    @XmlTransient
     public List<Asignatura> getAsignaturaList() {
         return asignaturaList;
     }
 
     public void setAsignaturaList(List<Asignatura> asignaturaList) {
         this.asignaturaList = asignaturaList;
+    }
+
+    @XmlTransient
+    public List<Periodo> getPeriodoList() {
+        return periodoList;
+    }
+
+    public void setPeriodoList(List<Periodo> periodoList) {
+        this.periodoList = periodoList;
     }
 
     @XmlTransient
@@ -185,13 +186,12 @@ public class Configuracion implements Serializable {
         this.cicloList = cicloList;
     }
 
-    @XmlTransient
-    public List<Periodo> getPeriodoList() {
-        return periodoList;
+    public Anlectivo getAnlectivo() {
+        return anlectivo;
     }
 
-    public void setPeriodoList(List<Periodo> periodoList) {
-        this.periodoList = periodoList;
+    public void setAnlectivo(Anlectivo anlectivo) {
+        this.anlectivo = anlectivo;
     }
 
     @Override

@@ -53,9 +53,9 @@ public class Matricula implements Serializable {
     @JoinColumn(name = "estudiante_id", referencedColumnName = "estudiante_id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Estudiante estudianteId;
-    @JoinColumn(name = "ciclo_id", referencedColumnName = "ciclo_id", nullable = false)
+    @JoinColumn(name = "curso_id", referencedColumnName = "curso_id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Ciclo cicloId;
+    private Curso cursoId;
 
     public Matricula() {
     }
@@ -102,12 +102,12 @@ public class Matricula implements Serializable {
         this.estudianteId = estudianteId;
     }
 
-    public Ciclo getCicloId() {
-        return cicloId;
+    public Curso getCursoId() {
+        return cursoId;
     }
 
-    public void setCicloId(Ciclo cicloId) {
-        this.cicloId = cicloId;
+    public void setCursoId(Curso cursoId) {
+        this.cursoId = cursoId;
     }
 
     @Override
