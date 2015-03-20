@@ -34,7 +34,7 @@
                             <h:outputText value="#{item.minaprob}"/>
                         </p:column>
                         <p:column>
-                            <p:commandButton value="Editar" icon="ui-icon-pencil" actionListener="#{mbvEscala.cargarEscala(item.escalaId)}"/>
+                            <p:commandButton value="Editar" icon="ui-icon-pencil" actionListener="#{mbvcriterioevaluacion.cargarCriterioseval(item.criterioevaluacionId)}"/>
                         </p:column>
                     </p:dataTable>
 
@@ -58,25 +58,25 @@
                 <h:form id="frmEditarEscala">
                     <p:dialog header="Datos del usuario" widgetVar="dialogoEditarEscala" modal="false">
                         <p:outputPanel id="panelEditarEscala" >
-                            <h:panelGrid columns="3">
+                             <h:panelGrid columns="3">
                                 <p:outputLabel for="txtNombre" value="Nombre: " />
-                                <p:inputText id="txtNombre" value="#{mbvEscala.escala.nombre}"/>
+                                <p:inputText id="txtNombre" value="#{mbvcriterioevaluacion.criterioeval.nombre}" />
                                 <p:message for="txtNombre"/>
                                 <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
-                                <p:inputTextarea id="txtDescripcion" autoResize="false" rows="5" cols="22" value="#{mbvEscala.escala.descripcion}"/>
+                                <p:inputTextarea id="txtDescripcion" value="#{mbvcriterioevaluacion.criterioeval.descripcion}" autoResize="false" rows="5" cols="22" />
                                 <p:message for="txtDescripcion"/>
-                                <p:outputLabel for="txtMin" value="Nota Minima:" />
-                                <p:inputText id="txtMin" value="#{mbvEscala.escala.min}"/>
+                                <p:outputLabel for="stlCriterio" value="Criterio de aprobacion:" />
+                                <p:selectOneMenu id="stlCriterio" effect="fade" value="#{mbvcriterioevaluacion.fcriterioselected.formacriterioevaluacionId}">
+                                    <f:selectItem itemLabel="Seleccione."/>
+                                    <f:selectItems value="#{mbvcriterioevaluacion.fcriterios}" var="fcriterio" itemLabel="#{fcriterio.nombre}" itemValue="#{fcriterio.formacriterioevaluacionId}"/>
+                                </p:selectOneMenu>
+                                <p:message for="stlCriterio"/>
+                                <p:outputLabel for="txtMin" value="Minimo para aprobar:" />
+                                <p:inputText id="txtMin" value="#{mbvcriterioevaluacion.criterioeval.minaprob}" />
                                 <p:message for="txtMin"/>
-                                <p:outputLabel for="txtMax" value="Nota Maxima:" />
-                                <p:inputText id="txtMax" value="#{mbvEscala.escala.max}"/>
-                                <p:message for="txtMax"/>
-                                <p:outputLabel for="txtMinaprob" value="Nota Minima Aprobacion:" />
-                                <p:inputText id="txtMinaprob" value="#{mbvEscala.escala.notaminimaaprob}"/>
-                                <p:message for="txtMinaprob"/>
                                 <h:panelGroup></h:panelGroup>
-                                <p:commandButton value="editar Escala" ajax="true" actionListener="#{mbvEscala.actualizar}" update=":frmListaEscala" />
-                            </h:panelGrid>
+                                <p:commandButton value="Registrar Escala" actionListener="#{mbvcriterioevaluacion.actualizar}" ajax="true" update=":frmListaEscala" />
+                            </h:panelGrid> 
                         </p:outputPanel>
                     </p:dialog>
                 </h:form>
