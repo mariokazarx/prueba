@@ -41,27 +41,26 @@
                     <ui:insert name="top">
                         <h:panelGrid columns="2">
                             <!--<p:graphicImage value="/resources/img/grias.jpg"  height="60" width="100%"/>-->
-                            <h:outputLabel value="Bienvenido a Maskana" />
+                            <h:outputLabel value="CENTRO EDUCATIVO ANTONIO RICAURTE"/>
                         </h:panelGrid>
                     </ui:insert>
                 </div>
                 <div id="center_content">
-                            <h:form>
-                                <p:menubar>  
-                                    <p:submenu label="Configuracion" icon="ui-icon-gear"> 
-                                        <p:submenu label="Escalas">
-                                            <p:menuitem value="Listar Escalas" url="../Usuarios/Aplicaciones.xhtml" />  
-                                            <p:separator />  
-                                            <p:menuitem value="Nueva Esacala" outcome="/configuracion/escalas.xhtml"/>
-                                        </p:submenu>
-                                        <p:menuitem value="Criterios Evaluacion" outcome="/configuracion/criterioevaluacion.xhtml" />  
-                                        <p:separator />  
-                                        <p:menuitem value="Seguridad Perfil" url="../Usuarios/Seguridad.xhtml"/>  
-                                    </p:submenu>  
-                                <p:menuitem value="Cerrar Sesion"/>  
-                              
-                                </p:menubar>
-                            </h:form>
+                    <h:form>
+                        <p:menubar>  
+                            <p:submenu label="Configuracion" icon="ui-icon-gear"> 
+                                <p:submenu label="Escalas">
+                                    <p:menuitem value="Listar Escalas" url="../Usuarios/Aplicaciones.xhtml" />  
+                                    <p:separator />  
+                                    <p:menuitem value="Nueva Esacala" outcome="/configuracion/escalas.xhtml"/>
+                                </p:submenu>
+                                <p:menuitem value="Criterios Evaluacion" outcome="/configuracion/criterioevaluacion.xhtml" />  
+                                <p:separator />  
+                                <p:menuitem value="Seguridad Perfil" url="../Usuarios/Seguridad.xhtml"/>  
+                            </p:submenu>  
+                            <p:menuitem value="Cerrar Sesion"/>  
+                        </p:menubar>
+                    </h:form>
                     <ui:insert name="content">Content</ui:insert>
                 </div>
             </p:layoutUnit>

@@ -57,15 +57,17 @@ public class Escala implements Serializable {
     @Size(max = 200)
     @Column(name = "descripcion", length = 200)
     private String descripcion;
-    @Min(value=0,message="Este campo debe ser mayor o igual que 0")
+    @Min(value=0,message="Nota minima debe ser mayor o igual que 0")
     @Basic(optional = false)
     @NotNull
     @Column(name = "min", nullable = false)
     private int min;
+    @Min(value=0,message="Nota maxima debe ser mayor o igual que 0")
     @Basic(optional = false)
     @NotNull
     @Column(name = "max", nullable = false)
     private int max;
+    @Min(value=0,message="Nota minima aprobacion debe ser mayor o igual que 0")
     @Basic(optional = false)
     @NotNull
     @Column(name = "notaminimaaprob", nullable = false)

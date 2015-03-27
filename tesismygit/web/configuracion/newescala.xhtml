@@ -2,7 +2,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:h="http://java.sun.com/jsf/html">
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
     <h:head>
         <title>Nueva Escala</title>
                 <style type="text/css">
@@ -13,9 +14,12 @@
     </h:head>
     <h:body>
         <h:form id="frmescala">
+            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" rendered="#{mbvEscala.mensage}"/>
             <h:panelGrid columns="3">
-                <p:outputLabel for="txtNombre" value="Nombre: " />
-                <p:inputText id="txtNombre" value="#{mbvEscala.escala.nombre}" />
+                <p:outputLabel for="txtNombre" value="Nombre: "/>
+                <p:inputText id="txtNombre" value="#{mbvEscala.escala.nombre}" validator="#{mbvEscala.validateNombreUnique}">
+                    <f:validator validatorId="validatorVacio"/>
+                </p:inputText>
                 <p:message for="txtNombre"/>
                 <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
                 <p:inputTextarea id="txtDescripcion" value="#{mbvEscala.escala.descripcion}" autoResize="false" rows="5" cols="22" />
@@ -25,12 +29,12 @@
                 <p:message for="txtMin"/>
                 <p:outputLabel for="txtMax" value="Nota Maxima:" />
                 <p:inputText id="txtMax" value="#{mbvEscala.escala.max}" />
-                <p:message for="txtMax"/>
+                <p:message for="txtMax" />
                 <p:outputLabel for="txtMinaprob" value="Nota Minima Aprobacion:" />
                 <p:inputText id="txtMinaprob" value="#{mbvEscala.escala.notaminimaaprob}"/>
                 <p:message for="txtMinaprob"/>
                 <h:panelGroup></h:panelGroup>
-                <p:commandButton value="Registrar Escala" actionListener="#{mbvEscala.insertar}" ajax="true" update="frmescala" />
+                <p:commandButton value="Registrar Escala" actionListener="#{mbvEscala.insertar}" onclick="#{mbvEscala.setMensage(false)}" ajax="true" update="frmescala" />
             </h:panelGrid> 
         </h:form>
     </h:body>

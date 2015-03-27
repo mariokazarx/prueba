@@ -10,6 +10,7 @@ import com.tesis.beans.EscalaFacade;
 import com.tesis.entity.Configuracion;
 import com.tesis.entity.Criterioevaluacion;
 import com.tesis.entity.Escala;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,7 @@ import org.primefaces.context.RequestContext;
  */
 @ManagedBean
 @ViewScoped
-public class mbvConfiguracion {
+public class mbvConfiguracion implements Serializable{
 
     /**
      * Creates a new instance of mbvConfiguracion
@@ -35,7 +36,13 @@ public class mbvConfiguracion {
     
     private Configuracion configuracion;
     private List<Configuracion> configuraciones;
-    
+    private Escala escala;
+    private Criterioevaluacion criterioevaluacion;
+    private List<Criterioevaluacion> criterios;
+    private List<Escala> escalas;
+    private Escala escalaselected;
+    private Criterioevaluacion criterioevaluacionselected;
+
     @EJB
     private ConfiguracionFacade configuracionEjb;
     @EJB
@@ -44,6 +51,72 @@ public class mbvConfiguracion {
     private EscalaFacade escalaEjb;
     
     public mbvConfiguracion() {
+    }
+    
+    public Escala getEscalaselected() {
+        return escalaselected;
+    }
+
+    public void setEscalaselected(Escala escalaselected) {
+        this.escalaselected = escalaselected;
+    }
+
+    public Criterioevaluacion getCriterioevaluacionselected() {
+        return criterioevaluacionselected;
+    }
+
+    public void setCriterioevaluacionselected(Criterioevaluacion criterioevaluacionselected) {
+        this.criterioevaluacionselected = criterioevaluacionselected;
+    }
+    
+    public List<Criterioevaluacion> getCriterios() {
+        return criterios;
+    }
+
+    public void setCriterios(List<Criterioevaluacion> criterios) {
+        this.criterios = criterios;
+    }
+
+    public List<Escala> getEscalas() {
+        return escalas;
+    }
+
+    public void setEscalas(List<Escala> escalas) {
+        this.escalas = escalas;
+    }
+    
+    public Escala getEscala() {
+        this.escala = this.configuracion.getEscalaId();
+        return escala;
+    }
+
+    public void setEscala(Escala escala) {
+        this.escala = escala;
+    }
+    
+    public Criterioevaluacion getCriterioevaluacion() {
+        this.criterioevaluacion = this.configuracion.getCriterioevaluacionId();
+        return criterioevaluacion;
+    }
+
+    public void setCriterioevaluacion(Criterioevaluacion criterioevaluacion) {
+        this.criterioevaluacion = criterioevaluacion;
+    }
+    
+    public CriterioevaluacionFacade getCriterioevalEjb() {
+        return criterioevalEjb;
+    }
+
+    public void setCriterioevalEjb(CriterioevaluacionFacade criterioevalEjb) {
+        this.criterioevalEjb = criterioevalEjb;
+    }
+
+    public EscalaFacade getEscalaEjb() {
+        return escalaEjb;
+    }
+
+    public void setEscalaEjb(EscalaFacade escalaEjb) {
+        this.escalaEjb = escalaEjb;
     }
     
     public Configuracion getConfiguracion() {
@@ -75,6 +148,12 @@ public class mbvConfiguracion {
     public void inicioPagina(){
         this.configuracion=new Configuracion();
         this.configuraciones=this.configuracionEjb.findAll();
+        this.escala = new Escala();
+        this.criterioevaluacion = new Criterioevaluacion();
+        this.escalas = escalaEjb.findAll();
+        this.criterios = criterioevalEjb.findAll();
+        this.criterioevaluacionselected = new Criterioevaluacion();
+        this.escalaselected = new Escala();
         //this.fcriterios = this.fcriterioejb.findAll();
         //this.fcriterioselected = new Formacriterioevaluacion();
     }
@@ -82,38 +161,23 @@ public class mbvConfiguracion {
     /*public String getNombreFcriterio(Formacriterioevaluacion fcriterioid){
         return this.fcriterioejb.find(fcriterioid.getFormacriterioevaluacionId()).getNombre();
     }*/
-    public String getNombreEscala(Escala escala){
-        try {
-            return this.escalaEjb.find(escala.getEscalaId()).getNombre();
-        } catch (Exception e) {
-            return e.getMessage();
-        }
-    }
-    public String getNombreCriterio(Criterioevaluacion criterio){
-        try {
-            return this.criterioevalEjb.find(criterio.getCriterioevaluacionId()).getNombre();
-        } catch (Exception e) {
-            return e.getMessage();
-        }
-    }
-    public String getNombreEscala(){
-        try {
-            return this.configuracion.getEscalaId().getNombre();
-        } catch (Exception e) {
-            return e.getMessage();
-        }
-    }
-    public String getNombreCriterio(){
-        try {
-            return this.configuracion.getCriterioevaluacionId().getNombre();
-        } catch (Exception e) {
-            return e.getMessage();
-        }
-    }
+   
     public void insertar(){
         try{
+            //System.out.print(criterioevaluacionselected.getCriterioevaluacionId());
+//            if(criterioevaluacionselected.getCriterioevaluacionId()==null){
+//                FacesContext.getCurrentInstance().
+//                        addMessage("sltCriterio", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado","null criterio"));
+//            }
+//            if(escalaselected.getEscalaId()==null){
+//                FacesContext.getCurrentInstance().
+//                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado","null escala"));
+//            }
+            configuracion.setCriterioevaluacionId(criterioevaluacionselected);
+            configuracion.setEscalaId(escalaselected);
+            configuracionEjb.create(configuracion);
             //criterioeval.setFormacriterioevaluacionId(fcriterioselected);
-            RequestContext.getCurrentInstance().closeDialog(this);
+            //RequestContext.getCurrentInstance().closeDialog(this);
             //criterioevalEjb.create(criterioeval);
             FacesContext.getCurrentInstance().
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Criterio Evaluacion creado Satisfactoriamente", ""));
@@ -160,6 +224,6 @@ public class mbvConfiguracion {
         options.put("modal", true);
         options.put("draggable", true);
         options.put("resizable", true);
-        RequestContext.getCurrentInstance().openDialog("newcriterioeval",options,null);
+        RequestContext.getCurrentInstance().openDialog("newconf",options,null);
     }
 }

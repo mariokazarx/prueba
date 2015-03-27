@@ -61,26 +61,27 @@
                 <h:form id="frmEditarEscala">
                     <p:dialog header="Datos del usuario" widgetVar="dialogoEditarEscala" modal="false">
                         <p:outputPanel id="panelEditarEscala" >
+                            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" rendered="#{mbvEscala.mensage}"/>
                             <h:panelGrid columns="3">
-                                <p:outputLabel for="txtNombre" value="Nombre: " />
-                                <p:inputText id="txtNombre" value="#{mbvEscala.escala.nombre}">
+                                <p:outputLabel for="txtNombre" value="Nombre: "/>
+                                <p:inputText id="txtNombre" value="#{mbvEscala.escala.nombre}" >
                                     <f:validator validatorId="validatorVacio"/>
                                 </p:inputText>
                                 <p:message for="txtNombre"/>
                                 <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
-                                <p:inputTextarea id="txtDescripcion" autoResize="false" rows="5" cols="22" value="#{mbvEscala.escala.descripcion}"/>
+                                <p:inputTextarea id="txtDescripcion" value="#{mbvEscala.escala.descripcion}" autoResize="false" rows="5" cols="22" />
                                 <p:message for="txtDescripcion"/>
                                 <p:outputLabel for="txtMin" value="Nota Minima:" />
                                 <p:inputText id="txtMin" value="#{mbvEscala.escala.min}"/>
                                 <p:message for="txtMin"/>
                                 <p:outputLabel for="txtMax" value="Nota Maxima:" />
-                                <p:inputText id="txtMax" value="#{mbvEscala.escala.max}"/>
-                                <p:message for="txtMax"/>
+                                <p:inputText id="txtMax" value="#{mbvEscala.escala.max}" />
+                                <p:message for="txtMax" />
                                 <p:outputLabel for="txtMinaprob" value="Nota Minima Aprobacion:" />
                                 <p:inputText id="txtMinaprob" value="#{mbvEscala.escala.notaminimaaprob}"/>
                                 <p:message for="txtMinaprob"/>
                                 <h:panelGroup></h:panelGroup>
-                                <p:commandButton value="editar Escala" ajax="true" actionListener="#{mbvEscala.actualizar}" update=":frmListaEscala" />
+                                <p:commandButton value="editar Escala" ajax="true" actionListener="#{mbvEscala.actualizar}" update=":frmListaEscala" onclick="#{mbvEscala.setMensage(false)}" />
                             </h:panelGrid>
                         </p:outputPanel>
                     </p:dialog>

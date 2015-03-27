@@ -16,7 +16,11 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIComponent;
+import javax.faces.component.UIInput;
+import javax.faces.component.html.HtmlInputText;
 import javax.faces.context.FacesContext;
+import javax.faces.validator.ValidatorException;
 import org.primefaces.context.RequestContext;
 
 /**
@@ -29,6 +33,15 @@ public class mbvEscala implements Serializable {
 
     private Escala escala;
     private List<Escala> escalas;
+
+    public boolean isMensage() {
+        return mensage;
+    }
+
+    public void setMensage(boolean mensage) {
+        this.mensage = mensage;
+    }
+    boolean mensage=false;
 
     @EJB
     private EscalaFacade escalaEjb;
@@ -61,19 +74,47 @@ public class mbvEscala implements Serializable {
         this.escala=new Escala();
         this.escalas=this.escalaEjb.findAllOrder();
     }
-    
+    //validator="#{mbvEscala.validateNombreUnique}"
+    public void validateMax(FacesContext arg0, UIComponent arg1, Object arg2)throws ValidatorException {
+        HtmlInputText maxText=(HtmlInputText)arg1.findComponent("txtMax");
+        System.out.print("min"+maxText.getLocalValue()+"max"+arg2);
+        if (12<=escala.getMin()) {
+             throw new ValidatorException(new FacesMessage("Debe ser mayor que nota minima"));
+        }
+   }
+    public void validateNombreUnique(FacesContext arg0, UIComponent arg1, Object arg2)throws ValidatorException {
+        //this.escalaEjb.getByNombre(arg2.toString());
+        this.mensage=false;
+        if (this.escalaEjb.getByNombre(arg2.toString())==false) {
+            throw new ValidatorException(new FacesMessage("ya existe una escala con este nombre"));
+        }
+    }
     public void insertar(){
         try{
+            if(escala.getMax()<=escala.getMin()){
+                this.mensage=true;
+                FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Nota maxima debe ser mayor a nota minima"));
+                //this.mensage=false;
+                return;
+            }
+            if(escala.getNotaminimaaprob()<=escala.getMin() || escala.getNotaminimaaprob()>=escala.getMax()){
+                this.mensage=true;
+                FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Nota minima aprobacion debe ser superior a la nota minima e inferior a la maxima"));
+                //this.mensage=false;
+                return;
+            }
             escalaEjb.create(escala);
             RequestContext.getCurrentInstance().closeDialog(this);
             System.out.print("error");
-          //  FacesContext.getCurrentInstance().
-           //             addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Escala creada Satisfactoriamente", ""));
-            //nicioPagina();
+            FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Escala creada Satisfactoriamente", ""));
+            inicioPagina();
         }catch(Exception e){
             System.out.print("error");
-            // FacesContext.getCurrentInstance().
-              //          addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+             FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
         }
     }
     public void closeDialog() {
@@ -107,9 +148,9 @@ public class mbvEscala implements Serializable {
     }
     public void newEscala(){
         Map<String,Object> options = new HashMap<String, Object>();
-        /*options.put("contentHeight", 340);
+        options.put("contentHeight", 340);
         options.put("height", 400);
-        options.put("width",700);*/
+        options.put("width",700);
         options.put("modal", true);
         options.put("draggable", true);
         options.put("resizable", true);

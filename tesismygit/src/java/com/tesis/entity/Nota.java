@@ -5,6 +5,7 @@
 package com.tesis.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -44,10 +45,11 @@ public class Nota implements Serializable {
     @Basic(optional = false)
     @Column(name = "nota_id", nullable = false)
     private Integer notaId;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Basic(optional = false)
     @NotNull
-    @Column(name = "valor", nullable = false)
-    private int valor;
+    @Column(name = "valor", nullable = false, precision = 2, scale = 1)
+    private BigDecimal valor;
     @Column(name = "fechamodificacion")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodificacion;
@@ -68,7 +70,7 @@ public class Nota implements Serializable {
         this.notaId = notaId;
     }
 
-    public Nota(Integer notaId, int valor) {
+    public Nota(Integer notaId, BigDecimal valor) {
         this.notaId = notaId;
         this.valor = valor;
     }
@@ -81,11 +83,11 @@ public class Nota implements Serializable {
         this.notaId = notaId;
     }
 
-    public int getValor() {
+    public BigDecimal getValor() {
         return valor;
     }
 
-    public void setValor(int valor) {
+    public void setValor(BigDecimal valor) {
         this.valor = valor;
     }
 

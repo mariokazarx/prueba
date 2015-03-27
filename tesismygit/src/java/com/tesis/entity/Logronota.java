@@ -5,10 +5,9 @@
 package com.tesis.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -19,13 +18,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -49,21 +46,20 @@ public class Logronota implements Serializable {
     @Column(name = "fechamodificacion")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodificacion;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Basic(optional = false)
     @NotNull
-    @Column(name = "nota", nullable = false)
-    private int nota;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "estado", fetch = FetchType.LAZY)
-    private List<Logronota> logronotaList;
-    @JoinColumn(name = "estado", referencedColumnName = "logronota_id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Logronota estado;
+    @Column(name = "nota", nullable = false, precision = 2, scale = 1)
+    private BigDecimal nota;
     @JoinColumn(name = "logro_id", referencedColumnName = "logro_id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Logro logroId;
     @JoinColumn(name = "estudiante_id", referencedColumnName = "estudiante_id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Estudiante estudianteId;
+    @JoinColumn(name = "estado", referencedColumnName = "estadologronota_id", nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Estadologronota estado;
 
     public Logronota() {
     }
@@ -72,7 +68,7 @@ public class Logronota implements Serializable {
         this.logronotaId = logronotaId;
     }
 
-    public Logronota(Integer logronotaId, int nota) {
+    public Logronota(Integer logronotaId, BigDecimal nota) {
         this.logronotaId = logronotaId;
         this.nota = nota;
     }
@@ -93,29 +89,12 @@ public class Logronota implements Serializable {
         this.fechamodificacion = fechamodificacion;
     }
 
-    public int getNota() {
+    public BigDecimal getNota() {
         return nota;
     }
 
-    public void setNota(int nota) {
+    public void setNota(BigDecimal nota) {
         this.nota = nota;
-    }
-
-    @XmlTransient
-    public List<Logronota> getLogronotaList() {
-        return logronotaList;
-    }
-
-    public void setLogronotaList(List<Logronota> logronotaList) {
-        this.logronotaList = logronotaList;
-    }
-
-    public Logronota getEstado() {
-        return estado;
-    }
-
-    public void setEstado(Logronota estado) {
-        this.estado = estado;
     }
 
     public Logro getLogroId() {
@@ -132,6 +111,14 @@ public class Logronota implements Serializable {
 
     public void setEstudianteId(Estudiante estudianteId) {
         this.estudianteId = estudianteId;
+    }
+
+    public Estadologronota getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Estadologronota estado) {
+        this.estado = estado;
     }
 
     @Override

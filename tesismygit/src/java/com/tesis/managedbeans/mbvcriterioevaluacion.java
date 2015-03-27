@@ -35,7 +35,6 @@ public class mbvcriterioevaluacion implements Serializable {
     private List<Criterioevaluacion> criterioseval;
     private List<Formacriterioevaluacion> fcriterios;
     private Formacriterioevaluacion fcriterioselected;
-
     
     @EJB
     private CriterioevaluacionFacade criterioevalEjb;
@@ -97,19 +96,10 @@ public class mbvcriterioevaluacion implements Serializable {
         this.criterioseval=this.criterioevalEjb.findAll();
         this.fcriterios = this.fcriterioejb.findAll();
         this.fcriterioselected = new Formacriterioevaluacion();
+        //this.dialogEdit=false;
     }
     
-    public String getNombreFcriterio(Formacriterioevaluacion fcriterioid){
-        return this.fcriterioejb.find(fcriterioid.getFormacriterioevaluacionId()).getNombre();
-    }
-    public String getNombreFcriterio(){
-        try {
-            return this.criterioeval.getFormacriterioevaluacionId().getNombre();
-        } catch (Exception e) {
-            return e.getMessage();
-        }
-        
-    }
+    
     public void insertar(){
         try{
             criterioeval.setFormacriterioevaluacionId(fcriterioselected);
@@ -131,13 +121,17 @@ public class mbvcriterioevaluacion implements Serializable {
 
     public void actualizar(){
         try{
+            System.out.print("fail 2"+fcriterioselected+criterioeval.getFormacriterioevaluacionId());
             criterioeval.setFormacriterioevaluacionId(fcriterioselected);
+            System.out.print("fail 3"+fcriterioselected+criterioeval.getFormacriterioevaluacionId());
             criterioevalEjb.edit(criterioeval);
+            System.out.print("fail 4"+fcriterioselected+criterioeval.getFormacriterioevaluacionId());
             FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Escala creada Satisfactoriamente", ""));
+            RequestContext.getCurrentInstance().execute("PF('dialogoEditarEscala').hide()");
             inicioPagina();
         }catch(Exception e){
-            System.out.print("fail"+e.getMessage());
+            System.out.print("fail"+fcriterioselected);
              FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
         }
@@ -145,6 +139,7 @@ public class mbvcriterioevaluacion implements Serializable {
     public void cargarCriterioseval(int criterioevalid){
         try {
             this.criterioeval =  this.criterioevalEjb.find(criterioevalid);
+            //this.fcriterioselected = this.fcriterioejb.find(criterioeval.getFormacriterioevaluacionId().getFormacriterioevaluacionId());
             RequestContext.getCurrentInstance().update("frmEditarEscala:panelEditarEscala");
             RequestContext.getCurrentInstance().execute("PF('dialogoEditarEscala').show()");
         } catch (Exception e) {

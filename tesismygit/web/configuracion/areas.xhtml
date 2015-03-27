@@ -1,16 +1,81 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://java.sun.com/jsf/facelets">
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
 
     <body>
-
         <ui:composition template="./../plantilla.xhtml">
-
             <ui:define name="content">
-                aqui va el formulario de areas
-            </ui:define>
+                <h:form id="frmListaArea">
+                    <p:commandButton value="Nueva Area" icon="ui-icon-document" actionListener="#{mbvArea.newArea}">
+                        <p:ajax event="dialogReturn" listener="#{mbvArea.closeDialog}" update="frmListaArea" />
+                    </p:commandButton>
+                    <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
+                    <p:dataTable id="tablaListaArea" var="item" value="#{mbvArea.areas}" paginator="true" rows="10" selection="#{mbvarea.area}" selectionMode="single" lazy="true" rowKey="#{item.areaId}" >
+                        <p:ajax event="rowSelect" update=":frmListaArea:panelDetalleArea" oncomplete="PF('dialogoDetalleArea').show()"/>
+                        <f:facet name="header">
+                            Lista de Areas
+                        </f:facet>
+                        <p:column headerText="Nombre" filterBy="nombre">
+                            <h:outputText value="#{item.nombre}"/>
+                        </p:column>
+                        <p:column headerText="Descripcion" filterBy="descripcion">
+                            <h:outputText value="#{item.descripcion}"/>
+                        </p:column>
+                        <p:column headerText="Configuracion" filterBy="max">
+                            <h:outputText value="#{item.configuracionId.nombre}"/>
+                        </p:column>
+                        <p:column>
+                            <p:commandButton value="Editar" icon="ui-icon-pencil" actionListener="#{mbvArea.cargarArea(item.areaId)}"/>
+                        </p:column>
+                    </p:dataTable>
 
+                    <p:dialog header="Detalle de Area" widgetVar="dialogoDetalleArea" modal="true"  appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
+                        <p:outputPanel id="panelDetalleArea">
+                            <p:panelGrid columns="2">
+                                <p:outputLabel value="Id"/>
+                                <h:outputText value="#{mbvArea.area.areaId}"/>
+                                <p:outputLabel value="Nombre"/>
+                                <h:outputText value="#{mbvarea.area.nombre}"/>
+                                <p:outputLabel value="Descripcion"/>
+                                <h:outputText value="#{mbvarea.area.descripcion}"/>
+                                <p:outputLabel value="Nota minima"/>
+                                <h:outputText value="#{mbvEscala.escala.min}"/>
+                            </p:panelGrid>
+                        </p:outputPanel>
+                    </p:dialog>                   
+                </h:form>
+                <h:form id="frmEditarEscala">
+                    <p:dialog header="Datos del usuario" widgetVar="dialogoEditarEscala" modal="false">
+                        <p:outputPanel id="panelEditarEscala" >
+                            <h:panelGrid columns="3">
+                                <p:outputLabel for="txtNombre" value="Nombre: " />
+                                <p:inputText id="txtNombre" value="#{mbvEscala.escala.nombre}">
+                                    <f:validator validatorId="validatorVacio"/>
+                                </p:inputText>
+                                <p:message for="txtNombre"/>
+                                <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
+                                <p:inputTextarea id="txtDescripcion" autoResize="false" rows="5" cols="22" value="#{mbvEscala.escala.descripcion}"/>
+                                <p:message for="txtDescripcion"/>
+                                <p:outputLabel for="txtMin" value="Nota Minima:" />
+                                <p:inputText id="txtMin" value="#{mbvEscala.escala.min}"/>
+                                <p:message for="txtMin"/>
+                                <p:outputLabel for="txtMax" value="Nota Maxima:" />
+                                <p:inputText id="txtMax" value="#{mbvEscala.escala.max}"/>
+                                <p:message for="txtMax"/>
+                                <p:outputLabel for="txtMinaprob" value="Nota Minima Aprobacion:" />
+                                <p:inputText id="txtMinaprob" value="#{mbvEscala.escala.notaminimaaprob}"/>
+                                <p:message for="txtMinaprob"/>
+                                <h:panelGroup></h:panelGroup>
+                                <p:commandButton value="editar Escala" ajax="true" actionListener="#{mbvEscala.actualizar}" update=":frmListaArea" />
+                            </h:panelGrid>
+                        </p:outputPanel>
+                    </p:dialog>
+                </h:form>
+            </ui:define>
         </ui:composition>
 
     </body>
