@@ -60,6 +60,9 @@ public class Curso implements Serializable {
     @JoinColumn(name = "ciclo_id", referencedColumnName = "ciclo_id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Ciclo cicloId;
+    @JoinColumn(name = "anlectivo_id", referencedColumnName = "anlectivo_id", nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Anlectivo anlectivoId;
 
     public Curso() {
     }
@@ -122,6 +125,14 @@ public class Curso implements Serializable {
 
     public void setCicloId(Ciclo cicloId) {
         this.cicloId = cicloId;
+    }
+
+    public Anlectivo getAnlectivoId() {
+        return anlectivoId;
+    }
+
+    public void setAnlectivoId(Anlectivo anlectivoId) {
+        this.anlectivoId = anlectivoId;
     }
 
     @Override

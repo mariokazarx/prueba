@@ -96,6 +96,7 @@ public class mbvcriterioevaluacion implements Serializable {
         this.criterioseval=this.criterioevalEjb.findAll();
         this.fcriterios = this.fcriterioejb.findAll();
         this.fcriterioselected = new Formacriterioevaluacion();
+        //this.criterioeval.setFormacriterioevaluacionId(fcriterioselected);
         //this.dialogEdit=false;
     }
     
@@ -121,25 +122,22 @@ public class mbvcriterioevaluacion implements Serializable {
 
     public void actualizar(){
         try{
-            System.out.print("fail 2"+fcriterioselected+criterioeval.getFormacriterioevaluacionId());
+            this.fcriterioselected = this.fcriterioejb.find(fcriterioselected.getFormacriterioevaluacionId());
             criterioeval.setFormacriterioevaluacionId(fcriterioselected);
-            System.out.print("fail 3"+fcriterioselected+criterioeval.getFormacriterioevaluacionId());
             criterioevalEjb.edit(criterioeval);
-            System.out.print("fail 4"+fcriterioselected+criterioeval.getFormacriterioevaluacionId());
             FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Escala creada Satisfactoriamente", ""));
             RequestContext.getCurrentInstance().execute("PF('dialogoEditarEscala').hide()");
             inicioPagina();
         }catch(Exception e){
-            System.out.print("fail"+fcriterioselected);
-             FacesContext.getCurrentInstance().
+            FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
         }
     }
     public void cargarCriterioseval(int criterioevalid){
         try {
             this.criterioeval =  this.criterioevalEjb.find(criterioevalid);
-            //this.fcriterioselected = this.fcriterioejb.find(criterioeval.getFormacriterioevaluacionId().getFormacriterioevaluacionId());
+            this.fcriterioselected = this.fcriterioejb.find(criterioeval.getFormacriterioevaluacionId().getFormacriterioevaluacionId());
             RequestContext.getCurrentInstance().update("frmEditarEscala:panelEditarEscala");
             RequestContext.getCurrentInstance().execute("PF('dialogoEditarEscala').show()");
         } catch (Exception e) {

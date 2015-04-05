@@ -5,7 +5,9 @@
 package com.tesis.entity;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,12 +18,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -29,8 +32,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Entity
 @Table(name = "anlectivo", catalog = "prueba", schema = "public", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"anio"}),
-    @UniqueConstraint(columnNames = {"configuracion_id"})})
+    @UniqueConstraint(columnNames = {"anio"})})
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Anlectivo.findAll", query = "SELECT a FROM Anlectivo a"),
@@ -57,11 +59,13 @@ public class Anlectivo implements Serializable {
     @Size(max = 200)
     @Column(name = "descripcion", length = 200)
     private String descripcion;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "anlectivoId", fetch = FetchType.LAZY)
+    private List<Curso> cursoList;
     @JoinColumn(name = "estado_aniolectivo_id", referencedColumnName = "estado_aniolectivo_id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private EstadoAniolectivo estadoAniolectivoId;
     @JoinColumn(name = "configuracion_id", referencedColumnName = "configuracion_id", nullable = false)
-    @OneToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Configuracion configuracionId;
 
     public Anlectivo() {
@@ -107,6 +111,15 @@ public class Anlectivo implements Serializable {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    @XmlTransient
+    public List<Curso> getCursoList() {
+        return cursoList;
+    }
+
+    public void setCursoList(List<Curso> cursoList) {
+        this.cursoList = cursoList;
     }
 
     public EstadoAniolectivo getEstadoAniolectivoId() {

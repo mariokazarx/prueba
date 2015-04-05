@@ -19,7 +19,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
@@ -79,8 +78,8 @@ public class Configuracion implements Serializable {
     private List<Periodo> periodoList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "configuracion", fetch = FetchType.LAZY)
     private List<Ciclo> cicloList;
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "configuracionId", fetch = FetchType.LAZY)
-    private Anlectivo anlectivo;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "configuracionId", fetch = FetchType.LAZY)
+    private List<Anlectivo> anlectivoList;
 
     public Configuracion() {
     }
@@ -188,12 +187,13 @@ public class Configuracion implements Serializable {
         this.cicloList = cicloList;
     }
 
-    public Anlectivo getAnlectivo() {
-        return anlectivo;
+    @XmlTransient
+    public List<Anlectivo> getAnlectivoList() {
+        return anlectivoList;
     }
 
-    public void setAnlectivo(Anlectivo anlectivo) {
-        this.anlectivo = anlectivo;
+    public void setAnlectivoList(List<Anlectivo> anlectivoList) {
+        this.anlectivoList = anlectivoList;
     }
 
     @Override

@@ -57,9 +57,10 @@
                             </p:panelGrid>
                         </p:outputPanel>
                     </p:dialog>                   
-                </h:form>
-                <h:form id="frmEditarEscala">
-                    <p:dialog header="Datos del usuario" widgetVar="dialogoEditarEscala" modal="false">
+                </h:form>        
+                <p:dialog header="Datos de la escala" widgetVar="dialogoEditarEscala" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
+                    <h:form id="frmEditarEscala">
+                        <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
                         <p:outputPanel id="panelEditarEscala" >
                             <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" rendered="#{mbvEscala.mensage}"/>
                             <h:panelGrid columns="3">
@@ -81,11 +82,11 @@
                                 <p:inputText id="txtMinaprob" value="#{mbvEscala.escala.notaminimaaprob}"/>
                                 <p:message for="txtMinaprob"/>
                                 <h:panelGroup></h:panelGroup>
-                                <p:commandButton value="editar Escala" ajax="true" actionListener="#{mbvEscala.actualizar}" update=":frmListaEscala" onclick="#{mbvEscala.setMensage(false)}" />
+                                <p:commandButton value="editar Escala" ajax="true" actionListener="#{mbvEscala.actualizar}" update=":frmListaEscala :frmEditarEscala" onclick="#{mbvEscala.setMensage(false)}" />
                             </h:panelGrid>
                         </p:outputPanel>
-                    </p:dialog>
-                </h:form>
+                    </h:form>
+                </p:dialog>
             </ui:define>
         </ui:composition>
 

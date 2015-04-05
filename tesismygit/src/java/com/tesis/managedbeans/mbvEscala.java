@@ -33,7 +33,13 @@ public class mbvEscala implements Serializable {
 
     private Escala escala;
     private List<Escala> escalas;
+    boolean mensage=false;
 
+    @EJB
+    private EscalaFacade escalaEjb;
+    public mbvEscala() {
+    }
+    
     public boolean isMensage() {
         return mensage;
     }
@@ -41,12 +47,7 @@ public class mbvEscala implements Serializable {
     public void setMensage(boolean mensage) {
         this.mensage = mensage;
     }
-    boolean mensage=false;
-
-    @EJB
-    private EscalaFacade escalaEjb;
-    public mbvEscala() {
-    }
+    
     public Escala getEscala() {
         return escala;
     }
@@ -125,10 +126,24 @@ public class mbvEscala implements Serializable {
 
     public void actualizar(){
         try{
-            System.out.print("ok"+escala.getDescripcion());
+            if(escala.getMax()<=escala.getMin()){
+                this.mensage=true;
+                FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Nota maxima debe ser mayor a nota minima"));
+                //this.mensage=false;
+                return;
+            }
+            if(escala.getNotaminimaaprob()<=escala.getMin() || escala.getNotaminimaaprob()>=escala.getMax()){
+                this.mensage=true;
+                FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Nota minima aprobacion debe ser superior a la nota minima e inferior a la maxima"));
+                //this.mensage=false;
+                return;
+            }
             escalaEjb.edit(escala);
             FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Escala creada Satisfactoriamente", ""));
+            RequestContext.getCurrentInstance().execute("PF('dialogoEditarEscala').hide()");
             inicioPagina();
         }catch(Exception e){
             System.out.print("fail"+e.getMessage());
