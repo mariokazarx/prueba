@@ -48,16 +48,29 @@
                 <div id="center_content">
                     <h:form>
                         <p:menubar>  
-                            <p:submenu label="Configuracion" icon="ui-icon-gear"> 
+                            <p:submenu label="Configuracion Año Escolar" icon="ui-icon-gear"> 
                                 <p:submenu label="Escalas">
                                     <p:menuitem value="Listar Escalas" url="../Usuarios/Aplicaciones.xhtml" />  
                                     <p:separator />  
                                     <p:menuitem value="Nueva Esacala" outcome="/configuracion/escalas.xhtml"/>
                                 </p:submenu>
-                                <p:menuitem value="Criterios Evaluacion" outcome="/configuracion/criterioevaluacion.xhtml" />  
+                                <p:menuitem value="Criterios Evaluacion" outcome="/configuracion/criterioevaluacion.xhtml" />
+                                <p:menuitem value="Configuracion" outcome="/configuracion/configuracion.xhtml" />
+                                <p:menuitem value="Areas" outcome="/configuracion/areas.xhtml" />
+                                <p:menuitem value="Asignaturas" outcome="/configuracion/asignaturas.xhtml" />
+                                <p:menuitem value="Ciclos" outcome="/configuracion/ciclos.xhtml" />
                                 <p:separator />  
                                 <p:menuitem value="Seguridad Perfil" url="../Usuarios/Seguridad.xhtml"/>  
                             </p:submenu>  
+                             <p:submenu label="Año Escolar" icon="ui-icon-gear"> 
+                                <p:menuitem value="Criterios Evaluacion" outcome="/configuracion/criterioevaluacion.xhtml" />
+                                <p:menuitem value="Configuracion" outcome="/configuracion/configuracion.xhtml" />
+                                <p:menuitem value="Areas" outcome="/configuracion/areas.xhtml" />
+                                <p:menuitem value="Asignaturas" outcome="/configuracion/asignaturas.xhtml" />
+                                <p:menuitem value="Ciclos" outcome="/configuracion/ciclos.xhtml" />
+                                <p:separator />  
+                                <p:menuitem value="Seguridad Perfil" url="../Usuarios/Seguridad.xhtml"/>  
+                            </p:submenu>
                             <p:menuitem value="Cerrar Sesion"/>  
                         </p:menubar>
                     </h:form>

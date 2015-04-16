@@ -4,7 +4,7 @@
  */
 package com.tesis.beans;
 
-import com.tesis.entity.Asignaturacurso;
+import com.tesis.entity.Asignaturaciclo;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -14,7 +14,7 @@ import javax.persistence.PersistenceContext;
  * @author Mario Jurado
  */
 @Stateless
-public class AsignaturacursoFacade extends AbstractFacade<Asignaturacurso> {
+public class AsignaturacicloFacade extends AbstractFacade<Asignaturaciclo> {
     @PersistenceContext(unitName = "tesismygitPU")
     private EntityManager em;
 
@@ -23,8 +23,8 @@ public class AsignaturacursoFacade extends AbstractFacade<Asignaturacurso> {
         return em;
     }
 
-    public AsignaturacursoFacade() {
-        super(Asignaturacurso.class);
+    public AsignaturacicloFacade() {
+        super(Asignaturaciclo.class);
     }
     
 }

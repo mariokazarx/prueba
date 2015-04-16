@@ -1,25 +1,73 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://java.sun.com/jsf/facelets">
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
 
     <body>
-
         <ui:composition template="./../plantilla.xhtml">
-
-            <ui:define name="left">
-                left
-            </ui:define>
-
-            <ui:define name="top">
-                top
-            </ui:define>
-
             <ui:define name="content">
-                content
+                <h:form id="frmListaCiclos">
+                    <p:commandButton value="Nuevo Ciclo" icon="ui-icon-document" actionListener="#{mbvCiclo.newCiclo}">
+                        <p:ajax event="dialogReturn" listener="#{mbvCiclo.closeDialog}" update="frmListaCiclos" />
+                    </p:commandButton>
+                    <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
+                    <p:dataTable id="tablaListaCiclos" var="item" value="#{mbvCiclo.ciclos}" paginator="true" rows="10" selection="#{mbvCiclo.ciclo}" selectionMode="single" lazy="true" rowKey="#{item.cicloId}" >
+                        <p:ajax event="rowSelect" update=":frmListaCiclos:panelDetalleCiclo" oncomplete="PF('dialogoDetalleCiclo').show()"/>
+                        <f:facet name="header">
+                            Lista de Ciclos
+                        </f:facet>
+                        <p:column headerText="Numero" filterBy="numero">
+                            <h:outputText value="#{item.numero}"/>
+                        </p:column>
+                        <p:column headerText="Descripcion" filterBy="descripcion">
+                            <h:outputText value="#{item.descripcion}"/>
+                        </p:column>
+                        <p:column headerText="Configuracion" filterBy="max">
+                            <h:outputText value="#{item.configuracion.nombre}"/>
+                        </p:column>
+                        <p:column>
+                            <p:commandButton value="Editar" icon="ui-icon-pencil" actionListener="#{mbvCiclo.cargarCiclo(item.cicloId)}"/>
+                        </p:column>
+                    </p:dataTable>
+                    <p:dialog header="Detalle Ciclo" widgetVar="dialogoDetalleCiclo" modal="true"  appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
+                        <p:outputPanel id="panelDetalleCiclo">
+                            <p:panelGrid columns="2">
+                                <p:outputLabel value="Id"/>
+                                <h:outputText value="#{mbvCiclo.ciclo.cicloId}"/>
+                                <p:outputLabel value="Nombre"/>
+                                <h:outputText value="#{mbvCiclo.ciclo.numero}"/>
+                                <p:outputLabel value="Descripcion"/>
+                                <h:outputText value="#{mbvCiclo.ciclo.descripcion}"/>
+                                <p:outputLabel value="Configuracion"/>
+                                <h:outputText value="#{mbvCiclo.ciclo.configuracion.nombre}"/>
+                            </p:panelGrid>
+                        </p:outputPanel>
+                    </p:dialog>                   
+                </h:form>
+                <p:dialog header="Datos Ciclo" widgetVar="dialogoEditarCiclo" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
+                    <h:form id="frmEditarCiclo">
+                        <p:outputPanel id="panelEditarCiclo" >
+                             <h:panelGrid columns="3">
+                                <p:outputLabel for="txtNumero" value="Numero: " />
+                                <p:inputText id="txtNumero" value="#{mbvCiclo.ciclo.numero}" />
+                                <p:message for="txtNumero"/>
+                                <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
+                                <p:inputTextarea id="txtDescripcion" value="#{mbvCiclo.ciclo.descripcion}" autoResize="false" rows="5" cols="22" />
+                                <p:message for="txtDescripcion"/>
+                                <p:outputLabel for="stlConfiguracion" value="Configuracion: " />
+                                <p:selectOneMenu id="stlConfiguracion" value="#{mbvCiclo.confuguracionselected.configuracionId}">
+                                    <f:selectItems value="#{mbvCiclo.configuraciones}" var="configuracion" itemLabel="#{configuracion.nombre}" itemValue="#{configuracion.configuracionId}"/>
+                                </p:selectOneMenu>
+                                <p:message for="stlConfiguracion"/><h:panelGroup></h:panelGroup>
+                                <p:commandButton value="Editar" actionListener="#{mbvCiclo.actualizar}" ajax="true" update=":frmListaCiclos" />
+                            </h:panelGrid> 
+                        </p:outputPanel>
+                    </h:form>
+                </p:dialog>
             </ui:define>
-
         </ui:composition>
-
     </body>
-</html>
+</html> 
