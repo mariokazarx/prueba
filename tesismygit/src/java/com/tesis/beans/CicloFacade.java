@@ -5,9 +5,12 @@
 package com.tesis.beans;
 
 import com.tesis.entity.Ciclo;
+import com.tesis.entity.Configuracion;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -25,6 +28,20 @@ public class CicloFacade extends AbstractFacade<Ciclo> {
 
     public CicloFacade() {
         super(Ciclo.class);
+    }
+    public List<Ciclo> getByConfiguracion(Configuracion configuracion){
+        try {
+            Query cq = em.createNamedQuery("Ciclo.findByConfiguracion");
+            cq.setParameter("configuracion",configuracion);
+            if(cq.getResultList()==null){
+                return null;
+            }else{
+                return cq.getResultList();
+            }
+        } catch (Exception e) {
+            return null;
+        }
+    
     }
     
 }
