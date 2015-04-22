@@ -36,6 +36,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Ciclo.findAll", query = "SELECT c FROM Ciclo c"),
     @NamedQuery(name = "Ciclo.findByCicloId", query = "SELECT c FROM Ciclo c WHERE c.cicloId = :cicloId"),
     @NamedQuery(name = "Ciclo.findByNumero", query = "SELECT c FROM Ciclo c WHERE c.numero = :numero"),
+    @NamedQuery(name = "Ciclo.findByConfiguracion", query = "SELECT c FROM Ciclo c WHERE c.configuracion = :configuracion"),
     @NamedQuery(name = "Ciclo.findByDescripcion", query = "SELECT c FROM Ciclo c WHERE c.descripcion = :descripcion")})
 public class Ciclo implements Serializable {
     private static final long serialVersionUID = 1L;
