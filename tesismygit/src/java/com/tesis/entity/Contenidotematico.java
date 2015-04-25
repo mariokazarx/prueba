@@ -23,6 +23,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -37,6 +38,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Contenidotematico.findAll", query = "SELECT c FROM Contenidotematico c"),
     @NamedQuery(name = "Contenidotematico.findByContenidotematicoId", query = "SELECT c FROM Contenidotematico c WHERE c.contenidotematicoId = :contenidotematicoId"),
+    @NamedQuery(name = "Contenidotematico.findByAsignaturacicloId", query = "SELECT c FROM Contenidotematico c WHERE c.asignaturacicloId = :asignaturacicloId"),
     @NamedQuery(name = "Contenidotematico.findByFechacierre", query = "SELECT c FROM Contenidotematico c WHERE c.fechacierre = :fechacierre"),
     @NamedQuery(name = "Contenidotematico.findByDescripcion", query = "SELECT c FROM Contenidotematico c WHERE c.descripcion = :descripcion")})
 public class Contenidotematico implements Serializable {
@@ -46,6 +48,10 @@ public class Contenidotematico implements Serializable {
     @Basic(optional = false)
     @Column(name = "contenidotematico_id", nullable = false)
     private Integer contenidotematicoId;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "asignaturaciclo_id", nullable = false)
+    private int asignaturacicloId;
     @Column(name = "fechacierre")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechacierre;
@@ -66,9 +72,6 @@ public class Contenidotematico implements Serializable {
     @JoinColumn(name = "curso_id", referencedColumnName = "curso_id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Curso cursoId;
-    @JoinColumn(name = "asignaturaciclo_id", referencedColumnName = "asignaturaciclo_id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Asignaturaciclo asignaturacicloId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "contenidotematicoId", fetch = FetchType.LAZY)
     private List<Logro> logroList;
 
@@ -79,12 +82,25 @@ public class Contenidotematico implements Serializable {
         this.contenidotematicoId = contenidotematicoId;
     }
 
+    public Contenidotematico(Integer contenidotematicoId, int asignaturacicloId) {
+        this.contenidotematicoId = contenidotematicoId;
+        this.asignaturacicloId = asignaturacicloId;
+    }
+
     public Integer getContenidotematicoId() {
         return contenidotematicoId;
     }
 
     public void setContenidotematicoId(Integer contenidotematicoId) {
         this.contenidotematicoId = contenidotematicoId;
+    }
+
+    public int getAsignaturacicloId() {
+        return asignaturacicloId;
+    }
+
+    public void setAsignaturacicloId(int asignaturacicloId) {
+        this.asignaturacicloId = asignaturacicloId;
     }
 
     public Date getFechacierre() {
@@ -142,14 +158,6 @@ public class Contenidotematico implements Serializable {
 
     public void setCursoId(Curso cursoId) {
         this.cursoId = cursoId;
-    }
-
-    public Asignaturaciclo getAsignaturacicloId() {
-        return asignaturacicloId;
-    }
-
-    public void setAsignaturacicloId(Asignaturaciclo asignaturacicloId) {
-        this.asignaturacicloId = asignaturacicloId;
     }
 
     @XmlTransient

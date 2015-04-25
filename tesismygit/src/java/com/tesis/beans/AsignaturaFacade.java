@@ -6,6 +6,7 @@ package com.tesis.beans;
 
 import com.tesis.entity.Asignatura;
 import com.tesis.entity.Ciclo;
+import com.tesis.entity.Configuracion;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -31,7 +32,15 @@ public class AsignaturaFacade extends AbstractFacade<Asignatura> {
     }
     public List<Asignatura> findByCiclo(Ciclo ciclo) {
         Query cq = em.createNamedQuery("Asignatura.findByCiclo");
-        cq.setParameter("ciclo",ciclo.getCicloId());
+        cq.setParameter("ciclo",ciclo);
+        return cq.getResultList();
+        //System.out.println("aa"+ciclo);
+        //return null;
+    }
+    public List<Asignatura> findByConfiguracion(Configuracion conf,Ciclo ciclo) {
+        Query cq = em.createNamedQuery("Asignatura.findByConf");
+        cq.setParameter("ciclo",ciclo);
+        cq.setParameter("configuracion",conf);
         return cq.getResultList();
         //System.out.println("aa"+ciclo);
         //return null;

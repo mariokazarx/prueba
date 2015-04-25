@@ -5,9 +5,7 @@
 package com.tesis.entity;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -18,10 +16,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -32,6 +28,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Asignaturaciclo.findAll", query = "SELECT a FROM Asignaturaciclo a"),
+    @NamedQuery(name = "Asignaturaciclo.removeByAsignatura", query = "DELETE FROM Asignaturaciclo a WHERE a.asignaturaId= :asignatura"),
     @NamedQuery(name = "Asignaturaciclo.findByAsignaturacicloId", query = "SELECT a FROM Asignaturaciclo a WHERE a.asignaturacicloId = :asignaturacicloId")})
 public class Asignaturaciclo implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -40,18 +37,12 @@ public class Asignaturaciclo implements Serializable {
     @Basic(optional = false)
     @Column(name = "asignaturaciclo_id", nullable = false)
     private Integer asignaturacicloId;
-    @JoinColumn(name = "ciclo_id", referencedColumnName = "curso_id", nullable = false)
+    @JoinColumn(name = "ciclo_id", referencedColumnName = "ciclo_id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Curso cicloId;
+    private Ciclo cicloId;
     @JoinColumn(name = "asignatura_id", referencedColumnName = "asignatura_id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Asignatura asignaturaId;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "asignaturacicloId", fetch = FetchType.LAZY)
-    private List<Notafinal> notafinalList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "asignaturacicloId", fetch = FetchType.LAZY)
-    private List<Contenidotematico> contenidotematicoList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "asignaturacicloId", fetch = FetchType.LAZY)
-    private List<Notafinalrecuperacion> notafinalrecuperacionList;
 
     public Asignaturaciclo() {
     }
@@ -68,11 +59,11 @@ public class Asignaturaciclo implements Serializable {
         this.asignaturacicloId = asignaturacicloId;
     }
 
-    public Curso getCicloId() {
+    public Ciclo getCicloId() {
         return cicloId;
     }
 
-    public void setCicloId(Curso cicloId) {
+    public void setCicloId(Ciclo cicloId) {
         this.cicloId = cicloId;
     }
 
@@ -82,33 +73,6 @@ public class Asignaturaciclo implements Serializable {
 
     public void setAsignaturaId(Asignatura asignaturaId) {
         this.asignaturaId = asignaturaId;
-    }
-
-    @XmlTransient
-    public List<Notafinal> getNotafinalList() {
-        return notafinalList;
-    }
-
-    public void setNotafinalList(List<Notafinal> notafinalList) {
-        this.notafinalList = notafinalList;
-    }
-
-    @XmlTransient
-    public List<Contenidotematico> getContenidotematicoList() {
-        return contenidotematicoList;
-    }
-
-    public void setContenidotematicoList(List<Contenidotematico> contenidotematicoList) {
-        this.contenidotematicoList = contenidotematicoList;
-    }
-
-    @XmlTransient
-    public List<Notafinalrecuperacion> getNotafinalrecuperacionList() {
-        return notafinalrecuperacionList;
-    }
-
-    public void setNotafinalrecuperacionList(List<Notafinalrecuperacion> notafinalrecuperacionList) {
-        this.notafinalrecuperacionList = notafinalrecuperacionList;
     }
 
     @Override

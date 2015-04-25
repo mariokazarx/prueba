@@ -52,6 +52,8 @@ public class Ciclo implements Serializable {
     @Size(max = 200)
     @Column(name = "descripcion", length = 200)
     private String descripcion;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cicloId", fetch = FetchType.LAZY)
+    private List<Asignaturaciclo> asignaturacicloList;
     @JoinColumn(name = "configuracion", referencedColumnName = "configuracion_id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Configuracion configuracion;
@@ -92,6 +94,15 @@ public class Ciclo implements Serializable {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    @XmlTransient
+    public List<Asignaturaciclo> getAsignaturacicloList() {
+        return asignaturacicloList;
+    }
+
+    public void setAsignaturacicloList(List<Asignaturaciclo> asignaturacicloList) {
+        this.asignaturacicloList = asignaturacicloList;
     }
 
     public Configuracion getConfiguracion() {

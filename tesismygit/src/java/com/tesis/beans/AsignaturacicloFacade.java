@@ -4,10 +4,12 @@
  */
 package com.tesis.beans;
 
+import com.tesis.entity.Asignatura;
 import com.tesis.entity.Asignaturaciclo;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -26,5 +28,14 @@ public class AsignaturacicloFacade extends AbstractFacade<Asignaturaciclo> {
     public AsignaturacicloFacade() {
         super(Asignaturaciclo.class);
     }
-    
+    public int removeByAsignatura(Asignatura asig) {
+        //System.out.println("aaa"+asig);
+        Query cq = em.createNamedQuery("Asignaturaciclo.removeByAsignatura");
+        cq.setParameter("asignatura",asig);
+        return cq.executeUpdate();
+
+        
+        //System.out.println("aa"+ciclo);
+        //return 1;
+    }
 }

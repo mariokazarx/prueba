@@ -53,8 +53,6 @@ public class Curso implements Serializable {
     @NotNull
     @Column(name = "numeroestudiantes", nullable = false)
     private int numeroestudiantes;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cicloId", fetch = FetchType.LAZY)
-    private List<Asignaturaciclo> asignaturacicloList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "cursoId", fetch = FetchType.LAZY)
     private List<Contenidotematico> contenidotematicoList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "cursoId", fetch = FetchType.LAZY)
@@ -101,15 +99,6 @@ public class Curso implements Serializable {
 
     public void setNumeroestudiantes(int numeroestudiantes) {
         this.numeroestudiantes = numeroestudiantes;
-    }
-
-    @XmlTransient
-    public List<Asignaturaciclo> getAsignaturacicloList() {
-        return asignaturacicloList;
-    }
-
-    public void setAsignaturacicloList(List<Asignaturaciclo> asignaturacicloList) {
-        this.asignaturacicloList = asignaturacicloList;
     }
 
     @XmlTransient
