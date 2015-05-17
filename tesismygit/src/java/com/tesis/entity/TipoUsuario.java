@@ -53,7 +53,7 @@ public class TipoUsuario implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tipoUsuarioId", fetch = FetchType.LAZY)
     private List<Profesor> profesorList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tipoUsuarioId", fetch = FetchType.LAZY)
-    private List<Root> rootList;
+    private List<Usuario> usuarioList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tipoUsuarioId", fetch = FetchType.LAZY)
     private List<Estudiante> estudianteList;
 
@@ -103,12 +103,12 @@ public class TipoUsuario implements Serializable {
     }
 
     @XmlTransient
-    public List<Root> getRootList() {
-        return rootList;
+    public List<Usuario> getUsuarioList() {
+        return usuarioList;
     }
 
-    public void setRootList(List<Root> rootList) {
-        this.rootList = rootList;
+    public void setUsuarioList(List<Usuario> usuarioList) {
+        this.usuarioList = usuarioList;
     }
 
     @XmlTransient

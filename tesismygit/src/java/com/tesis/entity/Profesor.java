@@ -20,6 +20,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -30,13 +31,19 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author Mario Jurado
  */
 @Entity
-@Table(name = "profesor", catalog = "prueba", schema = "public")
+@Table(name = "profesor", catalog = "prueba", schema = "public", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"cedula"})})
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Profesor.findAll", query = "SELECT p FROM Profesor p"),
     @NamedQuery(name = "Profesor.findByProfesorId", query = "SELECT p FROM Profesor p WHERE p.profesorId = :profesorId"),
     @NamedQuery(name = "Profesor.findByCedula", query = "SELECT p FROM Profesor p WHERE p.cedula = :cedula"),
     @NamedQuery(name = "Profesor.findByTelefono", query = "SELECT p FROM Profesor p WHERE p.telefono = :telefono"),
+    @NamedQuery(name = "Profesor.findByCorreo", query = "SELECT p FROM Profesor p WHERE p.correo = :correo"),
+    @NamedQuery(name = "Profesor.findByContrase\u00f1a", query = "SELECT p FROM Profesor p WHERE p.contrase\u00f1a = :contrase\u00f1a"),
+    @NamedQuery(name = "Profesor.findBySexo", query = "SELECT p FROM Profesor p WHERE p.sexo = :sexo"),
+    @NamedQuery(name = "Profesor.findByTituloProfesional", query = "SELECT p FROM Profesor p WHERE p.tituloProfesional = :tituloProfesional"),
+    @NamedQuery(name = "Profesor.findByFoto", query = "SELECT p FROM Profesor p WHERE p.foto = :foto"),
     @NamedQuery(name = "Profesor.findByNombre", query = "SELECT p FROM Profesor p WHERE p.nombre = :nombre"),
     @NamedQuery(name = "Profesor.findByApellido", query = "SELECT p FROM Profesor p WHERE p.apellido = :apellido"),
     @NamedQuery(name = "Profesor.findByDireccion", query = "SELECT p FROM Profesor p WHERE p.direccion = :direccion")})
@@ -55,6 +62,27 @@ public class Profesor implements Serializable {
     @Size(max = 15)
     @Column(name = "telefono", length = 15)
     private String telefono;
+    @Size(max = 100)
+    @Column(name = "correo", length = 100)
+    private String correo;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 2147483647)
+    @Column(name = "contrase\u00f1a", nullable = false, length = 2147483647)
+    private String contraseña;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 2)
+    @Column(name = "sexo", nullable = false, length = 2)
+    private String sexo;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 2147483647)
+    @Column(name = "titulo_profesional", nullable = false, length = 2147483647)
+    private String tituloProfesional;
+    @Size(max = 2147483647)
+    @Column(name = "foto", length = 2147483647)
+    private String foto;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 200)
@@ -90,9 +118,12 @@ public class Profesor implements Serializable {
         this.profesorId = profesorId;
     }
 
-    public Profesor(Integer profesorId, String cedula, String nombre, String apellido, String direccion) {
+    public Profesor(Integer profesorId, String cedula, String contraseña, String sexo, String tituloProfesional, String nombre, String apellido, String direccion) {
         this.profesorId = profesorId;
         this.cedula = cedula;
+        this.contraseña = contraseña;
+        this.sexo = sexo;
+        this.tituloProfesional = tituloProfesional;
         this.nombre = nombre;
         this.apellido = apellido;
         this.direccion = direccion;
@@ -120,6 +151,46 @@ public class Profesor implements Serializable {
 
     public void setTelefono(String telefono) {
         this.telefono = telefono;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
+    public String getContraseña() {
+        return contraseña;
+    }
+
+    public void setContraseña(String contraseña) {
+        this.contraseña = contraseña;
+    }
+
+    public String getSexo() {
+        return sexo;
+    }
+
+    public void setSexo(String sexo) {
+        this.sexo = sexo;
+    }
+
+    public String getTituloProfesional() {
+        return tituloProfesional;
+    }
+
+    public void setTituloProfesional(String tituloProfesional) {
+        this.tituloProfesional = tituloProfesional;
+    }
+
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
     }
 
     public String getNombre() {

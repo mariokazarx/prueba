@@ -35,7 +35,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Notafinal.findAll", query = "SELECT n FROM Notafinal n"),
     @NamedQuery(name = "Notafinal.findByNotafinalId", query = "SELECT n FROM Notafinal n WHERE n.notafinalId = :notafinalId"),
-    @NamedQuery(name = "Notafinal.findByAsignaturacicloId", query = "SELECT n FROM Notafinal n WHERE n.asignaturacicloId = :asignaturacicloId"),
     @NamedQuery(name = "Notafinal.findByRecuperacion", query = "SELECT n FROM Notafinal n WHERE n.recuperacion = :recuperacion"),
     @NamedQuery(name = "Notafinal.findByValor", query = "SELECT n FROM Notafinal n WHERE n.valor = :valor"),
     @NamedQuery(name = "Notafinal.findByFechamodificacion", query = "SELECT n FROM Notafinal n WHERE n.fechamodificacion = :fechamodificacion"),
@@ -47,10 +46,6 @@ public class Notafinal implements Serializable {
     @Basic(optional = false)
     @Column(name = "notafinal_id", nullable = false)
     private Integer notafinalId;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "asignaturaciclo_id", nullable = false)
-    private int asignaturacicloId;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 2)
@@ -73,6 +68,9 @@ public class Notafinal implements Serializable {
     @JoinColumn(name = "estudiante_id", referencedColumnName = "estudiante_id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Estudiante estudianteId;
+    @JoinColumn(name = "asignaturaciclo_id", referencedColumnName = "asignaturaciclo_id", nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Asignaturaciclo asignaturacicloId;
 
     public Notafinal() {
     }
@@ -81,9 +79,8 @@ public class Notafinal implements Serializable {
         this.notafinalId = notafinalId;
     }
 
-    public Notafinal(Integer notafinalId, int asignaturacicloId, String recuperacion, BigDecimal valor) {
+    public Notafinal(Integer notafinalId, String recuperacion, BigDecimal valor) {
         this.notafinalId = notafinalId;
-        this.asignaturacicloId = asignaturacicloId;
         this.recuperacion = recuperacion;
         this.valor = valor;
     }
@@ -94,14 +91,6 @@ public class Notafinal implements Serializable {
 
     public void setNotafinalId(Integer notafinalId) {
         this.notafinalId = notafinalId;
-    }
-
-    public int getAsignaturacicloId() {
-        return asignaturacicloId;
-    }
-
-    public void setAsignaturacicloId(int asignaturacicloId) {
-        this.asignaturacicloId = asignaturacicloId;
     }
 
     public String getRecuperacion() {
@@ -150,6 +139,14 @@ public class Notafinal implements Serializable {
 
     public void setEstudianteId(Estudiante estudianteId) {
         this.estudianteId = estudianteId;
+    }
+
+    public Asignaturaciclo getAsignaturacicloId() {
+        return asignaturacicloId;
+    }
+
+    public void setAsignaturacicloId(Asignaturaciclo asignaturacicloId) {
+        this.asignaturacicloId = asignaturacicloId;
     }
 
     @Override

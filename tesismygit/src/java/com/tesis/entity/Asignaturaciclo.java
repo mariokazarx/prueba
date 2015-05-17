@@ -5,7 +5,9 @@
 package com.tesis.entity;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,8 +18,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -43,6 +47,12 @@ public class Asignaturaciclo implements Serializable {
     @JoinColumn(name = "asignatura_id", referencedColumnName = "asignatura_id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Asignatura asignaturaId;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "asignaturacicloId", fetch = FetchType.LAZY)
+    private List<Notafinal> notafinalList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "asignaturacicloId", fetch = FetchType.LAZY)
+    private List<Contenidotematico> contenidotematicoList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "asignaturacicloId", fetch = FetchType.LAZY)
+    private List<Notafinalrecuperacion> notafinalrecuperacionList;
 
     public Asignaturaciclo() {
     }
@@ -73,6 +83,33 @@ public class Asignaturaciclo implements Serializable {
 
     public void setAsignaturaId(Asignatura asignaturaId) {
         this.asignaturaId = asignaturaId;
+    }
+
+    @XmlTransient
+    public List<Notafinal> getNotafinalList() {
+        return notafinalList;
+    }
+
+    public void setNotafinalList(List<Notafinal> notafinalList) {
+        this.notafinalList = notafinalList;
+    }
+
+    @XmlTransient
+    public List<Contenidotematico> getContenidotematicoList() {
+        return contenidotematicoList;
+    }
+
+    public void setContenidotematicoList(List<Contenidotematico> contenidotematicoList) {
+        this.contenidotematicoList = contenidotematicoList;
+    }
+
+    @XmlTransient
+    public List<Notafinalrecuperacion> getNotafinalrecuperacionList() {
+        return notafinalrecuperacionList;
+    }
+
+    public void setNotafinalrecuperacionList(List<Notafinalrecuperacion> notafinalrecuperacionList) {
+        this.notafinalrecuperacionList = notafinalrecuperacionList;
     }
 
     @Override

@@ -5,6 +5,8 @@
 package com.tesis.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -20,6 +22,9 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -30,16 +35,26 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author Mario Jurado
  */
 @Entity
-@Table(name = "estudiante", catalog = "prueba", schema = "public")
+@Table(name = "estudiante", catalog = "prueba", schema = "public", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"identificiacion"})})
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Estudiante.findAll", query = "SELECT e FROM Estudiante e"),
     @NamedQuery(name = "Estudiante.findByEstudianteId", query = "SELECT e FROM Estudiante e WHERE e.estudianteId = :estudianteId"),
     @NamedQuery(name = "Estudiante.findByNombre", query = "SELECT e FROM Estudiante e WHERE e.nombre = :nombre"),
     @NamedQuery(name = "Estudiante.findByIdentificiacion", query = "SELECT e FROM Estudiante e WHERE e.identificiacion = :identificiacion"),
+    @NamedQuery(name = "Estudiante.findByTipoIdentifcacion", query = "SELECT e FROM Estudiante e WHERE e.tipoIdentifcacion = :tipoIdentifcacion"),
+    @NamedQuery(name = "Estudiante.findByFechaNacimiento", query = "SELECT e FROM Estudiante e WHERE e.fechaNacimiento = :fechaNacimiento"),
     @NamedQuery(name = "Estudiante.findByTelefono", query = "SELECT e FROM Estudiante e WHERE e.telefono = :telefono"),
     @NamedQuery(name = "Estudiante.findByDireccion", query = "SELECT e FROM Estudiante e WHERE e.direccion = :direccion"),
     @NamedQuery(name = "Estudiante.findByApellido", query = "SELECT e FROM Estudiante e WHERE e.apellido = :apellido"),
+    @NamedQuery(name = "Estudiante.findBySexo", query = "SELECT e FROM Estudiante e WHERE e.sexo = :sexo"),
+    @NamedQuery(name = "Estudiante.findByZona", query = "SELECT e FROM Estudiante e WHERE e.zona = :zona"),
+    @NamedQuery(name = "Estudiante.findBySisben", query = "SELECT e FROM Estudiante e WHERE e.sisben = :sisben"),
+    @NamedQuery(name = "Estudiante.findByEstrato", query = "SELECT e FROM Estudiante e WHERE e.estrato = :estrato"),
+    @NamedQuery(name = "Estudiante.findByResguardo", query = "SELECT e FROM Estudiante e WHERE e.resguardo = :resguardo"),
+    @NamedQuery(name = "Estudiante.findByCabezaFamilia", query = "SELECT e FROM Estudiante e WHERE e.cabezaFamilia = :cabezaFamilia"),
+    @NamedQuery(name = "Estudiante.findByAcudiente", query = "SELECT e FROM Estudiante e WHERE e.acudiente = :acudiente"),
     @NamedQuery(name = "Estudiante.findByUltimoaprobado", query = "SELECT e FROM Estudiante e WHERE e.ultimoaprobado = :ultimoaprobado")})
 public class Estudiante implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -60,6 +75,16 @@ public class Estudiante implements Serializable {
     private String identificiacion;
     @Basic(optional = false)
     @NotNull
+    @Size(min = 1, max = 5)
+    @Column(name = "tipo_identifcacion", nullable = false, length = 5)
+    private String tipoIdentifcacion;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "fecha_nacimiento", nullable = false)
+    @Temporal(TemporalType.DATE)
+    private Date fechaNacimiento;
+    @Basic(optional = false)
+    @NotNull
     @Size(min = 1, max = 15)
     @Column(name = "telefono", nullable = false, length = 15)
     private String telefono;
@@ -75,6 +100,40 @@ public class Estudiante implements Serializable {
     private String apellido;
     @Basic(optional = false)
     @NotNull
+    @Size(min = 1, max = 2)
+    @Column(name = "sexo", nullable = false, length = 2)
+    private String sexo;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 7)
+    @Column(name = "zona", nullable = false, length = 7)
+    private String zona;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "sisben", nullable = false, precision = 2, scale = 2)
+    private BigDecimal sisben;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "estrato", nullable = false)
+    private int estrato;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 2)
+    @Column(name = "resguardo", nullable = false, length = 2)
+    private String resguardo;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 2)
+    @Column(name = "cabeza_familia", nullable = false, length = 2)
+    private String cabezaFamilia;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 100)
+    @Column(name = "acudiente", nullable = false, length = 100)
+    private String acudiente;
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "ultimoaprobado", nullable = false)
     private int ultimoaprobado;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "estudianteId", fetch = FetchType.LAZY)
@@ -84,6 +143,9 @@ public class Estudiante implements Serializable {
     @JoinColumn(name = "tipo_usuario_id", referencedColumnName = "tipo_usuario_id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private TipoUsuario tipoUsuarioId;
+    @JoinColumn(name = "estado_estudiante_id", referencedColumnName = "estado_estudiante_id", nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private EstadoEstudiante estadoEstudianteId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "estudianteId", fetch = FetchType.LAZY)
     private List<Logronota> logronotaList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "estudianteId", fetch = FetchType.LAZY)
@@ -100,13 +162,22 @@ public class Estudiante implements Serializable {
         this.estudianteId = estudianteId;
     }
 
-    public Estudiante(Integer estudianteId, String nombre, String identificiacion, String telefono, String direccion, String apellido, int ultimoaprobado) {
+    public Estudiante(Integer estudianteId, String nombre, String identificiacion, String tipoIdentifcacion, Date fechaNacimiento, String telefono, String direccion, String apellido, String sexo, String zona, BigDecimal sisben, int estrato, String resguardo, String cabezaFamilia, String acudiente, int ultimoaprobado) {
         this.estudianteId = estudianteId;
         this.nombre = nombre;
         this.identificiacion = identificiacion;
+        this.tipoIdentifcacion = tipoIdentifcacion;
+        this.fechaNacimiento = fechaNacimiento;
         this.telefono = telefono;
         this.direccion = direccion;
         this.apellido = apellido;
+        this.sexo = sexo;
+        this.zona = zona;
+        this.sisben = sisben;
+        this.estrato = estrato;
+        this.resguardo = resguardo;
+        this.cabezaFamilia = cabezaFamilia;
+        this.acudiente = acudiente;
         this.ultimoaprobado = ultimoaprobado;
     }
 
@@ -134,6 +205,22 @@ public class Estudiante implements Serializable {
         this.identificiacion = identificiacion;
     }
 
+    public String getTipoIdentifcacion() {
+        return tipoIdentifcacion;
+    }
+
+    public void setTipoIdentifcacion(String tipoIdentifcacion) {
+        this.tipoIdentifcacion = tipoIdentifcacion;
+    }
+
+    public Date getFechaNacimiento() {
+        return fechaNacimiento;
+    }
+
+    public void setFechaNacimiento(Date fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
+    }
+
     public String getTelefono() {
         return telefono;
     }
@@ -156,6 +243,62 @@ public class Estudiante implements Serializable {
 
     public void setApellido(String apellido) {
         this.apellido = apellido;
+    }
+
+    public String getSexo() {
+        return sexo;
+    }
+
+    public void setSexo(String sexo) {
+        this.sexo = sexo;
+    }
+
+    public String getZona() {
+        return zona;
+    }
+
+    public void setZona(String zona) {
+        this.zona = zona;
+    }
+
+    public BigDecimal getSisben() {
+        return sisben;
+    }
+
+    public void setSisben(BigDecimal sisben) {
+        this.sisben = sisben;
+    }
+
+    public int getEstrato() {
+        return estrato;
+    }
+
+    public void setEstrato(int estrato) {
+        this.estrato = estrato;
+    }
+
+    public String getResguardo() {
+        return resguardo;
+    }
+
+    public void setResguardo(String resguardo) {
+        this.resguardo = resguardo;
+    }
+
+    public String getCabezaFamilia() {
+        return cabezaFamilia;
+    }
+
+    public void setCabezaFamilia(String cabezaFamilia) {
+        this.cabezaFamilia = cabezaFamilia;
+    }
+
+    public String getAcudiente() {
+        return acudiente;
+    }
+
+    public void setAcudiente(String acudiente) {
+        this.acudiente = acudiente;
     }
 
     public int getUltimoaprobado() {
@@ -190,6 +333,14 @@ public class Estudiante implements Serializable {
 
     public void setTipoUsuarioId(TipoUsuario tipoUsuarioId) {
         this.tipoUsuarioId = tipoUsuarioId;
+    }
+
+    public EstadoEstudiante getEstadoEstudianteId() {
+        return estadoEstudianteId;
+    }
+
+    public void setEstadoEstudianteId(EstadoEstudiante estadoEstudianteId) {
+        this.estadoEstudianteId = estadoEstudianteId;
     }
 
     @XmlTransient

@@ -42,6 +42,6 @@ public class CicloFacade extends AbstractFacade<Ciclo> {
             return null;
         }
     
-    }
+}
     
 }

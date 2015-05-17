@@ -35,7 +35,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Notafinalrecuperacion.findAll", query = "SELECT n FROM Notafinalrecuperacion n"),
     @NamedQuery(name = "Notafinalrecuperacion.findByNotafinalrecuperacionId", query = "SELECT n FROM Notafinalrecuperacion n WHERE n.notafinalrecuperacionId = :notafinalrecuperacionId"),
-    @NamedQuery(name = "Notafinalrecuperacion.findByAsignaturacicloId", query = "SELECT n FROM Notafinalrecuperacion n WHERE n.asignaturacicloId = :asignaturacicloId"),
     @NamedQuery(name = "Notafinalrecuperacion.findByValor", query = "SELECT n FROM Notafinalrecuperacion n WHERE n.valor = :valor"),
     @NamedQuery(name = "Notafinalrecuperacion.findByFechamodificacion", query = "SELECT n FROM Notafinalrecuperacion n WHERE n.fechamodificacion = :fechamodificacion"),
     @NamedQuery(name = "Notafinalrecuperacion.findByObservaciones", query = "SELECT n FROM Notafinalrecuperacion n WHERE n.observaciones = :observaciones")})
@@ -46,10 +45,6 @@ public class Notafinalrecuperacion implements Serializable {
     @Basic(optional = false)
     @Column(name = "notafinalrecuperacion_id", nullable = false)
     private Integer notafinalrecuperacionId;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "asignaturaciclo_id", nullable = false)
-    private int asignaturacicloId;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Basic(optional = false)
     @NotNull
@@ -67,6 +62,9 @@ public class Notafinalrecuperacion implements Serializable {
     @JoinColumn(name = "estudiante_id", referencedColumnName = "estudiante_id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Estudiante estudianteId;
+    @JoinColumn(name = "asignaturaciclo_id", referencedColumnName = "asignaturaciclo_id", nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Asignaturaciclo asignaturacicloId;
 
     public Notafinalrecuperacion() {
     }
@@ -75,9 +73,8 @@ public class Notafinalrecuperacion implements Serializable {
         this.notafinalrecuperacionId = notafinalrecuperacionId;
     }
 
-    public Notafinalrecuperacion(Integer notafinalrecuperacionId, int asignaturacicloId, BigDecimal valor) {
+    public Notafinalrecuperacion(Integer notafinalrecuperacionId, BigDecimal valor) {
         this.notafinalrecuperacionId = notafinalrecuperacionId;
-        this.asignaturacicloId = asignaturacicloId;
         this.valor = valor;
     }
 
@@ -87,14 +84,6 @@ public class Notafinalrecuperacion implements Serializable {
 
     public void setNotafinalrecuperacionId(Integer notafinalrecuperacionId) {
         this.notafinalrecuperacionId = notafinalrecuperacionId;
-    }
-
-    public int getAsignaturacicloId() {
-        return asignaturacicloId;
-    }
-
-    public void setAsignaturacicloId(int asignaturacicloId) {
-        this.asignaturacicloId = asignaturacicloId;
     }
 
     public BigDecimal getValor() {
@@ -135,6 +124,14 @@ public class Notafinalrecuperacion implements Serializable {
 
     public void setEstudianteId(Estudiante estudianteId) {
         this.estudianteId = estudianteId;
+    }
+
+    public Asignaturaciclo getAsignaturacicloId() {
+        return asignaturacicloId;
+    }
+
+    public void setAsignaturacicloId(Asignaturaciclo asignaturacicloId) {
+        this.asignaturacicloId = asignaturacicloId;
     }
 
     @Override
