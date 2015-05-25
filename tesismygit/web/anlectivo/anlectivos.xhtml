@@ -10,17 +10,17 @@
         <ui:composition template="./../plantilla.xhtml">
             <ui:define name="content">
                 <h:form id="frmanlectios">
-                    <p:commandButton value="Nuevo año lectivo" icon="ui-icon-document" actionListener="#{mbvAlectivo.newAlectivo}">
+                    <p:commandButton value="Nuevo año lectivo" icon="ui-icon-document" actionListener="#{mbvAlectivo.newAnlectivo}">
                         <p:ajax event="dialogReturn" listener="#{mbvAlectivo.closeDialog}" update="frmanlectios" />
                     </p:commandButton>
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
-                    <p:dataTable id="tablaListaAlectivos" var="item" value="#{mbvAlectivo.alectivos}" paginator="true" rows="10" selection="#{mbvAlectivo.alectivo}" selectionMode="single" lazy="true" rowKey="#{item.criterioevaluacionId}" >
+                    <p:dataTable id="tablaListaAlectivos" var="item" value="#{mbvAlectivo.anlectivos}" paginator="true" rows="10" selection="#{mbvAlectivo.anlectivo}" selectionMode="single" lazy="true" rowKey="#{item.anlectivoId}" >
                         <p:ajax event="rowSelect" update=":frmanlectios:panelDetalleAlectivo" oncomplete="PF('dialogoDetalleAlectivo').show()"/>
                         <f:facet name="header">
-                            Anos Lectivos
+                            Años Lectivos
                         </f:facet>
                         <p:column headerText="Año" filterBy="Año">
-                            <h:outputText value="#{item.nombre}"/>
+                            <h:outputText value="#{item.anio}"/>
                         </p:column>
                         <p:column headerText="Descripcion" filterBy="descripcion">
                             <h:outputText value="#{item.descripcion}"/>
@@ -29,23 +29,23 @@
                             <h:outputText value="#{item.configuracionId.nombre}"/>
                         </p:column>
                         <p:column headerText="Estado" filterBy="max">
-                            <h:outputText value="#{item.formacriterioevaluacionId.nombre}"/>
+                            <h:outputText value="#{item.estadoAniolectivoId.estado}"/>
                         </p:column>
                         <p:column>
-                            <p:commandButton value="Editar" icon="ui-icon-pencil" actionListener="#{mbvAlectivo.cargarAlectivo(item.criterioevaluacionId)}"/>
+                            <p:commandButton value="Editar" icon="ui-icon-pencil" actionListener="#{mbvAlectivo.cargarAnlectivo(item.anlectivoId)}"/>
                         </p:column>
                     </p:dataTable>
 
                     <p:dialog header="Detalle Año Lectivo" widgetVar="dialogoDetalleAlectivo" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
-                        <p:outputPanel id="panelDetalleEscala">
+                        <p:outputPanel id="panelDetalleAlectivo">
                             <p:panelGrid columns="2">
                                 <p:outputLabel value="Id"/>
-                                <h:outputText value="#{mbvAlectivo.criterioeval.criterioevaluacionId}"/>
+                                <h:outputText value="#{mbvAlectivo.anlectivo.anlectivoId}"/>
                                 <p:outputLabel value="Año"/>
-                                <h:outputText value="#{mbvAlectivo.criterioeval.nombre}"/>
+                                <h:outputText value="#{mbvAlectivo.anlectivo.anio}"/>
                                 <p:outputLabel value="Descripcion"/>
-                                <h:outputText value="#{mbvAlectivo.criterioeval.descripcion}"/>
-                                <p:outputLabel value="Criterio de aprobacion"/>
+                                <h:outputText value="#{mbvAlectivo.anlectivo.descripcion}"/>
+                                <p:outputLabel value="Configuracion"/>
                                 <h:outputText value="#{mbvcriterioevaluacion.criterioeval.formacriterioevaluacionId.nombre}"/>
                                 <p:outputLabel value="Minimo para aprobar"/>
                                 <h:outputText value="#{mbvcriterioevaluacion.criterioeval.minaprob}"/>
@@ -54,9 +54,9 @@
                     </p:dialog>                   
                 </h:form>
                 
-                <p:dialog header="Datos del usuario" widgetVar="dialogoEditarEscala" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
-                    <h:form id="frmEditarEscala">
-                        <p:outputPanel id="panelEditarEscala" >
+                <p:dialog header="Datos año lectivo" widgetVar="dialogoEditarAlectivo" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
+                    <h:form id="frmEditarAlectivo">
+                        <p:outputPanel id="panelEditarAlectivo" >
                              <h:panelGrid columns="3">
                                 <p:outputLabel for="txtNombre" value="Nombre: " />
                                 <p:inputText id="txtNombre" value="#{mbvcriterioevaluacion.criterioeval.nombre}" />
@@ -73,7 +73,7 @@
                                 <p:inputText id="txtMin" value="#{mbvcriterioevaluacion.criterioeval.minaprob}" />
                                 <p:message for="txtMin"/>
                                 <h:panelGroup></h:panelGroup>
-                                <p:commandButton value="Registrar Escala" actionListener="#{mbvcriterioevaluacion.actualizar}" ajax="true" update=":frmListaEscala" />
+                                <p:commandButton value="Registrar Escala" actionListener="#{mbvcriterioevaluacion.actualizar}" ajax="true" update=":frmEditarAlectivo" />
                             </h:panelGrid> 
                         </p:outputPanel>
                     </h:form>

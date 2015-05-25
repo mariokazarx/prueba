@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Nuevo Profesor</title>
+                <style type="text/css">
+            .ui-widget {
+                font-size: 90%;
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <h:form id="frmProfesor">
+            <h:panelGrid columns="3">
+                <p:outputLabel for="rdbTipo" value="Tipo de Identificacion: " />
+                <p:selectOneRadio id="rdbTipo" value="#{mbvEstudiante.estudiante.tipoIdentifcacion}" >
+                    <f:selectItem itemLabel="Cedula de ciudadania" itemValue="C.C" />
+                    <f:selectItem itemLabel="Tarjeta de Identidad" itemValue="T.I" />
+                </p:selectOneRadio>
+                <p:message for="rdbTipo"/>
+                <p:outputLabel for="txtIdentificacion" value="Numero Identificacion: " />
+                <p:inputText id="txtIdentificacion" value="#{mbvEstudiante.estudiante.identificiacion}" size="50" >
+                    <f:validator validatorId="validatorVacio"/>
+                </p:inputText>
+                <p:message for="txtIdentificacion"/>
+                <p:outputLabel for="txtNombre" value="Nombres: " />
+                <p:inputText id="txtNombre" value="#{mbvEstudiante.estudiante.nombre}" size="50" >
+                    <f:validator validatorId="validatorVacio"/>
+                </p:inputText>
+                <p:message for="txtNombre"/>
+                <p:outputLabel for="txtApellidos" value="Apellidos: " />
+                <p:inputText id="txtApellidos" value="#{mbvEstudiante.estudiante.apellido}" size="50">
+                    <f:validator validatorId="validatorVacio"/>
+                </p:inputText>
+                <p:message for="txtApellidos"/>
+                <p:outputLabel for="txtTelefono" value="Telefono: " />
+                <p:inputText id="txtTelefono" value="#{mbvEstudiante.estudiante.telefono}" size="50" >
+                    <f:validator validatorId="validatorVacio"/>
+                </p:inputText>
+                <p:message for="txtTelefono"/>
+                <p:outputLabel for="txtDireccion" value="Direccion: " />
+                <p:inputText id="txtDireccion" value="#{mbvEstudiante.estudiante.direccion}" size="50">
+                    <f:validator validatorId="validatorVacio"/>
+                </p:inputText>
+                <p:message for="txtCorreo"/>
+                <p:outputLabel for="txtTitulo" value="Titulo Profesional: " />
+                <p:inputText id="txtTitulo" value="#{mbvProfesor.profesor.tituloProfesional}" size="50">
+                    <f:validator validatorId="validatorVacio"/>
+                </p:inputText>
+                <p:message for="txtTitulo"/>
+                <p:outputLabel for="txtCorreo" value="Correo: " />
+                <p:inputText id="txtCorreo" value="#{mbvProfesor.profesor.correo}" size="50">
+                    <f:validator validatorId="validatorVacio"/>
+                </p:inputText>
+                <p:message for="txtCorreo"/> 
+                <p:outputLabel for="rdbSexo" value="Sexo:" />
+                <p:selectOneRadio id="rdbSexo" value="#{mbvProfesor.profesor.sexo}" >
+                    <f:selectItem itemLabel="Masculino" itemValue="M" />
+                    <f:selectItem itemLabel="Femenino" itemValue="F" />
+                </p:selectOneRadio>
+                <p:message for="rdbSexo"/>
+                <p:outputLabel value="Contraseña" for="txtContrasenia"/>
+                <p:password id="txtContrasenia" label="Contraseña: " size="50" value="#{mbvProfesor.profesor.contraseña}">
+                    <f:validator validatorId="validatorVacio"/>
+                </p:password>
+                <p:message for="txtContrasenia"/>
+                <p:outputLabel value="Repita contraseña" for="txtContraseniaRepita"/>
+                <p:password id="txtContraseniaRepita" label="Repita contraseña: " size="50" value="#{mbvProfesor.txtRepiteContrasenia}"/>
+                <h:panelGroup></h:panelGroup>
+                
+                
+                <h:panelGroup></h:panelGroup>
+                <p:commandButton value="Registrar Profesor" actionListener="#{mbvProfesor.insertar}" ajax="true" update="frmProfesor" />
+            </h:panelGrid> 
+        </h:form>
+    </h:body>
+</html>

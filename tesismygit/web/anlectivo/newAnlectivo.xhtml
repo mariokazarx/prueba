@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Nuevo Año lectivo</title>
+                <style type="text/css">
+            .ui-widget {
+                font-size: 90%;
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <h:form id="frmAlectivo">
+            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" rendered="#{mbvAlectivo.mensage}"/>
+            <h:panelGrid columns="3">
+                <p:outputLabel for="selectaño" value="Año: "/>
+                <p:selectOneMenu id="selectaño" value="#{mbvAlectivo.año}" style="width:125px">
+                    <f:selectItem itemLabel="Seleccione." itemValue="" />
+                    <f:selectItems value="#{mbvAlectivo.años}" />
+                </p:selectOneMenu>
+                <p:message for="selectaño"/>
+                
+                <p:outputLabel for="selectconf" value="Configuracion:" />
+                <p:selectOneMenu id="selectconf" value="#{mbvAlectivo.configuracionselected.configuracionId}">
+                    <f:selectItem itemLabel="Seleccione."/>
+                    <f:selectItems value="#{mbvAlectivo.configuraciones}" var="conf" itemLabel="#{conf.nombre}" itemValue="#{conf.configuracionId}"/>
+                </p:selectOneMenu>
+                <p:message for="selectconf"/>
+                
+                <p:outputLabel for="selectcopia" value="Copiar año:" />
+                <p:selectOneMenu id="selectcopia" value="#{mbvAlectivo.copia}" style="width:125px">
+                    <f:selectItem itemLabel="Seleccione." itemValue="" />
+                    <f:selectItem itemLabel="SI" itemValue="SI" />
+                    <f:selectItem itemLabel="NO" itemValue="NO" />    
+                </p:selectOneMenu>
+                <h:panelGroup></h:panelGroup>
+                
+                <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
+                <p:inputTextarea id="txtDescripcion" value="#{mbvEscala.escala.descripcion}" autoResize="false" rows="5" cols="22" />
+                <p:message for="txtDescripcion"/>
+                
+                <h:panelGroup></h:panelGroup>
+                <p:commandButton value="Registrar Escala" actionListener="#{mbvEscala.insertar}" onclick="#{mbvEscala.setMensage(false)}" ajax="true" update="frmAlectivo" />
+            </h:panelGrid> 
+        </h:form>
+    </h:body>
+</html>
