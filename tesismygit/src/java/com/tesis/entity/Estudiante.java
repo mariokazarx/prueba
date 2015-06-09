@@ -55,6 +55,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Estudiante.findByResguardo", query = "SELECT e FROM Estudiante e WHERE e.resguardo = :resguardo"),
     @NamedQuery(name = "Estudiante.findByCabezaFamilia", query = "SELECT e FROM Estudiante e WHERE e.cabezaFamilia = :cabezaFamilia"),
     @NamedQuery(name = "Estudiante.findByAcudiente", query = "SELECT e FROM Estudiante e WHERE e.acudiente = :acudiente"),
+    @NamedQuery(name = "Estudiante.findByFoto", query = "SELECT e FROM Estudiante e WHERE e.foto = :foto"),
     @NamedQuery(name = "Estudiante.findByUltimoaprobado", query = "SELECT e FROM Estudiante e WHERE e.ultimoaprobado = :ultimoaprobado")})
 public class Estudiante implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -132,6 +133,9 @@ public class Estudiante implements Serializable {
     @Size(min = 1, max = 100)
     @Column(name = "acudiente", nullable = false, length = 100)
     private String acudiente;
+    @Size(max = 2147483647)
+    @Column(name = "foto", length = 2147483647)
+    private String foto;
     @Basic(optional = false)
     @NotNull
     @Column(name = "ultimoaprobado", nullable = false)
@@ -299,6 +303,14 @@ public class Estudiante implements Serializable {
 
     public void setAcudiente(String acudiente) {
         this.acudiente = acudiente;
+    }
+
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
     }
 
     public int getUltimoaprobado() {

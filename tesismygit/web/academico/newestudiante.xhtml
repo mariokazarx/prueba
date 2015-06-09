@@ -1,0 +1,112 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Nuevo Profesor</title>
+                <style type="text/css">
+            .ui-widget {
+                font-size: 90%;
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <h:form id="frmProfesor" enctype="multipart/form-data">
+            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
+            <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
+            
+            <h:panelGrid columns="3">
+                <p:outputLabel for="selectTipo" value="Tipo Identificacion: " />
+                <p:selectOneMenu id="selectTipo" value="#{mbvEstudiante.estudiante.tipoIdentifcacion}" style="width:125px">
+                    <f:selectItem itemLabel="Select One" itemValue="" />
+                    <f:selectItem itemLabel="Cedula de ciudadania" itemValue="C.C" />
+                    <f:selectItem itemLabel="Tarjeta de Identidad" itemValue="T.I" />
+                </p:selectOneMenu>
+                <p:message for="selectTipo"/>
+                <p:outputLabel for="txtIdentificacion" value="Numero Identificacion: " />
+                <p:inputText id="txtIdentificacion" value="#{mbvEstudiante.estudiante.identificiacion}" size="50" >
+                    <f:validator validatorId="validatorVacio"/>
+                </p:inputText>
+                <p:message for="txtIdentificacion"/>
+                <p:outputLabel for="txtNombre" value="Nombres: " />
+                <p:inputText id="txtNombre" value="#{mbvEstudiante.estudiante.nombre}" size="50" >
+                    <f:validator validatorId="validatorVacio"/>
+                </p:inputText>
+                <p:message for="txtNombre"/>
+                <p:outputLabel for="txtApellidos" value="Apellidos: " />
+                <p:inputText id="txtApellidos" value="#{mbvEstudiante.estudiante.apellido}" size="50">
+                    <f:validator validatorId="validatorVacio"/>
+                </p:inputText>
+                <p:message for="txtApellidos"/>
+                <p:outputLabel for="txtTelefono" value="Telefono: " />
+                <p:inputText id="txtTelefono" value="#{mbvEstudiante.estudiante.telefono}" size="50" >
+                    <f:validator validatorId="validatorVacio"/>
+                </p:inputText>
+                <p:message for="txtTelefono"/>
+                <p:outputLabel for="txtDireccion" value="Direccion: " />
+                <p:inputText id="txtDireccion" value="#{mbvEstudiante.estudiante.direccion}" size="50">
+                    <f:validator validatorId="validatorVacio"/>
+                </p:inputText>
+                <p:message for="txtDireccion"/>
+                
+                <p:outputLabel for="txtEstrato" value="Estrato: " />
+                <p:inputText id="txtEstrato" value="#{mbvEstudiante.estudiante.estrato}" size="50">
+                    <f:validator validatorId="validatorVacio"/>
+                </p:inputText>
+                <p:message for="txtEstrato"/>
+                <p:outputLabel for="txtSisben" value="Sisben: " />
+                <p:inputText id="txtSisben" value="#{mbvEstudiante.estudiante.sisben}" size="50">
+            
+                </p:inputText>
+                <p:message for="txtSisben"/>
+                <p:outputLabel for="txtAcudiente" value="Acudiente: " />
+                <p:inputText id="txtAcudiente" value="#{mbvEstudiante.estudiante.acudiente}" size="50">
+                    <f:validator validatorId="validatorVacio"/>
+                </p:inputText>
+                <p:message for="txtAcudiente"/>
+                <p:outputLabel for="txtUltimo" value="Ultimo ciclo Aprobado: " />
+                <p:inputText id="txtUltimo" value="#{mbvEstudiante.estudiante.ultimoaprobado}" size="50">
+                    <f:validator validatorId="validatorVacio"/>
+                </p:inputText>
+                <p:message for="txtUltimo"/>
+                
+                <p:outputLabel for="selectZona" value="Zona:" />
+                <p:selectOneMenu id="selectZona" value="#{mbvEstudiante.estudiante.zona}" style="width:125px">
+                    <f:selectItem itemLabel="Select One" itemValue="" />
+                    <f:selectItem itemLabel="Rular" itemValue="RURAL" />
+                    <f:selectItem itemLabel="Urbano" itemValue="URBANO" />
+                </p:selectOneMenu>
+                <p:message for="selectZona"/>
+                <p:outputLabel value="Fecha de Nacimiento" for="txtFechaNacimiento"/>
+                <p:calendar id="txtFechaNacimiento" label="Fecha de nacimiento" showOn="button" title="Ejemplo: dd/mm/yyyy" value="#{mbvEstudiante.estudiante.fechaNacimiento}" pattern="dd/MM/yyyy" required="true" requiredMessage="Fecha de nacimiento es requerido"/>
+                <p:message for="txtFechaNacimiento"/>
+                <p:outputLabel for="rdbSexo" value="Sexo:" />
+                <p:selectOneRadio id="rdbSexo" value="#{mbvEstudiante.estudiante.sexo}" >
+                    <f:selectItem itemLabel="Masculino" itemValue="M" />
+                    <f:selectItem itemLabel="Femenino" itemValue="F" />
+                </p:selectOneRadio>
+                <p:message for="rdbSexo"/>
+                <p:outputLabel for="rdbCabeza" value="Cabeza de Familia:" />
+                <p:selectOneRadio id="rdbCabeza" value="#{mbvEstudiante.estudiante.cabezaFamilia}" >
+                    <f:selectItem itemLabel="Si" itemValue="SI" />
+                    <f:selectItem itemLabel="No" itemValue="NO" />
+                </p:selectOneRadio>
+                <p:message for="rdbCabeza"/>
+                <p:outputLabel for="rdbResguardo" value="Resguardo Indigena:" />
+                <p:selectOneRadio id="rdbResguardo" value="#{mbvEstudiante.estudiante.resguardo}" >
+                    <f:selectItem itemLabel="Si" itemValue="SI" />
+                    <f:selectItem itemLabel="No" itemValue="NO" />
+                </p:selectOneRadio>
+                <p:message for="rdbResguardo"/>
+                
+                <p:outputLabel for="txtFoto" value="Foto:" />
+                <p:fileUpload id="txtFoto" mode="simple" value="#{mbvEstudiante.foto}" />
+                <p:message for="txtFoto"/>
+                <h:panelGroup></h:panelGroup>
+                <p:commandButton value="Registrar Profesor" actionListener="#{mbvEstudiante.insertar}" ajax="false" update="frmProfesor" />
+            </h:panelGrid> 
+        </h:form>
+    </h:body>
+</html>

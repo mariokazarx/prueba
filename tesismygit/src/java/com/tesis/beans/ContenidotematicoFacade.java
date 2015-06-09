@@ -5,9 +5,12 @@
 package com.tesis.beans;
 
 import com.tesis.entity.Contenidotematico;
+import com.tesis.entity.Curso;
+import com.tesis.entity.Profesor;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -26,5 +29,10 @@ public class ContenidotematicoFacade extends AbstractFacade<Contenidotematico> {
     public ContenidotematicoFacade() {
         super(Contenidotematico.class);
     }
-    
+    public int removeByProfesorCurso(Profesor profesor,Curso curso) {
+        Query cq = em.createNamedQuery("Contenidotematico.DeleteByProfesorCurso");
+        cq.setParameter("profesorId",profesor);
+        cq.setParameter("cursoId",curso);
+        return cq.executeUpdate();
+    }
 }

@@ -19,13 +19,13 @@
                         <f:facet name="header">
                             Lista de Asignaturas
                         </f:facet>
-                        <p:column headerText="Nombre" filterBy="nombre">
+                        <p:column headerText="Nombre" filterBy="nombre" sortBy="#{item.nombre}">
                             <h:outputText value="#{item.nombre}"/>
                         </p:column>
                         <p:column headerText="Descripcion" filterBy="descripcion">
                             <h:outputText value="#{item.descripcion}"/>
                         </p:column>
-                        <p:column headerText="Area" filterBy="max">
+                        <p:column headerText="Area" filterBy="max" >
                             <h:outputText value="#{item.areaId.nombre}"/>
                         </p:column>
                         <p:column headerText="Configuracion" filterBy="max">

@@ -34,6 +34,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Periodo.findAll", query = "SELECT p FROM Periodo p"),
     @NamedQuery(name = "Periodo.findByPeriodoId", query = "SELECT p FROM Periodo p WHERE p.periodoId = :periodoId"),
+    @NamedQuery(name = "Periodo.findMinByConfiguracion", query = "SELECT p FROM Periodo p WHERE p.numero =(SELECT MIN(p1.numero) from Periodo p1 WHERE p1.configuracionId = :configuracionId) and p.configuracionId = :configuracionId"),
+    @NamedQuery(name = "Periodo.findByConfiguracion", query = "SELECT p FROM Periodo p WHERE p.configuracionId = :configuracionId"),
     @NamedQuery(name = "Periodo.findByNumero", query = "SELECT p FROM Periodo p WHERE p.numero = :numero")})
 public class Periodo implements Serializable {
     private static final long serialVersionUID = 1L;

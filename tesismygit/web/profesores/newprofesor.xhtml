@@ -14,6 +14,9 @@
     </h:head>
     <h:body>
         <h:form id="frmProfesor">
+            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
+            <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
+            
             <h:panelGrid columns="3">
                 <p:outputLabel for="txtCedula" value="Cedula: " />
                 <p:inputText id="txtCedula" value="#{mbvProfesor.profesor.cedula}" size="50" >
@@ -57,7 +60,7 @@
                 </p:selectOneRadio>
                 <p:message for="rdbSexo"/>
                 <p:outputLabel value="Contraseña" for="txtContrasenia"/>
-                <p:password id="txtContrasenia" label="Contraseña: " size="50" value="#{mbvProfesor.profesor.contraseña}">
+                <p:password id="txtContrasenia" label="Contraseña: " match="txtContraseniaRepita" size="50" value="#{mbvProfesor.profesor.contraseña}">
                     <f:validator validatorId="validatorVacio"/>
                 </p:password>
                 <p:message for="txtContrasenia"/>

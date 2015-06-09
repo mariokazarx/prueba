@@ -5,9 +5,12 @@
 package com.tesis.beans;
 
 import com.tesis.entity.Anlectivo;
+import com.tesis.entity.Configuracion;
+import com.tesis.entity.Curso;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -26,5 +29,9 @@ public class AnlectivoFacade extends AbstractFacade<Anlectivo> {
     public AnlectivoFacade() {
         super(Anlectivo.class);
     }
-    
+    public Configuracion getConfiguracionCurso(Curso curso){
+        Query cq = em.createNamedQuery("Anlectivo.findConfoguracionCurso");
+        cq.setParameter("cursoId",curso.getCursoId());
+        return (Configuracion) cq.getSingleResult();
+    }
 }

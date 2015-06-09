@@ -48,8 +48,8 @@ public class Documento implements Serializable {
     private String nombre;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 200)
-    @Column(name = "rutaarchivo", nullable = false, length = 200)
+    @Size(min = 1, max = 2147483647)
+    @Column(name = "rutaarchivo", nullable = false, length = 2147483647)
     private String rutaarchivo;
     @Size(max = 200)
     @Column(name = "descripcion", length = 200)

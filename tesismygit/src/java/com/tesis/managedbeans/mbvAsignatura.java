@@ -7,6 +7,7 @@ package com.tesis.managedbeans;
 import com.tesis.beans.AreaFacade;
 import com.tesis.beans.AsignaturaFacade;
 import com.tesis.beans.ConfiguracionFacade;
+import com.tesis.clases.LazyAsignaturaDataModel;
 import com.tesis.entity.Area;
 import com.tesis.entity.Asignatura;
 import com.tesis.entity.Configuracion;
@@ -21,6 +22,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import org.primefaces.context.RequestContext;
+import org.primefaces.model.LazyDataModel;
 
 /**
  *
@@ -34,7 +36,7 @@ public class mbvAsignatura implements Serializable{
      * Creates a new instance of mbvAsignatura
      */
     private Asignatura asignatura;
-    private List<Asignatura> asignaturas;
+    private LazyDataModel<Asignatura> asignaturas;
     private List<Area> areas;
     private Area areaselected;
     private List<Configuracion> configuraciones;
@@ -54,13 +56,15 @@ public class mbvAsignatura implements Serializable{
         this.asignatura = asignatura;
     }
 
-    public List<Asignatura> getAsignaturas() {
+    public LazyDataModel<Asignatura> getAsignaturas() {
         return asignaturas;
     }
 
-    public void setAsignaturas(List<Asignatura> asignaturas) {
+    public void setAsignaturas(LazyDataModel<Asignatura> asignaturas) {
         this.asignaturas = asignaturas;
     }
+
+    
 
     public List<Area> getAreas() {
         return areas;
@@ -126,7 +130,7 @@ public class mbvAsignatura implements Serializable{
     @PostConstruct
     public void inicioPagina(){
         this.asignatura=new Asignatura();
-        this.asignaturas=this.asignaturaEjb.findAll();
+        this.asignaturas= new LazyAsignaturaDataModel(this.asignaturaEjb.findAll());
         this.areas = this.areaEjb.findAll();
         this.areaselected = new Area();
         this.configuraciones = this.configuracionEjb.findAll();

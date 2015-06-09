@@ -33,6 +33,10 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Asignaturaciclo.findAll", query = "SELECT a FROM Asignaturaciclo a"),
     @NamedQuery(name = "Asignaturaciclo.removeByAsignatura", query = "DELETE FROM Asignaturaciclo a WHERE a.asignaturaId= :asignatura"),
+    @NamedQuery(name = "Asignaturaciclo.asignaturasProfesor", query= "SELECT a FROM Asignaturaciclo a JOIN a.contenidotematicoList c WHERE c.cursoId = :cursoId AND c.profesorId= :profesorId AND c.periodoId = :periodoId"),
+    @NamedQuery(name = "Asignaturaciclo.asignaturasDisponibles", query= "SELECT a from Asignaturaciclo a LEFT JOIN Curso c WHERE c.cicloId = a.cicloId AND c.cursoId = :cursoId EXCEPT SELECT a FROM Asignaturaciclo a JOIN a.contenidotematicoList c WHERE c.cursoId = :cursoIdC AND c.profesorId= :profesorId"),
+    @NamedQuery(name = "Asignaturaciclo.findByCicloAsig", query= "SELECT a from Asignaturaciclo a WHERE a.cicloId = :cicloId AND a.asignaturaId = :asignaturaId"),
+    //@NamedQuery(name = "Asignaturaciclo.asignaturasProfesor", query= "SELECT a.* FROM Asignaturaciclo a,Contenidotematico c JOIN a.ciclos aCiclo JOIN c.cilos cCilo WHERE aCilco = cCiclo AND a.curso_id= :cursoId and a.profesor_id= :profesorId"),
     @NamedQuery(name = "Asignaturaciclo.findByAsignaturacicloId", query = "SELECT a FROM Asignaturaciclo a WHERE a.asignaturacicloId = :asignaturacicloId")})
 public class Asignaturaciclo implements Serializable {
     private static final long serialVersionUID = 1L;

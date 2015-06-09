@@ -6,6 +6,11 @@ package com.tesis.beans;
 
 import com.tesis.entity.Asignatura;
 import com.tesis.entity.Asignaturaciclo;
+import com.tesis.entity.Ciclo;
+import com.tesis.entity.Curso;
+import com.tesis.entity.Periodo;
+import com.tesis.entity.Profesor;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -37,5 +42,26 @@ public class AsignaturacicloFacade extends AbstractFacade<Asignaturaciclo> {
         
         //System.out.println("aa"+ciclo);
         //return 1;
-}
+    }
+    public List<Asignaturaciclo> asignaturasProfesor(Profesor profesor,Curso curso,Periodo periodo){
+        Query cq = em.createNamedQuery("Asignaturaciclo.asignaturasProfesor");
+        cq.setParameter("cursoId",curso);
+        cq.setParameter("periodoId",periodo);
+        cq.setParameter("profesorId",profesor);
+        return cq.getResultList();
+    }
+    public List<Asignaturaciclo> asignaturasDisponibles(Profesor profesor,Curso curso){
+        Query cq = em.createNamedQuery("Asignaturaciclo.asignaturasDisponibles");
+        cq.setParameter("cursoId",curso.getCursoId());
+        cq.setParameter("cursoIdC",curso);
+        cq.setParameter("profesorId",profesor);
+        return cq.getResultList();
+    }
+    public Asignaturaciclo asignaturasCiclo(Ciclo ciclo,Asignatura asg){
+        System.out.println("QQQQ"+ciclo+"WWWWWWWWW"+asg);
+        Query cq = em.createNamedQuery("Asignaturaciclo.findByCicloAsig");
+        cq.setParameter("cicloId",ciclo);
+        cq.setParameter("asignaturaId",asg);
+        return (Asignaturaciclo) cq.getSingleResult();
+    }
 }

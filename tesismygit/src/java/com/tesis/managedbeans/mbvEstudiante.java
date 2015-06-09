@@ -4,8 +4,12 @@
  */
 package com.tesis.managedbeans;
 
+import com.tesis.beans.EstadoEstudianteFacade;
 import com.tesis.beans.EstudianteFacade;
+import com.tesis.beans.TipoUsuarioFacade;
+import com.tesis.entity.EstadoEstudiante;
 import com.tesis.entity.Estudiante;
+import com.tesis.entity.TipoUsuario;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.Closeable;
@@ -17,7 +21,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Random;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -46,6 +53,10 @@ public class mbvEstudiante implements Serializable{
     
     @EJB
     private EstudianteFacade estudianteEjb;
+    @EJB
+    private EstadoEstudianteFacade estadoEjb;
+    @EJB
+    private TipoUsuarioFacade tusuEjb;
     
     public mbvEstudiante() {
     }
@@ -96,10 +107,78 @@ public class mbvEstudiante implements Serializable{
        this.estudiante = new Estudiante();
        this.estudiantes = this.estudianteEjb.findAll();
        ServletContext servletContext=(ServletContext)FacesContext.getCurrentInstance().getExternalContext().getContext();
-       this.ruta=(String)servletContext.getRealPath("/temporal");
+       this.ruta=(String)servletContext.getRealPath("/");
 
     }
     public void insertar(){
+        try{
+            EstadoEstudiante estado = estadoEjb.find(1);
+            TipoUsuario tusu = tusuEjb.find(1);
+            System.out.println("ooOO"+estado.getNombre());
+            this.estudiante.setEstadoEstudianteId(estado);
+            this.estudiante.setTipoUsuarioId(tusu);
+            System.out.println("ESTUDIANTE: "+estudiante.getEstudianteId());
+            InputStream inputStream=null;
+            OutputStream outputStream=null;
+            ServletContext servletContext=(ServletContext)FacesContext.getCurrentInstance().getExternalContext().getContext();
+            String carpetaEstudiantes=(String)servletContext.getRealPath("/fotosestudiantes");
+            try
+            {
+                if(this.foto.getSize()<=0)
+                {
+                    this.estudiante.setFoto("default.png");
+                }else{
+                    if(!this.foto.getFileName().endsWith(".png"))
+                    {
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error:", "El archivo debe ser con extensión \".png\""));
+                        return;
+                    }
+                    if(this.foto.getSize()>20971520)
+                    {
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error:", "El archivo no puede ser más de 20mb"));
+                        return;
+                    }
+                    String nombreArchivo = "/";
+                    nombreArchivo += this.estudiante.getIdentificiacion(); 
+                    Calendar fecha = new GregorianCalendar();
+                    int año = fecha.get(Calendar.YEAR);
+                    int mes = fecha.get(Calendar.MONTH);
+                    int dia = fecha.get(Calendar.DAY_OF_MONTH);
+                    int hora = fecha.get(Calendar.HOUR_OF_DAY);
+                    int minuto = fecha.get(Calendar.MINUTE);
+                    int segundo = fecha.get(Calendar.SECOND);
+                    int milseg = fecha.get(Calendar.MILLISECOND);
+                    nombreArchivo+= año+"-"+mes+"-"+dia+"-"+hora+"-"+minuto+"-"+segundo+"-"+milseg;
+                    Random nrd = new Random();
+                    nombreArchivo+= nrd.nextInt()+".png";
+                    outputStream=new FileOutputStream(new File(carpetaEstudiantes+nombreArchivo));
+                    inputStream=this.foto.getInputstream();
+
+                    int read=0;
+                    byte[] bytes=new byte[1024];
+
+                    while((read=inputStream.read(bytes))!=-1)
+                    {
+                        outputStream.write(bytes, 0, read);
+                    }
+                    this.estudiante.setFoto(nombreArchivo);
+                }
+                
+                System.out.println("ESTUDIANTE: "+this.estudiante);
+                this.estudianteEjb.create(estudiante);
+                FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Criterio Evaluacion creado Satisfactoriamente", ""));
+                inicioPagina();
+            }
+            catch(Exception ex)
+            {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error fatal:", "Por favor contacte con su administrador "+ex.getMessage()));
+            }
+            
+        }catch(Exception e){
+             FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+        }
         
     }
     public void handleFileUpload(FileUploadEvent event) throws IOException {    

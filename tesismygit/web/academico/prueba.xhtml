@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Nuevo Profesor</title>
+                <style type="text/css">
+            .ui-widget {
+                font-size: 90%;
+            }
+        </style>
+    </h:head>
+    <h:body>
+        #{mbvEstudiante.ruta}
+        <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/fotosprofesores/default.jpg" width="70" height="70" cache="false" alt="Sin definir" style="border-radius: 4px;box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7)"/>
+                                
+        
+        <h:form id="frmPrueba" enctype="multipart/form-data">
+            <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
+            <p:fileUpload id="txtAvatar" mode="simple" value="#{mbvEstudiante.foto}" />
+            <p:commandButton value="Actualizar avatar" ajax="false" actionListener="#{mbvEstudiante.subirFoto}"/>
+
+        </h:form>
+        
+        
+        <h:form id="frmPruebamulti" enctype="multipart/form-data">
+            <p:messages showDetail="true"/>  
+            <p:fileUpload fileUploadListener="#{mbvEstudiante.handleFileUpload}" multiple="true" mode="advanced" update="frmPruebamulti"  allowTypes="/(\.|\/)(pdf)$/" cancelLabel="Cancelar" uploadLabel="Subir archivos" label="Seleccione Archivo">
+                
+            </p:fileUpload>   
+ 
+        </h:form>
+        
+        
+        <h:form id="frmdowload">
+            <p:commandButton value="Download" ajax="false" actionListener="#{mbvEstudiante.FileDownloadView}" icon="ui-icon-arrowthick-1-s">
+                <p:fileDownload value="#{mbvEstudiante.download}" />
+            </p:commandButton>
+        </h:form>
+        <h:form>
+            <h:commandLink value= "Download PDF" action= "#{mbvEstudiante.downloadPDF('1.pdf')}" target= "_blank" />
+        </h:form>
+         <h:form target= "_blank" >
+             <h:commandButton value= "Download PDF" action= "#{mbvEstudiante.downloadPDF('2.pdf')}" />
+        </h:form>
+        <h:form id= "frmDelete" >
+            <h:commandButton value= "Remove PDF" action= "#{mbvEstudiante.FileDownloadView}" />
+        </h:form>
+    </h:body>
+</html>

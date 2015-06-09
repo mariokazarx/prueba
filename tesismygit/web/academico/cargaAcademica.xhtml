@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <h:head>
+        <title>Nueva Escala</title>
+                <style type="text/css">
+            .ui-widget {
+                font-size: 90%;
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <h:form id="frmescala">
+            <p:outputLabel for="txtCedula" value="Cedula: "/>
+            <p:autoComplete id="txtCedula" value="#{mbvCargaAcademica.profesor}" completeMethod="#{mbvCargaAcademica.completeProfesor}"
+                            var="profesor" itemLabel="#{profesor.cedula}" itemValue="#{profesor}" converter="profesorConverter"  forceSelection="true">
+                <p:column>
+                    <h:outputText styleClass="ui-theme ui-theme-#{profesor.nombre}" />
+                </p:column>
+
+                <p:column>
+                    <h:outputText value="#{profesor.cedula} #{profesor.nombre} #{profesor.apellido}" />
+                </p:column>
+            </p:autoComplete>
+            <p:commandButton value="prueba" actionListener="#{mbvCargaAcademica.prueba}" ajax="true" update="frmescala" />
+            <br/>
+            <p:outputLabel id="profesorlbl" value="#{mbvCargaAcademica.profesor.nombre}"/>
+            
+            <h:panelGroup id="prueba" rendered="#{mbvCargaAcademica.banderaSearch}">
+                <p:panelGrid columns="2" id="profesorTable">
+                    <f:facet name="header">
+                        <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/fotosprofesores/#{mbvCargaAcademica.profesor.foto}" width="240" height="240" cache="false" alt="Sin definir" style="border-radius: 4px;box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7)"/>
+                    </f:facet>
+
+                    <h:outputText value="Cedula:" />
+                    <h:outputText value="#{mbvCargaAcademica.profesor.cedula}" />
+
+
+                    <h:outputText value="Nombres:" />
+                    <h:outputText value="#{mbvCargaAcademica.profesor.nombre}" />
+
+                    <h:outputText value="Apellidos:" />
+                    <h:outputText value="#{mbvCargaAcademica.profesor.apellido}" />
+
+                    <h:outputText value="Email:" />
+                    <h:outputText value="#{mbvCargaAcademica.profesor.correo}" />
+
+                    <h:outputText value="Titulo:" />
+                    <h:outputText value="#{mbvCargaAcademica.profesor.tituloProfesional}" />
+                </p:panelGrid>
+
+                <p:outputLabel for="selectCourse" value="Curso: " />
+                <p:selectOneMenu id="selectCourse" value="#{mbvCargaAcademica.cursoSelected.cursoId}">
+                    <p:ajax listener="#{mbvCargaAcademica.cargarPickList()}" update="frmescala"/>
+                   <f:selectItem itemLabel="Seleccione."/>
+                   <f:selectItems value="#{mbvCargaAcademica.cursos}" var="curso" itemLabel="ciclo #{curso.cicloId.numero} - #{curso.nombre} " itemValue="#{curso.cursoId}"/>
+                </p:selectOneMenu>
+
+
+                <h3>Asignaturas</h3>
+                <p:pickList id="pickList" value="#{mbvCargaAcademica.pickList}" var="asignatura" itemLabel="#{asignatura.nombre}" itemValue="#{asignatura.asignaturaId}" rendered="#{mbvCargaAcademica.banderaAsig}">
+                     <f:facet name="sourceCaption">Asiganturas</f:facet>
+                    <f:facet name="targetCaption">Ciclo</f:facet>
+                    <p:ajax event="transfer" listener="#{mbvCargaAcademica.onTransfer}"  />
+                </p:pickList>
+                <p:commandButton id="Confirmar" value="Confirmar" actionListener="#{mbvCargaAcademica.cargarMaterias}" style="margin-top:5px" />
+            </h:panelGroup>
+            
+            
+        
+        </h:form>
+    </h:body>
+</html>
