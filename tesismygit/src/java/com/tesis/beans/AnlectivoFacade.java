@@ -33,5 +33,5 @@ public class AnlectivoFacade extends AbstractFacade<Anlectivo> {
         Query cq = em.createNamedQuery("Anlectivo.findConfoguracionCurso");
         cq.setParameter("cursoId",curso.getCursoId());
         return (Configuracion) cq.getSingleResult();
-    }
+}
 }

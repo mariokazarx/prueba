@@ -5,6 +5,7 @@
 package com.tesis.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -20,6 +21,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -34,9 +37,11 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Periodo.findAll", query = "SELECT p FROM Periodo p"),
     @NamedQuery(name = "Periodo.findByPeriodoId", query = "SELECT p FROM Periodo p WHERE p.periodoId = :periodoId"),
+    @NamedQuery(name = "Periodo.findByNumero", query = "SELECT p FROM Periodo p WHERE p.numero = :numero"),
     @NamedQuery(name = "Periodo.findMinByConfiguracion", query = "SELECT p FROM Periodo p WHERE p.numero =(SELECT MIN(p1.numero) from Periodo p1 WHERE p1.configuracionId = :configuracionId) and p.configuracionId = :configuracionId"),
     @NamedQuery(name = "Periodo.findByConfiguracion", query = "SELECT p FROM Periodo p WHERE p.configuracionId = :configuracionId"),
-    @NamedQuery(name = "Periodo.findByNumero", query = "SELECT p FROM Periodo p WHERE p.numero = :numero")})
+    @NamedQuery(name = "Periodo.findByNumero", query = "SELECT p FROM Periodo p WHERE p.numero = :numero"),
+    @NamedQuery(name = "Periodo.findByFechacierre", query = "SELECT p FROM Periodo p WHERE p.fechacierre = :fechacierre")})
 public class Periodo implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -48,8 +53,14 @@ public class Periodo implements Serializable {
     @NotNull
     @Column(name = "numero", nullable = false)
     private int numero;
+    @Column(name = "fechacierre")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechacierre;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "periodoId", fetch = FetchType.LAZY)
     private List<Contenidotematico> contenidotematicoList;
+    @JoinColumn(name = "estado_periodo_id", referencedColumnName = "estado_periodo_id", nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private EstadoPeriodo estadoPeriodoId;
     @JoinColumn(name = "configuracion_id", referencedColumnName = "configuracion_id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Configuracion configuracionId;
@@ -82,6 +93,14 @@ public class Periodo implements Serializable {
         this.numero = numero;
     }
 
+    public Date getFechacierre() {
+        return fechacierre;
+    }
+
+    public void setFechacierre(Date fechacierre) {
+        this.fechacierre = fechacierre;
+    }
+
     @XmlTransient
     public List<Contenidotematico> getContenidotematicoList() {
         return contenidotematicoList;
@@ -89,6 +108,14 @@ public class Periodo implements Serializable {
 
     public void setContenidotematicoList(List<Contenidotematico> contenidotematicoList) {
         this.contenidotematicoList = contenidotematicoList;
+    }
+
+    public EstadoPeriodo getEstadoPeriodoId() {
+        return estadoPeriodoId;
+    }
+
+    public void setEstadoPeriodoId(EstadoPeriodo estadoPeriodoId) {
+        this.estadoPeriodoId = estadoPeriodoId;
     }
 
     public Configuracion getConfiguracionId() {

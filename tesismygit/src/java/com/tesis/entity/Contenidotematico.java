@@ -5,7 +5,6 @@
 package com.tesis.entity;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -21,9 +20,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -37,9 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Contenidotematico.findAll", query = "SELECT c FROM Contenidotematico c"),
     @NamedQuery(name = "Contenidotematico.findByContenidotematicoId", query = "SELECT c FROM Contenidotematico c WHERE c.contenidotematicoId = :contenidotematicoId"),
-    @NamedQuery(name = "Contenidotematico.findByFechacierre", query = "SELECT c FROM Contenidotematico c WHERE c.fechacierre = :fechacierre"),
-    @NamedQuery(name = "Contenidotematico.DeleteByProfesorCurso", query = "DELETE FROM Contenidotematico c WHERE c.profesorId = :profesorId AND c.cursoId = :cursoId"),
-    @NamedQuery(name = "Contenidotematico.findByDescripcion", query = "SELECT c FROM Contenidotematico c WHERE c.descripcion = :descripcion")})
+    @NamedQuery(name = "Contenidotematico.DeleteByProfesorCurso", query = "DELETE FROM Contenidotematico c WHERE c.profesorId = :profesorId AND c.cursoId = :cursoId")})
 public class Contenidotematico implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -47,12 +41,6 @@ public class Contenidotematico implements Serializable {
     @Basic(optional = false)
     @Column(name = "contenidotematico_id", nullable = false)
     private Integer contenidotematicoId;
-    @Column(name = "fechacierre")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fechacierre;
-    @Size(max = 200)
-    @Column(name = "descripcion", length = 200)
-    private String descripcion;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "contenidotematicoId", fetch = FetchType.LAZY)
     private List<Nota> notaList;
     @JoinColumn(name = "profesor_id", referencedColumnName = "profesor_id", nullable = false)
@@ -86,22 +74,6 @@ public class Contenidotematico implements Serializable {
 
     public void setContenidotematicoId(Integer contenidotematicoId) {
         this.contenidotematicoId = contenidotematicoId;
-    }
-
-    public Date getFechacierre() {
-        return fechacierre;
-    }
-
-    public void setFechacierre(Date fechacierre) {
-        this.fechacierre = fechacierre;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
     }
 
     @XmlTransient

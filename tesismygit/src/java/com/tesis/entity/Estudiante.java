@@ -112,7 +112,7 @@ public class Estudiante implements Serializable {
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Basic(optional = false)
     @NotNull
-    @Column(name = "sisben", nullable = false, precision = 2, scale = 2)
+    @Column(name = "sisben", nullable = false, precision = 2, scale = 1)
     private BigDecimal sisben;
     @Basic(optional = false)
     @NotNull
