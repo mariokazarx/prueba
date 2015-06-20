@@ -19,7 +19,9 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.validator.ValidatorException;
 import org.primefaces.context.RequestContext;
 
 /**
@@ -176,6 +178,7 @@ public class mbvConfiguracion implements Serializable{
             configuracion.setCriterioevaluacionId(criterioevaluacionselected);
             configuracion.setEscalaId(escalaselected);
             configuracionEjb.create(configuracion);
+            RequestContext.getCurrentInstance().closeDialog(this);
             //criterioeval.setFormacriterioevaluacionId(fcriterioselected);
             //RequestContext.getCurrentInstance().closeDialog(this);
             //criterioevalEjb.create(criterioeval);
@@ -187,6 +190,14 @@ public class mbvConfiguracion implements Serializable{
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
         }
     }
+    
+    public void validateNombreUnique(FacesContext arg0, UIComponent arg1, Object arg2)throws ValidatorException {
+       // this.mensage=false;
+        if (this.configuracionEjb.getByNombre(arg2.toString())==false) {
+            throw new ValidatorException(new FacesMessage("ya existe este nombre"));
+        }
+    }
+    
     public void closeDialog() {
         inicioPagina();
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Escala Registrada", "exitosamente"); 
@@ -195,10 +206,14 @@ public class mbvConfiguracion implements Serializable{
 
     public void actualizar(){
         try{
-            //criterioeval.setFormacriterioevaluacionId(fcriterioselected);
-            //criterioevalEjb.edit(criterioeval);
+            this.criterioevaluacionselected = this.criterioevalEjb.find(criterioevaluacionselected.getCriterioevaluacionId());
+            this.escalaselected = this.escalaEjb.find(escalaselected.getEscalaId());            
+            this.configuracion.setCriterioevaluacionId(criterioevaluacionselected);
+            this.configuracion.setEscalaId(escalaselected);
+            this.configuracionEjb.edit(this.configuracion);
             FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Escala creada Satisfactoriamente", ""));
+            RequestContext.getCurrentInstance().execute("PF('dialogoEditarEscala').hide()");
             inicioPagina();
         }catch(Exception e){
             System.out.print("fail"+e.getMessage());
@@ -206,9 +221,11 @@ public class mbvConfiguracion implements Serializable{
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
         }
     }
-    public void cargarCriterioseval(int criterioevalid){
+    public void cargarConfiguracion(int configuracionId){
         try {
-            //this.criterioeval =  this.criterioevalEjb.find(criterioevalid);
+            this.configuracion =  this.configuracionEjb.find(configuracionId);
+            this.criterioevaluacionselected = this.criterioevalEjb.find(configuracion.getCriterioevaluacionId().getCriterioevaluacionId());
+            this.escalaselected = this.escalaEjb.find(configuracion.getEscalaId().getEscalaId());            
             RequestContext.getCurrentInstance().update("frmEditarEscala:panelEditarEscala");
             RequestContext.getCurrentInstance().execute("PF('dialogoEditarEscala').show()");
         } catch (Exception e) {
@@ -218,9 +235,10 @@ public class mbvConfiguracion implements Serializable{
     }
     public void newConfig(){
         Map<String,Object> options = new HashMap<String, Object>();
-        /*options.put("contentHeight", 340);
-        options.put("height", 400);
-        options.put("width",700);*/
+        options.put("contentHeight", 430);
+        options.put("contentWidth", 560);
+        //options.put("height", 400);
+        //options.put("width",700);
         options.put("modal", true);
         options.put("draggable", true);
         options.put("resizable", true);

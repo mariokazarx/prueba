@@ -25,10 +25,8 @@
                     <ui:insert name="left"><br></br>
                         <center>
                             <h:form>
-                                <p:panelMenu style="width:80%" id="menuPpal">
-                                    <p:submenu label="Departamentos"> 
-                                        <p:menuitem value="Crear Departamento" /> 
-                                    </p:submenu>
+                                <p:panelMenu style="width:300px" id="menuPpal" model="#{mbvMenu.model}">
+                                    
                                 </p:panelMenu>
                             </h:form>
                         </center>
@@ -63,8 +61,8 @@
                                 <p:menuitem value="Seguridad Perfil" url="../Usuarios/Seguridad.xhtml"/>  
                             </p:submenu>  
                              <p:submenu label="Año Escolar" icon="ui-icon-gear"> 
-                                <p:menuitem value="Criterios Evaluacion" outcome="/configuracion/criterioevaluacion.xhtml" />
-                                <p:menuitem value="Configuracion" outcome="/configuracion/configuracion.xhtml" />
+                                <p:menuitem value="Años Escolares" outcome="/anlectivo/anlectivos.xhtml" />
+                                <p:menuitem value="Cursos" outcome="/anlectivo/cursos.xhtml" />
                                 <p:menuitem value="Areas" outcome="/configuracion/areas.xhtml" />
                                 <p:menuitem value="Asignaturas" outcome="/configuracion/asignaturas.xhtml" />
                                 <p:menuitem value="Ciclos" outcome="/configuracion/ciclos.xhtml" />

@@ -48,5 +48,11 @@
         <h:form id= "frmDelete" >
             <h:commandButton value= "Remove PDF" action= "#{mbvEstudiante.FileDownloadView}" />
         </h:form>
+        
+        <h:form>
+            <p:inputText id="txtprueba" value="#{mbvEstudiante.prueba}"/>
+            <p:commandButton value= "Prueba" action="#{mbvEstudiante.pp}"/>
+                
+        </h:form>
     </h:body>
 </html>

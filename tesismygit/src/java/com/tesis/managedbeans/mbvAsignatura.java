@@ -131,7 +131,7 @@ public class mbvAsignatura implements Serializable{
     public void inicioPagina(){
         this.asignatura=new Asignatura();
         this.asignaturas= new LazyAsignaturaDataModel(this.asignaturaEjb.findAll());
-        this.areas = this.areaEjb.findAll();
+        //this.areas = this.areaEjb.findAll();
         this.areaselected = new Area();
         this.configuraciones = this.configuracionEjb.findAll();
         this.confuguracionselected = new Configuracion();
@@ -173,6 +173,10 @@ public class mbvAsignatura implements Serializable{
             FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
         }
+    }
+    public void cargarAreas(){
+        this.confuguracionselected = this.configuracionEjb.find(this.confuguracionselected.getConfiguracionId());
+        this.areas = this.confuguracionselected.getAreaList();
     }
     public void cargarAsignatura(int asignaturaid){
         try {

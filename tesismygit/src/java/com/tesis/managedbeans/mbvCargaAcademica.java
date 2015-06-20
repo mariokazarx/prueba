@@ -29,6 +29,7 @@ import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 import org.primefaces.event.TransferEvent;
@@ -40,8 +41,8 @@ import org.primefaces.model.DualListModel;
  */
 @ManagedBean
 @ViewScoped
-public class mbvCargaAcademica implements Serializable{
-    
+public class mbvCargaAcademica implements Serializable {
+
     private Profesor profesor;
     private List<Profesor> profesores;
     private Curso cursoSelected;
@@ -70,9 +71,9 @@ public class mbvCargaAcademica implements Serializable{
     private ContenidotematicoFacade contenidoEjb;
     @EJB
     private EstadocontenidotematicoFacade estadocontenidoEjb;
-    @Resource 
+    @Resource
     UserTransaction tx;
-    
+
     public mbvCargaAcademica() {
     }
 
@@ -99,7 +100,7 @@ public class mbvCargaAcademica implements Serializable{
     public void setPickList(DualListModel<Asignatura> pickList) {
         this.pickList = pickList;
     }
-    
+
     public Profesor getProfesor() {
         return profesor;
     }
@@ -112,10 +113,9 @@ public class mbvCargaAcademica implements Serializable{
         this.profesores = profesores;
     }
 
-    
     public void setProfesor(Profesor profesor) {
         this.profesor = profesor;
-        
+
     }
 
     public Curso getCursoSelected() {
@@ -133,114 +133,132 @@ public class mbvCargaAcademica implements Serializable{
     public void setCursos(List<Curso> cursos) {
         this.cursos = cursos;
     }
-    
+  
     @PostConstruct
-    public void inicioPagina(){
-        this.profesor = new Profesor();
+    public void inicioPagina() {
+
+        Profesor aux = (Profesor) FacesContext.getCurrentInstance()
+                .getExternalContext()
+                .getFlash()
+                .get("param1");
+        if (aux != null) {
+            this.profesor = aux;
+            System.out.println("QQQQQ1" + this.profesor + "EEE1" + profesor.getNombre());
+            prueba();
+        }
+        else{
+            this.profesor = new Profesor();
+        }
+        
         profesores = this.profesorEjb.findAll();
         this.cursos = this.cursoEjb.findAll();
         this.cursoSelected = new Curso();
         this.contenido = new Contenidotematico();
         asSelecteds = new ArrayList<Asignatura>();
     }
+
     public List<Profesor> completeProfesor(String query) {
-        
+
         List<Profesor> allThemes = profesorEjb.findAll();
         List<Profesor> filteredThemes = new ArrayList<Profesor>();
-        System.out.println("ccc"+query+allThemes.size()); 
+        System.out.println("ccc" + query + allThemes.size());
         for (int i = 0; i < allThemes.size(); i++) {
             Profesor skin = allThemes.get(i);
-            if(skin.getCedula().startsWith(query)) {
+            if (skin.getCedula().startsWith(query)) {
                 filteredThemes.add(skin);
             }
         }
-         
+
         return filteredThemes;
     }
-    public void prueba(){
+
+    public void prueba() {
         try {
-            if(this.profesor!=null){
-                System.out.println("aaaaww");
+            if (this.profesor != null) {
+                System.out.println("aaaaww"+this.profesor.getNombre());
                 //cursoSelected = cursoEjb.find(1);
-                this.banderaSearch=true;
-            }else{
+                this.banderaSearch = true;
+            } else {
                 this.banderaSearch = false;
             }
-            
+
         } catch (Exception e) {
-            System.out.println("errrrooorrrr"+e.toString());
+            System.out.println("errrrooorrrr" + e.toString());
             this.banderaAsig = true;
         }
-        
+
     }
-    public void cargarPickList(){
+
+    public void cargarPickList() {
         try {
-            System.out.println("aaa"+cursoSelected);
-            if(cursoSelected.getCursoId()==null){
+            System.out.println("aaa" + cursoSelected);
+            if (cursoSelected.getCursoId() == null) {
                 this.banderaAsig = false;
-            }else{
+            } else {
                 this.banderaAsig = true;
                 asignturasdisponibles = new ArrayList<Asignatura>();
                 asignturasSelecionadas = new ArrayList<Asignatura>();
                 Configuracion cf = anlectivoEjb.getConfiguracionCurso(cursoSelected);
-                System.out.println("FUNCIONO:::::"+cf);
+                System.out.println("FUNCIONO:::::" + cf);
                 Periodo per = periodoEjb.getPeriodoMinByConfiguracion(cf);
-                System.out.println("FUNCIONO********"+per);
+                System.out.println("FUNCIONO********" + per);
                 asignaturasprofes = asignaturaCicloEjb.asignaturasDisponibles(profesor, cursoSelected);
-                for(Asignaturaciclo asc:asignaturasprofes){
+                for (Asignaturaciclo asc : asignaturasprofes) {
                     Asignatura as = asignaturaEjb.find(asc.getAsignaturaId().getAsignaturaId());
                     asignturasdisponibles.add(as);
                 }
-                asignaturasprofes = asignaturaCicloEjb.asignaturasProfesor(profesor, cursoSelected,per);
-                for(Asignaturaciclo asc:asignaturasprofes){
-                    Asignatura as =  asignaturaEjb.find(asc.getAsignaturaId().getAsignaturaId());
+                asignaturasprofes = asignaturaCicloEjb.asignaturasProfesor(profesor, cursoSelected, per);
+                for (Asignaturaciclo asc : asignaturasprofes) {
+                    Asignatura as = asignaturaEjb.find(asc.getAsignaturaId().getAsignaturaId());
                     asignturasSelecionadas.add(as);
                 }
-                this.pickList = new DualListModel<Asignatura>(asignturasdisponibles,asignturasSelecionadas);
+                this.pickList = new DualListModel<Asignatura>(asignturasdisponibles, asignturasSelecionadas);
             }
-            
+
         } catch (Exception e) {
-            System.out.println("errrrooorrrr"+e.toString());
+            System.out.println("errrrooorrrr" + e.toString());
             this.banderaAsig = false;
         }
     }
+
     public void onTransfer(TransferEvent event) {
         try {
-            System.out.println("mmm"+event.isAdd()+event.isRemove()+event.getItems());
-          
-            for(Object item : event.getItems()) {
+            System.out.println("mmm" + event.isAdd() + event.isRemove() + event.getItems());
+
+            for (Object item : event.getItems()) {
                 //builder.append(((Theme) item).getName()).append("<br />");
                 System.out.println(item.toString());
-                if(event.isRemove()){
-                    Asignatura asg = asignaturaEjb.find(Integer.parseInt(item.toString())); 
+                if (event.isRemove()) {
+                    Asignatura asg = asignaturaEjb.find(Integer.parseInt(item.toString()));
                     asSelecteds.remove(asg);
-                    System.out.println("FUNCIONO********"+asSelecteds);
+                    System.out.println("FUNCIONO********" + asSelecteds);
                 }
-                if(event.isAdd()){
-                    Asignatura asg = asignaturaEjb.find(Integer.parseInt(item.toString())); 
+                if (event.isAdd()) {
+                    Asignatura asg = asignaturaEjb.find(Integer.parseInt(item.toString()));
                     asSelecteds.add(asg);
-                    System.out.println("FUNCIONO********"+asSelecteds);
+                    System.out.println("FUNCIONO********" + asSelecteds);
                 }
             }
         } catch (Exception e) {
-            System.out.println(",,2"+e.getMessage());
+            System.out.println(",,2" + e.getMessage());
         }
         //StringBuilder builder = new StringBuilder();
-         
-        
-    } 
-    public void cargarMaterias() throws IllegalStateException, SecurityException, SystemException{
+
+
+    }
+
+    public void cargarMaterias() throws IllegalStateException, SecurityException, SystemException {
         try {
             tx.begin();
-            System.out.println("DELETE****"+contenidoEjb.removeByProfesorCurso(profesor, cursoSelected));
+            System.out.println("DELETE****" + contenidoEjb.removeByProfesorCurso(profesor, cursoSelected));
             Configuracion cf = anlectivoEjb.getConfiguracionCurso(cursoSelected);
             List<Periodo> periodos = periodoEjb.getPeriodosByConfiguracion(cf);
             Estadocontenidotematico est = estadocontenidoEjb.find(1);
-            System.out.println("FUNCIONO********"+asSelecteds);
+            System.out.println("FUNCIONO********" + asSelecteds);
             Curso cur = cursoEjb.find(cursoSelected.getCursoId());
-            for(int i = 0; i<asSelecteds.size();i++){
-                Asignaturaciclo asg = asignaturaCicloEjb.asignaturasCiclo(cur.getCicloId(),asSelecteds.get(i));
-                for(Periodo aux : periodos){
+            for (int i = 0; i < asSelecteds.size(); i++) {
+                Asignaturaciclo asg = asignaturaCicloEjb.asignaturasCiclo(cur.getCicloId(), asSelecteds.get(i));
+                for (Periodo aux : periodos) {
                     Contenidotematico con = new Contenidotematico();
                     con.setCursoId(cursoSelected);
                     con.setPeriodoId(aux);
@@ -253,7 +271,7 @@ public class mbvCargaAcademica implements Serializable{
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
-            System.out.println("ERROR"+e.toString());
+            System.out.println("ERROR" + e.toString());
         }
     }
 }

@@ -21,6 +21,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -57,6 +58,7 @@ public class Criterioevaluacion implements Serializable {
     private String descripcion;
     @Basic(optional = false)
     @NotNull
+    @Min(value=1,message="Nota maxima debe ser mayor que 0")
     @Column(name = "minaprob", nullable = false)
     private int minaprob;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "criterioevaluacionId", fetch = FetchType.LAZY)

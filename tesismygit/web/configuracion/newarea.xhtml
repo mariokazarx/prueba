@@ -16,7 +16,9 @@
         <h:form id="frmcriterioeval">
             <h:panelGrid columns="3">
                 <p:outputLabel for="txtNombre" value="Nombre: " />
-                <p:inputText id="txtNombre" value="#{mbvArea.area.nombre}" />
+                <p:inputText id="txtNombre" value="#{mbvArea.area.nombre}" >
+                    <f:validator validatorId="validatorVacio"/>
+                </p:inputText>
                 <p:message for="txtNombre"/>
                 <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
                 <p:inputTextarea id="txtDescripcion" value="#{mbvArea.area.descripcion}" autoResize="false" rows="5" cols="22" />

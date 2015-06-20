@@ -105,7 +105,7 @@
                 <p:fileUpload id="txtFoto" mode="simple" value="#{mbvEstudiante.foto}" />
                 <p:message for="txtFoto"/>
                 <h:panelGroup></h:panelGroup>
-                <p:commandButton value="Registrar Profesor" actionListener="#{mbvEstudiante.insertar}" ajax="false" update="frmProfesor" />
+                <p:commandButton value="Registrar Profesor" action="#{mbvEstudiante.insertar}" ajax="false" update="frmProfesor" />
             </h:panelGrid> 
         </h:form>
     </h:body>

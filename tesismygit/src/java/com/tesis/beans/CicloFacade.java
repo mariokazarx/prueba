@@ -41,7 +41,11 @@ public class CicloFacade extends AbstractFacade<Ciclo> {
         } catch (Exception e) {
             return null;
         }
-    
-}
+    }
+    public Ciclo getCicloByNum(int numero){
+        Query cq = em.createNamedQuery("Ciclo.findByNumero");
+        cq.setParameter("numero",numero);
+        return (Ciclo) cq.getSingleResult();
+    }
     
 }

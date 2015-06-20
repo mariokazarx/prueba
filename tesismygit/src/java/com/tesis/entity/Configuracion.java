@@ -21,6 +21,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -50,10 +51,12 @@ public class Configuracion implements Serializable {
     private Integer configuracionId;
     @Basic(optional = false)
     @NotNull
+    @Min(value=1,message="Debe ser mayor que 0")
     @Column(name = "no_periodos", nullable = false)
     private int noPeriodos;
     @Basic(optional = false)
     @NotNull
+    @Min(value=1,message="Debe ser mayor que 0")
     @Column(name = "duracion_periodo", nullable = false)
     private int duracionPeriodo;
     @Basic(optional = false)

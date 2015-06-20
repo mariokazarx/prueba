@@ -11,57 +11,57 @@
         <ui:composition template="./../plantilla.xhtml">
 
             <ui:define name="content">
-                <h:form id="frmListaEscala">
-                    <p:commandButton value="Nueva Criterio de Evaluacion" icon="ui-icon-document" actionListener="#{mbvcriterioevaluacion.newCriterioEval}">
-                        <p:ajax event="dialogReturn" listener="#{mbvcriterioevaluacion.closeDialog}" update="frmListaEscala" />
+                <h:form id="frmListaCursos">
+                    <p:commandButton value="Nuevo Curso" icon="ui-icon-document" actionListener="#{mbvCurso.newCurso}">
+                        <p:ajax event="dialogReturn" listener="#{mbvCurso.closeDialog}" update="frmListaCursos" />
                     </p:commandButton>
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
-                    <p:dataTable id="tablaListaEscala" var="item" value="#{mbvcriterioevaluacion.criterioseval}" paginator="true" rows="10" selection="#{mbvcriterioevaluacion.criterioeval}" selectionMode="single" lazy="true" rowKey="#{item.criterioevaluacionId}" >
-                        <p:ajax event="rowSelect" update=":frmListaEscala:panelDetalleEscala" oncomplete="PF('dialogoDetalleEscala').show()"/>
+                    <p:dataTable id="tablaListaCurso" var="curso" value="#{mbvCurso.cursos}" paginator="true" rows="10" selection="#{mbvCurso.curso}" selectionMode="single" lazy="true" rowKey="#{curso.cicloId}" >
+                        <p:ajax event="rowSelect" update=":frmListaCursos:panelDetalleCurso" oncomplete="PF('dialogoDetalleCurso').show()"/>
                         <f:facet name="header">
-                            Criterios de valiacion
+                            CUrsos
                         </f:facet>
                         <p:column headerText="Nombre" filterBy="nombre">
-                            <h:outputText value="#{item.nombre}"/>
+                            <h:outputText value="#{curso.nombre}"/>
                         </p:column>
-                        <p:column headerText="Descripcion" filterBy="descripcion">
-                            <h:outputText value="#{item.descripcion}"/>
+                        <p:column headerText="Ciclo" filterBy="ciclo">
+                            <h:outputText value="#{curso.cicloId.numero}"/>
                         </p:column>
-                        <p:column headerText="Criterio de aprobacion" filterBy="max">
-                            <h:outputText value="#{item.formacriterioevaluacionId.nombre}"/>
+                        <p:column headerText="Año Lectivo" filterBy="max">
+                            <h:outputText value="#{curso.anlectivoId.anio}"/>
                         </p:column>
-                        <p:column headerText="Minimo para aprobar" filterBy="min">
-                            <h:outputText value="#{item.minaprob}"/>
+                        <p:column headerText="Numero de Estudiantes" filterBy="min">
+                            <h:outputText value="#{curso.numeroestudiantes}"/>
                         </p:column>
                         <p:column>
-                            <p:commandButton value="Editar" icon="ui-icon-pencil" actionListener="#{mbvcriterioevaluacion.cargarCriterioseval(item.criterioevaluacionId)}"/>
+                            <p:commandButton value="Editar" icon="ui-icon-pencil" actionListener="#{mbvCurso.cargarCurso(curso.cursoId)}"/>
                         </p:column>
                     </p:dataTable>
 
-                    <p:dialog header="Detalle de Escala" widgetVar="dialogoDetalleEscala" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
-                        <p:outputPanel id="panelDetalleEscala">
+                    <p:dialog header="Detalle del Curso" widgetVar="dialogoDetalleCurso" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
+                        <p:outputPanel id="panelDetalleCurso">
                             <p:panelGrid columns="2">
                                 <p:outputLabel value="Id"/>
-                                <h:outputText value="#{mbvcriterioevaluacion.criterioeval.criterioevaluacionId}"/>
+                                <h:outputText value="#{mbvCurso.curso.cursoId}"/>
                                 <p:outputLabel value="Nombre"/>
-                                <h:outputText value="#{mbvcriterioevaluacion.criterioeval.nombre}"/>
-                                <p:outputLabel value="Descripcion"/>
-                                <h:outputText value="#{mbvcriterioevaluacion.criterioeval.descripcion}"/>
-                                <p:outputLabel value="Criterio de aprobacion"/>
-                                <h:outputText value="#{mbvcriterioevaluacion.criterioeval.formacriterioevaluacionId.nombre}"/>
-                                <p:outputLabel value="Minimo para aprobar"/>
-                                <h:outputText value="#{mbvcriterioevaluacion.criterioeval.minaprob}"/>
+                                <h:outputText value="#{mbvCurso.curso.nombre}"/>
+                                <p:outputLabel value="Curso"/>
+                                <h:outputText value="#{mbvCurso.curso.cicloId.numero}"/>
+                                <p:outputLabel value="Ano Lectivo"/>
+                                <h:outputText value="#{mbvCurso.curso.anlectivoId.anio}"/>
+                                <p:outputLabel value="Numero Estudiantes"/>
+                                <h:outputText value="#{mbvCurso.curso.numeroestudiantes}"/>
                             </p:panelGrid>
                         </p:outputPanel>
                     </p:dialog>                   
                 </h:form>
                 
-                <p:dialog header="Datos del usuario" widgetVar="dialogoEditarEscala" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
-                    <h:form id="frmEditarEscala">
-                        <p:outputPanel id="panelEditarEscala" >
+                <p:dialog header="Datos Del Curso" widgetVar="dialogoEditarCurso" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
+                    <h:form id="frmEditarCurso">
+                        <p:outputPanel id="panelEditarCurso" >
                              <h:panelGrid columns="3">
                                 <p:outputLabel for="txtNombre" value="Nombre: " />
-                                <p:inputText id="txtNombre" value="#{mbvcriterioevaluacion.criterioeval.nombre}" >
+                                <p:inputText id="txtNombre" value="#{mbvCurso.curso.nombre}" >
                                     <f:validator validatorId="validatorVacio"/>
                                 </p:inputText>
                                 <p:message for="txtNombre"/>
@@ -77,7 +77,7 @@
                                 <p:inputText id="txtMin" value="#{mbvcriterioevaluacion.criterioeval.minaprob}" />
                                 <p:message for="txtMin"/>
                                 <h:panelGroup></h:panelGroup>
-                                <p:commandButton value="Registrar Escala" actionListener="#{mbvcriterioevaluacion.actualizar}" ajax="true" update=":frmListaEscala" />
+                                <p:commandButton value="Registrar Escala" actionListener="#{mbvcriterioevaluacion.actualizar}" ajax="true" update=":frmListaCursos" />
                             </h:panelGrid> 
                         </p:outputPanel>
                     </h:form>

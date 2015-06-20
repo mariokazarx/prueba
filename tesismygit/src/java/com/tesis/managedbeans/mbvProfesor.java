@@ -128,4 +128,22 @@ public class mbvProfesor implements Serializable {
         options.put("resizable", true);
         RequestContext.getCurrentInstance().openDialog("newprofesor",options,null);
     }
+    public String cargarMaterias(Profesor profesor){
+         FacesContext.getCurrentInstance()
+                    .getExternalContext()
+                    .getFlash()
+                    .put("param1", profesor);
+					
+        return "cargaAcademica?faces-redirect=true";
+     }
+    public void cargarProfesor(int profesorid){
+        try {
+            this.profesor = profesorEjb.find(profesorid);
+            RequestContext.getCurrentInstance().update("frmEditarProfesor:panelEditarProfesor");
+            RequestContext.getCurrentInstance().execute("PF('dialogoEditarProfesor').show()");
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+        }
+    }
 }

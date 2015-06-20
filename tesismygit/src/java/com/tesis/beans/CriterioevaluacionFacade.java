@@ -8,6 +8,7 @@ import com.tesis.entity.Criterioevaluacion;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -26,5 +27,18 @@ public class CriterioevaluacionFacade extends AbstractFacade<Criterioevaluacion>
     public CriterioevaluacionFacade() {
         super(Criterioevaluacion.class);
     }
+    public boolean getByNombre(String nombre){
+        try {
+            Query cq = em.createNamedQuery("Criterioevaluacion.findByNombre");
+            cq.setParameter("nombre",nombre);
+            if(cq.getSingleResult()==null){
+                return true;
+            }else{
+                return false;
+            }
+        } catch (Exception e) {
+            return true;
+        }
     
+    }
 }

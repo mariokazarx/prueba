@@ -17,7 +17,9 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.validator.ValidatorException;
 import org.primefaces.context.RequestContext;
 
 /**
@@ -100,6 +102,12 @@ public class mbvcriterioevaluacion implements Serializable {
         //this.dialogEdit=false;
     }
     
+    public void validateNombreUnique(FacesContext arg0, UIComponent arg1, Object arg2)throws ValidatorException {
+       // this.mensage=false;
+        if (this.criterioevalEjb.getByNombre(arg2.toString())==false) {
+            throw new ValidatorException(new FacesMessage("ya existe este nombre"));
+        }
+    }
     
     public void insertar(){
         try{

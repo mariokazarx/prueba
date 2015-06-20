@@ -14,7 +14,7 @@
                         <p:ajax event="dialogReturn" listener="#{mbvArea.closeDialog}" update="frmListaArea" />
                     </p:commandButton>
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
-                    <p:dataTable id="tablaListaArea" var="item" value="#{mbvArea.areas}" paginator="true" rows="10" selection="#{mbvarea.area}" selectionMode="single" lazy="true" rowKey="#{item.areaId}" >
+                    <p:dataTable id="tablaListaArea" var="item" value="#{mbvArea.areas}" paginator="true" rows="10" selection="#{mbvArea.area}" selectionMode="single" lazy="true" rowKey="#{item.areaId}" >
                         <p:ajax event="rowSelect" update=":frmListaArea:panelDetalleArea" oncomplete="PF('dialogoDetalleArea').show()"/>
                         <f:facet name="header">
                             Lista de Areas
@@ -39,42 +39,38 @@
                                 <p:outputLabel value="Id"/>
                                 <h:outputText value="#{mbvArea.area.areaId}"/>
                                 <p:outputLabel value="Nombre"/>
-                                <h:outputText value="#{mbvarea.area.nombre}"/>
+                                <h:outputText value="#{mbvArea.area.nombre}"/>
                                 <p:outputLabel value="Descripcion"/>
-                                <h:outputText value="#{mbvarea.area.descripcion}"/>
-                                <p:outputLabel value="Nota minima"/>
-                                <h:outputText value="#{mbvEscala.escala.min}"/>
+                                <h:outputText value="#{mbvArea.area.descripcion}"/>
+                                <p:outputLabel value="Configuracion"/>
+                                <h:outputText value="#{mbvArea.area.configuracionId.nombre}"/>
                             </p:panelGrid>
                         </p:outputPanel>
                     </p:dialog>                   
                 </h:form>
-                <h:form id="frmEditarEscala">
-                    <p:dialog header="Datos del usuario" widgetVar="dialogoEditarEscala" modal="false">
+                <p:dialog header="Datos del usuario" widgetVar="dialogoEditarEscala" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
+                    <h:form id="frmEditarEscala">
                         <p:outputPanel id="panelEditarEscala" >
                             <h:panelGrid columns="3">
                                 <p:outputLabel for="txtNombre" value="Nombre: " />
-                                <p:inputText id="txtNombre" value="#{mbvEscala.escala.nombre}">
+                                <p:inputText id="txtNombre" value="#{mbvArea.area.nombre}">
                                     <f:validator validatorId="validatorVacio"/>
                                 </p:inputText>
                                 <p:message for="txtNombre"/>
                                 <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
-                                <p:inputTextarea id="txtDescripcion" autoResize="false" rows="5" cols="22" value="#{mbvEscala.escala.descripcion}"/>
+                                <p:inputTextarea id="txtDescripcion" autoResize="false" rows="5" cols="22" value="#{mbvArea.area.descripcion}"/>
                                 <p:message for="txtDescripcion"/>
-                                <p:outputLabel for="txtMin" value="Nota Minima:" />
-                                <p:inputText id="txtMin" value="#{mbvEscala.escala.min}"/>
-                                <p:message for="txtMin"/>
-                                <p:outputLabel for="txtMax" value="Nota Maxima:" />
-                                <p:inputText id="txtMax" value="#{mbvEscala.escala.max}"/>
-                                <p:message for="txtMax"/>
-                                <p:outputLabel for="txtMinaprob" value="Nota Minima Aprobacion:" />
-                                <p:inputText id="txtMinaprob" value="#{mbvEscala.escala.notaminimaaprob}"/>
-                                <p:message for="txtMinaprob"/>
+                                <p:outputLabel for="stlConfiguracion" value="Configuracion:" />
+                                <p:selectOneMenu id="stlConfiguracion" value="#{mbvArea.confselected.configuracionId}">
+                                    <f:selectItems value="#{mbvArea.configs}" var="configuracion" itemLabel="#{configuracion.nombre}" itemValue="#{configuracion.configuracionId}"/>
+                                </p:selectOneMenu>
+                                <p:message for="stlConfiguracion"/>
                                 <h:panelGroup></h:panelGroup>
                                 <p:commandButton value="editar Escala" ajax="true" actionListener="#{mbvEscala.actualizar}" update=":frmListaArea" />
                             </h:panelGrid>
                         </p:outputPanel>
-                    </p:dialog>
-                </h:form>
+                    </h:form>
+                </p:dialog>
             </ui:define>
         </ui:composition>
 

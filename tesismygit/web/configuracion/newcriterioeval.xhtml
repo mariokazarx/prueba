@@ -16,7 +16,7 @@
         <h:form id="frmcriterioeval">
             <h:panelGrid columns="3">
                 <p:outputLabel for="txtNombre" value="Nombre: " />
-                <p:inputText id="txtNombre" value="#{mbvcriterioevaluacion.criterioeval.nombre}" >
+                <p:inputText id="txtNombre" value="#{mbvcriterioevaluacion.criterioeval.nombre}" validator="#{mbvcriterioevaluacion.validateNombreUnique}">
                     <f:validator validatorId="validatorVacio"/>
                 </p:inputText>
                 <p:message for="txtNombre"/>

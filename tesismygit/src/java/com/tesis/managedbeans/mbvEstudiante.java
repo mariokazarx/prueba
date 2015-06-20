@@ -4,6 +4,7 @@
  */
 package com.tesis.managedbeans;
 
+import com.sun.xml.rpc.processor.modeler.j2ee.xml.paramValueType;
 import com.tesis.beans.EstadoEstudianteFacade;
 import com.tesis.beans.EstudianteFacade;
 import com.tesis.beans.TipoUsuarioFacade;
@@ -23,17 +24,25 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.ejb.EJB;
+import javax.faces.FacesException;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.RequestScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.UploadedFile;
@@ -50,7 +59,7 @@ public class mbvEstudiante implements Serializable{
     private List<Estudiante> estudiantes;
     private UploadedFile foto;
     private String ruta;
-    
+    String prueba; 
     @EJB
     private EstudianteFacade estudianteEjb;
     @EJB
@@ -59,6 +68,14 @@ public class mbvEstudiante implements Serializable{
     private TipoUsuarioFacade tusuEjb;
     
     public mbvEstudiante() {
+    }
+
+    public String getPrueba() {
+        return prueba;
+    }
+
+    public void setPrueba(String prueba) {
+        this.prueba = prueba;
     }
 
     public String getRuta() {
@@ -101,16 +118,19 @@ public class mbvEstudiante implements Serializable{
         this.estudianteEjb = estudianteEjb;
     }
 
-    
+    @PreDestroy
+    public void a(){
+        System.out.println("BBBBBBBBBBBBBBBB");
+    }
     @PostConstruct
     public void inicioPagina(){
+        System.out.println("AAAAAAAAAAAAAAA"+this.prueba);
        this.estudiante = new Estudiante();
        this.estudiantes = this.estudianteEjb.findAll();
        ServletContext servletContext=(ServletContext)FacesContext.getCurrentInstance().getExternalContext().getContext();
        this.ruta=(String)servletContext.getRealPath("/");
-
     }
-    public void insertar(){
+    public String insertar(){
         try{
             EstadoEstudiante estado = estadoEjb.find(1);
             TipoUsuario tusu = tusuEjb.find(1);
@@ -131,12 +151,12 @@ public class mbvEstudiante implements Serializable{
                     if(!this.foto.getFileName().endsWith(".png"))
                     {
                         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error:", "El archivo debe ser con extensión \".png\""));
-                        return;
+                        return "";
                     }
                     if(this.foto.getSize()>20971520)
                     {
                         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error:", "El archivo no puede ser más de 20mb"));
-                        return;
+                        return "";
                     }
                     String nombreArchivo = "/";
                     nombreArchivo += this.estudiante.getIdentificiacion(); 
@@ -168,7 +188,14 @@ public class mbvEstudiante implements Serializable{
                 this.estudianteEjb.create(estudiante);
                 FacesContext.getCurrentInstance().
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Criterio Evaluacion creado Satisfactoriamente", ""));
+                FacesContext.getCurrentInstance()
+                    .getExternalContext()
+                    .getFlash()
+                    .put("param1", this.estudiante);
                 inicioPagina();
+                //ExternalContext context = FacesContext.getCurrentInstance().getExternalContext(); 
+                //context.redirect("/tesismygit/faces/academico/matriculas.xhtml");
+                return "/academico/matriculas.xhtml?faces-redirect=true&includeViewParams=true";
             }
             catch(Exception ex)
             {
@@ -179,6 +206,7 @@ public class mbvEstudiante implements Serializable{
              FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
         }
+        return "";
         
     }
     public void handleFileUpload(FileUploadEvent event) throws IOException {    
@@ -390,4 +418,40 @@ public class mbvEstudiante implements Serializable{
              }
          }
      }
+     public String pp(){
+         FacesContext.getCurrentInstance()
+                    .getExternalContext()
+                    .getFlash()
+                    .put("param1", "hola");
+					
+        return "matriculas.xhtml?faces-redirect=true";
+     }
+     public String cargarMatricula(Estudiante es){
+         FacesContext.getCurrentInstance()
+                    .getExternalContext()
+                    .getFlash()
+                    .put("param1", es);
+					
+        return "matriculas.xhtml?faces-redirect=true";
+     }
+     public void newEstudiante(){
+        Map<String,Object> options = new HashMap<String, Object>();
+        options.put("contentHeight", 440);
+        options.put("height", 460);
+        options.put("width",700);
+        options.put("modal", true);
+        options.put("draggable", true);
+        options.put("resizable", true);
+        RequestContext.getCurrentInstance().openDialog("newestudiante",options,null);
+    }
+     public void cargarEstudiante(int estudianteid){
+        try {
+            this.estudiante = estudianteEjb.find(estudianteid);
+            RequestContext.getCurrentInstance().update("frmEditarEstudiante:panelEditarEstudiante");
+            RequestContext.getCurrentInstance().execute("PF('dialogoEditarEstudiante').show()");
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+        }
+    }
 }

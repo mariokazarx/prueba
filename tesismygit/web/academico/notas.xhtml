@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <body>
+        <ui:composition template="./../plantilla.xhtml">
+            <ui:define name="content">
+                <h:form id="frmMateriasCiclos">
+                    <p:outputLabel for="sltConfiguracion" value="Configuracion:" />
+                    <p:selectOneMenu id="sltConfiguracion" value="#{mbvMateriasCiclos.configuracionSelected.configuracionId}">
+                        <p:ajax listener="#{mbvMateriasCiclos.cargarCiclo()}" update="frmMateriasCiclos"/>
+                        <f:selectItem itemLabel="Seleccione."/>
+                        <f:selectItems value="#{mbvMateriasCiclos.configuraciones}" var="configuracion" itemLabel="#{configuracion.nombre}" itemValue="#{configuracion.configuracionId}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel for="sltCiclos" value="Ciclo:" />
+                    <p:selectOneMenu id="sltCiclos" value="#{mbvMateriasCiclos.cicloselected.cicloId}">
+                        <p:ajax listener="#{mbvMateriasCiclos.cargarAsignaturas()}" update="frmMateriasCiclos"/>
+                        <f:selectItem itemLabel="Seleccione."/>
+                        <f:selectItems value="#{mbvMateriasCiclos.ciclosSlected}" var="ciclo" itemLabel="#{ciclo.numero}" itemValue="#{ciclo.cicloId}"/>
+                    </p:selectOneMenu>
+                    <h3>Asignaturas</h3>
+                    
+                    <p:commandButton id="Confirmar" value="Confirmar" update="frmMateriasCiclos" style="margin-top:5px" />
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

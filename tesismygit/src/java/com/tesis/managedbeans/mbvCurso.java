@@ -120,6 +120,7 @@ public class mbvCurso implements Serializable{
     
     @PostConstruct
     public void inicioPagina(){
+        this.cursos = cursoEjb.findAll();
         this.anlectivoSelected = new Anlectivo();
         this.cicloselected = new Ciclo();
         this.curso = new Curso();

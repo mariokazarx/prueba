@@ -47,7 +47,7 @@ public class EscalaFacade extends AbstractFacade<Escala> {
             return true;
         }
     
-}
+    }
     /*public User getUserByUsernameOrNull(String username) {
     try{
         Query q = em.createNamedQuery(User.getUserByUsername);

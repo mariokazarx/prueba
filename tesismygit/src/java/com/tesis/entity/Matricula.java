@@ -17,8 +17,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -30,9 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Matricula.findAll", query = "SELECT m FROM Matricula m"),
-    @NamedQuery(name = "Matricula.findByMatriculaId", query = "SELECT m FROM Matricula m WHERE m.matriculaId = :matriculaId"),
-    @NamedQuery(name = "Matricula.findByEstado", query = "SELECT m FROM Matricula m WHERE m.estado = :estado"),
-    @NamedQuery(name = "Matricula.findByAprovacion", query = "SELECT m FROM Matricula m WHERE m.aprovacion = :aprovacion")})
+    @NamedQuery(name = "Matricula.findByMatriculaId", query = "SELECT m FROM Matricula m WHERE m.matriculaId = :matriculaId")})
 public class Matricula implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -40,34 +36,24 @@ public class Matricula implements Serializable {
     @Basic(optional = false)
     @Column(name = "matricula_id", nullable = false)
     private Integer matriculaId;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 200)
-    @Column(name = "estado", nullable = false, length = 200)
-    private String estado;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 200)
-    @Column(name = "aprovacion", nullable = false, length = 200)
-    private String aprovacion;
     @JoinColumn(name = "estudiante_id", referencedColumnName = "estudiante_id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Estudiante estudianteId;
+    @JoinColumn(name = "estado_matricula_id", referencedColumnName = "estado_matricula_id", nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private EstadoMatricula estadoMatriculaId;
     @JoinColumn(name = "curso_id", referencedColumnName = "curso_id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Curso cursoId;
+    @JoinColumn(name = "aprobacion_id", referencedColumnName = "aprobacion_id", nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Aprobacion aprobacionId;
 
     public Matricula() {
     }
 
     public Matricula(Integer matriculaId) {
         this.matriculaId = matriculaId;
-    }
-
-    public Matricula(Integer matriculaId, String estado, String aprovacion) {
-        this.matriculaId = matriculaId;
-        this.estado = estado;
-        this.aprovacion = aprovacion;
     }
 
     public Integer getMatriculaId() {
@@ -78,22 +64,6 @@ public class Matricula implements Serializable {
         this.matriculaId = matriculaId;
     }
 
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
-
-    public String getAprovacion() {
-        return aprovacion;
-    }
-
-    public void setAprovacion(String aprovacion) {
-        this.aprovacion = aprovacion;
-    }
-
     public Estudiante getEstudianteId() {
         return estudianteId;
     }
@@ -102,12 +72,28 @@ public class Matricula implements Serializable {
         this.estudianteId = estudianteId;
     }
 
+    public EstadoMatricula getEstadoMatriculaId() {
+        return estadoMatriculaId;
+    }
+
+    public void setEstadoMatriculaId(EstadoMatricula estadoMatriculaId) {
+        this.estadoMatriculaId = estadoMatriculaId;
+    }
+
     public Curso getCursoId() {
         return cursoId;
     }
 
     public void setCursoId(Curso cursoId) {
         this.cursoId = cursoId;
+    }
+
+    public Aprobacion getAprobacionId() {
+        return aprobacionId;
+    }
+
+    public void setAprobacionId(Aprobacion aprobacionId) {
+        this.aprobacionId = aprobacionId;
     }
 
     @Override
