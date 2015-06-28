@@ -4,6 +4,7 @@
  */
 package com.tesis.managedbeans;
 
+import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -18,7 +19,7 @@ import org.primefaces.model.menu.MenuModel;
  */
 @ManagedBean
 @ViewScoped
-public class mbvMenu {
+public class mbvMenu implements Serializable{
 
     private MenuModel model;
     

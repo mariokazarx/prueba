@@ -56,6 +56,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Estudiante.findByCabezaFamilia", query = "SELECT e FROM Estudiante e WHERE e.cabezaFamilia = :cabezaFamilia"),
     @NamedQuery(name = "Estudiante.findByAcudiente", query = "SELECT e FROM Estudiante e WHERE e.acudiente = :acudiente"),
     @NamedQuery(name = "Estudiante.findByFoto", query = "SELECT e FROM Estudiante e WHERE e.foto = :foto"),
+    @NamedQuery(name = "Estudiante.findByCurso", query = "SELECT e FROM Estudiante e JOIN e.matriculaList m WHERE m.cursoId = :cursoId"),
+    @NamedQuery(name = "Estudiante.findNotaLOgro", query = "SELECT logn FROM Estudiante e JOIN e.logronotaList logn WHERE logn.logroId = :logroId AND e.estudianteId = :estudianteId"),
+    @NamedQuery(name = "Estudiante.findNotaEst", query = "SELECT nt FROM Estudiante e JOIN e.notaList nt WHERE nt.contenidotematicoId = :contenidotematicoId AND e.estudianteId = :estudianteId"),
     @NamedQuery(name = "Estudiante.findByUltimoaprobado", query = "SELECT e FROM Estudiante e WHERE e.ultimoaprobado = :ultimoaprobado")})
 public class Estudiante implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -390,14 +393,33 @@ public class Estudiante implements Serializable {
     public void setNotafinalrecuperacionList(List<Notafinalrecuperacion> notafinalrecuperacionList) {
         this.notafinalrecuperacionList = notafinalrecuperacionList;
     }
-
+    //@XmlTransient
+    public BigDecimal getnotaLogro(Integer logroId) {
+        System.out.println("ENTRA TRAER NOTA");
+        BigDecimal nota = new BigDecimal(0);
+        for(Logronota logNota : this.logronotaList){
+            System.out.println("Traer Nota"+logronotaList+"NOMBRE"+nombre+"LOGRO ID"+logNota.getLogroId().getLogroId()+"PARAMETRO"+logroId);
+            if(logroId==logNota.getLogroId().getLogroId()){
+                nota = logNota.getNota();
+            }
+        }
+        return nota;
+    }
+    public void setnotaLogro(Integer logroId,BigDecimal notanew) {
+        System.out.println("Poner Nota"+notanew);
+        for(Logronota logNota : this.logronotaList){
+            if(logroId==logNota.getLogronotaId()){
+                logNota.setNota(notanew);
+            }
+        }
+    }
     @Override
     public int hashCode() {
         int hash = 0;
         hash += (estudianteId != null ? estudianteId.hashCode() : 0);
         return hash;
     }
-
+    
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set

@@ -4,28 +4,95 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:f="http://java.sun.com/jsf/core">
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
 
     <body>
         <ui:composition template="./../plantilla.xhtml">
             <ui:define name="content">
                 <h:form id="frmMateriasCiclos">
-                    <p:outputLabel for="sltConfiguracion" value="Configuracion:" />
-                    <p:selectOneMenu id="sltConfiguracion" value="#{mbvMateriasCiclos.configuracionSelected.configuracionId}">
-                        <p:ajax listener="#{mbvMateriasCiclos.cargarCiclo()}" update="frmMateriasCiclos"/>
+                    <p:outputLabel for="sltCursos" value="Curso:" />
+                    <p:selectOneMenu id="sltCursos" value="#{mbvNotas.cursoSelected.cursoId}">
+                        <p:ajax listener="#{mbvNotas.cargarAsignaturas()}" update="frmMateriasCiclos"/>
                         <f:selectItem itemLabel="Seleccione."/>
-                        <f:selectItems value="#{mbvMateriasCiclos.configuraciones}" var="configuracion" itemLabel="#{configuracion.nombre}" itemValue="#{configuracion.configuracionId}"/>
+                        <f:selectItems value="#{mbvNotas.cursos}" var="curso" itemLabel="#{curso.nombre}" itemValue="#{curso.cursoId}"/>
                     </p:selectOneMenu>
-                    <p:outputLabel for="sltCiclos" value="Ciclo:" />
-                    <p:selectOneMenu id="sltCiclos" value="#{mbvMateriasCiclos.cicloselected.cicloId}">
-                        <p:ajax listener="#{mbvMateriasCiclos.cargarAsignaturas()}" update="frmMateriasCiclos"/>
+                    <p:outputLabel for="sltAsignaturas" value="Asignaturas:" />
+                    <p:selectOneMenu id="sltAsignaturas" value="#{mbvNotas.asignaturaSelected.asignaturaId}">
+                        <p:ajax listener="#{mbvNotas.cargarContenido()}" update="frmMateriasCiclos"/>
                         <f:selectItem itemLabel="Seleccione."/>
-                        <f:selectItems value="#{mbvMateriasCiclos.ciclosSlected}" var="ciclo" itemLabel="#{ciclo.numero}" itemValue="#{ciclo.cicloId}"/>
+                        <f:selectItems value="#{mbvNotas.asignaturas}" var="asignatura" itemLabel="#{asignatura.nombre}" itemValue="#{asignatura.asignaturaId}"/>
                     </p:selectOneMenu>
+
+                    <p:commandButton value="Crear Logro" icon="ui-icon-pencil" actionListener="#{mbvNotas.newLogro}"/>
+
                     <h3>Asignaturas</h3>
+
+                    <p:dataTable id="tableLogros" var="logro" value="#{mbvNotas.logros}" sortBy="#{logro.porcentaje}">
+                        <p:column headerText="Id" sortBy="#{logro.logroId}">
+                            <h:outputText value="#{logro.logroId}" />
+                        </p:column>
+                        <p:column headerText="Titulo" sortBy="#{logro.titulo}">
+                            <h:outputText value="#{logro.titulo}" />
+                        </p:column>
+                        <p:column headerText="Descripcion" sortBy="#{logro.descripcion}">
+                            <h:outputText value="#{logro.descripcion}" />
+                        </p:column>
+                        <p:column headerText="Porcentaje" sortBy="#{logro.porcentaje}">
+                            <h:outputText value="#{logro.porcentaje}" />
+                        </p:column>
+                        <p:column>
+                            <p:commandButton value="Eliminar"  icon="ui-icon-close" actionListener="#{mbvNotas.eliminarLogro(logro)}" ajax="true" update=":frmMateriasCiclos"/>
+                        </p:column>
+                    </p:dataTable>
+                    <p:remoteCommand name="onCellEdit" update="testContainer" />
                     
+                    <p:outputPanel id="testContainer">
+                        <p:dataTable tableStyle="width:auto" editable="true" editMode="cell" id="tablanotas" var="estudiante" value="#{mbvNotas.estudiantes}" widgetVar="tablaEstudiantes" >                    
+                            <p:ajax event="cellEdit" listener="#{mbvNotas.onCellEdit}" oncomplete="onCellEdit()" />
+                            <p:column headerText="Nombres Y Apellidos" sortBy="#{estudiante.nombre}">
+                                <h:outputText value="#{estudiante.apellido} #{estudiante.nombre}" />
+                            </p:column>
+                            <c:forEach items="#{mbvNotas.columns}" var="column" varStatus="loop">
+                                <p:column headerText="#{column.property}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{column.header}" />
+                                    </f:facet>
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{mbvNotas.getNotaEstudiante(estudiante,column.property)}" /></f:facet>
+                                        <f:facet name="input"><p:inputMask id="modelInput_#{loop.index}" maxlength="2" mask="9.9" value="#{mbvNotas.notaxxLogro}" style="width:96%"/></f:facet>
+                                        <ui:param name="idLogro#{estudiante.estudianteId}_#{loop.index}" value="#{column.property}"/> 
+                                    </p:cellEditor>
+                                </p:column>
+                            </c:forEach>
+                            <p:column headerText="Nota" sortBy="#{estudiante.nombre}">
+                                <h:outputText value="#{mbvNotas.getNotaEst(estudiante)}" />
+                            </p:column>
+                        </p:dataTable>
+                    </p:outputPanel>
                     <p:commandButton id="Confirmar" value="Confirmar" update="frmMateriasCiclos" style="margin-top:5px" />
                 </h:form>
+                <p:dialog header="Nuevo Logro" widgetVar="dialogoCrearLogro" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
+                    <h:form id="frmCrearLogro">
+                        <p:outputPanel id="panelCrearLogro" >
+                            <h:panelGrid columns="3">
+                                <p:outputLabel for="txtTitulo" value="Titulo: "/>
+                                <p:inputText id="txtTitulo" value="#{mbvNotas.logro.titulo}" validator="#{mbvEscala.validateNombreUnique}">
+                                    <f:validator validatorId="validatorVacio"/>
+                                </p:inputText>
+                                <p:message for="txtTitulo"/>
+                                <p:outputLabel for="txtPorcentaje" value="Porcentaje:" />
+                                <p:inputText id="txtPorcentaje" value="#{mbvNotas.logro.porcentaje}"/>
+                                <p:message for="txtPorcentaje"/>
+                                <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
+                                <p:inputTextarea id="txtDescripcion" value="#{mbvEscala.escala.descripcion}" rows="5" cols="22" />
+                                <p:message for="txtDescripcion"/>
+                                <h:panelGroup></h:panelGroup>
+                                <p:commandButton value="Registrar Logro" actionListener="#{mbvNotas.insertarLogro}" ajax="true" update=":frmMateriasCiclos" />
+                            </h:panelGrid> 
+                        </p:outputPanel>
+                    </h:form>
+                </p:dialog>
             </ui:define>
         </ui:composition>
     </body>

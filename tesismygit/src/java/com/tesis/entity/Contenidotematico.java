@@ -33,6 +33,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Contenidotematico.findAll", query = "SELECT c FROM Contenidotematico c"),
     @NamedQuery(name = "Contenidotematico.findByContenidotematicoId", query = "SELECT c FROM Contenidotematico c WHERE c.contenidotematicoId = :contenidotematicoId"),
+    @NamedQuery(name = "Contenidotematico.findCursoId", query = "SELECT DISTINCT c.cursoId FROM Contenidotematico c WHERE c.contenidotematicoId = :contenidotematicoId"),
+    @NamedQuery(name = "Contenidotematico.findByAll", query = "SELECT c FROM Contenidotematico c WHERE c.cursoId = :cursoId and c.periodoId = :periodoId and c.profesorId = :profesorId and c.asignaturacicloId = :asignaturacicloId"),
     @NamedQuery(name = "Contenidotematico.DeleteByProfesorCurso", query = "DELETE FROM Contenidotematico c WHERE c.profesorId = :profesorId AND c.cursoId = :cursoId")})
 public class Contenidotematico implements Serializable {
     private static final long serialVersionUID = 1L;

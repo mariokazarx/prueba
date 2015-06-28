@@ -231,12 +231,14 @@ public class mbvCargaAcademica implements Serializable {
                 if (event.isRemove()) {
                     Asignatura asg = asignaturaEjb.find(Integer.parseInt(item.toString()));
                     asSelecteds.remove(asg);
-                    System.out.println("FUNCIONO********" + asSelecteds);
+                    asignturasSelecionadas.remove(asg);
+                    System.out.println("FUNCIONO********" + asSelecteds+"ESTE MEJOR"+asignturasSelecionadas);
                 }
                 if (event.isAdd()) {
                     Asignatura asg = asignaturaEjb.find(Integer.parseInt(item.toString()));
                     asSelecteds.add(asg);
-                    System.out.println("FUNCIONO********" + asSelecteds);
+                    asignturasSelecionadas.add(asg);
+                    System.out.println("FUNCIONO********" + asSelecteds+"ESTE MEJOR"+asignturasSelecionadas);
                 }
             }
         } catch (Exception e) {
@@ -254,10 +256,10 @@ public class mbvCargaAcademica implements Serializable {
             Configuracion cf = anlectivoEjb.getConfiguracionCurso(cursoSelected);
             List<Periodo> periodos = periodoEjb.getPeriodosByConfiguracion(cf);
             Estadocontenidotematico est = estadocontenidoEjb.find(1);
-            System.out.println("FUNCIONO********" + asSelecteds);
+            System.out.println("FUNCIONO********" + asSelecteds+"ESTE MEJOR"+asignturasSelecionadas);
             Curso cur = cursoEjb.find(cursoSelected.getCursoId());
-            for (int i = 0; i < asSelecteds.size(); i++) {
-                Asignaturaciclo asg = asignaturaCicloEjb.asignaturasCiclo(cur.getCicloId(), asSelecteds.get(i));
+            for (int i = 0; i < asignturasSelecionadas.size(); i++) {
+                Asignaturaciclo asg = asignaturaCicloEjb.asignaturasCiclo(cur.getCicloId(), asignturasSelecionadas.get(i));
                 for (Periodo aux : periodos) {
                     Contenidotematico con = new Contenidotematico();
                     con.setCursoId(cursoSelected);

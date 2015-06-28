@@ -4,8 +4,10 @@
  */
 package com.tesis.beans;
 
+import com.tesis.entity.Asignaturaciclo;
 import com.tesis.entity.Contenidotematico;
 import com.tesis.entity.Curso;
+import com.tesis.entity.Periodo;
 import com.tesis.entity.Profesor;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -35,4 +37,12 @@ public class ContenidotematicoFacade extends AbstractFacade<Contenidotematico> {
         cq.setParameter("cursoId",curso);
         return cq.executeUpdate();
 }
+    public Contenidotematico getContenidoByAll(Profesor profesor,Curso curso,Asignaturaciclo asinaturaciclo,Periodo periodo){
+        Query cq = em.createNamedQuery("Contenidotematico.findByAll");
+        cq.setParameter("profesorId",profesor);
+        cq.setParameter("cursoId",curso);
+        cq.setParameter("asignaturacicloId",asinaturaciclo);
+        cq.setParameter("periodoId",periodo);
+        return (Contenidotematico) cq.getSingleResult();
+    }
 }

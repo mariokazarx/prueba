@@ -37,6 +37,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Logro.findByLogroId", query = "SELECT l FROM Logro l WHERE l.logroId = :logroId"),
     @NamedQuery(name = "Logro.findByDescripcion", query = "SELECT l FROM Logro l WHERE l.descripcion = :descripcion"),
     @NamedQuery(name = "Logro.findByPorcentaje", query = "SELECT l FROM Logro l WHERE l.porcentaje = :porcentaje"),
+    @NamedQuery(name = "Logro.findByContenido", query = "SELECT l FROM Logro l WHERE l.contenidotematicoId = :contenidotematicoId"),
+    @NamedQuery(name = "Logro.findByEstdudiante", query = "SELECT l FROM Logro l JOIN l.logronotaList ln WHERE ln.estudianteId = :estudianteId AND l.logroId = :logroId"),
     @NamedQuery(name = "Logro.findByTitulo", query = "SELECT l FROM Logro l WHERE l.titulo = :titulo")})
 public class Logro implements Serializable {
     private static final long serialVersionUID = 1L;
