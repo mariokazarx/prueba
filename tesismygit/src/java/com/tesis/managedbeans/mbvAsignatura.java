@@ -183,6 +183,7 @@ public class mbvAsignatura implements Serializable{
             this.asignatura =  this.asignaturaEjb.find(asignaturaid);
             this.areaselected = this.areaEjb.find(asignatura.getAreaId().getAreaId());
             this.confuguracionselected = this.configuracionEjb.find(asignatura.getConfiguracionId().getConfiguracionId());
+            this.areas = this.confuguracionselected.getAreaList();
             RequestContext.getCurrentInstance().update("frmEditarAsignatura:panelEditarAsignatura");
             RequestContext.getCurrentInstance().execute("PF('dialogoEditarAsignatura').show()");
         } catch (Exception e) {

@@ -23,7 +23,6 @@ import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import sun.org.mozilla.javascript.internal.ast.TryStatement;
 
 /**
  *

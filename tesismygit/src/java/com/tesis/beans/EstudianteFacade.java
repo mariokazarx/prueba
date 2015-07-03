@@ -58,6 +58,7 @@ public class EstudianteFacade extends AbstractFacade<Estudiante> {
             return null;
         }
     }
+
     public Nota findNotaEst(Contenidotematico contenido, Estudiante estudiante) {
         try {
             Query cq = em.createNamedQuery("Estudiante.findNotaEst");

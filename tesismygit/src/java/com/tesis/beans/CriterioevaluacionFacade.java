@@ -16,6 +16,7 @@ import javax.persistence.Query;
  */
 @Stateless
 public class CriterioevaluacionFacade extends AbstractFacade<Criterioevaluacion> {
+
     @PersistenceContext(unitName = "tesismygitPU")
     private EntityManager em;
 
@@ -27,18 +28,19 @@ public class CriterioevaluacionFacade extends AbstractFacade<Criterioevaluacion>
     public CriterioevaluacionFacade() {
         super(Criterioevaluacion.class);
     }
-    public boolean getByNombre(String nombre){
+
+    public boolean getByNombre(String nombre) {
         try {
             Query cq = em.createNamedQuery("Criterioevaluacion.findByNombre");
-            cq.setParameter("nombre",nombre);
-            if(cq.getSingleResult()==null){
+            cq.setParameter("nombre", nombre);
+            if (cq.getSingleResult() == null) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
         } catch (Exception e) {
             return true;
         }
-    
+
     }
 }

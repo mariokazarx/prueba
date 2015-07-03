@@ -8,6 +8,7 @@ import com.tesis.entity.Usuario;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -26,5 +27,18 @@ public class UsuarioFacade extends AbstractFacade<Usuario> {
     public UsuarioFacade() {
         super(Usuario.class);
     }
-    
+    public Usuario getByCorreo(String correo) {
+        try {
+            Query cq = em.createNamedQuery("Usuario.findByCorreo");
+            cq.setParameter("correo", correo);
+            System.out.println("RESULTQDO USUARIO" + cq.getSingleResult());
+            if (cq.getSingleResult() == null) {
+                return null;
+            } else {
+                return (Usuario) cq.getSingleResult();
+            }
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

@@ -8,6 +8,7 @@ import com.tesis.entity.Profesor;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -26,5 +27,18 @@ public class ProfesorFacade extends AbstractFacade<Profesor> {
     public ProfesorFacade() {
         super(Profesor.class);
     }
-    
+    public Profesor getByCorreo(String correo) {
+        try {
+            Query cq = em.createNamedQuery("Profesor.findByCorreo");
+            cq.setParameter("correo", correo);
+            System.out.println("RESULTQDO USUARIO" + cq.getSingleResult());
+            if (cq.getSingleResult() == null) {
+                return null;
+            } else {
+                return (Profesor) cq.getSingleResult();
+            }
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

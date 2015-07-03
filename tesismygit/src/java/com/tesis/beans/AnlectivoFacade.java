@@ -18,6 +18,7 @@ import javax.persistence.Query;
  */
 @Stateless
 public class AnlectivoFacade extends AbstractFacade<Anlectivo> {
+
     @PersistenceContext(unitName = "tesismygitPU")
     private EntityManager em;
 
@@ -29,9 +30,27 @@ public class AnlectivoFacade extends AbstractFacade<Anlectivo> {
     public AnlectivoFacade() {
         super(Anlectivo.class);
     }
-    public Configuracion getConfiguracionCurso(Curso curso){
+
+    public Configuracion getConfiguracionCurso(Curso curso) {
         Query cq = em.createNamedQuery("Anlectivo.findConfoguracionCurso");
-        cq.setParameter("cursoId",curso.getCursoId());
+        cq.setParameter("cursoId", curso.getCursoId());
         return (Configuracion) cq.getSingleResult();
-}
+    }
+
+    public boolean existeConfiguracion(Configuracion configuracion) {
+        boolean bandera;
+        try {
+            Query cq = em.createNamedQuery("Anlectivo.findConfiguracion");
+            cq.setParameter("configuracionId", configuracion);
+            if (cq.getSingleResult() != null) {
+                bandera = true;
+            } else {
+                bandera = false;
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR[]"+e.toString());
+            bandera = false;
+        }
+        return bandera;
+    }
 }

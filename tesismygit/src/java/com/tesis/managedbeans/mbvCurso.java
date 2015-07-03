@@ -11,13 +11,16 @@ import com.tesis.entity.Anlectivo;
 import com.tesis.entity.Ciclo;
 import com.tesis.entity.Curso;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -25,7 +28,7 @@ import javax.faces.context.FacesContext;
  */
 @ManagedBean
 @ViewScoped
-public class mbvCurso implements Serializable{
+public class mbvCurso implements Serializable {
 
     private Curso curso;
     private List<Curso> cursos;
@@ -33,14 +36,13 @@ public class mbvCurso implements Serializable{
     private List<Anlectivo> anlectivos;
     private Ciclo cicloselected;
     private List<Ciclo> ciclosSelected;
-    
     @EJB
     private CursoFacade cursoEjb;
     @EJB
     private AnlectivoFacade anlectivoEJB;
     @EJB
     private CicloFacade cicloEJB;
-    
+
     public mbvCurso() {
     }
 
@@ -84,8 +86,6 @@ public class mbvCurso implements Serializable{
         this.anlectivoEJB = anlectivoEJB;
     }
 
-    
-
     public Ciclo getCicloselected() {
         return cicloselected;
     }
@@ -117,39 +117,57 @@ public class mbvCurso implements Serializable{
     public void setCicloEJB(CicloFacade cicloEJB) {
         this.cicloEJB = cicloEJB;
     }
-    
+
     @PostConstruct
-    public void inicioPagina(){
+    public void inicioPagina() {
         this.cursos = cursoEjb.findAll();
         this.anlectivoSelected = new Anlectivo();
         this.cicloselected = new Ciclo();
         this.curso = new Curso();
-        this.anlectivos = this.anlectivoEJB.findAll();      
+        this.anlectivos = this.anlectivoEJB.findAll();
     }
-    public void cargarCiclo(){
+
+    public void cargarCiclo() {
         try {
             this.anlectivoSelected = anlectivoEJB.find(anlectivoSelected.getAnlectivoId());
             //System.out.println("mma"+anlectivoSelected.getConfiguracionId().getNombre());
             this.ciclosSelected = cicloEJB.getByConfiguracion(anlectivoSelected.getConfiguracionId());
             System.out.println(this.ciclosSelected.isEmpty());
             //if(this.ciclosSlected.isEmpty()==true){
-                //this.banAsig=false;
+            //this.banAsig=false;
             //}
         } catch (Exception e) {
-           System.out.println("mmaaaaa"+e.getMessage());
-        }    
+            System.out.println("mmaaaaa" + e.getMessage());
+        }
     }
-     public void insertar(){
+
+    public void insertar() {
         try {
             this.curso.setAnlectivoId(anlectivoSelected);
             this.curso.setCicloId(cicloselected);
             this.cursoEjb.create(curso);
             FacesContext.getCurrentInstance().
-                           addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Criterio Evaluacion creado Satisfactoriamente", ""));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Criterio Evaluacion creado Satisfactoriamente", ""));
             inicioPagina();
         } catch (Exception ex) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error fatal:", "Por favor contacte con su administrador "+ex.getMessage()));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error fatal:", "Por favor contacte con su administrador " + ex.getMessage()));
         }
-        
+
+    }
+    public void closeDialog() {
+        inicioPagina();
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Asignatura registrada", "exitosamente"); 
+        FacesContext.getCurrentInstance().addMessage(null, message);
+    }
+    public void newCurso(){
+        Map<String,Object> options = new HashMap<String, Object>();
+        /*options.put("contentHeight", 340);
+        options.put("height", 400);
+        options.put("width",700);*/
+        options.put("modal", true);
+        //options.put("showEffect", "clip");
+        options.put("draggable", true);
+        options.put("resizable", true);
+        RequestContext.getCurrentInstance().openDialog("newcurso",options,null);
     }
 }

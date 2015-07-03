@@ -5,7 +5,9 @@
 package com.tesis.entity;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,11 +18,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -80,6 +84,8 @@ public class Usuario implements Serializable {
     @JoinColumn(name = "estado_usuario_id", referencedColumnName = "estado_usuario_id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private EstadoUsuario estadoUsuarioId;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioId", fetch = FetchType.LAZY)
+    private List<UsuarioRole> usuarioRoleList;
 
     public Usuario() {
     }
@@ -173,6 +179,15 @@ public class Usuario implements Serializable {
 
     public void setEstadoUsuarioId(EstadoUsuario estadoUsuarioId) {
         this.estadoUsuarioId = estadoUsuarioId;
+    }
+
+    @XmlTransient
+    public List<UsuarioRole> getUsuarioRoleList() {
+        return usuarioRoleList;
+    }
+
+    public void setUsuarioRoleList(List<UsuarioRole> usuarioRoleList) {
+        this.usuarioRoleList = usuarioRoleList;
     }
 
     @Override

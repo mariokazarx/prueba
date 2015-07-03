@@ -40,6 +40,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Anlectivo.findByEstadocopiado", query = "SELECT a FROM Anlectivo a WHERE a.estadocopiado = :estadocopiado"),
     @NamedQuery(name = "Anlectivo.findByAnio", query = "SELECT a FROM Anlectivo a WHERE a.anio = :anio"),
     @NamedQuery(name = "Anlectivo.findConfoguracionCurso", query = "SELECT a.configuracionId FROM Anlectivo a JOIN a.cursoList c WHERE c.cursoId = :cursoId"),
+    @NamedQuery(name = "Anlectivo.findConfiguracion", query = "SELECT a FROM Anlectivo a WHERE a.configuracionId = :configuracionId"),
     @NamedQuery(name = "Anlectivo.findByDescripcion", query = "SELECT a FROM Anlectivo a WHERE a.descripcion = :descripcion")})
 public class Anlectivo implements Serializable {
     private static final long serialVersionUID = 1L;

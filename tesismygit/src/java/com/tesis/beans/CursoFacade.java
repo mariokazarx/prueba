@@ -19,6 +19,7 @@ import javax.persistence.Query;
  */
 @Stateless
 public class CursoFacade extends AbstractFacade<Curso> {
+
     @PersistenceContext(unitName = "tesismygitPU")
     private EntityManager em;
 
@@ -30,11 +31,12 @@ public class CursoFacade extends AbstractFacade<Curso> {
     public CursoFacade() {
         super(Curso.class);
     }
-    public List<Curso> findCursosProfeso(Profesor profesor,Periodo periodo) {
-        System.out.println("MMMM"+profesor.getNombre());
+
+    public List<Curso> findCursosProfeso(Profesor profesor, Periodo periodo) {
+        System.out.println("MMMM" + profesor.getNombre());
         Query cq = em.createNamedQuery("Curso.findByCursoProfesor");
-        cq.setParameter("profesorId",profesor);
-        cq.setParameter("periodoId",periodo);
+        cq.setParameter("profesorId", profesor);
+        cq.setParameter("periodoId", periodo);
         return cq.getResultList();
     }
 }

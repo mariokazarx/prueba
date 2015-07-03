@@ -19,6 +19,7 @@ import javax.persistence.Query;
  */
 @Stateless
 public class EscalaFacade extends AbstractFacade<Escala> {
+
     @PersistenceContext(unitName = "tesismygitPU")
     private EntityManager em;
 
@@ -30,31 +31,33 @@ public class EscalaFacade extends AbstractFacade<Escala> {
     public EscalaFacade() {
         super(Escala.class);
     }
+
     public List<Escala> findAllOrder() {
         Query cq = em.createNamedQuery("Escala.findAllOrder");
         return cq.getResultList();
     }
-    public boolean getByNombre(String nombre){
+
+    public boolean getByNombre(String nombre) {
         try {
             Query cq = em.createNamedQuery("Escala.findByNombre");
-            cq.setParameter("nombre",nombre);
-            if(cq.getSingleResult()==null){
+            cq.setParameter("nombre", nombre);
+            if (cq.getSingleResult() == null) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
         } catch (Exception e) {
             return true;
         }
-    
+
     }
     /*public User getUserByUsernameOrNull(String username) {
-    try{
-        Query q = em.createNamedQuery(User.getUserByUsername);
-        q.setParameter("username", username);
-        return (User) q.getSingleResult();
-    } catch(NoResultException e) {
-        return null;
-    }
-}*/
+     try{
+     Query q = em.createNamedQuery(User.getUserByUsername);
+     q.setParameter("username", username);
+     return (User) q.getSingleResult();
+     } catch(NoResultException e) {
+     return null;
+     }
+     }*/
 }

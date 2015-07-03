@@ -419,7 +419,7 @@ public class Estudiante implements Serializable {
         hash += (estudianteId != null ? estudianteId.hashCode() : 0);
         return hash;
     }
-    
+
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
