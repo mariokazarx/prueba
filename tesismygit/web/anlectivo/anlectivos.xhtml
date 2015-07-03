@@ -53,27 +53,39 @@
                         </p:outputPanel>
                     </p:dialog>                   
                 </h:form>
-                
+
                 <p:dialog header="Datos año lectivo" widgetVar="dialogoEditarAlectivo" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
                     <h:form id="frmEditarAlectivo">
                         <p:outputPanel id="panelEditarAlectivo" >
-                             <h:panelGrid columns="3">
-                                <p:outputLabel for="txtNombre" value="Nombre: " />
-                                <p:inputText id="txtNombre" value="#{mbvcriterioevaluacion.criterioeval.nombre}" />
-                                <p:message for="txtNombre"/>
-                                <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
-                                <p:inputTextarea id="txtDescripcion" value="#{mbvcriterioevaluacion.criterioeval.descripcion}" autoResize="false" rows="5" cols="22" />
-                                <p:message for="txtDescripcion"/>
-                                <p:outputLabel for="stlCriterio" value="Criterio de aprobacion:" />
-                                <p:selectOneMenu id="stlCriterio" value="#{mbvcriterioevaluacion.fcriterioselected.formacriterioevaluacionId}">
-                                    <f:selectItems value="#{mbvcriterioevaluacion.fcriterios}" var="fcriterio" itemLabel="#{fcriterio.nombre}" itemValue="#{fcriterio.formacriterioevaluacionId}"/>
+                            <h:panelGrid columns="3">
+                                <p:outputLabel for="selectaño" value="Año: "/>
+                                <p:selectOneMenu id="selectaño" value="#{mbvAlectivo.año}" style="width:125px">
+                                    <p:ajax event="change" update="@this" />
+                                    <f:selectItem itemLabel="Seleccione." itemValue="" />
+                                    <f:selectItems value="#{mbvAlectivo.años}" />
                                 </p:selectOneMenu>
-                                <p:message for="stlCriterio"/>
-                                <p:outputLabel for="txtMin" value="Minimo para aprobar:" />
-                                <p:inputText id="txtMin" value="#{mbvcriterioevaluacion.criterioeval.minaprob}" />
-                                <p:message for="txtMin"/>
+                                <p:message for="selectaño"/>
+
+                                <p:outputLabel for="selectconf" value="Configuracion:" />
+                                <p:selectOneMenu id="selectconf" value="#{mbvAlectivo.configuracionselected.configuracionId}">
+                                    <p:ajax listener="#{mbvAlectivo.cargarCopia}" update="frmEditarAlectivo"/>
+                                    <f:selectItem itemLabel="Seleccione."/>
+                                    <f:selectItems value="#{mbvAlectivo.configuraciones}" var="conf" itemLabel="#{conf.nombre}" itemValue="#{conf.configuracionId}"/>
+                                </p:selectOneMenu>
+                                <p:message for="selectconf"/>
+                                
+                                <p:outputLabel for="selectestado" value="Estado:" />
+                                <p:selectOneMenu id="selectestado" value="#{mbvAlectivo.estadoAlectivoselected.estadoAniolectivoId}">
+                                    <f:selectItems value="#{mbvAlectivo.estadosAlectivos}" var="estado" itemLabel="#{estado.estado}" itemValue="#{estado.estadoAniolectivoId}"/>
+                                </p:selectOneMenu>
+                                <p:message for="selectestado"/>
+                                
+                                <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
+                                <p:inputTextarea id="txtDescripcion" value="#{mbvAlectivo.anlectivo.descripcion}" autoResize="false" rows="5" />
+                                <p:message for="txtDescripcion"/>
+
                                 <h:panelGroup></h:panelGroup>
-                                <p:commandButton value="Registrar Escala" actionListener="#{mbvcriterioevaluacion.actualizar}" ajax="true" update=":frmEditarAlectivo" />
+                                <p:commandButton value="Registrar Escala" actionListener="#{mbvAlectivo.actualizar}" ajax="true" update=":frmanlectios" />
                             </h:panelGrid> 
                         </p:outputPanel>
                     </h:form>

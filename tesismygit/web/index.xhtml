@@ -1,12 +1,36 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html">
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
     <h:head>
         <title>Facelet Title</title>
+        <h:outputStylesheet name="css/cssFormulario.css"/>
     </h:head>
     <h:body>
-        s from Facelets prueba
+        <h1>Centro Educativo Antonio Ricaurte</h1>
+        <hr />
+        <div class="contenedorLogin">
+            <h:form id="frmLogin" class="formulario">
+                <p:growl id="mensageGeneral" showDetail="true" sticky="false"/>
+                <h2>Inicio de sesión</h2>
+                <h:panelGrid columns="2">
+                    <p:outputLabel value="Correo electrónico" for="txtCorreoElectronico"/>
+                    <p:inputText placeholder="Correo" id="txtCorreoElectronico" size="35" value="#{mbsLogin.txtCorreo}"/>
+                    <p:outputLabel value="Contraseña" for="txtContrasenia"/>
+                    <p:password placeholder="Contraseña" id="txtContrasenia" size="35" value="#{mbsLogin.clave}"/>
+                    <p:outputLabel for="selectTipoUsu" value="Tipo de Usuario:" />
+                    <p:selectOneMenu id="selectTipoUsu" value="#{mbsLogin.tipoUsuario}" style="width:125px">
+                        <f:selectItem itemLabel="Docente" itemValue="profesor" />
+                        <f:selectItem itemLabel="Administrativo" itemValue="administrativo" />
+                    </p:selectOneMenu>
+                    <h:panelGroup></h:panelGroup>
+                    <p:commandButton value="Ingresar" ajax="false" actionListener="#{mbsLogin.confirmar}"/>
+                </h:panelGrid>
+            </h:form>
+        </div>
+
     </h:body>
 </html>
 

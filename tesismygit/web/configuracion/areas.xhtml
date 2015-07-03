@@ -58,7 +58,7 @@
                                 </p:inputText>
                                 <p:message for="txtNombre"/>
                                 <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
-                                <p:inputTextarea id="txtDescripcion" autoResize="false" rows="5" cols="22" value="#{mbvArea.area.descripcion}"/>
+                                <p:inputTextarea id="txtDescripcion" autoResize="false" rows="5" value="#{mbvArea.area.descripcion}"/>
                                 <p:message for="txtDescripcion"/>
                                 <p:outputLabel for="stlConfiguracion" value="Configuracion:" />
                                 <p:selectOneMenu id="stlConfiguracion" value="#{mbvArea.confselected.configuracionId}">
@@ -66,7 +66,7 @@
                                 </p:selectOneMenu>
                                 <p:message for="stlConfiguracion"/>
                                 <h:panelGroup></h:panelGroup>
-                                <p:commandButton value="editar Escala" ajax="true" actionListener="#{mbvEscala.actualizar}" update=":frmListaArea" />
+                                <p:commandButton value="editar Escala" ajax="true" actionListener="#{mbvArea.actualizar}" update=":frmListaArea" />
                             </h:panelGrid>
                         </p:outputPanel>
                     </h:form>

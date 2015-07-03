@@ -61,12 +61,12 @@
                         <p:outputPanel id="panelEditarEscala" >
                              <h:panelGrid columns="3">
                                 <p:outputLabel for="txtNombre" value="Nombre: " />
-                                <p:inputText id="txtNombre" value="#{mbvcriterioevaluacion.criterioeval.nombre}" >
+                                <p:inputText id="txtNombre" value="#{mbvcriterioevaluacion.criterioeval.nombre}" validator="#{mbvcriterioevaluacion.validateNombreUniqueEditar}">
                                     <f:validator validatorId="validatorVacio"/>
                                 </p:inputText>
                                 <p:message for="txtNombre"/>
                                 <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
-                                <p:inputTextarea id="txtDescripcion" value="#{mbvcriterioevaluacion.criterioeval.descripcion}" autoResize="false" rows="5" cols="22" />
+                                <p:inputTextarea id="txtDescripcion" value="#{mbvcriterioevaluacion.criterioeval.descripcion}" autoResize="false" rows="5"/>
                                 <p:message for="txtDescripcion"/>
                                 <p:outputLabel for="stlCriterio" value="Criterio de aprobacion:" />
                                 <p:selectOneMenu id="stlCriterio" value="#{mbvcriterioevaluacion.fcriterioselected.formacriterioevaluacionId}">
@@ -77,7 +77,7 @@
                                 <p:inputText id="txtMin" value="#{mbvcriterioevaluacion.criterioeval.minaprob}" />
                                 <p:message for="txtMin"/>
                                 <h:panelGroup></h:panelGroup>
-                                <p:commandButton value="Registrar Escala" actionListener="#{mbvcriterioevaluacion.actualizar}" ajax="true" update=":frmListaEscala" />
+                                <p:commandButton value="Editar" actionListener="#{mbvcriterioevaluacion.actualizar}" ajax="true" update=":frmListaEscala" />
                             </h:panelGrid> 
                         </p:outputPanel>
                     </h:form>

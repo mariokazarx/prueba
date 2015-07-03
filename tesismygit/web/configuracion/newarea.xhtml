@@ -21,10 +21,10 @@
                 </p:inputText>
                 <p:message for="txtNombre"/>
                 <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
-                <p:inputTextarea id="txtDescripcion" value="#{mbvArea.area.descripcion}" autoResize="false" rows="5" cols="22" />
+                <p:inputTextarea id="txtDescripcion" value="#{mbvArea.area.descripcion}" autoResize="false" rows="5" />
                 <p:message for="txtDescripcion"/>
                 <p:outputLabel for="stlCriterio" value="Configuraciones:" />
-                <p:selectOneMenu id="stlCriterio" value="#{mbvArea.confselected.configuracionId}">
+                <p:selectOneMenu id="stlCriterio" value="#{mbvArea.confselected.configuracionId}" required="true" requiredMessage="Seleccione una configuracion">
                     <f:selectItem itemLabel="Seleccione."/>
                     <f:selectItems value="#{mbvArea.configs}" var="conf" itemLabel="#{conf.nombre}" itemValue="#{conf.configuracionId}"/>
                 </p:selectOneMenu>

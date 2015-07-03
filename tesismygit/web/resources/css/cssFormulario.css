@@ -1,0 +1,194 @@
+body
+{
+    background-color: #8BB9C7;
+    font-family: sans-serif;
+}
+  
+.contenedorLogin
+{
+    margin-top: 100px;
+    text-align: center;
+    width: 100%;
+}
+  
+.formulario
+{
+    background-color: #F3F3F3;
+    border-radius: 7px;
+    box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.4), 0px 0px 4px white inset, 2px 2px 2px rgba(0, 0, 0, 0.2);
+    display: inline-block;
+    margin: 0 auto;
+    /*text-align: center;*/
+    vertical-align: middle;
+    width: 650px;
+    -webkit-animation: entrada 1s;
+    -moz-animation: entrada 1s;
+    -ms-animation: entrada 1s;
+    -o-animation: entrada 1s;
+    animation: entrada 1s;
+}
+  
+.formulario a
+{
+    color: #7C96B7;
+}
+  
+.formulario h2
+{
+    color: #414848;
+}
+  
+.formulario input[type=<span id="IL_AD4" class="IL_AD">submit</span>]
+{
+    background-color: #409FBA;
+    border: none;
+    border-radius: 2px;
+    box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.4), 0px 0px 2px white inset;
+    color: white;
+    font-size: 17px;
+    height: 35px;
+    margin: 4px;
+    min-width: 100px;
+    -webkit-transition: background-color 0.2s;
+    -moz-transition: background-color 0.2s;
+    -ms-transition: background-color 0.2s;
+    -o-transition: background-color 0.2s;
+    transition: background-color 0.2s;
+}
+  
+.formulario input[type=submit]:hover
+{
+    background-color: #D84530;
+    cursor: pointer;
+}
+  
+.formulario input[type=submit]:focus
+{
+    outline: none;
+}
+  
+.formulario input[type=text], .formulario input[type=password]
+{
+    border: none;
+    border-radius: 4px;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2) inset, -1px -1px 1px rgba(0, 0, 0, 0.1) inset, 0px 0px 2px white;
+    height: 30px;
+    margin: 0px;
+    min-width: 240px;
+    padding: 5px;
+}
+  
+.formulario input[type=text]:focus, .formulario input[type=password]:focus
+{
+    outline: none;
+}
+  
+.formulario input[type=text]:hover, .formulario input[type=password]:hover
+{
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2) inset, -1px -1px 1px rgba(0, 0, 0, 0.1) inset, 0px 0px 2px white, 0px 0px 2px rgba(0, 0, 0, 0.2);
+}
+  
+.formulario p
+{
+    color: #7C96B7;
+}
+  
+.seccionBotones
+{
+    background-color: #D4DEDF;
+    border-radius: 0px 0px 7px 7px;
+    box-shadow: 0px 0px 2px white, 0px 2px 2px rgba(0, 0, 0, 0.2), 0px 0px 2px white inset;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    text-align: right;
+}
+  
+@-webkit-keyframes entrada
+{
+    0%
+    {
+        margin-top: -1000px;
+        -webkit-transform: rotate(360deg);
+    }
+    75%
+    {
+        margin: 30px auto;
+    }
+    100%
+    {
+        margin: 0px auto;
+        -webkit-transform: rotate(0deg);
+    }
+}
+  
+@-moz-keyframes entrada
+{
+    0%
+    {
+        margin-top: -1000px;
+        -moz-transform: rotate(360deg);
+    }
+    75%
+    {
+        margin: 30px auto;
+    }
+    100%
+    {
+        margin: 0px auto;
+        -moz-transform: rotate(0deg);
+    }
+}
+  
+@-ms-keyframes entrada
+{
+    0%
+    {
+        margin-top: -1000px;
+        -ms-transform: rotate(360deg);
+    }
+    75%
+    {
+        margin: 30px auto;
+    }
+    100%
+    {
+        margin: 0px auto;
+        -ms-transform: rotate(0deg);
+    }
+}
+  
+@-o-keyframes entrada
+{
+    0%
+    {
+        margin-top: -1000px;
+        -o-transform: rotate(360deg);
+    }
+    75%
+    {
+        margin: 30px auto;
+    }
+    100%
+    {
+        margin: 0px auto;
+        -o-transform: rotate(0deg);
+    }
+}
+  
+@keyframes entrada
+{
+    0%
+    {
+        margin-top: -1000px;
+        transform: rotate(360deg);
+    }
+    75%
+    {
+        margin: 30px auto;
+    }
+    100%
+    {
+        margin: 0px auto;
+        transform: rotate(0deg);
+    }
+}

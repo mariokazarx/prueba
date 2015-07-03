@@ -1,0 +1,119 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <body>
+        <ui:composition template="./../plantilla.xhtml">
+            <ui:define name="content">
+                <h:form id="frmListaUsuarios">
+                    <p:commandButton value="Nuevo Usuario" icon="ui-icon-document" actionListener="#{mbvUsuario.newUsuario}">
+                        <p:ajax event="dialogReturn" listener="#{mbvUsuario.closeDialog}" update="frmListaUsuarios" />
+                    </p:commandButton>
+                    <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
+                    <p:dataTable id="tablaListaUsuario" var="item" value="#{mbvUsuario.usuarios}" paginator="true" rows="10" selection="#{mbvUsuario.usuario}" selectionMode="single" lazy="true" rowKey="#{item.usuarioId}" >
+                        <p:ajax event="rowSelect" update=":frmListaUsuarios:panelDetalleUsuario" oncomplete="PF('dialogoDetalleUsuario').show()"/>
+                        <f:facet name="header">
+                            Lista de Usuarios
+                        </f:facet>
+                        <p:column headerText="Cedula" filterBy="cedula">
+                            <h:outputText value="#{item.cedula}"/>
+                        </p:column>
+                        <p:column headerText="Nombres" filterBy="nombres">
+                            <h:outputText value="#{item.nombre}"/>
+                        </p:column>
+                        <p:column headerText="Apellidos" filterBy="apellidos">
+                            <h:outputText value="#{item.apellido}"/>
+                        </p:column>
+                        <p:column headerText="Direccion" filterBy="direccion">
+                            <h:outputText value="#{item.direccion}"/>
+                        </p:column>
+                        <p:column headerText="Telefono" filterBy="telefono">
+                            <h:outputText value="#{item.telefono}"/>
+                        </p:column>
+                        <p:column headerText="Correo" filterBy="correo">
+                            <h:outputText value="#{item.correo}"/>
+                        </p:column>
+                        <p:column>
+                            <p:commandButton value="Editar" icon="ui-icon-pencil" actionListener="#{mbvUsuario.cargarProfesor(item.usuarioId)}"/>
+                        </p:column>
+                        <p:column>
+                            <p:commandButton value="Materias" icon="ui-icon-pencil" action="#{mbvUsuario.cargarMaterias(item)}"/>
+                        </p:column>
+                    </p:dataTable>
+
+                    <p:dialog header="Detalle Profesor" widgetVar="dialogoDetalleUsuario" modal="true"  appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
+                        <p:outputPanel id="panelDetalleUsuario">
+                            <p:panelGrid columns="2">
+                                <f:facet name="header">
+                                    <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/fotosusuarios/#{mbvUsuario.usuario.foto}" width="70" height="70" cache="false" alt="Sin definir" style="border-radius: 4px;box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7)"/>
+                                </f:facet>
+                                <p:outputLabel value="Cedula"/>
+                                <h:outputText value="#{mbvUsuario.usuario.cedula}"/>
+
+                            </p:panelGrid>
+                        </p:outputPanel>
+                    </p:dialog>                   
+                </h:form>        
+                <p:dialog header="Datos Profesor" widgetVar="dialogoEditarProfesor" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
+                    <h:form id="frmEditarProfesor">
+                        <p:outputPanel id="panelEditarProfesor" >
+                            <h:panelGrid columns="3">
+                                <p:outputLabel for="txtCedula" value="Cedula: " />
+                                <p:inputText id="txtCedula" value="#{mbvUsuario.usuario.cedula}" size="50" >
+                                    <f:validator validatorId="validatorVacio"/>
+                                </p:inputText>
+                                <p:message for="txtCedula"/>
+                                <p:outputLabel for="txtNombre" value="Nombres: " />
+                                <p:inputText id="txtNombre" value="#{mbvUsuario.usuario.nombre}" size="50" >
+                                    <f:validator validatorId="validatorVacio"/>
+                                </p:inputText>
+                                <p:message for="txtNombre"/>
+                                <p:outputLabel for="txtApellidos" value="Apellidos: " />
+                                <p:inputText id="txtApellidos" value="#{mbvUsuario.usuario.apellido}" size="50">
+                                    <f:validator validatorId="validatorVacio"/>
+                                </p:inputText>
+                                <p:message for="txtApellidos"/>
+                                <p:outputLabel for="txtTelefono" value="Telefono: " />
+                                <p:inputText id="txtTelefono" value="#{mbvUsuario.usuario.telefono}" size="50" >
+                                    <f:validator validatorId="validatorVacio"/>
+                                </p:inputText>
+                                <p:message for="txtTelefono"/>
+                                <p:outputLabel for="txtDireccion" value="Direccion: " />
+                                <p:inputText id="txtDireccion" value="#{mbvUsuario.usuario.direccion}" size="50">
+                                    <f:validator validatorId="validatorVacio"/>
+                                </p:inputText>
+                                <p:message for="txtCorreo"/>
+                                <p:outputLabel for="txtTitulo" value="Titulo Profesional: " />
+                                <p:inputText id="txtTitulo" value="#{mbvUsuario.usuario.tituloProfesional}" size="50">
+                                    <f:validator validatorId="validatorVacio"/>
+                                </p:inputText>
+                                <p:message for="txtTitulo"/>
+                                <p:outputLabel for="txtCorreo" value="Correo: " />
+                                <p:inputText id="txtCorreo" value="#{mbvUsuario.usuario.correo}" size="50">
+                                    <f:validator validatorId="validatorVacio"/>
+                                </p:inputText>
+                                <p:message for="txtCorreo"/> 
+                                <p:outputLabel for="rdbSexo" value="Sexo:" />
+                                <p:selectOneRadio id="rdbSexo" value="#{mbvUsuario.usuario.sexo}" >
+                                    <f:selectItem itemLabel="Masculino" itemValue="M" />
+                                    <f:selectItem itemLabel="Femenino" itemValue="F" />
+                                </p:selectOneRadio>
+                                <p:message for="rdbSexo"/>
+                                
+                                <h:panelGroup></h:panelGroup>
+                                <h:panelGroup></h:panelGroup>
+                                <p:commandButton value="Registrar Profesor" actionListener="#{mbvUsuario.insertar}" ajax="true" update=":frmListaUsuarios" />
+                            </h:panelGrid>  
+                        </p:outputPanel>
+                    </h:form>
+                </p:dialog>
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>
+

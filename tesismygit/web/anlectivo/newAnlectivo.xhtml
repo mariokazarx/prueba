@@ -18,6 +18,7 @@
             <h:panelGrid columns="3">
                 <p:outputLabel for="selectaño" value="Año: "/>
                 <p:selectOneMenu id="selectaño" value="#{mbvAlectivo.año}" style="width:125px">
+                    <p:ajax event="change" update="@this" />
                     <f:selectItem itemLabel="Seleccione." itemValue="" />
                     <f:selectItems value="#{mbvAlectivo.años}" />
                 </p:selectOneMenu>
@@ -25,25 +26,26 @@
                 
                 <p:outputLabel for="selectconf" value="Configuracion:" />
                 <p:selectOneMenu id="selectconf" value="#{mbvAlectivo.configuracionselected.configuracionId}">
+                    <p:ajax listener="#{mbvAlectivo.cargarCopia}" update=":frmAlectivo"/>
                     <f:selectItem itemLabel="Seleccione."/>
                     <f:selectItems value="#{mbvAlectivo.configuraciones}" var="conf" itemLabel="#{conf.nombre}" itemValue="#{conf.configuracionId}"/>
                 </p:selectOneMenu>
                 <p:message for="selectconf"/>
                 
-                <p:outputLabel for="selectcopia" value="Copiar año:" />
-                <p:selectOneMenu id="selectcopia" value="#{mbvAlectivo.copia}" style="width:125px">
+                <p:outputLabel for="selectcopia" value="Copiar año:" rendered="#{mbvAlectivo.estCopia}"/>
+                <p:selectOneMenu id="selectcopia" value="#{mbvAlectivo.copia}" style="width:125px" rendered="#{mbvAlectivo.estCopia}">
                     <f:selectItem itemLabel="Seleccione." itemValue="" />
                     <f:selectItem itemLabel="SI" itemValue="SI" />
                     <f:selectItem itemLabel="NO" itemValue="NO" />    
                 </p:selectOneMenu>
-                <h:panelGroup></h:panelGroup>
+                <p:message for="selectcopia" rendered="#{mbvAlectivo.estCopia}"/>
                 
                 <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
-                <p:inputTextarea id="txtDescripcion" value="#{mbvEscala.escala.descripcion}" autoResize="false" rows="5" cols="22" />
+                <p:inputTextarea id="txtDescripcion" value="#{mbvAlectivo.anlectivo.descripcion}" autoResize="false" rows="5" />
                 <p:message for="txtDescripcion"/>
                 
                 <h:panelGroup></h:panelGroup>
-                <p:commandButton value="Registrar Escala" actionListener="#{mbvEscala.insertar}" onclick="#{mbvEscala.setMensage(false)}" ajax="true" update="frmAlectivo" />
+                <p:commandButton value="Registrar Escala" actionListener="#{mbvAlectivo.insertar}" ajax="true" update="frmAlectivo" />
             </h:panelGrid> 
         </h:form>
     </h:body>
