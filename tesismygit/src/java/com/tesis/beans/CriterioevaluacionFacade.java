@@ -8,6 +8,7 @@ import com.tesis.entity.Criterioevaluacion;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
 /**
@@ -42,5 +43,23 @@ public class CriterioevaluacionFacade extends AbstractFacade<Criterioevaluacion>
             return true;
         }
 
+    }
+
+    public boolean removeById(Criterioevaluacion criterioeval) {
+        try {
+            Query cq = em.createNamedQuery("Criterioevaluacion.removeById");
+            cq.setParameter("criterioevaluacionId", criterioeval.getCriterioevaluacionId());
+            if(cq.executeUpdate()>0){
+                return true;
+            }
+            else{
+                return false;
+            }
+        } catch (PersistenceException e) {
+            return false;
+        }
+        catch (Exception e) {
+            return false;
+        }
     }
 }

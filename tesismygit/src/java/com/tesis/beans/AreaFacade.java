@@ -8,6 +8,8 @@ import com.tesis.entity.Area;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
+import javax.persistence.Query;
 
 /**
  *
@@ -25,6 +27,24 @@ public class AreaFacade extends AbstractFacade<Area> {
 
     public AreaFacade() {
         super(Area.class);
+    }
+
+    public boolean removeById(Area area) {
+        try {
+            Query cq = em.createNamedQuery("Area.removeById");
+            cq.setParameter("areaId", area.getAreaId());
+            if(cq.executeUpdate()>0){
+                return true;
+            }
+            else{
+                return false;
+            }
+        } catch (PersistenceException e) {
+            return false;
+        }
+        catch (Exception e) {
+            return false;
+        }
     }
     
 }

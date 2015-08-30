@@ -10,6 +10,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
 /**
@@ -46,6 +47,24 @@ public class CicloFacade extends AbstractFacade<Ciclo> {
         Query cq = em.createNamedQuery("Ciclo.findByNumero");
         cq.setParameter("numero",numero);
         return (Ciclo) cq.getSingleResult();
+    }
+
+    public boolean removeById(Ciclo ciclo) {
+        try {
+            Query cq = em.createNamedQuery("Ciclo.removeById");
+            cq.setParameter("cicloId", ciclo.getCicloId());
+            if(cq.executeUpdate()>0){
+                return true;
+            }
+            else{
+                return false;
+            }
+        } catch (PersistenceException e) {
+            return false;
+        }
+        catch (Exception e) {
+            return false;
+        }
     }
     
 }

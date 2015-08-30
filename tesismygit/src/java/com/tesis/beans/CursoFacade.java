@@ -11,6 +11,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
 /**
@@ -38,5 +39,23 @@ public class CursoFacade extends AbstractFacade<Curso> {
         cq.setParameter("profesorId", profesor);
         cq.setParameter("periodoId", periodo);
         return cq.getResultList();
+    }
+
+    public boolean removeById(Curso curso) {
+        try {
+            Query cq = em.createNamedQuery("Curso.removeById");
+            cq.setParameter("cursoId", curso.getCursoId());
+            if(cq.executeUpdate()>0){
+                return true;
+            }
+            else{
+                return false;
+            }
+        } catch (PersistenceException e) {
+            return false;
+        }
+        catch (Exception e) {
+            return false;
+        }
     }
 }

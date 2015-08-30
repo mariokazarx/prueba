@@ -7,8 +7,6 @@ package com.tesis.beans;
 import com.tesis.entity.Escala;
 import java.util.List;
 import javax.ejb.Stateless;
-import javax.faces.application.FacesMessage;
-import javax.faces.validator.ValidatorException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -48,6 +46,22 @@ public class EscalaFacade extends AbstractFacade<Escala> {
             }
         } catch (Exception e) {
             return true;
+        }
+
+    }
+
+    public boolean removeById(Escala escala) {
+        try {
+            Query cq = em.createNamedQuery("Escala.removeById");
+            cq.setParameter("escalaId", escala.getEscalaId());
+            if(cq.executeUpdate()>0){
+                return true;
+            }
+            else{
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
         }
 
     }

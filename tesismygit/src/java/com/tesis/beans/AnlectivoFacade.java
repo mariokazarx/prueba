@@ -10,6 +10,7 @@ import com.tesis.entity.Curso;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
 /**
@@ -52,5 +53,23 @@ public class AnlectivoFacade extends AbstractFacade<Anlectivo> {
             bandera = false;
         }
         return bandera;
+    }
+
+    public boolean removeById(Anlectivo anlectivo) {
+        try {
+            Query cq = em.createNamedQuery("Anlectivo.removeById");
+            cq.setParameter("anlectivoId", anlectivo.getAnlectivoId());
+            if(cq.executeUpdate()>0){
+                return true;
+            }
+            else{
+                return false;
+            }
+        } catch (PersistenceException e) {
+            return false;
+        }
+        catch (Exception e) {
+            return false;
+        }
     }
 }
