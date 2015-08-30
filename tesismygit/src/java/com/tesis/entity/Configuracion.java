@@ -41,6 +41,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Configuracion.findByNoPeriodos", query = "SELECT c FROM Configuracion c WHERE c.noPeriodos = :noPeriodos"),
     @NamedQuery(name = "Configuracion.findByDuracionPeriodo", query = "SELECT c FROM Configuracion c WHERE c.duracionPeriodo = :duracionPeriodo"),
     @NamedQuery(name = "Configuracion.findByNombre", query = "SELECT c FROM Configuracion c WHERE c.nombre = :nombre"),
+    @NamedQuery(name = "Configuracion.enUso", query = "SELECT COUNT(c) FROM Configuracion c JOIN c.anlectivoList an WHERE c.configuracionId = :configuracionId and an.estadoAniolectivoId.estadoAniolectivoId != 1"),
+    @NamedQuery(name = "Configuracion.removeById", query = "DELETE FROM Configuracion c WHERE c.configuracionId = :configuracionId"),
     @NamedQuery(name = "Configuracion.findByDescripcion", query = "SELECT c FROM Configuracion c WHERE c.descripcion = :descripcion")})
 public class Configuracion implements Serializable {
     private static final long serialVersionUID = 1L;

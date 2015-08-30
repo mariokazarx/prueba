@@ -33,7 +33,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "EstadoAniolectivo.findAll", query = "SELECT e FROM EstadoAniolectivo e"),
     @NamedQuery(name = "EstadoAniolectivo.findByEstadoAniolectivoId", query = "SELECT e FROM EstadoAniolectivo e WHERE e.estadoAniolectivoId = :estadoAniolectivoId"),
-    @NamedQuery(name = "EstadoAniolectivo.findByEstado", query = "SELECT e FROM EstadoAniolectivo e WHERE e.estado = :estado")})
+    @NamedQuery(name = "EstadoAniolectivo.findByEstado", query = "SELECT e FROM EstadoAniolectivo e WHERE e.estado = :estado"),
+    @NamedQuery(name = "EstadoAniolectivo.findByDescripcion", query = "SELECT e FROM EstadoAniolectivo e WHERE e.descripcion = :descripcion")})
 public class EstadoAniolectivo implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -46,6 +47,9 @@ public class EstadoAniolectivo implements Serializable {
     @Size(min = 1, max = 200)
     @Column(name = "estado", nullable = false, length = 200)
     private String estado;
+    @Size(max = 200)
+    @Column(name = "descripcion", length = 200)
+    private String descripcion;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "estadoAniolectivoId", fetch = FetchType.LAZY)
     private List<Anlectivo> anlectivoList;
 
@@ -75,6 +79,14 @@ public class EstadoAniolectivo implements Serializable {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     @XmlTransient

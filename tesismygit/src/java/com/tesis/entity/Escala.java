@@ -41,6 +41,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Escala.findByDescripcion", query = "SELECT e FROM Escala e WHERE e.descripcion = :descripcion"),
     @NamedQuery(name = "Escala.findByMin", query = "SELECT e FROM Escala e WHERE e.min = :min"),
     @NamedQuery(name = "Escala.findByMax", query = "SELECT e FROM Escala e WHERE e.max = :max"),
+    @NamedQuery(name = "Escala.removeById", query = "DELETE FROM Escala e WHERE e.escalaId= :escalaId"),
     @NamedQuery(name = "Escala.findByNotaminimaaprob", query = "SELECT e FROM Escala e WHERE e.notaminimaaprob = :notaminimaaprob")})
 public class Escala implements Serializable {
     private static final long serialVersionUID = 1L;

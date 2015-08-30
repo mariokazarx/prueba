@@ -32,7 +32,8 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity
 @Table(name = "usuario", catalog = "prueba", schema = "public", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"identificacion"})})
+    @UniqueConstraint(columnNames = {"identificacion"}),
+    @UniqueConstraint(columnNames = {"correo"})})
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Usuario.findAll", query = "SELECT u FROM Usuario u"),
@@ -43,6 +44,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Usuario.findByCorreo", query = "SELECT u FROM Usuario u WHERE u.correo = :correo"),
     @NamedQuery(name = "Usuario.findByDireccion", query = "SELECT u FROM Usuario u WHERE u.direccion = :direccion"),
     @NamedQuery(name = "Usuario.findByContrase\u00f1a", query = "SELECT u FROM Usuario u WHERE u.contrase\u00f1a = :contrase\u00f1a"),
+    @NamedQuery(name = "Usuario.findByCargo", query = "SELECT u FROM Usuario u WHERE u.cargo = :cargo"),
+    @NamedQuery(name = "Usuario.findByFoto", query = "SELECT u FROM Usuario u WHERE u.foto = :foto"),
     @NamedQuery(name = "Usuario.findByTelefono", query = "SELECT u FROM Usuario u WHERE u.telefono = :telefono")})
 public class Usuario implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -66,15 +69,29 @@ public class Usuario implements Serializable {
     @Size(min = 1, max = 200)
     @Column(name = "apellidos", nullable = false, length = 200)
     private String apellidos;
-    @Size(max = 100)
-    @Column(name = "correo", length = 100)
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 100)
+    @Column(name = "correo", nullable = false, length = 100)
     private String correo;
-    @Size(max = 199)
-    @Column(name = "direccion", length = 199)
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 199)
+    @Column(name = "direccion", nullable = false, length = 199)
     private String direccion;
-    @Size(max = 2147483647)
-    @Column(name = "contrase\u00f1a", length = 2147483647)
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 2147483647)
+    @Column(name = "contrase\u00f1a", nullable = false, length = 2147483647)
     private String contraseña;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 2147483647)
+    @Column(name = "cargo", nullable = false, length = 2147483647)
+    private String cargo;
+    @Size(max = 2147483647)
+    @Column(name = "foto", length = 2147483647)
+    private String foto;
     @Size(max = 15)
     @Column(name = "telefono", length = 15)
     private String telefono;
@@ -94,11 +111,15 @@ public class Usuario implements Serializable {
         this.usuarioId = usuarioId;
     }
 
-    public Usuario(Integer usuarioId, String identificacion, String nombres, String apellidos) {
+    public Usuario(Integer usuarioId, String identificacion, String nombres, String apellidos, String correo, String direccion, String contraseña, String cargo) {
         this.usuarioId = usuarioId;
         this.identificacion = identificacion;
         this.nombres = nombres;
         this.apellidos = apellidos;
+        this.correo = correo;
+        this.direccion = direccion;
+        this.contraseña = contraseña;
+        this.cargo = cargo;
     }
 
     public Integer getUsuarioId() {
@@ -155,6 +176,22 @@ public class Usuario implements Serializable {
 
     public void setContraseña(String contraseña) {
         this.contraseña = contraseña;
+    }
+
+    public String getCargo() {
+        return cargo;
+    }
+
+    public void setCargo(String cargo) {
+        this.cargo = cargo;
+    }
+
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
     }
 
     public String getTelefono() {

@@ -40,6 +40,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Criterioevaluacion.findByCriterioevaluacionId", query = "SELECT c FROM Criterioevaluacion c WHERE c.criterioevaluacionId = :criterioevaluacionId"),
     @NamedQuery(name = "Criterioevaluacion.findByNombre", query = "SELECT c FROM Criterioevaluacion c WHERE c.nombre = :nombre"),
     @NamedQuery(name = "Criterioevaluacion.findByDescripcion", query = "SELECT c FROM Criterioevaluacion c WHERE c.descripcion = :descripcion"),
+    @NamedQuery(name = "Criterioevaluacion.removeById", query = "DELETE FROM Criterioevaluacion c WHERE c.criterioevaluacionId = :criterioevaluacionId"),
     @NamedQuery(name = "Criterioevaluacion.findByMinaprob", query = "SELECT c FROM Criterioevaluacion c WHERE c.minaprob = :minaprob")})
 public class Criterioevaluacion implements Serializable {
     private static final long serialVersionUID = 1L;

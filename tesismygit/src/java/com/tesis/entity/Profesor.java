@@ -32,7 +32,8 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity
 @Table(name = "profesor", catalog = "prueba", schema = "public", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"cedula"})})
+    @UniqueConstraint(columnNames = {"cedula"}),
+    @UniqueConstraint(columnNames = {"correo"})})
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Profesor.findAll", query = "SELECT p FROM Profesor p"),
@@ -56,14 +57,16 @@ public class Profesor implements Serializable {
     private Integer profesorId;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 12)
-    @Column(name = "cedula", nullable = false, length = 12)
+    @Size(min = 1, max = 15)
+    @Column(name = "cedula", nullable = false, length = 15)
     private String cedula;
     @Size(max = 15)
     @Column(name = "telefono", length = 15)
     private String telefono;
-    @Size(max = 100)
-    @Column(name = "correo", length = 100)
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 100)
+    @Column(name = "correo", nullable = false, length = 100)
     private String correo;
     @Basic(optional = false)
     @NotNull
@@ -118,9 +121,10 @@ public class Profesor implements Serializable {
         this.profesorId = profesorId;
     }
 
-    public Profesor(Integer profesorId, String cedula, String contraseña, String sexo, String tituloProfesional, String nombre, String apellido, String direccion) {
+    public Profesor(Integer profesorId, String cedula, String correo, String contraseña, String sexo, String tituloProfesional, String nombre, String apellido, String direccion) {
         this.profesorId = profesorId;
         this.cedula = cedula;
+        this.correo = correo;
         this.contraseña = contraseña;
         this.sexo = sexo;
         this.tituloProfesional = tituloProfesional;
