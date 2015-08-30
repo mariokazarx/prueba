@@ -36,6 +36,11 @@
                         <p:column>
                             <p:commandButton value="Editar" icon="ui-icon-pencil" actionListener="#{mbvcriterioevaluacion.cargarCriterioseval(item.criterioevaluacionId)}"/>
                         </p:column>
+                        <p:column rendered="true">
+                            <p:commandButton value="Eliminar" update=":frmRemoveCriterio:display" oncomplete="PF('removecriterio').show();" icon="ui-icon-search" title="View">
+                                <f:setPropertyActionListener value="#{item}" target="#{mbvcriterioevaluacion.criterioeval}" />
+                            </p:commandButton>
+                        </p:column>
                     </p:dataTable>
 
                     <p:dialog header="Detalle de Escala" widgetVar="dialogoDetalleEscala" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
@@ -56,10 +61,25 @@
                     </p:dialog>                   
                 </h:form>
                 
+                
+                <p:confirmDialog header="Eliminar Criterio Evaluacion" widgetVar="removecriterio" appendTo="@(body)" resizable="false" id="removeDlg"
+                                 showEffect="fade" hideEffect="explode" modal="true" message="Esta Seguro que desea eliminar esta escala?">
+                    <h:form id="frmRemoveCriterio">
+                        <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                            <h:outputText value="Name:" />
+                            <h:outputText value="#{mbvcriterioevaluacion.criterioeval.nombre}" style="font-weight:bold"/>                                               
+                            <p:commandButton id="deleteButton" actionListener="#{mbvcriterioevaluacion.eliminarCriterio(mbvcriterioevaluacion.criterioeval)}" oncomplete="PF('removecriterio').hide();" 
+                                             update=":frmListaEscala" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" value="Aceptar"/>
+                            <p:commandButton id="cancelButton" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('removecriterio').hide();" value="Cancelar"/>
+                        </h:panelGrid>
+                    </h:form>
+                </p:confirmDialog>
+
                 <p:dialog header="Datos del usuario" widgetVar="dialogoEditarEscala" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
                     <h:form id="frmEditarEscala">
                         <p:outputPanel id="panelEditarEscala" >
-                             <h:panelGrid columns="3">
+                            <h:panelGrid columns="3">
                                 <p:outputLabel for="txtNombre" value="Nombre: " />
                                 <p:inputText id="txtNombre" value="#{mbvcriterioevaluacion.criterioeval.nombre}" validator="#{mbvcriterioevaluacion.validateNombreUniqueEditar}">
                                     <f:validator validatorId="validatorVacio"/>

@@ -40,6 +40,11 @@
                         <p:column>
                             <p:commandButton value="Editar" icon="ui-icon-pencil" actionListener="#{mbvConfiguracion.cargarConfiguracion(item.configuracionId)}"/>
                         </p:column>
+                        <p:column rendered="true">
+                            <p:commandButton value="Eliminar" update=":frmRemoveConfiguracion:display" oncomplete="PF('removeconfiguracion').show();" icon="ui-icon-search" title="View">
+                                <f:setPropertyActionListener value="#{item}" target="#{mbvConfiguracion.configuracion}" />
+                            </p:commandButton>
+                        </p:column>
                     </p:dataTable>
 
                     <p:dialog header="Detalle de Configuracion" widgetVar="dialogoDetalleConf" modal="true"  appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
@@ -75,11 +80,28 @@
                                 <h:outputText value="#{mbvConfiguracion.criterioevaluacion.formacriterioevaluacionId.nombre}"/>
                                 <p:outputLabel value="Minimo para aprobar"/>
                                 <h:outputText value="#{mbvConfiguracion.criterioevaluacion.minaprob}"/>
-                                
+
                             </p:panelGrid>
                         </p:outputPanel>
                     </p:dialog>                   
                 </h:form>
+
+                <p:confirmDialog header="Eliminar Configuracion" widgetVar="removeconfiguracion" appendTo="@(body)" resizable="false" id="removeDlg"
+                                 showEffect="fade" hideEffect="explode" modal="true" message="Esta Seguro que desea eliminar esta Configuracion?">
+                    <h:form id="frmRemoveConfiguracion">
+                        <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                            <h:outputText value="Name:" />
+                            <h:outputText value="#{mbvConfiguracion.configuracion.nombre}" style="font-weight:bold"/>                                               
+                            <p:commandButton id="deleteButton" actionListener="#{mbvConfiguracion.eliminarConfiguracion(mbvConfiguracion.configuracion)}" oncomplete="PF('removeconfiguracion').hide();" 
+                                             update=":frmListaConf" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" value="Aceptar"/>
+                            <p:commandButton id="cancelButton" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('removeconfiguracion').hide();" value="Cancelar"/>
+                        </h:panelGrid>
+                    </h:form>
+                </p:confirmDialog>
+                <p:dialog header="Advertencia" widgetVar="dlg2" modal="true" height="100" showEffect="clip" hideEffect="clip" appendTo="@(body)">
+                    <h:outputText value="esta configuracion ya esta en uso no es posible si edicion" />
+                </p:dialog>   
                 <p:dialog header="Datos del usuario" widgetVar="dialogoEditarEscala" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
                     <h:form id="frmEditarEscala">
                         <p:outputPanel id="panelEditarEscala" >

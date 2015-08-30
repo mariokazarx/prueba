@@ -31,6 +31,11 @@
                         <p:column>
                             <p:commandButton value="Editar" icon="ui-icon-pencil" actionListener="#{mbvCiclo.cargarCiclo(item.cicloId)}"/>
                         </p:column>
+                        <p:column rendered="true">
+                            <p:commandButton value="Eliminar" update=":frmRemoveCiclo:display" oncomplete="PF('removeciclo').show();" icon="ui-icon-search" title="View">
+                                <f:setPropertyActionListener value="#{item}" target="#{mbvCiclo.ciclo}" />
+                            </p:commandButton>
+                        </p:column>
                     </p:dataTable>
                     <p:dialog header="Detalle Ciclo" widgetVar="dialogoDetalleCiclo" modal="true"  appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
                         <p:outputPanel id="panelDetalleCiclo">
@@ -47,6 +52,21 @@
                         </p:outputPanel>
                     </p:dialog>                   
                 </h:form>
+                
+                <p:confirmDialog header="Eliminar Ciclo" widgetVar="removeciclo" appendTo="@(body)" resizable="false" id="removeDlg"
+                                 showEffect="fade" hideEffect="explode" modal="true" message="Esta Seguro que desea eliminar esta ciclo?">
+                    <h:form id="frmRemoveCiclo">
+                        <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                            <h:outputText value="Name:" />
+                            <h:outputText value="#{mbvCiclo.ciclo}" style="font-weight:bold"/>                                               
+                            <p:commandButton id="deleteButton" actionListener="#{mbvCiclo.eliminarCiclo(mbvCiclo.ciclo)}" oncomplete="PF('removeciclo').hide();" 
+                                             update=":frmListaCiclos" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" value="Aceptar"/>
+                            <p:commandButton id="cancelButton" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('removeciclo').hide();" value="Cancelar"/>
+                        </h:panelGrid>
+                    </h:form>
+                </p:confirmDialog>
+                
                 <p:dialog header="Datos Ciclo" widgetVar="dialogoEditarCiclo" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
                     <h:form id="frmEditarCiclo">
                         <p:outputPanel id="panelEditarCiclo" >

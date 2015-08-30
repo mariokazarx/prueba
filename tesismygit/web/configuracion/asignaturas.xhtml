@@ -34,6 +34,11 @@
                         <p:column>
                             <p:commandButton value="Editar" icon="ui-icon-pencil" actionListener="#{mbvAsignatura.cargarAsignatura(item.asignaturaId)}"/>
                         </p:column>
+                        <p:column rendered="true">
+                            <p:commandButton value="Eliminar" update=":frmRemoveAsignatura:display" oncomplete="PF('removeasignatura').show();" icon="ui-icon-search" title="View">
+                                <f:setPropertyActionListener value="#{item}" target="#{mbvAsignatura.asignatura}" />
+                            </p:commandButton>
+                        </p:column>
                     </p:dataTable>
                     <p:dialog header="Detalle de Asignatura" widgetVar="dialogoDetalleAsignatura" modal="true"  appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
                         <p:outputPanel id="panelDetalleAsignatura">
@@ -52,6 +57,21 @@
                         </p:outputPanel>
                     </p:dialog>                   
                 </h:form>
+                
+                <p:confirmDialog header="Eliminar Asignatura" widgetVar="removeasignatura" appendTo="@(body)" resizable="false" id="removeDlg"
+                                 showEffect="fade" hideEffect="explode" modal="true" message="Esta Seguro que desea eliminar esta asignatura?">
+                    <h:form id="frmRemoveAsignatura">
+                        <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                            <h:outputText value="Name:" />
+                            <h:outputText value="#{mbvAsignatura.asignatura.nombre}" style="font-weight:bold"/>                                               
+                            <p:commandButton id="deleteButton" actionListener="#{mbvAsignatura.eliminarAsignatura(mbvAsignatura.asignatura)}" oncomplete="PF('removeasignatura').hide();" 
+                                             update=":frmListaAsignaturas" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" value="Aceptar"/>
+                            <p:commandButton id="cancelButton" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('removeasignatura').hide();" value="Cancelar"/>
+                        </h:panelGrid>
+                    </h:form>
+                </p:confirmDialog>
+                
                 <p:dialog header="Datos asignatura" widgetVar="dialogoEditarAsignatura" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
                     <h:form id="frmEditarAsignatura">
                         <p:outputPanel id="panelEditarAsignatura" >
