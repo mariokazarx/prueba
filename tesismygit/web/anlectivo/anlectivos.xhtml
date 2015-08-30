@@ -34,6 +34,11 @@
                         <p:column>
                             <p:commandButton value="Editar" icon="ui-icon-pencil" actionListener="#{mbvAlectivo.cargarAnlectivo(item.anlectivoId)}"/>
                         </p:column>
+                        <p:column rendered="true">
+                            <p:commandButton value="Eliminar" update=":frmRemoveAnlectivo:display" oncomplete="PF('removeanlectivo').show();" icon="ui-icon-search" title="View">
+                                <f:setPropertyActionListener value="#{item}" target="#{mbvAlectivo.anlectivo}" />
+                            </p:commandButton>
+                        </p:column>
                     </p:dataTable>
 
                     <p:dialog header="Detalle Año Lectivo" widgetVar="dialogoDetalleAlectivo" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
@@ -54,6 +59,20 @@
                     </p:dialog>                   
                 </h:form>
 
+                <p:confirmDialog header="Eliminar año lectivo" widgetVar="removeanlectivo" appendTo="@(body)" resizable="false" id="removeDlg"
+                                 showEffect="fade" hideEffect="explode" modal="true" message="Esta Seguro que desea eliminar esta escala?">
+                    <h:form id="frmRemoveAnlectivo">
+                        <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                            <h:outputText value="Name:" />
+                            <h:outputText value="#{mbvAlectivo.anlectivo.anio}" style="font-weight:bold"/>                                               
+                            <p:commandButton id="deleteButton" actionListener="#{mbvAlectivo.eliminarAnlectivo(mbvAlectivo.anlectivo)}" oncomplete="PF('removeanlectivo').hide();" 
+                                             update=":frmanlectios" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" value="Aceptar"/>
+                            <p:commandButton id="cancelButton" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('removeanlectivo').hide();" value="Cancelar"/>
+                        </h:panelGrid>
+                    </h:form>
+                </p:confirmDialog>
+                
                 <p:dialog header="Datos año lectivo" widgetVar="dialogoEditarAlectivo" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
                     <h:form id="frmEditarAlectivo">
                         <p:outputPanel id="panelEditarAlectivo" >
