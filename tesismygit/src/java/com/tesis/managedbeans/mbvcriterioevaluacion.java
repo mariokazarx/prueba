@@ -179,4 +179,25 @@ public class mbvcriterioevaluacion implements Serializable {
         options.put("resizable", true);
         RequestContext.getCurrentInstance().openDialog("newcriterioeval", options, null);
     }
+    
+    public void eliminarCriterio(Criterioevaluacion criterioeval) {
+        try {
+            //this.escala = this.escalaEjb.find(escalaid);
+            System.out.println("ELIMINAR CRITERIO :"+criterioeval);
+            if(criterioevalEjb.removeById(criterioeval)==true){
+                //inicioPagina();
+                //RequestContext.getCurrentInstance().update("frmEditarEscala"); 
+                FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Escala","eliminada"));
+            }else{
+                //RequestContext.getCurrentInstance().update("frmEditarEscala:mensajeGeneral");
+                FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Escala","esta escala esta en uso"));
+            }
+            inicioPagina();
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+        }
+    }
 }

@@ -245,4 +245,24 @@ public class mbvAlectivo implements Serializable {
             estCopia = false;
         }
     }
+    public void eliminarAnlectivo(Anlectivo anlectivo) {
+        try {
+            //this.escala = this.escalaEjb.find(escalaid);
+            //System.out.println("ELIMINAR CRITERIO :"+criterioeval);
+            if(anlectivoEjb.removeById(anlectivo)==true){
+                //inicioPagina();
+                //RequestContext.getCurrentInstance().update("frmEditarEscala"); 
+                FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Escala","eliminada"));
+            }else{
+                //RequestContext.getCurrentInstance().update("frmEditarEscala:mensajeGeneral");
+                FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Escala","esta escala esta en uso"));
+            }
+            inicioPagina();
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+        }
+    }
 }

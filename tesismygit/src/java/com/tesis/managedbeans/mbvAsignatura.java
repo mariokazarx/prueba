@@ -202,5 +202,24 @@ public class mbvAsignatura implements Serializable{
         options.put("resizable", true);
         RequestContext.getCurrentInstance().openDialog("newasignatura",options,null);
     }
-    
+     public void eliminarAsignatura(Asignatura asignatura) {
+        try {
+            //this.escala = this.escalaEjb.find(escalaid);
+           //System.out.println("ELIMINAR CRITERIO :"+criterioeval);
+            if(asignaturaEjb.removeById(asignatura)==true){
+                //inicioPagina();
+                //RequestContext.getCurrentInstance().update("frmEditarEscala"); 
+                FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Escala","eliminada"));
+            }else{
+                //RequestContext.getCurrentInstance().update("frmEditarEscala:mensajeGeneral");
+                FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Escala","esta escala esta en uso"));
+            }
+            inicioPagina();
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+        }
+    }
 }

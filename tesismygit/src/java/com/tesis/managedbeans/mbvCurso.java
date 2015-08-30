@@ -170,4 +170,24 @@ public class mbvCurso implements Serializable {
         options.put("resizable", true);
         RequestContext.getCurrentInstance().openDialog("newcurso",options,null);
     }
+    public void eliminarCurso(Curso curso) {
+        try {
+            //this.escala = this.escalaEjb.find(escalaid);
+            //System.out.println("ELIMINAR CRITERIO :"+criterioeval);
+            if(cursoEjb.removeById(curso)==true){
+                //inicioPagina();
+                //RequestContext.getCurrentInstance().update("frmEditarEscala"); 
+                FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Escala","eliminada"));
+            }else{
+                //RequestContext.getCurrentInstance().update("frmEditarEscala:mensajeGeneral");
+                FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Escala","esta escala esta en uso"));
+            }
+            inicioPagina();
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+        }
+    }
 }

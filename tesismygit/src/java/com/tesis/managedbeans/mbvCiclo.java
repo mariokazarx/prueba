@@ -15,7 +15,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import org.primefaces.context.RequestContext;
 
@@ -24,7 +24,7 @@ import org.primefaces.context.RequestContext;
  * @author Mario Jurado
  */
 @ManagedBean
-@RequestScoped
+@ViewScoped
 public class mbvCiclo {
     private Ciclo ciclo;
     private List<Ciclo> ciclos;
@@ -148,5 +148,25 @@ public class mbvCiclo {
         options.put("draggable", true);
         options.put("resizable", true);
         RequestContext.getCurrentInstance().openDialog("newciclo",options,null);
+    }
+     public void eliminarCiclo(Ciclo cicloremove) {
+        try {
+            //this.escala = this.escalaEjb.find(escalaid);
+            System.out.println("ELIMINAR CRITERIO :"+cicloremove);
+            if(cicloEjb.removeById(cicloremove)==true){
+                //inicioPagina();
+                //RequestContext.getCurrentInstance().update("frmEditarEscala"); 
+                FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Escala","eliminada"));
+            }else{
+                //RequestContext.getCurrentInstance().update("frmEditarEscala:mensajeGeneral");
+                FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Escala","esta escala esta en uso"));
+            }
+            inicioPagina();
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+        }
     }
 }
