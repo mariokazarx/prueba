@@ -39,6 +39,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Anlectivo.findByAnlectivoId", query = "SELECT a FROM Anlectivo a WHERE a.anlectivoId = :anlectivoId"),
     @NamedQuery(name = "Anlectivo.findByEstadocopiado", query = "SELECT a FROM Anlectivo a WHERE a.estadocopiado = :estadocopiado"),
     @NamedQuery(name = "Anlectivo.findByAnio", query = "SELECT a FROM Anlectivo a WHERE a.anio = :anio"),
+    @NamedQuery(name = "Anlectivo.findByTerminado", query = "SELECT a FROM Anlectivo a WHERE a.terminado = :terminado"),
     @NamedQuery(name = "Anlectivo.findConfoguracionCurso", query = "SELECT a.configuracionId FROM Anlectivo a JOIN a.cursoList c WHERE c.cursoId = :cursoId"),
     @NamedQuery(name = "Anlectivo.findConfiguracion", query = "SELECT a FROM Anlectivo a WHERE a.configuracionId = :configuracionId"),
     @NamedQuery(name = "Anlectivo.removeById", query = "DELETE FROM Anlectivo a WHERE a.anlectivoId = :anlectivoId"),
@@ -59,6 +60,10 @@ public class Anlectivo implements Serializable {
     @NotNull
     @Column(name = "anio", nullable = false)
     private int anio;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "terminado", nullable = false)
+    private boolean terminado;
     @Size(max = 200)
     @Column(name = "descripcion", length = 200)
     private String descripcion;
@@ -78,10 +83,11 @@ public class Anlectivo implements Serializable {
         this.anlectivoId = anlectivoId;
     }
 
-    public Anlectivo(Integer anlectivoId, String estadocopiado, int anio) {
+    public Anlectivo(Integer anlectivoId, String estadocopiado, int anio, boolean terminado) {
         this.anlectivoId = anlectivoId;
         this.estadocopiado = estadocopiado;
         this.anio = anio;
+        this.terminado = terminado;
     }
 
     public Integer getAnlectivoId() {
@@ -106,6 +112,14 @@ public class Anlectivo implements Serializable {
 
     public void setAnio(int anio) {
         this.anio = anio;
+    }
+
+    public boolean getTerminado() {
+        return terminado;
+    }
+
+    public void setTerminado(boolean terminado) {
+        this.terminado = terminado;
     }
 
     public String getDescripcion() {
