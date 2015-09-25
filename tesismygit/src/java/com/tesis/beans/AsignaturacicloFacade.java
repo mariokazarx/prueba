@@ -38,11 +38,11 @@ public class AsignaturacicloFacade extends AbstractFacade<Asignaturaciclo> {
         Query cq = em.createNamedQuery("Asignaturaciclo.removeByAsignatura");
         cq.setParameter("asignatura",asig);
         return cq.executeUpdate();
-    
-        
+
+
         //System.out.println("aa"+ciclo);
         //return 1;
-}
+    }
     public List<Asignaturaciclo> asignaturasProfesor(Profesor profesor,Curso curso,Periodo periodo){
         Query cq = em.createNamedQuery("Asignaturaciclo.asignaturasProfesor");
         cq.setParameter("cursoId",curso);

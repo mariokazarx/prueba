@@ -37,7 +37,7 @@ public class AsignaturaFacade extends AbstractFacade<Asignatura> {
         return cq.getResultList();
         //System.out.println("aa"+ciclo);
         //return null;
-}
+    }
     public List<Asignatura> findByConfiguracion(Configuracion conf,Ciclo ciclo) {
         Query cq = em.createNamedQuery("Asignatura.findByConf");
         cq.setParameter("ciclo",ciclo);

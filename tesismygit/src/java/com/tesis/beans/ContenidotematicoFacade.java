@@ -36,7 +36,7 @@ public class ContenidotematicoFacade extends AbstractFacade<Contenidotematico> {
         cq.setParameter("profesorId",profesor);
         cq.setParameter("cursoId",curso);
         return cq.executeUpdate();
-}
+    }
     public Contenidotematico getContenidoByAll(Profesor profesor,Curso curso,Asignaturaciclo asinaturaciclo,Periodo periodo){
         Query cq = em.createNamedQuery("Contenidotematico.findByAll");
         cq.setParameter("profesorId",profesor);

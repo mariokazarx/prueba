@@ -203,6 +203,14 @@ public class mbvAlectivo implements Serializable {
 
     public void actualizar() {
         try {
+            this.configuracionselected = this.configuracionEjb.find(configuracionselected.getConfiguracionId());
+            this.estadoAlectivoselected = this.estadoAlectivoEjb.find(estadoAlectivoselected.getEstadoAniolectivoId());
+            this.anlectivo.setConfiguracionId(configuracionselected);
+            this.anlectivo.setEstadoAniolectivoId(estadoAlectivoselected);
+            this.anlectivoEjb.edit(anlectivo);
+            FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Escala creada Satisfactoriamente", ""));
+            RequestContext.getCurrentInstance().execute("PF('dialogoEditarAlectivo').hide()");
             inicioPagina();
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
