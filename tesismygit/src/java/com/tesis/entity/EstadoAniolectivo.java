@@ -11,8 +11,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -32,14 +30,15 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "EstadoAniolectivo.findAll", query = "SELECT e FROM EstadoAniolectivo e"),
+    @NamedQuery(name = "EstadoAniolectivo.findAllTerminado", query = "SELECT e FROM EstadoAniolectivo e WHERE e.estadoAniolectivoId = 5 OR e.estadoAniolectivoId = 3"),
     @NamedQuery(name = "EstadoAniolectivo.findByEstadoAniolectivoId", query = "SELECT e FROM EstadoAniolectivo e WHERE e.estadoAniolectivoId = :estadoAniolectivoId"),
     @NamedQuery(name = "EstadoAniolectivo.findByEstado", query = "SELECT e FROM EstadoAniolectivo e WHERE e.estado = :estado"),
     @NamedQuery(name = "EstadoAniolectivo.findByDescripcion", query = "SELECT e FROM EstadoAniolectivo e WHERE e.descripcion = :descripcion")})
 public class EstadoAniolectivo implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
+    @NotNull
     @Column(name = "estado_aniolectivo_id", nullable = false)
     private Integer estadoAniolectivoId;
     @Basic(optional = false)

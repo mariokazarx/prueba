@@ -19,7 +19,7 @@
                         <f:facet name="header">
                             Lista de Asignaturas
                         </f:facet>
-                        <p:column headerText="Nombre" filterBy="nombre" sortBy="#{item.nombre}">
+                        <p:column headerText="Nombre" filterBy="#{item.nombre}" filterMatchMode="contains" sortBy="#{item.nombre}">
                             <h:outputText value="#{item.nombre}"/>
                         </p:column>
                         <p:column headerText="Descripcion" filterBy="descripcion">

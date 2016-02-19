@@ -181,7 +181,7 @@ public class mbvConfiguracion implements Serializable {
             //RequestContext.getCurrentInstance().closeDialog(this);
             //criterioevalEjb.create(criterioeval);
             FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Criterio Evaluacion creado Satisfactoriamente", ""));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Configuracion creada Satisfactoriamente", ""));
             inicioPagina();
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
@@ -207,7 +207,7 @@ public class mbvConfiguracion implements Serializable {
 
     public void closeDialog() {
         inicioPagina();
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Escala Registrada", "exitosamente");
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Configuracion Registrada", "exitosamente");
         FacesContext.getCurrentInstance().addMessage(null, message);
     }
 
@@ -219,7 +219,7 @@ public class mbvConfiguracion implements Serializable {
             this.configuracion.setEscalaId(escalaselected);
             this.configuracionEjb.edit(this.configuracion);
             FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Escala creada Satisfactoriamente", ""));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Configuracion creada Satisfactoriamente", ""));
             RequestContext.getCurrentInstance().execute("PF('dialogoEditarEscala').hide()");
             inicioPagina();
         } catch (Exception e) {
@@ -267,11 +267,11 @@ public class mbvConfiguracion implements Serializable {
                 //inicioPagina();
                 //RequestContext.getCurrentInstance().update("frmEditarEscala"); 
                 FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Escala", "eliminada"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Configuracion", "eliminada"));
             } else {
                 //RequestContext.getCurrentInstance().update("frmEditarEscala:mensajeGeneral");
                 FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Escala", "esta escala esta en uso"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Configuracion", "esta configuracion esta en uso"));
             }
             inicioPagina();
         } catch (Exception e) {

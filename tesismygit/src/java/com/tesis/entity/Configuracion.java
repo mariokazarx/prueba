@@ -21,7 +21,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -38,8 +37,6 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Configuracion.findAll", query = "SELECT c FROM Configuracion c"),
     @NamedQuery(name = "Configuracion.findByConfiguracionId", query = "SELECT c FROM Configuracion c WHERE c.configuracionId = :configuracionId"),
-    @NamedQuery(name = "Configuracion.findByNoPeriodos", query = "SELECT c FROM Configuracion c WHERE c.noPeriodos = :noPeriodos"),
-    @NamedQuery(name = "Configuracion.findByDuracionPeriodo", query = "SELECT c FROM Configuracion c WHERE c.duracionPeriodo = :duracionPeriodo"),
     @NamedQuery(name = "Configuracion.findByNombre", query = "SELECT c FROM Configuracion c WHERE c.nombre = :nombre"),
     @NamedQuery(name = "Configuracion.enUso", query = "SELECT COUNT(c) FROM Configuracion c JOIN c.anlectivoList an WHERE c.configuracionId = :configuracionId and an.estadoAniolectivoId.estadoAniolectivoId != 1"),
     @NamedQuery(name = "Configuracion.removeById", query = "DELETE FROM Configuracion c WHERE c.configuracionId = :configuracionId"),
@@ -51,16 +48,6 @@ public class Configuracion implements Serializable {
     @Basic(optional = false)
     @Column(name = "configuracion_id", nullable = false)
     private Integer configuracionId;
-    @Basic(optional = false)
-    @NotNull
-    @Min(value=1,message="Debe ser mayor que 0")
-    @Column(name = "no_periodos", nullable = false)
-    private int noPeriodos;
-    @Basic(optional = false)
-    @NotNull
-    @Min(value=1,message="Debe ser mayor que 0")
-    @Column(name = "duracion_periodo", nullable = false)
-    private int duracionPeriodo;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 200)
@@ -79,8 +66,6 @@ public class Configuracion implements Serializable {
     private List<Area> areaList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "configuracionId", fetch = FetchType.LAZY)
     private List<Asignatura> asignaturaList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "configuracionId", fetch = FetchType.LAZY)
-    private List<Periodo> periodoList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "configuracion", fetch = FetchType.LAZY)
     private List<Ciclo> cicloList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "configuracionId", fetch = FetchType.LAZY)
@@ -93,10 +78,8 @@ public class Configuracion implements Serializable {
         this.configuracionId = configuracionId;
     }
 
-    public Configuracion(Integer configuracionId, int noPeriodos, int duracionPeriodo, String nombre) {
+    public Configuracion(Integer configuracionId, String nombre) {
         this.configuracionId = configuracionId;
-        this.noPeriodos = noPeriodos;
-        this.duracionPeriodo = duracionPeriodo;
         this.nombre = nombre;
     }
 
@@ -106,22 +89,6 @@ public class Configuracion implements Serializable {
 
     public void setConfiguracionId(Integer configuracionId) {
         this.configuracionId = configuracionId;
-    }
-
-    public int getNoPeriodos() {
-        return noPeriodos;
-    }
-
-    public void setNoPeriodos(int noPeriodos) {
-        this.noPeriodos = noPeriodos;
-    }
-
-    public int getDuracionPeriodo() {
-        return duracionPeriodo;
-    }
-
-    public void setDuracionPeriodo(int duracionPeriodo) {
-        this.duracionPeriodo = duracionPeriodo;
     }
 
     public String getNombre() {
@@ -172,15 +139,6 @@ public class Configuracion implements Serializable {
 
     public void setAsignaturaList(List<Asignatura> asignaturaList) {
         this.asignaturaList = asignaturaList;
-    }
-
-    @XmlTransient
-    public List<Periodo> getPeriodoList() {
-        return periodoList;
-    }
-
-    public void setPeriodoList(List<Periodo> periodoList) {
-        this.periodoList = periodoList;
     }
 
     @XmlTransient

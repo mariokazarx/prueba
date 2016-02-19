@@ -28,6 +28,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Matricula.findAll", query = "SELECT m FROM Matricula m"),
+    @NamedQuery(name = "Matricula.findMatriculaActiva", query = "SELECT m FROM Matricula m WHERE m.estudianteId = :estudiante AND m.estadoMatriculaId.estadoMatriculaId = 1"),
+    @NamedQuery(name = "Matricula.findMatriculaByCurso", query = "SELECT m FROM Matricula m WHERE m.cursoId = :curso AND m.estadoMatriculaId.estadoMatriculaId = 1"),
+    @NamedQuery(name = "Matricula.findMatriculasAnio", query = "SELECT m FROM Matricula m WHERE m.cursoId IN (SELECT c FROM Curso c where c.anlectivoId = :anlectivoId) and m.estadoMatriculaId.estadoMatriculaId != 2 or m.estadoMatriculaId.estadoMatriculaId != 3"),
     @NamedQuery(name = "Matricula.findByMatriculaId", query = "SELECT m FROM Matricula m WHERE m.matriculaId = :matriculaId")})
 public class Matricula implements Serializable {
     private static final long serialVersionUID = 1L;

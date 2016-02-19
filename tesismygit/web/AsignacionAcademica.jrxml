@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="AsignacionAcademica" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2202e8a2-a634-45a5-9e77-6f964643d7ee">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="55"/>
+	<field name="numero" class="java.lang.Integer"/>
+	<field name="curso" class="java.lang.String"/>
+	<field name="año" class="java.lang.Integer"/>
+	<field name="contenidoDS" class="net.sf.jasperreports.engine.JRDataSource"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="26" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="175" splitType="Stretch">
+			<staticText>
+				<reportElement x="134" y="25" width="378" height="34" uuid="1c3a9c10-4b04-4b66-bc18-86fe6b3d67e6"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CENTRO EDUCATIVO  “ANTONIO RICAURTE”]]></text>
+			</staticText>
+			<image>
+				<reportElement x="10" y="10" width="100" height="93" uuid="f60b8f90-6fe7-4a47-b4c2-4b26bc6bc6c1"/>
+				<imageExpression><![CDATA["C:\\Users\\Mario Jurado\\Pictures\\Escudo colegio.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="110" y="59" width="424" height="30" uuid="c00a9ead-c6e7-4a32-9750-4cbabf4d7b34"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Licencia de funcionamiento 366 de Abril 4 de 2001, Resolución 1861  Junio 30 de 2005 de  la Secretaría de Educación y Cultura Departamental  CODIGO SNP ICFES 114454 Código DANE 352612001093
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="127" width="174" height="31" uuid="ff1b1364-16a3-4873-b9d0-8404c839124d"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Asignacion academica periodo ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="184" y="127" width="66" height="31" uuid="f5ced320-02d7-4d6e-8711-5d186e5f6715"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{numero}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="250" y="127" width="83" height="31" uuid="4208c1a3-901d-44d2-ab42-35e1f93a52b4"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{curso}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="333" y="127" width="77" height="31" uuid="f52fafc8-12b8-4e46-93b4-2df796c059c9"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[, año escolar]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="410" y="127" width="99" height="31" uuid="1e3bf50e-2f7e-48ed-833a-e0314adb0714"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{año}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="21" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="229" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="572" height="229" uuid="788c01fd-7940-4265-9ac9-a6b8bbf5a58c"/>
+				<dataSourceExpression><![CDATA[$F{contenidoDS}]]></dataSourceExpression>
+				<subreportExpression><![CDATA["AsignacionAcademica_subreport1.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+</jasperReport>

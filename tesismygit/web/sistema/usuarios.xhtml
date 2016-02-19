@@ -20,13 +20,13 @@
                             Lista de Usuarios
                         </f:facet>
                         <p:column headerText="Cedula" filterBy="cedula">
-                            <h:outputText value="#{item.cedula}"/>
+                            <h:outputText value="#{item.identificacion}"/>
                         </p:column>
                         <p:column headerText="Nombres" filterBy="nombres">
-                            <h:outputText value="#{item.nombre}"/>
+                            <h:outputText value="#{item.nombres}"/>
                         </p:column>
                         <p:column headerText="Apellidos" filterBy="apellidos">
-                            <h:outputText value="#{item.apellido}"/>
+                            <h:outputText value="#{item.apellidos}"/>
                         </p:column>
                         <p:column headerText="Direccion" filterBy="direccion">
                             <h:outputText value="#{item.direccion}"/>
@@ -38,7 +38,7 @@
                             <h:outputText value="#{item.correo}"/>
                         </p:column>
                         <p:column>
-                            <p:commandButton value="Editar" icon="ui-icon-pencil" actionListener="#{mbvUsuario.cargarProfesor(item.usuarioId)}"/>
+                            <p:commandButton value="Editar" icon="ui-icon-pencil" actionListener="#{mbvUsuario.cargarUsuario(item.usuarioId)}"/>
                         </p:column>
                         <p:column>
                             <p:commandButton value="Materias" icon="ui-icon-pencil" action="#{mbvUsuario.cargarMaterias(item)}"/>
@@ -52,28 +52,28 @@
                                     <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/fotosusuarios/#{mbvUsuario.usuario.foto}" width="70" height="70" cache="false" alt="Sin definir" style="border-radius: 4px;box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7)"/>
                                 </f:facet>
                                 <p:outputLabel value="Cedula"/>
-                                <h:outputText value="#{mbvUsuario.usuario.cedula}"/>
+                                <h:outputText value="#{mbvUsuario.usuario.identificacion}"/>
 
                             </p:panelGrid>
                         </p:outputPanel>
                     </p:dialog>                   
                 </h:form>        
-                <p:dialog header="Datos Profesor" widgetVar="dialogoEditarProfesor" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
-                    <h:form id="frmEditarProfesor">
-                        <p:outputPanel id="panelEditarProfesor" >
+                <p:dialog header="Datos Usuario" widgetVar="dialogoEditarUsuario" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
+                    <h:form id="frmEditarUsuario">
+                        <p:outputPanel id="panelEditarUsuario" >
                             <h:panelGrid columns="3">
                                 <p:outputLabel for="txtCedula" value="Cedula: " />
-                                <p:inputText id="txtCedula" value="#{mbvUsuario.usuario.cedula}" size="50" >
+                                <p:inputText id="txtCedula" value="#{mbvUsuario.usuario.identificacion}" size="50" >
                                     <f:validator validatorId="validatorVacio"/>
                                 </p:inputText>
                                 <p:message for="txtCedula"/>
                                 <p:outputLabel for="txtNombre" value="Nombres: " />
-                                <p:inputText id="txtNombre" value="#{mbvUsuario.usuario.nombre}" size="50" >
+                                <p:inputText id="txtNombre" value="#{mbvUsuario.usuario.nombres}" size="50" >
                                     <f:validator validatorId="validatorVacio"/>
                                 </p:inputText>
                                 <p:message for="txtNombre"/>
                                 <p:outputLabel for="txtApellidos" value="Apellidos: " />
-                                <p:inputText id="txtApellidos" value="#{mbvUsuario.usuario.apellido}" size="50">
+                                <p:inputText id="txtApellidos" value="#{mbvUsuario.usuario.apellidos}" size="50">
                                     <f:validator validatorId="validatorVacio"/>
                                 </p:inputText>
                                 <p:message for="txtApellidos"/>
@@ -86,28 +86,70 @@
                                 <p:inputText id="txtDireccion" value="#{mbvUsuario.usuario.direccion}" size="50">
                                     <f:validator validatorId="validatorVacio"/>
                                 </p:inputText>
-                                <p:message for="txtCorreo"/>
-                                <p:outputLabel for="txtTitulo" value="Titulo Profesional: " />
-                                <p:inputText id="txtTitulo" value="#{mbvUsuario.usuario.tituloProfesional}" size="50">
-                                    <f:validator validatorId="validatorVacio"/>
-                                </p:inputText>
-                                <p:message for="txtTitulo"/>
+                                <p:message for="txtDireccion"/>
                                 <p:outputLabel for="txtCorreo" value="Correo: " />
                                 <p:inputText id="txtCorreo" value="#{mbvUsuario.usuario.correo}" size="50">
                                     <f:validator validatorId="validatorVacio"/>
                                 </p:inputText>
-                                <p:message for="txtCorreo"/> 
-                                <p:outputLabel for="rdbSexo" value="Sexo:" />
-                                <p:selectOneRadio id="rdbSexo" value="#{mbvUsuario.usuario.sexo}" >
-                                    <f:selectItem itemLabel="Masculino" itemValue="M" />
-                                    <f:selectItem itemLabel="Femenino" itemValue="F" />
-                                </p:selectOneRadio>
-                                <p:message for="rdbSexo"/>
-                                
+                                <p:message for="txtCorreo"/>
+                                <p:outputLabel for="txtCargo" value="Cargo: " />
+                                <p:inputText id="txtCargo" value="#{mbvUsuario.usuario.cargo}" size="50">
+                                    <f:validator validatorId="validatorVacio"/>
+                                </p:inputText>
+                                <p:message for="txtCargo"/>
+                                <p:outputLabel value="Contraseña" for="txtContrasenia"/>
+                                <p:password id="txtContrasenia" label="Contraseña: " match="txtContraseniaRepita" size="50" value="#{mbvUsuario.usuario.contraseña}">
+                                    <f:validator validatorId="validatorVacio"/>
+                                </p:password>
+                                <p:message for="txtContrasenia"/>
+                                <p:outputLabel value="Repita contraseña" for="txtContraseniaRepita"/>
+                                <p:password id="txtContraseniaRepita" label="Repita contraseña: " size="50" value="#{mbvUsuario.txtRepiteContrasenia}"/>
+                                <h:panelGroup></h:panelGroup>
+                                <p:outputLabel for="selectRecurso" value="Recursos:" />
+                                <p:selectOneMenu id="selectRecurso" value="#{mbvUsuario.recursoSelected.recursoId}">
+                                    <p:ajax listener="#{mbvUsuario.cargarPermiso()}" update="chkPermisos"/>
+                                    <f:selectItem itemLabel="Seleccione."/>
+                                    <f:selectItems value="#{mbvUsuario.recursos}" var="recurso" itemLabel="#{recurso.nombre}" itemValue="#{recurso.recursoId}"/>
+                                </p:selectOneMenu>
+                                <p:message for="selectRecurso"/>
+                                <p:outputLabel value="El usuario puede:" />
+                                <h:panelGroup id="chkPermisos">
+                                    <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+                                        <h:outputText value="Consultar: " />
+                                        <p:selectBooleanButton id="chkConsultar" value="#{mbvUsuario.roleActual.consultar}" onLabel="Yes" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:60px">
+                                            <p:ajax update="tablaperfil" listener="#{mbvUsuario.checkPermiso}" />
+                                        </p:selectBooleanButton>
+                                        <h:outputText value="Edita: " />
+                                        <p:selectBooleanButton id="chkEsditar" value="#{mbvUsuario.roleActual.editar}" onLabel="Yes" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:60px">
+                                            <p:ajax update="tablaperfil" listener="#{mbvUsuario.checkPermiso}" />
+                                        </p:selectBooleanButton> 
+                                        <h:outputText value="Adicionar: " />
+                                        <p:selectBooleanButton id="chkAdicionar" value="#{mbvUsuario.roleActual.agregar}" onLabel="Yes" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:60px">
+                                            <p:ajax update="tablaperfil" listener="#{mbvUsuario.checkPermiso}" />
+                                        </p:selectBooleanButton>
+                                    </h:panelGrid>
+                                </h:panelGroup>
                                 <h:panelGroup></h:panelGroup>
                                 <h:panelGroup></h:panelGroup>
-                                <p:commandButton value="Registrar Profesor" actionListener="#{mbvUsuario.insertar}" ajax="true" update=":frmListaUsuarios" />
-                            </h:panelGrid>  
+                                <p:commandButton value="Editar Usuario" actionListener="#{mbvUsuario.actualizar}" ajax="true" update=":frmListaUsuarios :frmEditarUsuario" />
+                            </h:panelGrid> 
+                            <p:dataTable var="rol" value="#{mbvUsuario.rolesRecursos}" id="tablaperfil" style="width:600px;">
+                                <p:column headerText="Recurso">
+                                    <h:outputText value="#{rol.recursoId.nombre}" />
+                                </p:column>
+
+                                <p:column headerText="Consultar">
+                                    <h:outputText value="#{rol.consultar}" />
+                                </p:column>
+
+                                <p:column headerText="Editar">
+                                    <h:outputText value="#{rol.editar}" />
+                                </p:column>
+
+                                <p:column headerText="Adicionar">
+                                    <h:outputText value="#{rol.agregar}" />
+                                </p:column>
+                            </p:dataTable>
                         </p:outputPanel>
                     </h:form>
                 </p:dialog>

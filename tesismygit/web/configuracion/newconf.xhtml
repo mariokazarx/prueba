@@ -23,12 +23,6 @@
                 <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
                 <p:inputTextarea id="txtDescripcion" value="#{mbvConfiguracion.configuracion.descripcion}" autoResize="false" rows="5"/>
                 <p:message for="txtDescripcion"/>
-                <p:outputLabel for="txtNoPeriodos" value="Numero de periodos:  " />
-                <p:inputText id="txtNoPeriodos" value="#{mbvConfiguracion.configuracion.noPeriodos}" />
-                <p:message for="txtNoPeriodos"/>
-                <p:outputLabel for="txtDuracionPeriodos" value="Duracion periodos:  " />
-                <p:inputText id="txtDuracionPeriodos" value="#{mbvConfiguracion.configuracion.duracionPeriodo}" />
-                <p:message for="txtDuracionPeriodos"/>
                 <p:outputLabel for="sltCriterio" value="Criterio Evaluacion:" />
                 <p:selectOneMenu id="sltCriterio" value="#{mbvConfiguracion.criterioevaluacionselected.criterioevaluacionId}" required="true" requiredMessage="Seleccione un Criterio de evaluacion">
                     <f:selectItem itemLabel="Seleccione."/>
@@ -42,7 +36,7 @@
                 </p:selectOneMenu>
                 <p:message for="sltEscala"/>                
                 <h:panelGroup></h:panelGroup>
-                <p:commandButton value="Registrar Escala" actionListener="#{mbvConfiguracion.insertar}" ajax="true" update="frmconf" />
+                <p:commandButton value="Registrar Configuracion" actionListener="#{mbvConfiguracion.insertar}" ajax="true" update="frmconf" />
             </h:panelGrid> 
         </h:form>
     </h:body>

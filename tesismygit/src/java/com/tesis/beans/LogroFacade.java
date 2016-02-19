@@ -4,6 +4,7 @@
  */
 package com.tesis.beans;
 
+import com.tesis.entity.Anlectivo;
 import com.tesis.entity.Contenidotematico;
 import com.tesis.entity.Estudiante;
 import com.tesis.entity.Logro;
@@ -11,6 +12,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
 /**
@@ -52,5 +54,27 @@ public class LogroFacade extends AbstractFacade<Logro> {
         } catch (Exception e) {
             return null;
         }
+    }
+    public List<Logro> getByContenido(Contenidotematico contenido){
+        try {
+            Query cq = em.createNamedQuery("Logro.findByContenido");
+            cq.setParameter("contenidotematicoId", contenido);
+            if(cq.getResultList()!=null){
+                return cq.getResultList();
+            }
+            else{
+                return null;
+            }
+        } catch (PersistenceException e) {
+            System.out.println("llega b");
+            e.printStackTrace();
+            return null;
+        }
+        catch (Exception e) {
+            System.out.println("llega c");
+            e.printStackTrace();
+            return null;
+        }
+        
     }
 }

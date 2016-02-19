@@ -5,9 +5,13 @@
 package com.tesis.beans;
 
 import com.tesis.entity.Documento;
+import com.tesis.entity.Estudiante;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
+import javax.persistence.Query;
 
 /**
  *
@@ -26,5 +30,24 @@ public class DocumentoFacade extends AbstractFacade<Documento> {
     public DocumentoFacade() {
         super(Documento.class);
     }
-    
+    public List<Documento> getByEstudiante(Estudiante est){
+        try {
+            Query cq = em.createNamedQuery("Documento.findByEstudiante");
+            cq.setParameter("estudianteId", est);
+            if(cq.getResultList()!=null){
+                return cq.getResultList();
+            }
+            else{
+                return null;
+            }
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+            return null;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        
+    }
 }

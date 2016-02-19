@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Cursos" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b6c82bc8-6f62-4c13-aed8-0f656abac373">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="ciclo" class="java.lang.String"/>
+	<parameter name="año" class="java.lang.String"/>
+	<parameter name="curso" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+     estudiante."estudiante_id" AS estudiante_estudiante_id,
+     estudiante."tipo_usuario_id" AS estudiante_tipo_usuario_id,
+     estudiante."estado_estudiante_id" AS estudiante_estado_estudiante_id,
+     estudiante."nombre" AS estudiante_nombre,
+     estudiante."identificiacion" AS estudiante_identificiacion,
+     estudiante."tipo_identifcacion" AS estudiante_tipo_identifcacion,
+     estudiante."fecha_nacimiento" AS estudiante_fecha_nacimiento,
+     estudiante."telefono" AS estudiante_telefono,
+     estudiante."direccion" AS estudiante_direccion,
+     estudiante."apellido" AS estudiante_apellido,
+     estudiante."sexo" AS estudiante_sexo,
+     estudiante."zona" AS estudiante_zona,
+     estudiante."sisben" AS estudiante_sisben,
+     estudiante."estrato" AS estudiante_estrato,
+     estudiante."resguardo" AS estudiante_resguardo,
+     estudiante."cabeza_familia" AS estudiante_cabeza_familia,
+     estudiante."acudiente" AS estudiante_acudiente,
+     estudiante."foto" AS estudiante_foto,
+     estudiante."ultimoaprobado" AS estudiante_ultimoaprobado
+FROM
+     "public"."estudiante" estudiante]]>
+	</queryString>
+	<field name="numero" class="java.lang.Integer"/>
+	<field name="curso" class="java.lang.String"/>
+	<field name="año" class="java.lang.Integer"/>
+	<field name="estudiantesDS" class="net.sf.jasperreports.engine.JRDataSource"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="105" splitType="Stretch">
+			<image>
+				<reportElement x="19" y="0" width="100" height="93" uuid="8e633cf9-0229-469b-b059-58f2a71b290c"/>
+				<imageExpression><![CDATA["C:\\Users\\Mario Jurado\\Pictures\\Escudo colegio.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="143" y="15" width="378" height="34" uuid="d2f6f4ef-ae43-463e-b849-88cb8fe713ac"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CENTRO EDUCATIVO  “ANTONIO RICAURTE”]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="119" y="49" width="424" height="30" uuid="99872e10-8f0c-49c1-afff-bcee93978c70"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Licencia de funcionamiento 366 de Abril 4 de 2001, Resolución 1861  Junio 30 de 2005 de  la Secretaría de Educación y Cultura Departamental  CODIGO SNP ICFES 114454 Código DANE 352612001093
+]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="63" splitType="Stretch">
+			<staticText>
+				<reportElement x="71" y="15" width="185" height="20" uuid="7bc3d5f8-d725-4b18-88bb-ed58ec21b1a7"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Estudiantes matriculados al ciclo ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="256" y="15" width="63" height="20" uuid="11cc172c-1c93-45fe-8e0f-5bedf58e6084"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{numero}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="330" y="15" width="100" height="20" uuid="22a3064c-9fc7-47b2-a82c-def9b83a2911"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{curso}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="177" y="35" width="79" height="20" uuid="869f6ebb-fecf-466e-bde0-e58f35d00332"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[año escolar]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="274" y="35" width="100" height="20" uuid="f0cdb475-a870-49b2-b76c-499afeb7164e"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{año}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="15" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="209" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="555" height="209" uuid="fffae789-dea6-41d5-99a4-03b08a8e7349"/>
+				<dataSourceExpression><![CDATA[$F{estudiantesDS}]]></dataSourceExpression>
+				<subreportExpression><![CDATA["Cursos_subreport1.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+</jasperReport>

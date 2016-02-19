@@ -14,18 +14,18 @@
                         <p:ajax event="dialogReturn" listener="#{mbvArea.closeDialog}" update="frmListaArea" />
                     </p:commandButton>
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
-                    <p:dataTable id="tablaListaArea" var="item" value="#{mbvArea.areas}" paginator="true" rows="10" selection="#{mbvArea.area}" selectionMode="single" lazy="true" rowKey="#{item.areaId}" >
+                    <p:dataTable id="tablaListaArea" var="item" value="#{mbvArea.areas}" paginator="true" rows="10" selection="#{mbvArea.area}" selectionMode="single" rowKey="#{item.areaId}" >
                         <p:ajax event="rowSelect" update=":frmListaArea:panelDetalleArea" oncomplete="PF('dialogoDetalleArea').show()"/>
                         <f:facet name="header">
                             Lista de Areas
                         </f:facet>
-                        <p:column headerText="Nombre" filterBy="nombre">
+                        <p:column headerText="Nombre" filterBy="#{item.nombre}" filterMatchMode="contains" sortBy="#{item.nombre}">
                             <h:outputText value="#{item.nombre}"/>
                         </p:column>
                         <p:column headerText="Descripcion" filterBy="descripcion">
                             <h:outputText value="#{item.descripcion}"/>
                         </p:column>
-                        <p:column headerText="Configuracion" filterBy="max">
+                        <p:column headerText="Configuracion" filterBy="#{item.configuracionId.nombre}" filterMatchMode="contains" sortBy="#{item.configuracionId.nombre}">
                             <h:outputText value="#{item.configuracionId.nombre}"/>
                         </p:column>
                         <p:column>
@@ -86,7 +86,7 @@
                                 </p:selectOneMenu>
                                 <p:message for="stlConfiguracion"/>
                                 <h:panelGroup></h:panelGroup>
-                                <p:commandButton value="editar Escala" ajax="true" actionListener="#{mbvArea.actualizar}" update=":frmListaArea" />
+                                <p:commandButton value="Editar area" ajax="true" actionListener="#{mbvArea.actualizar}" update=":frmListaArea" />
                             </h:panelGrid>
                         </p:outputPanel>
                     </h:form>

@@ -22,7 +22,8 @@
                 <p:inputTextarea id="txtDescripcion" value="#{mbvCiclo.ciclo.descripcion}" autoResize="false" rows="5" cols="22" />
                 <p:message for="txtDescripcion"/>
                 <p:outputLabel for="stlConfiguracion" value="Configuracion: " />
-                <p:selectOneMenu id="stlConfiguracion" value="#{mbvCiclo.confuguracionselected.configuracionId}">
+                <p:selectOneMenu id="stlConfiguracion" value="#{mbvCiclo.confuguracionselected.configuracionId}" required="true" requiredMessage="Seleccione una configuracion">
+                    <f:selectItem itemLabel="Seleccione."/>
                     <f:selectItems value="#{mbvCiclo.configuraciones}" var="configuracion" itemLabel="#{configuracion.nombre}" itemValue="#{configuracion.configuracionId}"/>
                 </p:selectOneMenu>
                 <p:message for="stlConfiguracion"/><h:panelGroup></h:panelGroup>

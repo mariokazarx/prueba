@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Cursos_subreport1" pageWidth="572" pageHeight="752" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="02a37547-3f71-423a-b25b-bfc1f19ff058">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<field name="apellido" class="java.lang.String"/>
+	<field name="nombre" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="33" splitType="Stretch">
+			<staticText>
+				<reportElement x="124" y="9" width="53" height="20" uuid="9162a9fd-6708-438f-b43f-6b92515a6a46"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[No]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="231" y="9" width="100" height="20" uuid="c71df6e2-3e43-4a9b-bab6-2fd7b38cf2b6"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Apellidos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="391" y="5" width="100" height="20" uuid="81cc33c6-555a-4d7d-ae2b-b3da8517ca90"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nombres]]></text>
+			</staticText>
+			<line>
+				<reportElement x="89" y="4" width="434" height="1" uuid="8d9499ee-646d-4529-9946-88a1ed494996"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="48" splitType="Stretch">
+			<textField>
+				<reportElement x="231" y="6" width="100" height="20" uuid="9be3700d-827f-432d-9922-f6f7ace406f6"/>
+				<textFieldExpression><![CDATA[$F{apellido}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="391" y="6" width="100" height="20" uuid="9a2bffbe-286c-4f83-979e-e08e9da045e6"/>
+				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="89" y="0" width="434" height="1" uuid="c6961684-8c71-4b7d-809c-5abcadc17b59"/>
+			</line>
+			<line>
+				<reportElement x="523" y="-29" width="1" height="60" uuid="12f95949-4aec-4712-902d-880df254fb61"/>
+			</line>
+			<line>
+				<reportElement x="89" y="-30" width="1" height="61" uuid="fa9a1273-751d-4eec-b991-673196b6da9c"/>
+			</line>
+			<line>
+				<reportElement x="189" y="-30" width="1" height="62" uuid="67e7500e-0bfc-45dc-a722-a3542b6b2937"/>
+			</line>
+			<line>
+				<reportElement x="355" y="-28" width="1" height="60" uuid="da53211f-abbc-4e5b-9bb3-3d326d5c70dc"/>
+			</line>
+			<textField>
+				<reportElement x="124" y="6" width="34" height="20" uuid="ecaeded2-49cd-4872-b4d0-0d1571d16034"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

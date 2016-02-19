@@ -27,14 +27,14 @@
                 <p:message for="txtMinEst"/>
                 
                 <p:outputLabel for="sltConfiguracion" value="Año Lectivo:" />
-                <p:selectOneMenu id="sltConfiguracion" value="#{mbvCurso.anlectivoSelected.anlectivoId}">
+                <p:selectOneMenu id="sltConfiguracion" value="#{mbvCurso.anlectivoSelected.anlectivoId}" required="true" requiredMessage="seleccione un año escolar">
                     <p:ajax listener="#{mbvCurso.cargarCiclo()}" update="sltCiclos"/>
                     <f:selectItem itemLabel="Seleccione."/>
                     <f:selectItems value="#{mbvCurso.anlectivos}" var="anlectivo" itemLabel="#{anlectivo.anio}" itemValue="#{anlectivo.anlectivoId}"/>
                 </p:selectOneMenu>
                 <p:message for="sltConfiguracion"/>
                 <p:outputLabel for="sltCiclos" value="Ciclo:" />
-                <p:selectOneMenu id="sltCiclos" value="#{mbvCurso.cicloselected.cicloId}">
+                <p:selectOneMenu id="sltCiclos" value="#{mbvCurso.cicloselected.cicloId}" required="true" requiredMessage="seleccione un ciclo">
                     <f:selectItem itemLabel="Seleccione."/>
                     <f:selectItems value="#{mbvCurso.ciclosSelected}" var="ciclo" itemLabel="#{ciclo.numero}" itemValue="#{ciclo.cicloId}"/>
                 </p:selectOneMenu>

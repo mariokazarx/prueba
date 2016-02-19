@@ -10,6 +10,7 @@
         <ui:composition template="./../plantilla.xhtml">
             <ui:define name="content">
                 <h:form id="frmescala">
+                    <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
                     <p:outputLabel for="txtCedula" value="Cedula: "/>
                     <p:autoComplete id="txtCedula" value="#{mbvCargaAcademica.profesor}" completeMethod="#{mbvCargaAcademica.completeProfesor}"
                                     var="profesor" itemLabel="#{profesor.cedula}" itemValue="#{profesor}" converter="profesorConverter"  forceSelection="true">
@@ -48,6 +49,23 @@
                             <h:outputText value="#{mbvCargaAcademica.profesor.tituloProfesional}" />
                         </p:panelGrid>
 
+                        
+                        <p:outputPanel id="msgPanel">
+                            <h1>#{mbvCargaAcademica.mensaje}</h1>
+                        </p:outputPanel>
+                        
+                        <h:outputText value="Asignacion por periodo: " />
+                        <p:inputSwitch value="#{mbvCargaAcademica.isPeriodo}" onLabel="SI" offLabel="NO">
+                            <p:ajax listener="#{mbvCargaAcademica.activarByPeriodo}" update="frmescala" />
+                        </p:inputSwitch>
+                        
+                        <p:outputLabel for="selectPeriodo" value="Periodos: " />
+                        <p:selectOneMenu id="selectPeriodo" value="#{mbvCargaAcademica.periodoSelected.periodoId}">
+                            <p:ajax listener="#{mbvCargaAcademica.cargarPeriodo}" update="frmescala"/>
+                            <f:selectItem itemLabel="Seleccione."/>
+                            <f:selectItems value="#{mbvCargaAcademica.periodos}" var="periodo" itemLabel="#{periodo.numero}" itemValue="#{periodo.periodoId}"/>
+                        </p:selectOneMenu>
+                        
                         <p:outputLabel for="selectCourse" value="Curso: " />
                         <p:selectOneMenu id="selectCourse" value="#{mbvCargaAcademica.cursoSelected.cursoId}">
                             <p:ajax listener="#{mbvCargaAcademica.cargarPickList()}" update="frmescala"/>
@@ -56,15 +74,25 @@
                         </p:selectOneMenu>
 
 
-                        <h3>Asignaturas</h3>
+                        <p:outputLabel rendered="#{mbvCargaAcademica.banderaAsig}">
+                            <h3>Asignaturas</h3>
+                        </p:outputLabel>
+                        
+                        <p:outputLabel rendered="#{mbvCargaAcademica.contenidoError}">
+                            <h3>#{mbvCargaAcademica.mensajeError}</h3>
+                        </p:outputLabel>
+                        
                         <p:pickList id="pickList" value="#{mbvCargaAcademica.pickList}" var="asignatura" itemLabel="#{asignatura.nombre}" itemValue="#{asignatura.asignaturaId}" rendered="#{mbvCargaAcademica.banderaAsig}">
                             <f:facet name="sourceCaption">Asiganturas</f:facet>
                             <f:facet name="targetCaption">Ciclo</f:facet>
                             <p:ajax event="transfer" listener="#{mbvCargaAcademica.onTransfer}"  />
                         </p:pickList>
-                        <p:commandButton id="Confirmar" value="Confirmar" actionListener="#{mbvCargaAcademica.cargarMaterias}" style="margin-top:5px" />
+                        <p:commandButton id="Confirmar" value="Confirmar"  style="margin-top:5px" rendered="#{mbvCargaAcademica.banderaAsig}" >
+                            <p:ajax listener="#{mbvCargaAcademica.cargarMaterias}" update="frmescala"/>
+                        </p:commandButton>
                     </h:panelGroup>
-
+                    
+                     
 
 
                 </h:form>

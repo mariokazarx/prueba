@@ -132,6 +132,91 @@ public class mbvUsuario implements Serializable {
         this.rolesRecursos = new ArrayList<Role>();
     }
 
+    public void actualizar(){
+        try {
+            tx.begin();
+            if (this.usuario.getContraseña().equals(this.txtRepiteContrasenia)) {
+                usuario.setContraseña(Encrypt.sha512(this.usuario.getContraseña()));
+                //usuario.getUsuarioRoleList().clear();
+                //usuarioEjb.edit(this.usuario);
+                List<UsuarioRole> auxUsrRoles = new ArrayList<UsuarioRole>(userroleEjb.getByUser(usuario));
+                //auxUsrRoles = usuario.getUsuarioRoleList();
+                if(!userroleEjb.getByUser(usuario).isEmpty()){
+                    System.out.println("ERRORR GRAVE 13333"+usuario.getUsuarioRoleList()+"EL OTRO"+auxUsrRoles);
+                    if(!userroleEjb.removeByUsuario(usuario)){
+                        //tx.rollback();
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error fatal:", "Las contraseñas no coinciden 1"));
+                        return;
+                    } 
+                    usuario.getUsuarioRoleList().clear();
+                    System.out.println("ERRORR GRAVE 13333"+userroleEjb.getByUser(usuario)+"EL O>TRO"+auxUsrRoles);
+                    for(UsuarioRole usrRolAux:auxUsrRoles){
+                        if(!roleEjb.removeById(usrRolAux.getRoleId().getRoleId())){
+                            tx.rollback();
+                            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error fatal:", "Las contraseñas no coinciden 2"));
+                            return;
+                        }
+                    }
+                }
+                tx.commit();
+                //borrar roles por rol id de recursos
+                // borrar usuario roles
+                tx.begin();
+                System.out.println("MIERDAAAA"+userroleEjb.getByUser(usuario));
+                if (rolesRecursos.size() > 0) {
+                    for (Role aux : rolesRecursos) {
+                        System.out.println("role lllllll"+aux.getRecursoId());
+                        roleEjb.create(aux);
+                        UsuarioRole usrRol = new UsuarioRole();
+                        usrRol.setRoleId(aux);
+                        usrRol.setUsuarioId(usuario);
+                        System.out.println("role 22222"+usrRol.toString());
+                        userroleEjb.create(usrRol);
+                        System.out.println("MIERDAAAA 222212121211111"+userroleEjb.getByUser(usuario));
+                    }
+                    System.out.println("MIERDAAAA 22222"+userroleEjb.getByUser(usuario));
+                    usuarioEjb.edit(this.usuario);
+                    tx.commit();
+                    //closeDialog();
+                    FacesContext.getCurrentInstance().
+                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Criterio Evaluacion creado Satisfactoriamente", ""));
+                    //tx.rollback();    
+                    RequestContext.getCurrentInstance().execute("PF('dialogoEditarUsuario').hide()");
+                    inicioPagina();
+                } else {
+                    tx.rollback();
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error fatal:", "Las contraseñas no coinciden"));
+                    return;
+                }
+
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error fatal:", "Las contraseñas no coinciden"));
+                tx.rollback();
+                return;
+            }
+
+        } catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error fatal:", "Por favor contacte con su administrador " + ex.getMessage()));
+        }
+
+    }
+    public void prueba(){
+        System.out.println("ENTRO PRUEB A");
+        List<UsuarioRole> auxUsrRoles = new ArrayList<UsuarioRole>(userroleEjb.getByUser(usuario));
+        if(!userroleEjb.removeByUsuario(usuario)){
+            System.out.println("no pudo borrar");
+        }else{
+            System.out.println("pudo borrar");
+            for(UsuarioRole usrRolAux:auxUsrRoles){
+                if(!roleEjb.removeById(usrRolAux.getRoleId().getRoleId())){
+                    System.out.println("no pudo borrar KKKKK");
+                }
+                else{
+                    System.out.println("pudo borrar LLLLL");
+                }
+            }
+        }
+    }
     public void insertar() {
         try {
             tx.begin();
@@ -141,7 +226,9 @@ public class mbvUsuario implements Serializable {
                 usuario.setEstadoUsuarioId(estado);
                 usuario.setTipoUsuarioId(tusu);
                 usuario.setContraseña(Encrypt.sha512(this.usuario.getContraseña()));
+                System.out.println("USUARIO"+usuario.getIdentificacion());
                 usuarioEjb.create(this.usuario);
+                System.out.println("USUARIO"+usuario);
                 if (rolesRecursos.size() > 0) {
                     for (Role aux : rolesRecursos) {
                         roleEjb.create(aux);
@@ -173,15 +260,16 @@ public class mbvUsuario implements Serializable {
 
     }
 
-    public void newProfesor() {
+    public void newUsuario() {
         Map<String, Object> options = new HashMap<String, Object>();
-        options.put("contentHeight", 440);
-        options.put("height", 460);
-        options.put("width", 700);
+        options.put("contentHeight", 600);
+        options.put("contentWidth", 800);
+        options.put("height", 600);
+        options.put("width", 800);
         options.put("modal", true);
         options.put("draggable", true);
         options.put("resizable", true);
-        RequestContext.getCurrentInstance().openDialog("newprofesor", options, null);
+        RequestContext.getCurrentInstance().openDialog("newusuario", options, null);
     }
 
     public void checkPermiso() {
@@ -246,5 +334,30 @@ public class mbvUsuario implements Serializable {
              System.out.println("ENTRO 3");
             roleActual = new Role();
         }
+    }
+    public void cargarUsuario(int usuarioId) {
+        try {
+            this.usuario = this.usuarioEjb.find(usuarioId);
+            this.rolesRecursos.clear();
+            //if(!usuario.getUsuarioRoleList().isEmpty()){
+            //    System.out.println("FFGFGHG"+this.usuario.getUsuarioRoleList());
+            //}
+            //usuarioEjb.notifyAll();
+            for(UsuarioRole usrRolAux:userroleEjb.getByUser(usuario)){
+                this.rolesRecursos.add(usrRolAux.getRoleId());
+            }
+            this.cargarPermiso();
+            //this.nomoriginal = this.escala.getNombre();
+            RequestContext.getCurrentInstance().update("frmEditarUsuario:panelEditarUsuario");
+            RequestContext.getCurrentInstance().execute("PF('dialogoEditarUsuario').show()");
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+        }
+    }
+    public void closeDialog() {
+        inicioPagina();
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Escala Registrada", "exitosamente");
+        FacesContext.getCurrentInstance().addMessage(null, message);
     }
 }

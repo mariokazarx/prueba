@@ -44,6 +44,12 @@
                             <p:commandButton value="Editar" icon="ui-icon-pencil" actionListener="#{mbvEstudiante.cargarEstudiante(estudiante.estudianteId)}"/>
                         </p:column>
                         <p:column>
+                            <p:commandButton value="Subir Archivos" icon="ui-icon-pencil" actionListener="#{mbvEstudiante.subirArchivos(estudiante.estudianteId)}"/>
+                        </p:column>
+                        <p:column>
+                            <p:commandButton value="Ver Archivos" icon="ui-icon-pencil" actionListener="#{mbvEstudiante.examinarArchivos(estudiante.estudianteId)}"/>
+                        </p:column>
+                        <p:column>
                             <p:commandButton value="Matricular" icon="ui-icon-pencil" action="#{mbvEstudiante.cargarMatricula(estudiante)}"/>
                         </p:column>
                     </p:dataTable>
@@ -60,7 +66,39 @@
                             </p:panelGrid>
                         </p:outputPanel>
                     </p:dialog>                   
-                </h:form>        
+                </h:form>  
+                <p:dialog header="Subir Archivos" widgetVar="dialogoSubirArchivos" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
+                    <h:form id="frmArchivos" enctype="multipart/form-data">
+                        <p:messages showDetail="true"/>  
+                        <p:fileUpload fileUploadListener="#{mbvEstudiante.handleFileUpload}" multiple="true" mode="advanced" update="frmArchivos"  allowTypes="/(\.|\/)(pdf|png|jpg)$/" cancelLabel="Cancelar" uploadLabel="Subir archivos" label="Seleccione Archivo">
+
+                        </p:fileUpload>   
+
+                    </h:form>
+                </p:dialog>
+                <p:dialog header="Examinar Archivos" widgetVar="dialogoExaminarArchivos" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip" width="650px">
+                    <h:form id="frmArchivosView">
+                        <p:outputPanel id="panelArchivosEstudiante" >
+                            <p:messages showDetail="true"/>  
+                            <p:dataTable id="tablaArchivosEstudiante" var="documento" value="#{mbvEstudiante.documentos}" paginator="true" rows="10" selection="#{mbvEstudiante.documento}" selectionMode="single" lazy="true" rowKey="#{documento.documentoId}" >
+                                <f:facet name="header">
+                                    documentos
+                                </f:facet>
+                                <p:column headerText="Estudiante">
+                                    <h:outputText value="#{documento.estudianteId.nombre}"/>
+                                </p:column>
+                                <p:column headerText="Nombre">
+                                    <h:outputText value="#{documento.nombre}"/>
+                                </p:column>
+                                <p:column>
+                                    <h:commandLink value= "Ver Documento" action= "#{mbvEstudiante.downloadPDF(documento.rutaarchivo)}" target= "_blank" />
+                                </p:column>
+                            </p:dataTable>   
+                        </p:outputPanel>
+                    </h:form>
+                </p:dialog>
+
+
                 <p:dialog header="Datos del usuario" widgetVar="dialogoEditarEstudiante" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
                     <h:form id="frmEditarEstudiante">
                         <p:outputPanel id="panelEditarEstudiante" >

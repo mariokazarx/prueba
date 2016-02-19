@@ -7,6 +7,7 @@ package com.tesis.beans;
 import com.tesis.entity.Anlectivo;
 import com.tesis.entity.Configuracion;
 import com.tesis.entity.Curso;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -54,6 +55,23 @@ public class AnlectivoFacade extends AbstractFacade<Anlectivo> {
         }
         return bandera;
     }
+    
+    public boolean existeConfiguracionEnUso(Configuracion configuracion) {
+        boolean bandera;
+        try {
+            Query cq = em.createNamedQuery("Anlectivo.findConfiguracionUso");
+            cq.setParameter("configuracionId", configuracion);
+            if (cq.getSingleResult() != null) {
+                bandera = true;
+            } else {
+                bandera = false;
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR[]"+e.toString());
+            bandera = false;
+        }
+        return bandera;
+    }
 
     public boolean removeById(Anlectivo anlectivo) {
         try {
@@ -71,5 +89,145 @@ public class AnlectivoFacade extends AbstractFacade<Anlectivo> {
         catch (Exception e) {
             return false;
         }
+    }
+    public boolean enUso(){
+        try {
+            System.out.println("llega a");
+            Query cq = em.createNamedQuery("Anlectivo.findByUso");
+            if(cq.getSingleResult()!=null){
+                Long count = (Long) cq.getSingleResult();
+                if(count != 0){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+            else{
+                return false;
+            }
+        } catch (PersistenceException e) {
+            System.out.println("llega b");
+            e.printStackTrace();
+            return false;
+        }
+        catch (Exception e) {
+            System.out.println("llega c");
+            e.printStackTrace();
+            return false;
+        }
+        
+    }
+    public boolean existActivo(){
+        try {
+            Query cq = em.createNamedQuery("Anlectivo.findActivo");
+            if(cq.getSingleResult()!=null){
+                Long count = (Long) cq.getSingleResult();
+                if(count != 0){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+            else{
+                return false;
+            }
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+            return false;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        
+    }
+    public boolean existIniciado(){
+        try {
+            Query cq = em.createNamedQuery("Anlectivo.findIniciado");
+            if(cq.getSingleResult()!=null){
+                Long count = (Long) cq.getSingleResult();
+                if(count != 0){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+            else{
+                return false;
+            }
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+            return false;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        
+    }
+    public boolean existIniciadoNew(){
+        try {
+            Query cq = em.createNamedQuery("Anlectivo.findIniciado");
+            if(cq.getSingleResult()!=null){
+                Long count = (Long) cq.getSingleResult();
+                if(count != 0){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+            else{
+                return false;
+            }
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+            return false;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        
+    }
+    
+    public Anlectivo getIniciado(){
+        try {
+            Query cq = em.createNamedQuery("Anlectivo.findIniciadoObj");
+            if(cq.getSingleResult()!=null){
+                return (Anlectivo) cq.getSingleResult();
+            }
+            else{
+                return null;
+            }
+        } catch (PersistenceException e) {
+            //e.printStackTrace();
+            return null;
+        }
+        catch (Exception e) {
+            //e.printStackTrace();
+            return null;
+        }
+        
+    }
+    public List<Anlectivo> getEnUso(){
+        try {
+            Query cq = em.createNamedQuery("Anlectivo.findUso");
+            if(cq.getResultList()!=null){
+                return cq.getResultList();
+            }
+            else{
+                return null;
+            }
+        } catch (PersistenceException e) {
+            System.out.println("llega b");
+            e.printStackTrace();
+            return null;
+        }
+        catch (Exception e) {
+            System.out.println("llega c");
+            e.printStackTrace();
+            return null;
+        }
+        
     }
 }

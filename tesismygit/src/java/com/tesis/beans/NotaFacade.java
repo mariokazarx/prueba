@@ -4,10 +4,15 @@
  */
 package com.tesis.beans;
 
+import com.tesis.entity.Anlectivo;
+import com.tesis.entity.Curso;
+import com.tesis.entity.Estudiante;
 import com.tesis.entity.Nota;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
+import javax.persistence.Query;
 
 /**
  *
@@ -26,5 +31,28 @@ public class NotaFacade extends AbstractFacade<Nota> {
     public NotaFacade() {
         super(Nota.class);
     }
-    
+    public Double getNotaFinal(Anlectivo alectivo,Estudiante est,Curso curso){
+        try {
+            System.out.println("MM QUE SERA::::"+alectivo.toString()+"aaa"+est.toString()+"bbb"+curso.toString());
+            Query cq = em.createNamedQuery("Nota.findNotaFinal");
+            cq.setParameter("cursoId", curso);
+            cq.setParameter("estudianteId", est);
+            cq.setParameter("anlectivoId", alectivo);
+            if(cq.getResultList()!=null){
+                return (Double)cq.getSingleResult();
+            }
+            else{
+                System.out.println("MM QUE SERA::::222");
+                return null;
+            }
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+            return null;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        
+    }
 }

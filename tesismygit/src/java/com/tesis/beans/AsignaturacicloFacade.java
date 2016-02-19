@@ -8,12 +8,14 @@ import com.tesis.entity.Asignatura;
 import com.tesis.entity.Asignaturaciclo;
 import com.tesis.entity.Ciclo;
 import com.tesis.entity.Curso;
+import com.tesis.entity.Estudiante;
 import com.tesis.entity.Periodo;
 import com.tesis.entity.Profesor;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
 /**
@@ -54,9 +56,9 @@ public class AsignaturacicloFacade extends AbstractFacade<Asignaturaciclo> {
         Query cq = em.createNamedQuery("Asignaturaciclo.asignaturasDisponibles");
         cq.setParameter("cursoId",curso.getCursoId());
         cq.setParameter("cursoIdC",curso);
-        cq.setParameter("profesorId",profesor);
+        //cq.setParameter("profesorId",profesor);
         return cq.getResultList();
-    }
+    } 
     public Asignaturaciclo asignaturasCiclo(Ciclo ciclo,Asignatura asg){
         System.out.println("QQQQ"+ciclo+"WWWWWWWWW"+asg);
         Query cq = em.createNamedQuery("Asignaturaciclo.findByCicloAsig");
@@ -64,4 +66,28 @@ public class AsignaturacicloFacade extends AbstractFacade<Asignaturaciclo> {
         cq.setParameter("asignaturaId",asg);
         return (Asignaturaciclo) cq.getSingleResult();
     }
+     public Long asignaturasAprobadasAnio(Integer valor,Estudiante est,Curso curso){
+        try {
+            System.out.println("MM QUE SERA::::"+valor+"aaa"+est.toString()+"bbb"+curso.toString());
+            Query cq = em.createNamedQuery("Asignaturaciclo.countAprobadas");
+            cq.setParameter("cursoId", curso);
+            cq.setParameter("estudianteId", est);
+            cq.setParameter("valor", valor);
+            if(cq.getResultList()!=null){
+                System.out.println("MM QUE SERaaaaaaA::::"+cq.getSingleResult().toString());
+                return (Long)cq.getSingleResult();
+            }
+            else{
+                System.out.println("MM QUE SERA::::222");
+                return null;
+            }
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+            return null;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+     }
 }

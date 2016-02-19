@@ -57,7 +57,7 @@ public class LazyAsignaturaDataModel extends LazyDataModel<Asignatura> {
                         val1.setAccessible(true);
                         String fieldValue = String.valueOf(val1.get(asg));
  
-                        if(filterValue == null || fieldValue.startsWith(filterValue.toString())) {
+                        if(filterValue == null || fieldValue.startsWith(filterValue.toString()) || fieldValue.toLowerCase().contains(filterValue.toString().toLowerCase())) {
                             match = true;
                     }
                     else {

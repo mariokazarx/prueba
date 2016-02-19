@@ -16,12 +16,12 @@
                         <p:ajax event="dialogReturn" listener="#{mbvcriterioevaluacion.closeDialog}" update="frmListaEscala" />
                     </p:commandButton>
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
-                    <p:dataTable id="tablaListaEscala" var="item" value="#{mbvcriterioevaluacion.criterioseval}" paginator="true" rows="10" selection="#{mbvcriterioevaluacion.criterioeval}" selectionMode="single" lazy="true" rowKey="#{item.criterioevaluacionId}" >
+                    <p:dataTable id="tablaListaEscala" var="item" value="#{mbvcriterioevaluacion.criterioseval}" paginator="true" rows="10" selection="#{mbvcriterioevaluacion.criterioeval}" selectionMode="single" rowKey="#{item.criterioevaluacionId}" >
                         <p:ajax event="rowSelect" update=":frmListaEscala:panelDetalleEscala" oncomplete="PF('dialogoDetalleEscala').show()"/>
                         <f:facet name="header">
                             Criterios de valiacion
                         </f:facet>
-                        <p:column headerText="Nombre" filterBy="nombre">
+                        <p:column headerText="Nombre" filterBy="#{item.nombre}" filterMatchMode="contains" sortBy="#{item.nombre}">
                             <h:outputText value="#{item.nombre}"/>
                         </p:column>
                         <p:column headerText="Descripcion" filterBy="descripcion">
@@ -63,7 +63,7 @@
                 
                 
                 <p:confirmDialog header="Eliminar Criterio Evaluacion" widgetVar="removecriterio" appendTo="@(body)" resizable="false" id="removeDlg"
-                                 showEffect="fade" hideEffect="explode" modal="true" message="Esta Seguro que desea eliminar esta escala?">
+                                 showEffect="fade" hideEffect="explode" modal="true" message="Esta Seguro que desea eliminar este criterio?">
                     <h:form id="frmRemoveCriterio">
                         <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
 

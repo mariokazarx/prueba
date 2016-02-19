@@ -124,6 +124,10 @@ public class mbsLogin implements Serializable {
                 if (Encrypt.sha512(clave).equals(auxUsu.getContraseña())) {
                     //bien
                     System.out.println("bien");
+                    this.login = true;
+                    this.loginUsuario = true;
+                    this.usuario = auxUsu;
+                    context.getExternalContext().redirect("plantilla.xhtml");
                 } else {
                     //clave mal
                     System.out.println("clave mal");

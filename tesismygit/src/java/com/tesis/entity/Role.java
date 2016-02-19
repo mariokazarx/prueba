@@ -34,6 +34,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Role.findAll", query = "SELECT r FROM Role r"),
     @NamedQuery(name = "Role.findByRoleId", query = "SELECT r FROM Role r WHERE r.roleId = :roleId"),
+    @NamedQuery(name = "Role.removeByRoleId", query = "DELETE FROM Role r WHERE r.roleId = :roleId"),
     @NamedQuery(name = "Role.findByConsultar", query = "SELECT r FROM Role r WHERE r.consultar = :consultar"),
     @NamedQuery(name = "Role.findByEditar", query = "SELECT r FROM Role r WHERE r.editar = :editar"),
     @NamedQuery(name = "Role.findByAgregar", query = "SELECT r FROM Role r WHERE r.agregar = :agregar"),

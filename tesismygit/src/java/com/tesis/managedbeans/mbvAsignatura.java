@@ -7,10 +7,13 @@ package com.tesis.managedbeans;
 import com.tesis.beans.AreaFacade;
 import com.tesis.beans.AsignaturaFacade;
 import com.tesis.beans.ConfiguracionFacade;
+import com.tesis.beans.UsuarioRoleFacade;
 import com.tesis.clases.LazyAsignaturaDataModel;
 import com.tesis.entity.Area;
 import com.tesis.entity.Asignatura;
 import com.tesis.entity.Configuracion;
+import com.tesis.entity.Usuario;
+import com.tesis.entity.UsuarioRole;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
@@ -35,6 +38,8 @@ public class mbvAsignatura implements Serializable{
     /**
      * Creates a new instance of mbvAsignatura
      */
+    private Usuario usr;
+    private boolean login;
     private Asignatura asignatura;
     private LazyDataModel<Asignatura> asignaturas;
     private List<Area> areas;
@@ -44,6 +49,8 @@ public class mbvAsignatura implements Serializable{
     
     @EJB
     private AsignaturaFacade asignaturaEjb;
+    @EJB
+    private UsuarioRoleFacade usrRoleEjb;
 
     public mbvAsignatura() {
     }
@@ -129,6 +136,15 @@ public class mbvAsignatura implements Serializable{
     
     @PostConstruct
     public void inicioPagina(){
+        try {
+            mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
+             usr = mbslogin.getUsuario();
+             login = mbslogin.isLogin();
+            System.out.println("usuario"+usr.getNombres()+"Login"+login);
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+        login=false;
         this.asignatura=new Asignatura();
         this.asignaturas= new LazyAsignaturaDataModel(this.asignaturaEjb.findAll());
         //this.areas = this.areaEjb.findAll();
@@ -140,13 +156,37 @@ public class mbvAsignatura implements Serializable{
     
     public void insertar(){
         try{
-            asignatura.setAreaId(areaselected);
-            asignatura.setConfiguracionId(confuguracionselected);
-            RequestContext.getCurrentInstance().closeDialog(this);
-            asignaturaEjb.create(asignatura);
-            FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Asignatura creada Satisfactoriamente", ""));
-            inicioPagina();
+            if(!login){
+                System.out.println("Usuario NO logeado");
+                FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                return;
+            }
+            boolean permiso=false;
+            //6 recurso escalas
+            if(this.usr!=null){
+                for(UsuarioRole usrRol:usrRoleEjb.getByUser(usr)){
+                    if(usrRol.getRoleId().getRecursoId().getRecursoId()==3){
+                        if(usrRol.getRoleId().getAgregar()){
+                            permiso=true;
+                        }
+                    }
+                }
+            }
+            if(permiso){
+                asignatura.setAreaId(areaselected);
+                asignatura.setConfiguracionId(confuguracionselected);
+                RequestContext.getCurrentInstance().closeDialog(this);
+                asignaturaEjb.create(asignatura);
+                FacesContext.getCurrentInstance().
+                           addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Asignatura creada Satisfactoriamente", ""));
+                inicioPagina();
+            }
+            else{
+                System.out.print("error permiso denegado");
+                FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+            }
         }catch(Exception e){
              FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
@@ -160,15 +200,39 @@ public class mbvAsignatura implements Serializable{
 
     public void actualizar(){
         try{
-            this.areaselected = this.areaEjb.find(areaselected.getAreaId());
-            this.confuguracionselected = this.configuracionEjb.find(confuguracionselected.getConfiguracionId());
-            asignatura.setAreaId(areaselected);
-            asignatura.setConfiguracionId(confuguracionselected);
-            asignaturaEjb.edit(asignatura);
-            FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Asignatura Editada Exitosamente", ""));
-            RequestContext.getCurrentInstance().execute("PF('dialogoEditarAsignatura').hide()");
-            inicioPagina();
+            if(!login){
+                System.out.println("Usuario NO logeado");
+                FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                return;
+            }
+            boolean permiso=false;
+            //6 recurso escalas
+            if(this.usr!=null){
+                for(UsuarioRole usrRol:usrRoleEjb.getByUser(usr)){
+                    if(usrRol.getRoleId().getRecursoId().getRecursoId()==3){
+                        if(usrRol.getRoleId().getEditar()){
+                            permiso=true;
+                        }
+                    }
+                }
+            }
+            if(permiso){
+                this.areaselected = this.areaEjb.find(areaselected.getAreaId());
+                this.confuguracionselected = this.configuracionEjb.find(confuguracionselected.getConfiguracionId());
+                asignatura.setAreaId(areaselected);
+                asignatura.setConfiguracionId(confuguracionselected);
+                asignaturaEjb.edit(asignatura);
+                FacesContext.getCurrentInstance().
+                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Asignatura Editada Exitosamente", ""));
+                RequestContext.getCurrentInstance().execute("PF('dialogoEditarAsignatura').hide()");
+                inicioPagina();
+            }
+            else{
+                System.out.print("error permiso denegado");
+                FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+            }
         }catch(Exception e){
             FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
@@ -204,19 +268,43 @@ public class mbvAsignatura implements Serializable{
     }
      public void eliminarAsignatura(Asignatura asignatura) {
         try {
-            //this.escala = this.escalaEjb.find(escalaid);
-           //System.out.println("ELIMINAR CRITERIO :"+criterioeval);
-            if(asignaturaEjb.removeById(asignatura)==true){
-                //inicioPagina();
-                //RequestContext.getCurrentInstance().update("frmEditarEscala"); 
+            if(!login){
+                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Escala","eliminada"));
-            }else{
-                //RequestContext.getCurrentInstance().update("frmEditarEscala:mensajeGeneral");
-                FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Escala","esta escala esta en uso"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                return;
             }
-            inicioPagina();
+            boolean permiso=false;
+            //6 recurso escalas
+            if(this.usr!=null){
+                for(UsuarioRole usrRol:usrRoleEjb.getByUser(usr)){
+                    if(usrRol.getRoleId().getRecursoId().getRecursoId()==3){
+                        if(usrRol.getRoleId().getEliminar()){
+                            permiso=true;
+                        }
+                    }
+                }
+            }
+            if(permiso){
+                //this.escala = this.escalaEjb.find(escalaid);
+               //System.out.println("ELIMINAR CRITERIO :"+criterioeval);
+                if(asignaturaEjb.removeById(asignatura)==true){
+                    //inicioPagina();
+                    //RequestContext.getCurrentInstance().update("frmEditarEscala"); 
+                    FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Escala","eliminada"));
+                }else{
+                    //RequestContext.getCurrentInstance().update("frmEditarEscala:mensajeGeneral");
+                    FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Escala","esta escala esta en uso"));
+                }
+                inicioPagina();
+            }
+            else{
+                System.out.print("error permiso denegado");
+                FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+            }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));

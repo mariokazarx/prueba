@@ -1,0 +1,109 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <body>
+        <ui:composition template="./../plantilla.xhtml">
+            <ui:define name="content">
+                <h:form id="frmRectificar">
+                    <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
+                    <p:outputLabel for="txtCedula" value="Cedula: "/>
+                    <p:autoComplete id="txtCedula" value="#{mbvRectificar.profesor}" completeMethod="#{mbvRectificar.completeProfesor}"
+                                    var="profesor" itemLabel="#{profesor.cedula}" itemValue="#{profesor}" converter="profesorConverterRectificar"  forceSelection="true">
+                        <p:column>
+                            <h:outputText styleClass="ui-theme ui-theme-#{profesor.nombre}" />
+                        </p:column>
+
+                        <p:column>
+                            <h:outputText value="#{profesor.cedula} #{profesor.nombre} #{profesor.apellido}" />
+                        </p:column>
+                    </p:autoComplete>
+                    <p:commandButton value="prueba" actionListener="#{mbvRectificar.prueba}" ajax="true" update="frmRectificar" />
+                    <br/>
+                    <p:outputLabel id="profesorlbl" value="#{mbvRectificar.profesor.nombre}"/>
+
+                    <h:panelGroup id="prueba" rendered="#{mbvRectificar.contenidoPrincipal}">
+                        <p:panelGrid columns="2" id="profesorTable">
+                            <f:facet name="header">
+                                <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/fotosprofesores/#{mbvCargaAcademica.profesor.foto}" width="240" height="240" cache="false" alt="Sin definir" style="border-radius: 4px;box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7)"/>
+                            </f:facet>
+
+                            <h:outputText value="Cedula:" />
+                            <h:outputText value="#{mbvRectificar.profesor.cedula}" />
+
+
+                            <h:outputText value="Nombres:" />
+                            <h:outputText value="#{mbvRectificar.profesor.nombre}" />
+
+                            <h:outputText value="Apellidos:" />
+                            <h:outputText value="#{mbvRectificar.profesor.apellido}" />
+
+                            <h:outputText value="Email:" />
+                            <h:outputText value="#{mbvRectificar.profesor.correo}" />
+
+                            <h:outputText value="Titulo:" />
+                            <h:outputText value="#{mbvRectificar.profesor.tituloProfesional}" />
+                        </p:panelGrid>
+
+                                                
+                        <p:outputLabel for="selectPeriodo" value="Periodos: " />
+                        <p:selectOneMenu id="selectPeriodo" value="#{mbvRectificar.periodoSelected.periodoId}">
+                            <p:ajax listener="#{mbvRectificar.cargarContenido}" update="frmRectificar"/>
+                            <f:selectItem itemLabel="Seleccione."/>
+                            <f:selectItems value="#{mbvRectificar.periodosSelecteds}" var="periodo" itemLabel="#{periodo.numero}" itemValue="#{periodo.periodoId}"/>
+                        </p:selectOneMenu>
+                        
+                        <p:selectOneMenu id="selectContenido" value="#{mbvRectificar.contenidoSelected.contenidotematicoId}" rendered="true">
+                            <p:ajax listener="#{mbvRectificar.cargarBoton}" update="frmRectificar"/>
+                            <f:selectItem itemLabel="Seleccione."/>
+                            <f:selectItems value="#{mbvRectificar.contenidosRectificar}" var="contenido" itemLabel="#{contenido.asignaturacicloId.asignaturaId.nombre} - #{contenido.cursoId.nombre}" itemValue="#{contenido.contenidotematicoId}"/>
+                        </p:selectOneMenu>
+
+                        <p:commandButton id="Confirmar" value="Rectificar"  style="margin-top:5px" rendered="#{mbvRectificar.banderaRectificar}" >
+                            <p:ajax listener="#{mbvRectificar.rectificarMateria}" update="frmRectificar"/>
+                        </p:commandButton>
+                        
+                        <p:outputPanel id="panelListado" rendered="true">
+                            <p:dataTable id="tableRectificados" emptyMessage="No hay asignaturas para rectificar notas" var="rectificados" rowIndexVar="index" value="#{mbvRectificar.contenidosRectificados}">
+                                <p:column headerText="Numero">
+                                    <h:outputText value="#{index+1}" />
+                                </p:column>
+
+                                <p:column headerText="Asignatura">
+                                    <h:outputText value="#{rectificados.asignaturacicloId.asignaturaId.nombre}" />
+                                </p:column>
+                                
+                                <p:column headerText="Curso">
+                                    <h:outputText value="#{rectificados.cursoId.nombre}" />
+                                </p:column>
+                                
+                                <p:column>
+                                    <p:commandButton value="Terminar" icon="ui-icon-pencil" actionListener="#{mbvRectificar.terminarRectificar(rectificados.contenidotematicoId)}"/>
+                                </p:column>
+                                
+                            </p:dataTable>
+                        </p:outputPanel>
+                        
+                        <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+ 
+                        <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                            <p:graphicImage library="imagenes" name="load1.gif"/>
+                        </p:dialog>
+                        
+                    </h:panelGroup>
+                    
+                     
+
+
+                </h:form>
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>
+

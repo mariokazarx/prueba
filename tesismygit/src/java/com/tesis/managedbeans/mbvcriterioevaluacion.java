@@ -188,11 +188,11 @@ public class mbvcriterioevaluacion implements Serializable {
                 //inicioPagina();
                 //RequestContext.getCurrentInstance().update("frmEditarEscala"); 
                 FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Escala","eliminada"));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Criterio de Evaluacion","eliminada"));
             }else{
                 //RequestContext.getCurrentInstance().update("frmEditarEscala:mensajeGeneral");
                 FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Escala","esta escala esta en uso"));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Criterio de Evaluacion","esta criterio esta en uso"));
             }
             inicioPagina();
         } catch (Exception e) {

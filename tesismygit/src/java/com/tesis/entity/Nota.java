@@ -36,6 +36,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Nota.findAll", query = "SELECT n FROM Nota n"),
     @NamedQuery(name = "Nota.findByNotaId", query = "SELECT n FROM Nota n WHERE n.notaId = :notaId"),
     @NamedQuery(name = "Nota.findByValor", query = "SELECT n FROM Nota n WHERE n.valor = :valor"),
+    @NamedQuery(name = "Nota.findNotaFinal", query = "SELECT AVG(n.valor) FROM Nota n WHERE n.estudianteId = :estudianteId and n.contenidotematicoId IN (SELECT c FROM Contenidotematico c WHERE c.periodoId IN (SELECT p FROM Periodo p WHERE p.anlectivoId = :anlectivoId ) and c.cursoId = :cursoId)"),
+    //select avg(valor) from nota where estudiante_id = 1 and contenidotematico_id in (select contenidotematico_id  from contenidotematico where periodo_id in (select periodo_id from periodo  where anlectivo_id = 9 and curso_id = 1))
     @NamedQuery(name = "Nota.findByFechamodificacion", query = "SELECT n FROM Nota n WHERE n.fechamodificacion = :fechamodificacion"),
     @NamedQuery(name = "Nota.findByObservaciones", query = "SELECT n FROM Nota n WHERE n.observaciones = :observaciones")})
 public class Nota implements Serializable {

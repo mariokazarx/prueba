@@ -44,6 +44,10 @@
                 <p:inputTextarea id="txtDescripcion" value="#{mbvAlectivo.anlectivo.descripcion}" autoResize="false" rows="5" />
                 <p:message for="txtDescripcion"/>
                 
+                <p:outputLabel for="txtNoPeriodos" value="Numero de periodos:  " />
+                <p:inputText id="txtNoPeriodos" value="#{mbvAlectivo.anlectivo.noPeriodos}" />
+                <p:message for="txtNoPeriodos"/>
+                
                 <h:panelGroup></h:panelGroup>
                 <p:commandButton value="Registrar Escala" actionListener="#{mbvAlectivo.insertar}" ajax="true" update="frmAlectivo" />
             </h:panelGrid> 

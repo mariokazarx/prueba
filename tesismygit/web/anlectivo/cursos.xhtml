@@ -84,23 +84,37 @@
                                     <f:validator validatorId="validatorVacio"/>
                                 </p:inputText>
                                 <p:message for="txtNombre"/>
-                                <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
-                                <p:inputTextarea id="txtDescripcion" value="#{mbvcriterioevaluacion.criterioeval.descripcion}" autoResize="false" rows="5" cols="22" />
-                                <p:message for="txtDescripcion"/>
-                                <p:outputLabel for="stlCriterio" value="Criterio de aprobacion:" />
-                                <p:selectOneMenu id="stlCriterio" value="#{mbvcriterioevaluacion.fcriterioselected.formacriterioevaluacionId}">
-                                    <f:selectItems value="#{mbvcriterioevaluacion.fcriterios}" var="fcriterio" itemLabel="#{fcriterio.nombre}" itemValue="#{fcriterio.formacriterioevaluacionId}"/>
+                                <p:outputLabel for="txtMinEst" value="Cantidad de Estudiantes:" />
+                                <p:inputText id="txtMinEst" value="#{mbvCurso.curso.numeroestudiantes}"/>
+                                <p:message for="txtMinEst"/>
+                                <p:outputLabel for="sltConfiguracion" value="Año Lectivo:" />
+                                <p:selectOneMenu id="sltConfiguracion" value="#{mbvCurso.anlectivoSelected.anlectivoId}" required="true" requiredMessage="seleccione un año escolar">
+                                    <f:selectItem itemLabel="Seleccione."/>
+                                    <f:selectItems value="#{mbvCurso.anlectivos}" var="anlectivo" itemLabel="#{anlectivo.anio}" itemValue="#{anlectivo.anlectivoId}"/>
                                 </p:selectOneMenu>
-                                <p:message for="stlCriterio"/>
-                                <p:outputLabel for="txtMin" value="Minimo para aprobar:" />
-                                <p:inputText id="txtMin" value="#{mbvcriterioevaluacion.criterioeval.minaprob}" />
-                                <p:message for="txtMin"/>
+                                <p:message for="sltConfiguracion"/>
+                                <p:outputLabel for="sltCiclos" value="Ciclo:" />
+                                <p:selectOneMenu id="sltCiclos" value="#{mbvCurso.cicloselected.cicloId}" required="true" requiredMessage="seleccione un ciclo">
+                                    <f:selectItem itemLabel="Seleccione."/>
+                                    <f:selectItems value="#{mbvCurso.ciclosSelected}" var="ciclo" itemLabel="#{ciclo.numero}" itemValue="#{ciclo.cicloId}"/>
+                                </p:selectOneMenu>
+                                <p:message for="sltCiclos"/>
                                 <h:panelGroup></h:panelGroup>
                                 <p:commandButton value="Registrar Escala" actionListener="#{mbvcriterioevaluacion.actualizar}" ajax="true" update=":frmListaCursos" />
                             </h:panelGrid> 
                         </p:outputPanel>
                     </h:form>
                 </p:dialog>
+                
+                <p:confirmDialog header="Advertencia" widgetVar="añoNoIniciado" appendTo="@(body)" resizable="false" id="digNoIniciado"
+                                 showEffect="fade" hideEffect="explode" modal="true" message="Debe iniciar un año escolar para poder registrar un curso">
+                    <h:form id="frmNoiniciado">
+                        <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+                            <p:commandButton id="cancelButton" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('añoNoIniciado').hide();" value="OK"/>
+                        </h:panelGrid>
+                    </h:form>
+                </p:confirmDialog>
+                
             </ui:define>
 
         </ui:composition>

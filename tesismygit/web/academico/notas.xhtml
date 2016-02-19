@@ -23,12 +23,11 @@
                         <f:selectItem itemLabel="Seleccione."/>
                         <f:selectItems value="#{mbvNotas.asignaturas}" var="asignatura" itemLabel="#{asignatura.nombre}" itemValue="#{asignatura.asignaturaId}"/>
                     </p:selectOneMenu>
+                    
+                    <br />
+                    <p:commandButton value="Crear Logro" icon="ui-icon-pencil" actionListener="#{mbvNotas.newLogro}" rendered="#{mbvNotas.contenidoLogros}"/>
 
-                    <p:commandButton value="Crear Logro" icon="ui-icon-pencil" actionListener="#{mbvNotas.newLogro}"/>
-
-                    <h3>Asignaturas</h3>
-
-                    <p:dataTable id="tableLogros" var="logro" value="#{mbvNotas.logros}" sortBy="#{logro.porcentaje}">
+                    <p:dataTable id="tableLogros" var="logro" value="#{mbvNotas.logros}" sortBy="#{logro.porcentaje}" rendered="#{mbvNotas.contenidoLogros}">
                         <p:column headerText="Id" sortBy="#{logro.logroId}">
                             <h:outputText value="#{logro.logroId}" />
                         </p:column>
@@ -45,11 +44,11 @@
                             <p:commandButton value="Eliminar"  icon="ui-icon-close" actionListener="#{mbvNotas.eliminarLogro(logro)}" ajax="true" update=":frmMateriasCiclos"/>
                         </p:column>
                     </p:dataTable>
-                    <p:remoteCommand name="onCellEdit" update="testContainer" />
+                    <p:remoteCommand name="onCellEdit" update="tablanotas" />
                     
-                    <p:outputPanel id="testContainer">
-                        <p:dataTable tableStyle="width:auto" editable="true" editMode="cell" id="tablanotas" var="estudiante" value="#{mbvNotas.estudiantes}" widgetVar="tablaEstudiantes" >                    
-                            <p:ajax event="cellEdit" listener="#{mbvNotas.onCellEdit}" oncomplete="onCellEdit()" />
+                    <p:outputPanel id="testContainer" rendered="#{mbvNotas.contenidoNotas}">
+                        <p:dataTable tableStyle="width:auto" editable="true" id="tablanotas" var="estudiante" value="#{mbvNotas.estudiantesN}" widgetVar="tablaEstudiantes" >                    
+                            <p:ajax event="rowEdit" listener="#{mbvNotas.onRowEdit}" oncomplete="onCellEdit()" />
                             <p:column headerText="Nombres Y Apellidos" sortBy="#{estudiante.nombre}">
                                 <h:outputText value="#{estudiante.apellido} #{estudiante.nombre}" />
                             </p:column>
@@ -59,18 +58,36 @@
                                         <h:outputText value="#{column.header}" />
                                     </f:facet>
                                     <p:cellEditor>
-                                        <f:facet name="output"><h:outputText value="#{mbvNotas.getNotaEstudiante(estudiante,column.property)}" /></f:facet>
-                                        <f:facet name="input"><p:inputMask id="modelInput_#{loop.index}" maxlength="2" mask="9.9" value="#{mbvNotas.notaxxLogro}" style="width:96%"/></f:facet>
+                                        <f:facet name="output"><h:outputText value="#{estudiante.notasLogros[column.property]}" /></f:facet>
+                                        <f:facet name="input"><p:inputMask id="modelInput_#{loop.index}" maxlength="2" mask="9.9" value="#{estudiante.notasLogros[column.property]}" style="width:98%"/></f:facet>
                                         <ui:param name="idLogro#{estudiante.estudianteId}_#{loop.index}" value="#{column.property}"/> 
                                     </p:cellEditor>
                                 </p:column>
                             </c:forEach>
-                            <p:column headerText="Nota" sortBy="#{estudiante.nombre}">
-                                <h:outputText value="#{mbvNotas.getNotaEst(estudiante)}" />
+                            <p:column headerText="Nota" id="columnNota">
+                                <h:outputText value="#{estudiante.nota}" />
                             </p:column>
+                            <p:column style="width:32px">
+                                <p:rowEditor />
+                            </p:column>
+                            <p:column headerText="Observaciones" style="width:auto">
+                                <p:commandButton value="ver" icon="ui-icon-search" actionListener="#{mbvNotas.cargarObservacion(estudiante.id)}"/>
+                            </p:column>
+                            <p:column>
+                                <p:commandButton value="editar" icon="ui-icon-pencil" actionListener="#{mbvNotas.insertarObservacion(estudiante.id)}"/>
+                            </p:column>
+                            
                         </p:dataTable>
                     </p:outputPanel>
+                    
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+ 
+                    <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage library="imagenes" name="load1.gif"/>
+                    </p:dialog>
+                    
                     <p:commandButton id="Confirmar" value="Confirmar" update="frmMateriasCiclos" style="margin-top:5px" />
+                    <h:commandButton value="PDF" actionListener="#{mbvNotas.pdf}"/>
                 </h:form>
                 <p:dialog header="Nuevo Logro" widgetVar="dialogoCrearLogro" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
                     <h:form id="frmCrearLogro">
@@ -84,12 +101,29 @@
                                 <p:outputLabel for="txtPorcentaje" value="Porcentaje:" />
                                 <p:inputText id="txtPorcentaje" value="#{mbvNotas.logro.porcentaje}"/>
                                 <p:message for="txtPorcentaje"/>
-                                <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
-                                <p:inputTextarea id="txtDescripcion" value="#{mbvEscala.escala.descripcion}" rows="5" cols="22" />
+                                <p:outputLabel for="txtDescripcion" value="Descripcion: " />
+                                <p:inputTextarea id="txtDescripcion" value="#{mbvNotas.logro.descripcion}" rows="5" cols="22" />
                                 <p:message for="txtDescripcion"/>
                                 <h:panelGroup></h:panelGroup>
                                 <p:commandButton value="Registrar Logro" actionListener="#{mbvNotas.insertarLogro}" ajax="true" update=":frmMateriasCiclos" />
                             </h:panelGrid> 
+                        </p:outputPanel>
+                    </h:form>
+                </p:dialog>
+                <p:dialog header="Observaciones" widgetVar="dialogoObservaciones" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
+                    <h:form id="frmObservaciones">
+                        <p:outputPanel id="panelObservaciones" >
+                            <p>#{mbvNotas.observaciones}</p> 
+                        </p:outputPanel>
+                    </h:form>
+                </p:dialog>
+                <p:dialog header="Crear Observaciones" widgetVar="dialogoCrearObservaciones" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
+                    <h:form id="frmCrearObservaciones">
+                        <p:outputPanel id="panelCrearObservaciones" >
+                            <p:outputLabel for="txtObservacion" value="Observaciones: " />
+                            <p:inputTextarea id="txtObservacion" value="#{mbvNotas.observaciones}" rows="5"  />
+                            <p:message for="txtObservacion"/> 
+                            <p:commandButton value="Registrar Observacion" actionListener="#{mbvNotas.insertarObservacionDB()}" ajax="true" update=":frmMateriasCiclos" />
                         </p:outputPanel>
                     </h:form>
                 </p:dialog>

@@ -11,6 +11,7 @@ import com.tesis.entity.Anlectivo;
 import com.tesis.entity.Ciclo;
 import com.tesis.entity.Curso;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,7 @@ public class mbvCurso implements Serializable {
     private List<Curso> cursos;
     private Anlectivo anlectivoSelected;
     private List<Anlectivo> anlectivos;
+    private List<Anlectivo> auxAnlectivos;
     private Ciclo cicloselected;
     private List<Ciclo> ciclosSelected;
     @EJB
@@ -124,7 +126,13 @@ public class mbvCurso implements Serializable {
         this.anlectivoSelected = new Anlectivo();
         this.cicloselected = new Ciclo();
         this.curso = new Curso();
-        this.anlectivos = this.anlectivoEJB.findAll();
+        this.anlectivos = new ArrayList<Anlectivo>();
+        this.auxAnlectivos = this.anlectivoEJB.findAll();
+        for(Anlectivo aux:auxAnlectivos){
+            if(aux.getEstadoAniolectivoId().getEstadoAniolectivoId()==2){
+                anlectivos.add(aux);
+            }
+        }
     }
 
     public void cargarCiclo() {
@@ -160,15 +168,21 @@ public class mbvCurso implements Serializable {
         FacesContext.getCurrentInstance().addMessage(null, message);
     }
     public void newCurso(){
-        Map<String,Object> options = new HashMap<String, Object>();
-        /*options.put("contentHeight", 340);
-        options.put("height", 400);
-        options.put("width",700);*/
-        options.put("modal", true);
-        //options.put("showEffect", "clip");
-        options.put("draggable", true);
-        options.put("resizable", true);
-        RequestContext.getCurrentInstance().openDialog("newcurso",options,null);
+        if(!anlectivoEJB.existIniciadoNew()){
+           RequestContext.getCurrentInstance().execute("PF('añoNoIniciado').show()"); 
+        }
+        else{
+            Map<String,Object> options = new HashMap<String, Object>();
+            options.put("contentHeight", 340);
+            options.put("height", 400);
+            options.put("width",700);
+            options.put("contentWidth", 680);
+            options.put("modal", true);
+            //options.put("showEffect", "clip");
+            options.put("draggable", true);
+            options.put("resizable", true);
+            RequestContext.getCurrentInstance().openDialog("newcurso",options,null);
+        }
     }
     public void eliminarCurso(Curso curso) {
         try {
@@ -185,6 +199,17 @@ public class mbvCurso implements Serializable {
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Escala","esta escala esta en uso"));
             }
             inicioPagina();
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+        }
+    }
+    public void cargarCurso(int cursoId){
+        try {
+            this.curso = this.cursoEjb.find(cursoId);
+            this.anlectivoSelected = this.anlectivoEJB.find(this.curso.getAnlectivoId().getAnlectivoId());
+            RequestContext.getCurrentInstance().update("frmEditarCurso:panelEditarCurso");
+            RequestContext.getCurrentInstance().execute("PF('dialogoEditarCurso').show()");
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));

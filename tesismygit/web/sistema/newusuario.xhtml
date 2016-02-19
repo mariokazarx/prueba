@@ -48,6 +48,11 @@
                     <f:validator validatorId="validatorVacio"/>
                 </p:inputText>
                 <p:message for="txtCorreo"/>
+                <p:outputLabel for="txtCargo" value="Cargo: " />
+                <p:inputText id="txtCargo" value="#{mbvUsuario.usuario.cargo}" size="50">
+                    <f:validator validatorId="validatorVacio"/>
+                </p:inputText>
+                <p:message for="txtCargo"/>
                 <p:outputLabel value="Contraseña" for="txtContrasenia"/>
                 <p:password id="txtContrasenia" label="Contraseña: " match="txtContraseniaRepita" size="50" value="#{mbvUsuario.usuario.contraseña}">
                     <f:validator validatorId="validatorVacio"/>

@@ -36,11 +36,19 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Periodo.findAll", query = "SELECT p FROM Periodo p"),
+    @NamedQuery(name = "Periodo.findPeriodoEvaluar", query = "SELECT p FROM Periodo p WHERE p.anlectivoId = :anlectivo and p.estadoPeriodoId.estadoPeriodoId = 3"),
+    @NamedQuery(name = "Periodo.findFirstPeriodoAño", query = "SELECT p FROM Periodo p WHERE p.anlectivoId = :anlectivo"),
+    @NamedQuery(name = "Periodo.removeById", query = "DELETE FROM Periodo p WHERE p.periodoId = :periodoId"),
+    @NamedQuery(name = "Periodo.countPeriodoByaño", query = "SELECT COUNT(p) FROM Periodo p WHERE p.anlectivoId = :anlectivo"),
+    @NamedQuery(name = "Periodo.countPeriodoUso", query = "SELECT COUNT(p) FROM Periodo p WHERE p.anlectivoId = :anlectivo AND p.estadoPeriodoId.estadoPeriodoId = 3"),
     @NamedQuery(name = "Periodo.findByPeriodoId", query = "SELECT p FROM Periodo p WHERE p.periodoId = :periodoId"),
     @NamedQuery(name = "Periodo.findByNumero", query = "SELECT p FROM Periodo p WHERE p.numero = :numero"),
-    @NamedQuery(name = "Periodo.findMinByConfiguracion", query = "SELECT p FROM Periodo p WHERE p.numero =(SELECT MIN(p1.numero) from Periodo p1 WHERE p1.configuracionId = :configuracionId) and p.configuracionId = :configuracionId"),
-    @NamedQuery(name = "Periodo.findByConfiguracion", query = "SELECT p FROM Periodo p WHERE p.configuracionId = :configuracionId"),
-    @NamedQuery(name = "Periodo.findByNumero", query = "SELECT p FROM Periodo p WHERE p.numero = :numero"),
+    @NamedQuery(name = "Periodo.findByAnio", query = "SELECT p FROM Periodo p WHERE p.anlectivoId = :anlectivoId"),
+    @NamedQuery(name = "Periodo.findByUso", query = "SELECT COUNT(p) FROM Periodo p WHERE p.numero = :numero"),
+    @NamedQuery(name = "Periodo.findMinByAnio", query = "SELECT p FROM Periodo p WHERE p.numero =(SELECT MIN(p1.numero) from Periodo p1 WHERE p1.anlectivoId = :anlectivoId) and p.anlectivoId = :anlectivoId"),
+    //@NamedQuery(name = "Periodo.findMinByConfiguracion", query = "SELECT p FROM Periodo p WHERE p.numero =(SELECT MIN(p1.numero) from Periodo p1 WHERE p1.configuracionId = :configuracionId) and p.configuracionId = :configuracionId"),
+    //@NamedQuery(name = "Periodo.findByConfiguracion", query = "SELECT p FROM Periodo p WHERE p.configuracionId = :configuracionId"),
+    //@NamedQuery(name = "Periodo.findByNumero", query = "SELECT p FROM Periodo p WHERE p.numero = :numero"),
     @NamedQuery(name = "Periodo.findByFechacierre", query = "SELECT p FROM Periodo p WHERE p.fechacierre = :fechacierre")})
 public class Periodo implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -61,9 +69,9 @@ public class Periodo implements Serializable {
     @JoinColumn(name = "estado_periodo_id", referencedColumnName = "estado_periodo_id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private EstadoPeriodo estadoPeriodoId;
-    @JoinColumn(name = "configuracion_id", referencedColumnName = "configuracion_id", nullable = false)
+    @JoinColumn(name = "anlectivo_id", referencedColumnName = "anlectivo_id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Configuracion configuracionId;
+    private Anlectivo anlectivoId;
 
     public Periodo() {
     }
@@ -118,12 +126,12 @@ public class Periodo implements Serializable {
         this.estadoPeriodoId = estadoPeriodoId;
     }
 
-    public Configuracion getConfiguracionId() {
-        return configuracionId;
+    public Anlectivo getAnlectivoId() {
+        return anlectivoId;
     }
 
-    public void setConfiguracionId(Configuracion configuracionId) {
-        this.configuracionId = configuracionId;
+    public void setAnlectivoId(Anlectivo anlectivoId) {
+        this.anlectivoId = anlectivoId;
     }
 
     @Override

@@ -8,6 +8,8 @@ import com.tesis.entity.Role;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
+import javax.persistence.Query;
 
 /**
  *
@@ -27,4 +29,28 @@ public class RoleFacade extends AbstractFacade<Role> {
         super(Role.class);
     }
     
+    public boolean removeById(Integer roleId) {
+        try {
+            Query cq = em.createNamedQuery("Role.removeByRoleId");
+            cq.setParameter("roleId", roleId);
+            if(cq.executeUpdate()>0){
+                return true;
+            }
+            else{
+                System.out.println("ERROR 1"+roleId);
+                return false;
+            }
+        }
+        catch (PersistenceException e) {
+            e.printStackTrace();
+            return false;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("ERROR 2"+roleId);
+            return false;
+        }
+        
+
+    }
 }

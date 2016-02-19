@@ -7,11 +7,14 @@ package com.tesis.beans;
 import com.tesis.entity.Asignaturaciclo;
 import com.tesis.entity.Contenidotematico;
 import com.tesis.entity.Curso;
+import com.tesis.entity.Estadocontenidotematico;
 import com.tesis.entity.Periodo;
 import com.tesis.entity.Profesor;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
 /**
@@ -44,5 +47,191 @@ public class ContenidotematicoFacade extends AbstractFacade<Contenidotematico> {
         cq.setParameter("asignaturacicloId",asinaturaciclo);
         cq.setParameter("periodoId",periodo);
         return (Contenidotematico) cq.getSingleResult();
+    }
+    public boolean tieneNotas(Periodo periodo) {
+        try {
+            Query cq = em.createNamedQuery("Contenidotematico.countByPeriodo");
+            cq.setParameter("periodo", periodo);
+            if(cq.getSingleResult()!=null){
+                Long count = (Long) cq.getSingleResult();
+                if(count != 0){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+            else{
+                return false;
+            }
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+            return false;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    public boolean tieneAdvertencias(Periodo periodo) {
+        try {
+            Query cq = em.createNamedQuery("Contenidotematico.countAdvertenciaPeriodo");
+            cq.setParameter("periodo", periodo);
+            if(cq.getSingleResult()!=null){
+                Long count = (Long) cq.getSingleResult();
+                if(count != 0){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+            else{
+                return false;
+            }
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+            return false;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    public boolean removeByPeriodo(Periodo periodo) {
+        try {
+            Query cq = em.createNamedQuery("Contenidotematico.removeByPeriodo");
+            cq.setParameter("periodo", periodo);
+            if(cq.executeUpdate()>0){
+                return true;
+            }
+            else{
+                return false;
+            }
+        } catch (PersistenceException e) {
+            return false;
+        }
+        catch (Exception e) {
+            return false;
+        }
+    }
+    public boolean updateIniciarPeriodo(Periodo periodo,Estadocontenidotematico estado) {
+        try {
+            Query cq = em.createNamedQuery("Contenidotematico.updateIniciarPeriodo");
+            cq.setParameter("periodo", periodo);
+            cq.setParameter("estado", estado);
+            if(cq.executeUpdate()>0){
+                return true;
+            }
+            else{
+                return false;
+            }
+        } catch (PersistenceException e) {
+            return false;
+        }
+        catch (Exception e) {
+            return false; 
+        }
+    }
+    public List<Contenidotematico> getByPeriodo(Periodo periodo){
+        try {
+            Query cq = em.createNamedQuery("Contenidotematico.findByPeriodo");
+            cq.setParameter("periodo", periodo);
+            if(cq.getResultList()!=null){
+                return cq.getResultList();
+            }
+            else{
+                return null;
+            }
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+            return null;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        
+    }
+    public List<Contenidotematico> getRectificar(Periodo periodo,Profesor profesor){
+        try {
+            Query cq = em.createNamedQuery("Contenidotematico.findDiponiblePeriodoProfesor");
+            cq.setParameter("periodo", periodo);
+            cq.setParameter("profesor", profesor);
+            if(cq.getResultList()!=null){
+                return cq.getResultList();
+            }
+            else{
+                return null;
+            }
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+            return null;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        
+    }
+    public List<Contenidotematico> getRectificar(Profesor profesor){
+        try {
+            Query cq = em.createNamedQuery("Contenidotematico.findRectificarProfesor");
+            cq.setParameter("profesor", profesor);
+            if(cq.getResultList()!=null){
+                return cq.getResultList();
+            }
+            else{
+                return null;
+            }
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+            return null;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        
+    }
+    public List<Contenidotematico> getRectificados(Periodo periodo,Profesor profesor){
+        try {
+            Query cq = em.createNamedQuery("Contenidotematico.findRectificarPeriodoProfesor");
+            cq.setParameter("periodo", periodo);
+            cq.setParameter("profesor", profesor);
+            if(cq.getResultList()!=null){
+                return cq.getResultList();
+            }
+            else{
+                return null;
+            }
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+            return null;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        
+    }
+    public List<Contenidotematico> getByPeriodoCurso(Periodo periodo,Curso curso){
+        try {
+            Query cq = em.createNamedQuery("Contenidotematico.findByPeriodoCurso");
+            cq.setParameter("periodo", periodo);
+            cq.setParameter("curso", curso);
+            if(cq.getResultList()!=null){
+                return cq.getResultList();
+            }
+            else{
+                return null;
+            }
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+            return null;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        
     }
 }

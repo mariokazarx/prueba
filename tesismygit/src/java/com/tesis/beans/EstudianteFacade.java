@@ -43,6 +43,7 @@ public class EstudianteFacade extends AbstractFacade<Estudiante> {
 
     public Logronota findNotaEstudiante(Logro logro, Estudiante estudiante) {
         try {
+            //em.flush();
             Query cq = em.createNamedQuery("Estudiante.findNotaLOgro");
             cq.setParameter("logroId", logro);
             cq.setParameter("estudianteId", estudiante.getEstudianteId());

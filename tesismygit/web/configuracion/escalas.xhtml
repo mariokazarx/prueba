@@ -16,12 +16,12 @@
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
                     <p:remoteCommand name="onCellEdit" update="testContainer" />
                     <p:outputPanel id="testContainer">
-                        <p:dataTable rendered="true" id="tablaListaEscala" var="item" value="#{mbvEscala.escalas}" paginator="true" rows="10" selection="#{mbvEscala.escala}" selectionMode="single" lazy="true" rowKey="#{item.escalaId}" >
+                        <p:dataTable rendered="true" id="tablaListaEscala" filteredValue="#{mbvEscala.escalasFiltradas}" reflow="true" var="item" value="#{mbvEscala.escalas}" paginator="true" rows="10" selection="#{mbvEscala.escala}" selectionMode="single" rowKey="#{item.escalaId}" >
                             <p:ajax event="rowSelect" update=":frmListaEscala:panelDetalleEscala" oncomplete="PF('dialogoDetalleEscala').show()"/>
                             <f:facet name="header">
                                 Lista de Escalas
                             </f:facet>
-                            <p:column headerText="Nombre" filterBy="nombre">
+                            <p:column headerText="Nombre" filterBy="#{item.nombre}" filterMatchMode="contains">
                                 <h:outputText value="#{item.nombre}"/>
                             </p:column>
                             <p:column headerText="Descripcion" filterBy="descripcion">
@@ -65,7 +65,13 @@
                             </p:panelGrid>
                         </p:outputPanel>
                     </p:dialog>
-
+                    
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+ 
+                    <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage library="imagenes" name="load1.gif"/>
+                    </p:dialog>
+                    
                 </h:form>
 
                 <p:confirmDialog header="Eliminar Escala" widgetVar="studentDialog" appendTo="@(body)" resizable="false" id="studentDlg"

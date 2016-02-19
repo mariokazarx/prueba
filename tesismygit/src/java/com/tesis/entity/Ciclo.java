@@ -20,6 +20,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -46,6 +47,7 @@ public class Ciclo implements Serializable {
     @Basic(optional = false)
     @Column(name = "ciclo_id", nullable = false)
     private Integer cicloId;
+    @Min(value=1,message="el numero del ciclo debe ser mayor a 0")
     @Basic(optional = false)
     @NotNull
     @Column(name = "numero", nullable = false)

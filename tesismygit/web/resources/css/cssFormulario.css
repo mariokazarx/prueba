@@ -2,6 +2,7 @@ body
 {
     background-color: #8BB9C7;
     font-family: sans-serif;
+    text-align: center;
 }
   
 .contenedorLogin
@@ -10,7 +11,10 @@ body
     text-align: center;
     width: 100%;
 }
-  
+.indexLabel{
+    width: 100%;
+    text-align: left;
+}
 .formulario
 {
     background-color: #F3F3F3;
@@ -18,14 +22,13 @@ body
     box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.4), 0px 0px 4px white inset, 2px 2px 2px rgba(0, 0, 0, 0.2);
     display: inline-block;
     margin: 0 auto;
-    /*text-align: center;*/
-    vertical-align: middle;
-    width: 650px;
-    -webkit-animation: entrada 1s;
+    text-align: center;
+    width: 550px;
+    /*-webkit-animation: entrada 1s;
     -moz-animation: entrada 1s;
     -ms-animation: entrada 1s;
     -o-animation: entrada 1s;
-    animation: entrada 1s;
+    animation: entrada 1s;*/
 }
   
 .formulario a

@@ -51,7 +51,7 @@ public class ProfesorConverter implements Converter {
  
     @Override
     public String getAsString(FacesContext fc, UIComponent uic, Object object) {
-        System.out.println("bbb");
+        System.out.println("bbb ESTE");
         if(object != null) {
             return String.valueOf(((Profesor) object).getCedula());
         }

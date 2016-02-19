@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="notasProfesor" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="fdff15e7-61e9-46ce-9f77-b55130087d24">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Table Dataset 1" uuid="8aaba90b-56f3-41ad-85cd-ab415a6556d7"/>
+	<subDataset name="Table Dataset 2" uuid="d203ed62-d012-4dc6-a376-c2d9d48a00db"/>
+	<field name="curso.anlectivoId.anio" class="java.lang.Integer"/>
+	<field name="curso.cicloId.numero" class="java.lang.Integer"/>
+	<field name="curso.nombre" class="java.lang.String"/>
+	<field name="profesor.nombre" class="java.lang.String"/>
+	<field name="profesor.apellido" class="java.lang.String"/>
+	<field name="estudiantesDS" class="net.sf.jasperreports.engine.JRDataSource"/>
+	<columnHeader>
+		<band height="200">
+			<textField>
+				<reportElement x="129" y="158" width="423" height="20" uuid="d9459571-326c-4ccd-b697-861f8e962c83"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{profesor.nombre}+" "+$F{profesor.apellido}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="74" y="106" width="478" height="52" uuid="13c54134-85dc-4c12-bd68-24b36b90d813"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Reporte de notas año escolar: "+$F{curso.anlectivoId.anio}+" ciclo: "+$F{curso.cicloId.numero}+" "+$F{curso.nombre}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="28" y="13" width="100" height="93" uuid="adf895c6-289d-4071-be4e-82754e5ad915"/>
+				<imageExpression><![CDATA["C:\\Users\\Mario Jurado\\Pictures\\Escudo colegio.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="128" y="62" width="424" height="30" uuid="be359a3e-842a-4b64-a77e-ff292c81cee2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[Licencia de funcionamiento 366 de Abril 4 de 2001, Resolución 1861  Junio 30 de 2005 de  la Secretaría de Educación y Cultura Departamental  CODIGO SNP ICFES 114454 Código DANE 352612001093
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="152" y="28" width="378" height="34" uuid="93743654-58e1-4168-80d0-1bb8c7f7e827"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CENTRO EDUCATIVO  “ANTONIO RICAURTE”]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="74" y="158" width="54" height="20" uuid="1cdb0a98-23eb-4284-a42f-2d20abf32fc6"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<text><![CDATA[Profesor:]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="206" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="572" height="206" uuid="c07a2dd2-dbc7-4a23-bed4-b09e9c484e78"/>
+				<dataSourceExpression><![CDATA[$F{estudiantesDS}]]></dataSourceExpression>
+				<subreportExpression><![CDATA["notasProfesor_subreport1.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+</jasperReport>

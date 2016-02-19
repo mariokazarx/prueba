@@ -37,6 +37,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Notafinal.findByNotafinalId", query = "SELECT n FROM Notafinal n WHERE n.notafinalId = :notafinalId"),
     @NamedQuery(name = "Notafinal.findByRecuperacion", query = "SELECT n FROM Notafinal n WHERE n.recuperacion = :recuperacion"),
     @NamedQuery(name = "Notafinal.findByValor", query = "SELECT n FROM Notafinal n WHERE n.valor = :valor"),
+    @NamedQuery(name = "Notafinal.findByActual", query = "SELECT n FROM Notafinal n WHERE n.estudianteId = :estudianteId and n.asignaturacicloId = :asignaturacicloId"),
     @NamedQuery(name = "Notafinal.findByFechamodificacion", query = "SELECT n FROM Notafinal n WHERE n.fechamodificacion = :fechamodificacion"),
     @NamedQuery(name = "Notafinal.findByObservaciones", query = "SELECT n FROM Notafinal n WHERE n.observaciones = :observaciones")})
 public class Notafinal implements Serializable {

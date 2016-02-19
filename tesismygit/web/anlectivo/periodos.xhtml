@@ -1,0 +1,107 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <body>
+        <h:outputScript library="js" name="calendar_es.js" />
+        <ui:composition template="./../plantilla.xhtml">
+            <ui:define name="content">
+                <h:form id="frmPeriodos">
+                    <p:outputLabel for="selectAnio" value="Año:" />
+                    <p:selectOneMenu id="selectAnio" value="#{mbvPeriodo.anlectivoselected.anlectivoId}">
+                        <p:ajax listener="#{mbvPeriodo.cargarAnio}" update="tablaListaPeriodos"/>
+                        <f:selectItem itemLabel="Seleccione."/>
+                        <f:selectItems value="#{mbvPeriodo.anlectivos}" var="anio" itemLabel="#{anio.anio}" itemValue="#{anio.anlectivoId}"/>
+                    </p:selectOneMenu>
+                    <br />
+                    <h:panelGroup></h:panelGroup>
+
+                    <h:panelGroup></h:panelGroup>
+                    <p:commandButton value="Nuevo Periodo" icon="ui-icon-document" actionListener="#{mbvPeriodo.newPeriodo()}">
+                        <p:ajax event="dialogReturn" listener="#{mbvPeriodo.closeDialog}" update="frmPeriodos" />
+                    </p:commandButton>
+                    <h:panelGroup></h:panelGroup>
+                    <p:dataTable id="tablaListaPeriodos" var="periodo" value="#{mbvPeriodo.periodos}" paginator="true" rows="10" selection="#{mbvPeriodo.periodo}" selectionMode="single" lazy="true" rowKey="#{periodo.periodoId}" >
+                        <f:facet name="header">
+                            Periodos
+                        </f:facet>
+                        <p:column headerText="Numero" filterBy="Numero">
+                            <h:outputText value="#{periodo.numero}"/>
+                        </p:column>
+                        <p:column headerText="Ano Lectivo" filterBy="descripcion">
+                            <h:outputText value="#{periodo.anlectivoId.anio}"/>
+                        </p:column>
+                        <p:column headerText="Estado" filterBy="max">
+                            <h:outputText value="#{periodo.estadoPeriodoId.nombre}"/>
+                        </p:column>
+                        <p:column headerText="Fecha Cierre" filterBy="max">
+                            <h:outputText value="#{periodo.fechacierre}" >
+                            <f:convertDateTime dateStyle="full"
+                                locale="es" pattern="EEEEEEEE dd, MMMMMMM, yyyy"
+                                timeStyle="long" type="both" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column>
+                            <p:commandButton value="Editar" icon="ui-icon-pencil" actionListener="#{mbvPeriodo.cargarPeriodo(periodo.periodoId)}"/>
+                        </p:column>
+                        <p:column rendered="true">
+                            <p:commandButton value="Eliminar" update=":frmRemovePeriodo:display" oncomplete="PF('removePeriodo').show();" icon="ui-icon-search" title="View">
+                                <f:setPropertyActionListener value="#{periodo}" target="#{mbvPeriodo.periodo}" />
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+                    
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+ 
+                    <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage library="imagenes" name="load.gif"/>
+                    </p:dialog>
+                    
+                </h:form>
+                <p:confirmDialog header="Eliminar Periodo" widgetVar="removePeriodo" appendTo="@(body)" resizable="false" id="removeDlg"
+                                 showEffect="fade" hideEffect="explode" modal="true" message="Esta Seguro que desea eliminar esta periodo?">
+                    <h:form id="frmRemovePeriodo">
+                        <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+                            <h:outputText value="Name:" />
+                            <h:outputText value="#{mbvPeriodo.periodo.numero}" style="font-weight:bold"/>                                               
+                            <p:commandButton id="deleteButton" actionListener="#{mbvPeriodo.eliminarPeriodo(mbvPeriodo.periodo)}" oncomplete="PF('removePeriodo').hide();" 
+                                             update=":frmPeriodos" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" value="Aceptar"/>
+                            <p:commandButton id="cancelButton" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('removePeriodo').hide();" value="Cancelar"/>
+                        </h:panelGrid>
+                    </h:form>
+                </p:confirmDialog>
+                <p:dialog header="Datos Periodo" widgetVar="dialogoEditarPeriodo" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
+                    <h:form id="frmEditarPeriodo">
+                        <p:outputPanel id="panelEditarPeriodo" >
+                            <h:panelGrid columns="3">
+
+                                <p:outputLabel for="txtNumero" value="Numero: " />
+                                <p:inputText id="txtNumero" value="#{mbvPeriodo.periodo.numero}"/>
+                                <p:message for="txtNumero"/>
+
+                                <p:outputLabel for="selectEstado" value="Estado:" />
+                                <p:selectOneMenu id="selectEstado" value="#{mbvPeriodo.estadoSelected.estadoPeriodoId}">
+                                    <p:ajax listener="#{mbvPeriodo.cargarEstado}" update="frmEditarPeriodo"/>
+                                    <f:selectItems value="#{mbvPeriodo.estados}" var="estado" itemLabel="#{estado.nombre}" itemValue="#{estado.estadoPeriodoId}"/>
+                                </p:selectOneMenu>
+                                <p:message for="selectEstado"/>
+                                
+
+                                <p:outputLabel for="txtFechaCierre" value="Fecha Cierre:" rendered="#{mbvPeriodo.mostrarFecha}"/>
+                                <p:calendar id="txtFechaCierre" value="#{mbvPeriodo.periodo.fechacierre}" mindate="#{mbvPeriodo.minDate}" maxdate="#{mbvPeriodo.maxDate}" locale="es" rendered="#{mbvPeriodo.mostrarFecha}" />
+                                <p:message for="txtFechaCierre" rendered="#{mbvPeriodo.mostrarFecha}"/>
+
+                                
+                                <h:panelGroup></h:panelGroup>
+                                <p:commandButton value="Editar Periodo" actionListener="#{mbvPeriodo.actualizar}" ajax="true" update=":frmPeriodos" />
+                            </h:panelGrid> 
+                        </p:outputPanel>
+                    </h:form>
+                </p:dialog>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html> 

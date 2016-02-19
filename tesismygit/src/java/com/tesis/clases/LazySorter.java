@@ -1,11 +1,12 @@
 package com.tesis.clases;
 
 import com.tesis.entity.Asignatura;
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.Comparator;
 import org.primefaces.model.SortOrder;
 
-public class LazySorter implements Comparator<Asignatura> {
+public class LazySorter implements Comparator<Asignatura>,Serializable {
  
     private String sortField;
      

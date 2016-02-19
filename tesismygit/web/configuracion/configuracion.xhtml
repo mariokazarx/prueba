@@ -14,22 +14,16 @@
                         <p:ajax event="dialogReturn" listener="#{mbvConfiguracion.closeDialog}" update="frmListaConf" />
                     </p:commandButton>
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
-                    <p:dataTable id="tablaListaConf" var="item" value="#{mbvConfiguracion.configuraciones}" paginator="true" rows="10" selection="#{mbvConfiguracion.configuracion}" selectionMode="single" lazy="true" rowKey="#{item.configuracionId}" >
+                    <p:dataTable id="tablaListaConf" var="item" value="#{mbvConfiguracion.configuraciones}" paginator="true" rows="10" selection="#{mbvConfiguracion.configuracion}" selectionMode="single" rowKey="#{item.configuracionId}" >
                         <p:ajax event="rowSelect" update=":frmListaConf:panelDetalleConf" oncomplete="PF('dialogoDetalleConf').show()"/>
                         <f:facet name="header">
                             Lista de Configuraciones
                         </f:facet>
-                        <p:column headerText="Nombre" filterBy="nombre">
+                        <p:column headerText="Nombre" filterBy="#{item.nombre}" filterMatchMode="contains">
                             <h:outputText value="#{item.nombre}"/>
                         </p:column>
                         <p:column headerText="Descripcion" filterBy="descripcion">
                             <h:outputText value="#{item.descripcion}"/>
-                        </p:column>
-                        <p:column headerText="No Periodos" filterBy="min">
-                            <h:outputText value="#{item.noPeriodos}"/>
-                        </p:column>
-                        <p:column headerText="Duracion Periodos" filterBy="max">
-                            <h:outputText value="#{item.duracionPeriodo}"/>
                         </p:column>
                         <p:column headerText="Criterio Evaluacion" filterBy="minaprob">
                             <h:outputText value="#{item.criterioevaluacionId.nombre}"/>
@@ -114,12 +108,6 @@
                                 <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
                                 <p:inputTextarea id="txtDescripcion" value="#{mbvConfiguracion.configuracion.descripcion}" autoResize="false" rows="5"/>
                                 <p:message for="txtDescripcion"/>
-                                <p:outputLabel for="txtNoPeriodos" value="Numero de periodos:  " />
-                                <p:inputText id="txtNoPeriodos" value="#{mbvConfiguracion.configuracion.noPeriodos}" />
-                                <p:message for="txtNoPeriodos"/>
-                                <p:outputLabel for="txtDuracionPeriodos" value="Duracion periodos:  " />
-                                <p:inputText id="txtDuracionPeriodos" value="#{mbvConfiguracion.configuracion.duracionPeriodo}" />
-                                <p:message for="txtDuracionPeriodos"/>
                                 <p:outputLabel for="sltCriterio" value="Criterio Evaluacion:" />
                                 <p:selectOneMenu id="sltCriterio" value="#{mbvConfiguracion.criterioevaluacionselected.criterioevaluacionId}" required="true">
                                     <f:selectItems value="#{mbvConfiguracion.criterios}" var="criterio" itemLabel="#{criterio.nombre}" itemValue="#{criterio.criterioevaluacionId}"/>

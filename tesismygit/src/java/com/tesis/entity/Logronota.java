@@ -33,6 +33,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Logronota.findAll", query = "SELECT l FROM Logronota l"),
+    @NamedQuery(name = "Logronota.countNotasPeriodo", query = "SELECT COUNT(l) FROM Logronota l WHERE l.logroId.contenidotematicoId.periodoId = :periodo"),
+    @NamedQuery(name = "Logronota.findByLogroEstudiante", query = "SELECT l FROM Logronota l WHERE l.estudianteId = :estudiante AND l.logroId = :logro"),
     @NamedQuery(name = "Logronota.findByLogronotaId", query = "SELECT l FROM Logronota l WHERE l.logronotaId = :logronotaId"),
     @NamedQuery(name = "Logronota.findByFechamodificacion", query = "SELECT l FROM Logronota l WHERE l.fechamodificacion = :fechamodificacion"),
     @NamedQuery(name = "Logronota.findByNota", query = "SELECT l FROM Logronota l WHERE l.nota = :nota")})

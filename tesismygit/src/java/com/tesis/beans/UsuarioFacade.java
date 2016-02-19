@@ -5,9 +5,12 @@
 package com.tesis.beans;
 
 import com.tesis.entity.Usuario;
+import com.tesis.entity.UsuarioRole;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
 /**

@@ -32,6 +32,15 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Contenidotematico.findAll", query = "SELECT c FROM Contenidotematico c"),
+    @NamedQuery(name = "Contenidotematico.countAdvertenciaPeriodo", query = "SELECT COUNT(c) FROM Contenidotematico c WHERE c.estado.estadocontenidotematicoId = 5 AND c.periodoId = :period"),
+    @NamedQuery(name = "Contenidotematico.updateIniciarPeriodo", query = "UPDATE Contenidotematico c SET c.estado = :estado WHERE c.periodoId = :periodo"),
+    @NamedQuery(name = "Contenidotematico.findDiponiblePeriodoProfesor", query = "SELECT c FROM Contenidotematico c WHERE c.periodoId = :periodo AND c.profesorId = :profesor AND c.estado.estadocontenidotematicoId != 3"),
+    @NamedQuery(name = "Contenidotematico.findRectificarPeriodoProfesor", query = "SELECT c FROM Contenidotematico c WHERE c.periodoId = :periodo AND c.profesorId = :profesor AND c.estado.estadocontenidotematicoId = 3"),
+    @NamedQuery(name = "Contenidotematico.findRectificarProfesor", query = "SELECT c FROM Contenidotematico c WHERE c.profesorId = :profesor AND c.estado.estadocontenidotematicoId = 3"),
+    @NamedQuery(name = "Contenidotematico.findByPeriodo", query = "SELECT c FROM Contenidotematico c WHERE c.periodoId = :periodo"),
+    @NamedQuery(name = "Contenidotematico.findByPeriodoCurso", query = "SELECT c FROM Contenidotematico c WHERE c.periodoId = :periodo AND c.cursoId = :curso"),
+    @NamedQuery(name = "Contenidotematico.removeByPeriodo", query = "DELETE FROM Contenidotematico c where c.periodoId = :periodo"), 
+    @NamedQuery(name = "Contenidotematico.countByPeriodo", query = "SELECT COUNT(c) FROM Contenidotematico c JOIN c.notaList n WHERE c.periodoId = :periodo"),
     @NamedQuery(name = "Contenidotematico.findByContenidotematicoId", query = "SELECT c FROM Contenidotematico c WHERE c.contenidotematicoId = :contenidotematicoId"),
     @NamedQuery(name = "Contenidotematico.findCursoId", query = "SELECT DISTINCT c.cursoId FROM Contenidotematico c WHERE c.contenidotematicoId = :contenidotematicoId"),
     @NamedQuery(name = "Contenidotematico.findByAll", query = "SELECT c FROM Contenidotematico c WHERE c.cursoId = :cursoId and c.periodoId = :periodoId and c.profesorId = :profesorId and c.asignaturacicloId = :asignaturacicloId"),

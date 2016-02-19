@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="notasProfesor" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="fdff15e7-61e9-46ce-9f77-b55130087d24">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<field name="curso.anlectivoId.año" class="java.lang.String"/>
+	<field name="curso.cicloId.numero" class="java.lang.String"/>
+	<field name="curso.nombre" class="java.lang.String"/>
+	<field name="profesor.nombre" class="java.lang.String"/>
+	<field name="profesor.apellido" class="java.lang.String"/>
+	<field name="estudiante.nombre" class="java.lang.String"/>
+	<field name="estudiante.apellido" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="121" splitType="Stretch">
+			<image>
+				<reportElement x="10" y="10" width="100" height="93" uuid="adf895c6-289d-4071-be4e-82754e5ad915"/>
+				<imageExpression><![CDATA["C:\\Users\\Mario Jurado\\Pictures\\Escudo colegio.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="110" y="59" width="424" height="30" uuid="be359a3e-842a-4b64-a77e-ff292c81cee2"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Licencia de funcionamiento 366 de Abril 4 de 2001, Resolución 1861  Junio 30 de 2005 de  la Secretaría de Educación y Cultura Departamental  CODIGO SNP ICFES 114454 Código DANE 352612001093
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="134" y="25" width="378" height="34" uuid="93743654-58e1-4168-80d0-1bb8c7f7e827"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CENTRO EDUCATIVO  “ANTONIO RICAURTE”]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="100" splitType="Stretch">
+			<staticText>
+				<reportElement x="34" y="13" width="127" height="20" uuid="e3140cb6-d643-483f-8a41-333f142d7534"/>
+				<textElement>
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<text><![CDATA[Reprote de Notas AÑo]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="161" y="13" width="30" height="20" uuid="4b6711bd-eda3-4a20-a3f2-11151bd379d6"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{curso.anlectivoId.año}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="191" y="13" width="30" height="20" uuid="f7f762d0-3605-4743-84d0-cec27f2ccac6"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Ciclo ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="221" y="13" width="58" height="20" uuid="c19f65ee-b6cc-41a7-bbff-f1440dfd5835"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{curso.cicloId.numero}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="279" y="13" width="100" height="20" uuid="e86e08db-b1e9-4aa6-a696-d91b8510e904"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{curso.nombre}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="34" y="33" width="54" height="20" uuid="1cdb0a98-23eb-4284-a42f-2d20abf32fc6"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Profesor:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="104" y="33" width="165" height="20" uuid="d9459571-326c-4ccd-b697-861f8e962c83"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{profesor.nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="269" y="33" width="188" height="20" uuid="4cac922a-1e59-4dae-a0a8-1ae880f75e62"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{profesor.apellido}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="37" splitType="Stretch">
+			<staticText>
+				<reportElement x="121" y="2" width="100" height="20" uuid="eb1a75eb-aeed-4e32-83b4-cfe79bb83a23"/>
+				<text><![CDATA[estudiante.nombre]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="269" y="2" width="100" height="20" uuid="f5fd90ec-3fa0-4595-8534-c51d203c31a7"/>
+				<text><![CDATA[estudiante.apellido]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="93" splitType="Stretch">
+			<textField>
+				<reportElement x="121" y="27" width="100" height="20" uuid="5e93b9e4-55d1-449a-8e3f-eebadcc389da"/>
+				<textFieldExpression><![CDATA[$F{estudiante.nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="269" y="27" width="100" height="20" uuid="316b7563-a136-4b02-9731-23badb73ffbf"/>
+				<textFieldExpression><![CDATA[$F{estudiante.apellido}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

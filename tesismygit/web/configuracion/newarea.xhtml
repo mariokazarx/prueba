@@ -14,6 +14,7 @@
     </h:head>
     <h:body>
         <h:form id="frmcriterioeval">
+            <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
             <h:panelGrid columns="3">
                 <p:outputLabel for="txtNombre" value="Nombre: " />
                 <p:inputText id="txtNombre" value="#{mbvArea.area.nombre}" >
@@ -30,7 +31,7 @@
                 </p:selectOneMenu>
                 <p:message for="stlCriterio"/>
                 <h:panelGroup></h:panelGroup>
-                <p:commandButton value="Registrar Escala" actionListener="#{mbvArea.insertar}" ajax="true" update="frmcriterioeval" />
+                <p:commandButton value="Registrar" actionListener="#{mbvArea.insertar}" ajax="true" update="frmcriterioeval" />
             </h:panelGrid> 
         </h:form>
     </h:body>

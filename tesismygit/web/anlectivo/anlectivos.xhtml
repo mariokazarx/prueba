@@ -31,6 +31,9 @@
                         <p:column headerText="Estado" filterBy="max">
                             <h:outputText value="#{item.estadoAniolectivoId.estado}"/>
                         </p:column>
+                        <p:column headerText="No Periodos" filterBy="min">
+                            <h:outputText value="#{item.noPeriodos}"/>
+                        </p:column>
                         <p:column>
                             <p:commandButton value="Editar" icon="ui-icon-pencil" actionListener="#{mbvAlectivo.cargarAnlectivo(item.anlectivoId)}"/>
                         </p:column>
@@ -102,7 +105,11 @@
                                 <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
                                 <p:inputTextarea id="txtDescripcion" value="#{mbvAlectivo.anlectivo.descripcion}" autoResize="false" rows="5" />
                                 <p:message for="txtDescripcion"/>
-
+                                
+                                <p:outputLabel for="txtNoPeriodos" value="Numero de periodos:  " />
+                                <p:inputText id="txtNoPeriodos" value="#{mbvAlectivo.anlectivo.noPeriodos}" />
+                                <p:message for="txtNoPeriodos"/>
+                                
                                 <h:panelGroup></h:panelGroup>
                                 <p:commandButton value="Registrar Escala" actionListener="#{mbvAlectivo.actualizar}" ajax="true" update=":frmanlectios" />
                             </h:panelGrid> 

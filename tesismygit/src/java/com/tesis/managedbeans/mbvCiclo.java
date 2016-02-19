@@ -8,6 +8,7 @@ import com.tesis.beans.CicloFacade;
 import com.tesis.beans.ConfiguracionFacade;
 import com.tesis.entity.Ciclo;
 import com.tesis.entity.Configuracion;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +26,7 @@ import org.primefaces.context.RequestContext;
  */
 @ManagedBean
 @ViewScoped
-public class mbvCiclo {
+public class mbvCiclo implements Serializable{
     private Ciclo ciclo;
     private List<Ciclo> ciclos;
     private List<Configuracion> configuraciones;
@@ -129,12 +130,14 @@ public class mbvCiclo {
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
         }
     }
-    public void cargarCiclo(int asignaturaid){
+    public void cargarCiclo(int cicloId){
         try {
+            this.ciclo = this.cicloEjb.find(cicloId);
             this.confuguracionselected = this.configuracionEjb.find(ciclo.getConfiguracion().getConfiguracionId());
             RequestContext.getCurrentInstance().update("frmEditarCiclo:panelEditarCiclo");
             RequestContext.getCurrentInstance().execute("PF('dialogoEditarCiclo').show()");
         } catch (Exception e) {
+            e.printStackTrace();
             FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
         }
