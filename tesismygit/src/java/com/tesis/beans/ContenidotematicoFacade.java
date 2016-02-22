@@ -41,12 +41,47 @@ public class ContenidotematicoFacade extends AbstractFacade<Contenidotematico> {
         return cq.executeUpdate();
     }
     public Contenidotematico getContenidoByAll(Profesor profesor,Curso curso,Asignaturaciclo asinaturaciclo,Periodo periodo){
-        Query cq = em.createNamedQuery("Contenidotematico.findByAll");
-        cq.setParameter("profesorId",profesor);
-        cq.setParameter("cursoId",curso);
-        cq.setParameter("asignaturacicloId",asinaturaciclo);
-        cq.setParameter("periodoId",periodo);
-        return (Contenidotematico) cq.getSingleResult();
+        try {
+            Query cq = em.createNamedQuery("Contenidotematico.findByAll");
+            cq.setParameter("profesorId",profesor);
+            cq.setParameter("cursoId",curso);
+            cq.setParameter("asignaturacicloId",asinaturaciclo);
+            cq.setParameter("periodoId",periodo);
+            if(cq.getSingleResult()!=null){
+                return (Contenidotematico) cq.getSingleResult();
+            }
+            else{
+                return null;
+            }
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+            return null;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public Contenidotematico getContenidoByCambio(Curso curso,Asignaturaciclo asinaturaciclo,Periodo periodo){
+        try {
+            Query cq = em.createNamedQuery("Contenidotematico.findByCambio");
+            cq.setParameter("cursoId",curso);
+            cq.setParameter("asignaturacicloId",asinaturaciclo);
+            cq.setParameter("periodoId",periodo);
+            if(cq.getSingleResult()!=null){
+                return (Contenidotematico) cq.getSingleResult();
+            }
+            else{
+                return null;
+            }
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+            return null;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
     public boolean tieneNotas(Periodo periodo) {
         try {
@@ -151,6 +186,27 @@ public class ContenidotematicoFacade extends AbstractFacade<Contenidotematico> {
         }
         
     }
+    public List<Contenidotematico> getByPeriodoCurso(Periodo periodo,Curso curso){
+        try {
+            Query cq = em.createNamedQuery("Contenidotematico.findByCursoPeriodo");
+            cq.setParameter("periodo", periodo);
+            cq.setParameter("curso", curso);
+            if(cq.getResultList()!=null){
+                return cq.getResultList();
+            }
+            else{
+                return null;
+            }
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+            return null;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        
+    }
     public List<Contenidotematico> getRectificar(Periodo periodo,Profesor profesor){
         try {
             Query cq = em.createNamedQuery("Contenidotematico.findDiponiblePeriodoProfesor");
@@ -213,7 +269,7 @@ public class ContenidotematicoFacade extends AbstractFacade<Contenidotematico> {
         }
         
     }
-    public List<Contenidotematico> getByPeriodoCurso(Periodo periodo,Curso curso){
+    /*public List<Contenidotematico> getByPeriodoCurso(Periodo periodo,Curso curso){
         try {
             Query cq = em.createNamedQuery("Contenidotematico.findByPeriodoCurso");
             cq.setParameter("periodo", periodo);
@@ -233,5 +289,5 @@ public class ContenidotematicoFacade extends AbstractFacade<Contenidotematico> {
             return null;
         }
         
-    }
+    }*/
 }

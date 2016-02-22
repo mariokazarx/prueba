@@ -611,7 +611,7 @@ public class mbvNotas implements Serializable {
         cursoSelected = cursoEjb.find(cursoSelected.getCursoId());
         anlectivoAux = anlectivoEjb.find(cursoSelected.getAnlectivoId().getAnlectivoId());
         //System.out.println("MM QUE SERA::::"+notaf.toString()+"aa a"+asc.toString()+"bbb"+es.toString());
-        Double notaFinal = notaEstEJB.getNotaFinal(anlectivoAux, es, cursoSelected);        
+        Double notaFinal = notaEstEJB.getNotaFinal(anlectivoAux, es, cursoSelected,contenido.getAsignaturacicloId());        
         BigDecimal notaFinalDef = new BigDecimal(notaFinal);
         System.out.println("NOTA FINAL OK"+notaFinalDef);
         if(notaf == null){
@@ -792,4 +792,11 @@ public class mbvNotas implements Serializable {
         JasperExportManager.exportReportToPdfStream(jasperPrint, servletOutputStream);  
         FacesContext.getCurrentInstance().responseComplete(); 
     } 
+    public void pruebafinal(){
+        Anlectivo anlectivoAux = anlectivoEjb.getIniciado();
+        Estudiante es = estudianteEjB.find(1);
+        Double notaFinal = notaEstEJB.getNotaFinal(anlectivoAux, es, cursoSelected,contenido.getAsignaturacicloId());        
+        BigDecimal notaFinalDef = new BigDecimal(notaFinal);
+        System.out.println("NOTA FINAL OK"+notaFinalDef);
+    }
 }

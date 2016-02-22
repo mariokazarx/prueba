@@ -32,6 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Contenidotematico.findAll", query = "SELECT c FROM Contenidotematico c"),
+    @NamedQuery(name = "Contenidotematico.findByCursoPeriodo", query = "SELECT c FROM Contenidotematico c WHERE c.cursoId = :curso AND c.periodoId = :periodo"),
     @NamedQuery(name = "Contenidotematico.countAdvertenciaPeriodo", query = "SELECT COUNT(c) FROM Contenidotematico c WHERE c.estado.estadocontenidotematicoId = 5 AND c.periodoId = :period"),
     @NamedQuery(name = "Contenidotematico.updateIniciarPeriodo", query = "UPDATE Contenidotematico c SET c.estado = :estado WHERE c.periodoId = :periodo"),
     @NamedQuery(name = "Contenidotematico.findDiponiblePeriodoProfesor", query = "SELECT c FROM Contenidotematico c WHERE c.periodoId = :periodo AND c.profesorId = :profesor AND c.estado.estadocontenidotematicoId != 3"),
@@ -44,6 +45,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Contenidotematico.findByContenidotematicoId", query = "SELECT c FROM Contenidotematico c WHERE c.contenidotematicoId = :contenidotematicoId"),
     @NamedQuery(name = "Contenidotematico.findCursoId", query = "SELECT DISTINCT c.cursoId FROM Contenidotematico c WHERE c.contenidotematicoId = :contenidotematicoId"),
     @NamedQuery(name = "Contenidotematico.findByAll", query = "SELECT c FROM Contenidotematico c WHERE c.cursoId = :cursoId and c.periodoId = :periodoId and c.profesorId = :profesorId and c.asignaturacicloId = :asignaturacicloId"),
+    @NamedQuery(name = "Contenidotematico.findByCambio", query = "SELECT c FROM Contenidotematico c WHERE c.cursoId = :cursoId and c.periodoId = :periodoId  and c.asignaturacicloId = :asignaturacicloId"),
     @NamedQuery(name = "Contenidotematico.DeleteByProfesorCurso", query = "DELETE FROM Contenidotematico c WHERE c.profesorId = :profesorId AND c.cursoId = :cursoId")})
 public class Contenidotematico implements Serializable {
     private static final long serialVersionUID = 1L;

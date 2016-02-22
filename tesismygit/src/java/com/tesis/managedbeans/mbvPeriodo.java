@@ -258,6 +258,7 @@ public class mbvPeriodo implements Serializable {
         estadoSelected = estadoPeriodoEjb.find(estadoSelected.getEstadoPeriodoId());
         Anlectivo aEscolar = anlectivoEjb.find(anlectivoselected.getAnlectivoId());
         if(estadoSelected.getEstadoPeriodoId()==3){
+            //falta revisar si hay contenidos en advertencia
             //periodo a evaluar
             //comprobamos si no hay uno en evaluacion
             //verificar que no alla contenidos con advertencias
@@ -287,6 +288,7 @@ public class mbvPeriodo implements Serializable {
         }
         if(estadoSelected.getEstadoPeriodoId()==2){
             //terminado
+            //falta revisar si hay contenidos en advertencia
             //verificar que almenos tenga notas
             //verificar que no alla contenidos con advertencias
             if(!contenidoEjb.tieneAdvertencias(periodo)){

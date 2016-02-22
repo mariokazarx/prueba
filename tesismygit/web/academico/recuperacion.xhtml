@@ -25,25 +25,6 @@
                     </p:selectOneMenu>
                     
                     <br />
-                    <p:commandButton value="Crear Logro" icon="ui-icon-pencil" actionListener="#{mbvNotas.newLogro}" rendered="#{mbvNotas.contenidoLogros}"/>
-
-                    <p:dataTable id="tableLogros" var="logro" value="#{mbvNotas.logros}" sortBy="#{logro.porcentaje}" rendered="#{mbvNotas.contenidoLogros}">
-                        <p:column headerText="Id" sortBy="#{logro.logroId}">
-                            <h:outputText value="#{logro.logroId}" />
-                        </p:column>
-                        <p:column headerText="Titulo" sortBy="#{logro.titulo}">
-                            <h:outputText value="#{logro.titulo}" />
-                        </p:column>
-                        <p:column headerText="Descripcion" sortBy="#{logro.descripcion}">
-                            <h:outputText value="#{logro.descripcion}" />
-                        </p:column>
-                        <p:column headerText="Porcentaje" sortBy="#{logro.porcentaje}">
-                            <h:outputText value="#{logro.porcentaje}" />
-                        </p:column>
-                        <p:column>
-                            <p:commandButton value="Eliminar"  icon="ui-icon-close" actionListener="#{mbvNotas.eliminarLogro(logro)}" ajax="true" update=":frmMateriasCiclos"/>
-                        </p:column>
-                    </p:dataTable>
                     <p:remoteCommand name="onCellEdit" update="tablanotas" />
                     
                     <p:outputPanel id="testContainer" rendered="#{mbvNotas.contenidoNotas}">
@@ -89,45 +70,8 @@
                     <p:commandButton id="Confirmar" actionListener="#{mbvNotas.pruebafinal}" value="Confirmar" style="margin-top:5px" />
                     <h:commandButton value="PDF" actionListener="#{mbvNotas.pdf}"/>
                 </h:form>
-                <p:dialog header="Nuevo Logro" widgetVar="dialogoCrearLogro" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
-                    <h:form id="frmCrearLogro">
-                        <p:outputPanel id="panelCrearLogro" >
-                            <h:panelGrid columns="3">
-                                <p:outputLabel for="txtTitulo" value="Titulo: "/>
-                                <p:inputText id="txtTitulo" value="#{mbvNotas.logro.titulo}" validator="#{mbvEscala.validateNombreUnique}">
-                                    <f:validator validatorId="validatorVacio"/>
-                                </p:inputText>
-                                <p:message for="txtTitulo"/>
-                                <p:outputLabel for="txtPorcentaje" value="Porcentaje:" />
-                                <p:inputText id="txtPorcentaje" value="#{mbvNotas.logro.porcentaje}"/>
-                                <p:message for="txtPorcentaje"/>
-                                <p:outputLabel for="txtDescripcion" value="Descripcion: " />
-                                <p:inputTextarea id="txtDescripcion" value="#{mbvNotas.logro.descripcion}" rows="5" cols="22" />
-                                <p:message for="txtDescripcion"/>
-                                <h:panelGroup></h:panelGroup>
-                                <p:commandButton value="Registrar Logro" actionListener="#{mbvNotas.insertarLogro}" ajax="true" update=":frmMateriasCiclos" />
-                            </h:panelGrid> 
-                        </p:outputPanel>
-                    </h:form>
-                </p:dialog>
-                <p:dialog header="Observaciones" widgetVar="dialogoObservaciones" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
-                    <h:form id="frmObservaciones">
-                        <p:outputPanel id="panelObservaciones" >
-                            <p>#{mbvNotas.observaciones}</p> 
-                        </p:outputPanel>
-                    </h:form>
-                </p:dialog>
-                <p:dialog header="Crear Observaciones" widgetVar="dialogoCrearObservaciones" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
-                    <h:form id="frmCrearObservaciones">
-                        <p:outputPanel id="panelCrearObservaciones" >
-                            <p:outputLabel for="txtObservacion" value="Observaciones: " />
-                            <p:inputTextarea id="txtObservacion" value="#{mbvNotas.observaciones}" rows="5"  />
-                            <p:message for="txtObservacion"/> 
-                            <p:commandButton value="Registrar Observacion" actionListener="#{mbvNotas.insertarObservacionDB()}" ajax="true" update=":frmMateriasCiclos" />
-                        </p:outputPanel>
-                    </h:form>
-                </p:dialog>
             </ui:define>
         </ui:composition>
     </body>
 </html>
+

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="boletinPeriodo_subreport1" pageWidth="572" pageHeight="752" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="2f6be7f8-9ae6-4779-8f98-11b0eadc4da8">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Table Dataset 1" uuid="393f4f01-05fd-450a-aa4a-d465f892ef72">
+		<field name="logroId.porcentaje" class="java.lang.Integer"/>
+		<field name="nota" class="java.math.BigDecimal"/>
+		<field name="logroId.descripcion" class="java.lang.String"/>
+		<field name="logroId.titulo" class="java.lang.String"/>
+	</subDataset>
+	<field name="logrosDS" class="net.sf.jasperreports.engine.JRDataSource"/>
+	<field name="nota" class="java.math.BigDecimal"/>
+	<field name="observaciones" class="java.lang.String"/>
+	<field name="contenido.profesorId.nombre" class="java.lang.String"/>
+	<field name="contenido.asignaturacicloId.asignaturaId.nombre" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="320" splitType="Stretch">
+			<textField>
+				<reportElement x="44" y="19" width="100" height="20" uuid="585bb09e-113a-4c23-9893-af521d4c3485"/>
+				<textFieldExpression><![CDATA[$F{nota}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="164" y="19" width="100" height="20" uuid="754aace9-9e7a-4b06-a950-5d7f2a6442bb"/>
+				<textFieldExpression><![CDATA[$F{observaciones}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="295" y="19" width="100" height="20" uuid="8fcbcc22-b060-4cb1-b51e-6ade8fd3e656"/>
+				<textFieldExpression><![CDATA[$F{contenido.profesorId.nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="44" y="54" width="100" height="20" uuid="2a17552d-1c1f-4002-9044-bc5ce08115fd"/>
+				<textFieldExpression><![CDATA[$F{contenido.asignaturacicloId.asignaturaId.nombre}]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement key="table" style="table" x="44" y="155" width="488" height="119" uuid="cfc6f76b-d244-49e8-a566-19360adbfb79"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Table Dataset 1" uuid="0d8ebc1d-5495-41a5-ba43-0bf11eab3bc0">
+						<dataSourceExpression><![CDATA[$F{logrosDS}]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column width="90" uuid="9e0a7e0c-4e95-4cc1-b0af-f527d0428cd3">
+						<jr:columnHeader style="table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="d350bfd3-2e40-49a0-a53e-d3ebaa13f567"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Logro]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table_TD" height="44" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="44" uuid="cd0bec7d-67f4-4015-b52c-5b944fb4dfb5"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{logroId.titulo}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="242" uuid="00b07f47-efff-4f63-a2ac-d35a2134907e">
+						<jr:columnHeader style="table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="242" height="30" uuid="570f7238-8e91-4fe1-b365-94902d13ff29"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Descripcion]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table_TD" height="44" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="242" height="44" uuid="1ded4ca1-5055-4be3-8fcc-8ee6e6f22f9f"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[($F{logroId.descripcion}==null)? "-":$F{logroId.descripcion}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="e565983f-84f5-437c-a1dd-143330b7f4d6">
+						<jr:columnHeader style="table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="2035941d-b150-4141-9ab9-5ad2fcf6d7e1"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Porcentaje]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table_TD" height="44" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="44" uuid="e60a0897-0ac1-4aa8-bebc-4f11c927f854"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{logroId.porcentaje}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="55253781-a912-45bd-8e87-099acb1cf4a6">
+						<jr:columnHeader style="table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="083be31e-3f12-42ea-949f-9ceff26d3515"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Nota]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table_TD" height="44" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="44" uuid="fe2f8e06-df0b-4f76-a2de-7543247af24a"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{nota}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<staticText>
+				<reportElement x="225" y="70" width="100" height="20" uuid="6a74ea9b-c252-46a8-bb4d-9f806ecf465c"/>
+				<text><![CDATA[que sera]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

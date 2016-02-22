@@ -52,11 +52,25 @@ public class AsignaturacicloFacade extends AbstractFacade<Asignaturaciclo> {
         cq.setParameter("profesorId",profesor);
         return cq.getResultList();
     }
+    public List<Asignaturaciclo> asignaturasProfesorPeriodo(Profesor profesor,Curso curso,Periodo periodo){
+        Query cq = em.createNamedQuery("Asignaturaciclo.asignaturasProfesorPeriodo");
+        cq.setParameter("cursoId",curso);
+        cq.setParameter("periodoId",periodo);
+        cq.setParameter("profesorId",profesor);
+        return cq.getResultList();
+    }
     public List<Asignaturaciclo> asignaturasDisponibles(Profesor profesor,Curso curso){
         Query cq = em.createNamedQuery("Asignaturaciclo.asignaturasDisponibles");
         cq.setParameter("cursoId",curso.getCursoId());
         cq.setParameter("cursoIdC",curso);
         //cq.setParameter("profesorId",profesor);
+        return cq.getResultList();
+    }
+    public List<Asignaturaciclo> asignaturasDisponiblesPeriodo(Profesor profesor,Curso curso,Periodo periodo){
+        Query cq = em.createNamedQuery("Asignaturaciclo.asignaturasDisponiblesPeriodo");
+        cq.setParameter("cursoId",curso.getCursoId());
+        cq.setParameter("cursoIdC",curso);
+        cq.setParameter("periodo",periodo);
         return cq.getResultList();
     } 
     public Asignaturaciclo asignaturasCiclo(Ciclo ciclo,Asignatura asg){

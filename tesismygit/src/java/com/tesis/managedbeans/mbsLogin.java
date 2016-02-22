@@ -171,8 +171,8 @@ public class mbsLogin implements Serializable {
         ServletContext servContx = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
         String url = (String) servContx.getContextPath();
         this.login = false;
-        this.profesor = null;
-        this.usuario = null;
+        this.profesor = new Profesor();
+        this.usuario = new Usuario();
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().clear();
         FacesContext.getCurrentInstance().getExternalContext().getSession(login);
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();

@@ -24,6 +24,7 @@ import com.tesis.entity.Asignatura;
 import com.tesis.entity.Asignaturaciclo;
 import com.tesis.entity.Contenidotematico;
 import com.tesis.entity.Curso;
+import com.tesis.entity.EstadoPeriodo;
 import com.tesis.entity.Estadologronota;
 import com.tesis.entity.Estudiante;
 import com.tesis.entity.Logro;
@@ -37,6 +38,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,9 +71,9 @@ import org.primefaces.event.RowEditEvent;
  */
 @ManagedBean
 @ViewScoped
-public class mbvRectificarNota {
+public class mbvRecuperacion {
 
-    private List<ReporteNotasProfesor> reporte;
+   private List<ReporteNotasProfesor> reporte;
     private String notaxxLogro;
     private Map<String,Integer> datosNotas = new HashMap<String, Integer>();
     private boolean login;
@@ -95,10 +97,6 @@ public class mbvRectificarNota {
     private List<Asignaturaciclo> asignaturasCiclo;
     private List<mbvNotas.ColumnModel> columns;
     private List<Estudiante> estudiantes;
-    private List<Contenidotematico> contenidos;
-    private Contenidotematico contenidoSelected;
-    
-    
     @EJB
     private CursoFacade cursoEjb;
     @EJB
@@ -129,25 +127,9 @@ public class mbvRectificarNota {
     UserTransaction tx;
     private JasperPrint jasperPrint;
     
-    public mbvRectificarNota() {
+    public mbvRecuperacion() {
     }
 
-    public List<Contenidotematico> getContenidos() {
-        return contenidos;
-    }
-
-    public void setContenidos(List<Contenidotematico> contenidos) {
-        this.contenidos = contenidos;
-    }
-
-    public Contenidotematico getContenidoSelected() {
-        return contenidoSelected;
-    }
-
-    public void setContenidoSelected(Contenidotematico contenidoSelected) {
-        this.contenidoSelected = contenidoSelected;
-    }
-    
     public List<EstudianteNotas> getEstudiantesN() {
         return estudiantesN;
     }
@@ -297,9 +279,6 @@ public class mbvRectificarNota {
 
     @PostConstruct
     public void inicioPagina() {
-        this.contenidoSelected = new Contenidotematico();
-        this.contenidos = new ArrayList<Contenidotematico>();
-        
         try {
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
              profesor = mbslogin.getProfesor();
@@ -319,13 +298,11 @@ public class mbvRectificarNota {
         this.contenido = new Contenidotematico();
         this.cursoSelected = new Curso();
         if(profesor!=null){
-            // verificar profesor activo
-            this.contenidos = contenidoEjb.getRectificar(profesor);
             System.out.println("logueado como profesor");
             anlectivo = anlectivoEjb.getIniciado();
             //año iniciado
-            //this.periodo = periodoEjb.getPeriodEvaluar(anlectivo);
-            //this.cursos = cursoEjb.findCursosProfeso(profesor, periodo);
+            this.periodo = periodoEjb.getPeriodEvaluar(anlectivo);
+            this.cursos = cursoEjb.findCursosProfeso(profesor, periodo);
             this.estudiantes = new ArrayList<Estudiante>();
             this.notaxxLogro = new String();
         }
@@ -351,13 +328,12 @@ public class mbvRectificarNota {
     }
 
     public void cargarContenido() {
-        //Curso cur = cursoEjb.find(cursoSelected.getCursoId());
-        //Asignaturaciclo asg = asignaturaCicloEjb.asignaturasCiclo(cur.getCicloId(), asignaturaSelected);
-        //this.contenido = contenidoEjb.getContenidoByAll(profesor, cursoSelected, asg, periodo);        
-        //System.out.println("AAAAA" + cursoSelected + "Periodo" + periodo + "Profesor" + profesor + "asignaturaciclo" + asg + "contenido" + contenido);
-        this.contenido = contenidoEjb.find(contenidoSelected.getContenidotematicoId());
+        Curso cur = cursoEjb.find(cursoSelected.getCursoId());
+        Asignaturaciclo asg = asignaturaCicloEjb.asignaturasCiclo(cur.getCicloId(), asignaturaSelected);
+        this.contenido = contenidoEjb.getContenidoByAll(profesor, cursoSelected, asg, periodo);
+        System.out.println("AAAAA" + cursoSelected + "Periodo" + periodo + "Profesor" + profesor + "asignaturaciclo" + asg + "contenido" + contenido);
         this.logros = logroEjb.getContenidoByAll(contenido);
-        estudiantes = estudianteEjB.findByCurso(contenido.getCursoId());
+        estudiantes = estudianteEjB.findByCurso(cursoSelected);
         notaxxLogro = "";
         Integer suma =0;
         for(Logro logAuxSum:logroEjb.getByContenido(contenido)){
@@ -729,6 +705,8 @@ public class mbvRectificarNota {
                 //System.out.println("MIN"+min+" MAX"+max+"Nota"+notaLogroValidacion);
                 if(notaLogroValidacion.compareTo(max)>0 || notaLogroValidacion.compareTo(min)<0){
                     System.out.println("FUNCIONOOOOO");
+                    tx.rollback();
+                    cargarContenido();
                     return;
                 }
                 Integer logroId = key;
@@ -813,6 +791,14 @@ public class mbvRectificarNota {
         ServletOutputStream servletOutputStream=httpServletResponse.getOutputStream();  
         JasperExportManager.exportReportToPdfStream(jasperPrint, servletOutputStream);  
         FacesContext.getCurrentInstance().responseComplete(); 
+    } 
+    public void pruebafinal(){
+        Anlectivo anlectivoAux = anlectivoEjb.getIniciado();
+        Estudiante es = estudianteEjB.find(1);
+        Double notaFinal = notaEstEJB.getNotaFinal(anlectivoAux, es, cursoSelected,contenido.getAsignaturacicloId());        
+        BigDecimal notaFinalDef = new BigDecimal(notaFinal);
+        System.out.println("NOTA FINAL OK"+notaFinalDef);
     }
     
+
 }

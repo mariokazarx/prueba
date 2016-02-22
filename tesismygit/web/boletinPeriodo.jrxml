@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="boletinPeriodo" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="82111b57-f5de-4a60-995c-0a7ecc10a70c">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Users\\Mario Jurado\\Documents\\reporte\\"]]></defaultValueExpression>
+	</parameter>
+	<field name="estudiante.nombre" class="java.lang.String"/>
+	<field name="estudiante.apellido" class="java.lang.String"/>
+	<field name="curso.anlectivoId.anio" class="java.lang.Integer"/>
+	<field name="curso.cicloId.numero" class="java.lang.Integer"/>
+	<field name="curso.nombre" class="java.lang.String"/>
+	<field name="periodo.numero" class="java.lang.Integer"/>
+	<field name="contenidosDS" class="net.sf.jasperreports.engine.JRDataSource"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="164" splitType="Stretch">
+			<staticText>
+				<reportElement x="134" y="25" width="378" height="34" uuid="b48ba01d-4bcc-47aa-8e74-0ee10d85645e"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CENTRO EDUCATIVO 3 “ANTONIO RICAURTE”x]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="110" y="59" width="424" height="30" uuid="a2dc7150-e433-4e73-ae09-615936e0426c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[Licencia de funcionamiento 366 de Abril 4 de 2001, Resolución 1861  Junio 30 de 2005 de  la Secretaría de Educación y Cultura Departamental  CODIGO SNP ICFES 114454 Código DANE 352612001093
+]]></text>
+			</staticText>
+			<image>
+				<reportElement x="10" y="10" width="100" height="93" uuid="84c9c17a-3eed-44b0-8115-850d762d6986"/>
+				<imageExpression><![CDATA["C:\\Users\\Mario Jurado\\Pictures\\Escudo colegio.png"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="156" y="110" width="100" height="20" uuid="f393f124-1da0-43bc-93db-bb1dcbe194ba"/>
+				<textFieldExpression><![CDATA[$F{estudiante.apellido}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="291" y="110" width="100" height="20" uuid="bb2247ff-8f98-423f-8586-10eddaba6bfc"/>
+				<textFieldExpression><![CDATA[$F{curso.anlectivoId.anio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="420" y="113" width="100" height="20" uuid="96c1da7e-6f7e-4569-b963-6b69f9b8844a"/>
+				<textFieldExpression><![CDATA[$F{curso.cicloId.numero}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="62" y="142" width="100" height="20" uuid="053fbac3-b190-474d-a9c5-7a92f11b189e"/>
+				<textFieldExpression><![CDATA[$F{curso.nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="203" y="144" width="100" height="20" uuid="67783186-7955-4d8c-a66c-c691734a6d9d"/>
+				<textFieldExpression><![CDATA[$F{periodo.numero}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="56" y="110" width="100" height="20" uuid="c8a5960c-a907-4fc4-9c69-7629d11ad9c3"/>
+				<textFieldExpression><![CDATA[$F{estudiante.nombre}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="210" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="572" height="210" uuid="48d558a6-414d-48f1-8072-c57878cf92fc"/>
+				<dataSourceExpression><![CDATA[$F{contenidosDS}]]></dataSourceExpression>
+				<subreportExpression><![CDATA["boletinPeriodo_subreport1.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+</jasperReport>

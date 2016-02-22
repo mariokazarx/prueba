@@ -10,10 +10,13 @@ import com.tesis.entity.Estudiante;
 import com.tesis.entity.Logro;
 import com.tesis.entity.Logronota;
 import com.tesis.entity.Nota;
+import com.tesis.entity.Periodo;
+import com.tesis.entity.Profesor;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
 /**
@@ -77,4 +80,44 @@ public class EstudianteFacade extends AbstractFacade<Estudiante> {
             return null;
         }
     }
+    public List<Object> getFinalPeriodo(Curso curso,Periodo periodo){
+        try {
+            Query cq = em.createNamedQuery("Estudiante.findPromedioNotaPeriodo");
+            cq.setParameter("periodo", periodo);
+            cq.setParameter("curso", curso);
+            if(cq.getResultList()!=null){
+                return cq.getResultList();
+            }
+            else{
+                return null;
+            }
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+            return null;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        
+    }
+    private static void printResult(Object result) {
+    if (result == null) {
+      System.out.print("NULL");
+    } else if (result instanceof Object[]) {
+      Object[] row = (Object[]) result;
+      System.out.print("[");
+      for (int i = 0; i < row.length; i++) {
+        printResult(row[i]);
+      }
+      System.out.print("]");
+    } else if (result instanceof Long || result instanceof Double
+        || result instanceof String) {
+      System.out.print(result.getClass().getName() + ": " + result);
+    } else {
+      System.out.print(result);
+    }
+    System.out.println();
+  }
+
 }

@@ -5,6 +5,7 @@
 package com.tesis.beans;
 
 import com.tesis.entity.Anlectivo;
+import com.tesis.entity.Asignaturaciclo;
 import com.tesis.entity.Curso;
 import com.tesis.entity.Estudiante;
 import com.tesis.entity.Nota;
@@ -31,13 +32,14 @@ public class NotaFacade extends AbstractFacade<Nota> {
     public NotaFacade() {
         super(Nota.class);
     }
-    public Double getNotaFinal(Anlectivo alectivo,Estudiante est,Curso curso){
+    public Double getNotaFinal(Anlectivo alectivo,Estudiante est,Curso curso,Asignaturaciclo asignatura){
         try {
             System.out.println("MM QUE SERA::::"+alectivo.toString()+"aaa"+est.toString()+"bbb"+curso.toString());
             Query cq = em.createNamedQuery("Nota.findNotaFinal");
             cq.setParameter("cursoId", curso);
             cq.setParameter("estudianteId", est);
             cq.setParameter("anlectivoId", alectivo);
+            cq.setParameter("asignatura", asignatura);
             if(cq.getResultList()!=null){
                 return (Double)cq.getSingleResult();
             }

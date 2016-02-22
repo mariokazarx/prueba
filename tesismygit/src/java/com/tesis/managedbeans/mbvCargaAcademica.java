@@ -258,29 +258,55 @@ public class mbvCargaAcademica implements Serializable {
             if (cursoSelected.getCursoId() == null) {
                 this.banderaAsig = false;
             } else {
-                this.banderaAsig = true;
-                asignturasdisponibles = new ArrayList<Asignatura>();
-                asignturasSelecionadas = new ArrayList<Asignatura>();
-                cursoSelected = cursoEjb.find(cursoSelected.getCursoId());
-                System.out.println("FUNCIONO:::::" + cursoSelected.getAnlectivoId());
-                Anlectivo an = anlectivoEjb.find(cursoSelected.getAnlectivoId().getAnlectivoId());
-                //Configuracion cf = anlectivoEjb.getConfiguracionCurso(cursoSelected);
-                System.out.println("FUNCIONO:::::" + an);
-                Periodo per = periodoEjb.getPeriodoMinByAnio(an);
-                System.out.println("FUNCIONO********oo" + per);
-                asignaturasprofes = asignaturaCicloEjb.asignaturasDisponibles(profesor, cursoSelected);
-                for (Asignaturaciclo asc : asignaturasprofes) {
-                    Asignatura as = asignaturaEjb.find(asc.getAsignaturaId().getAsignaturaId());
-                    asignturasdisponibles.add(as);
+                if(isPeriodo){
+                    this.banderaAsig = true;
+                    asignturasdisponibles = new ArrayList<Asignatura>();
+                    asignturasSelecionadas = new ArrayList<Asignatura>();
+                    cursoSelected = cursoEjb.find(cursoSelected.getCursoId());
+                    System.out.println("FUNCIONO:::::" + cursoSelected.getAnlectivoId());
+                    Anlectivo an = anlectivoEjb.find(cursoSelected.getAnlectivoId().getAnlectivoId());
+                    //Configuracion cf = anlectivoEjb.getConfiguracionCurso(cursoSelected);
+                    System.out.println("FUNCIONO:::::" + an);
+                    Periodo per = periodoEjb.getPeriodoMinByAnio(an);
+                    System.out.println("FUNCIONO********oo" + per);
+                    asignaturasprofes = asignaturaCicloEjb.asignaturasDisponiblesPeriodo(profesor, cursoSelected,periodoSelected);
+                    for (Asignaturaciclo asc : asignaturasprofes) {
+                        Asignatura as = asignaturaEjb.find(asc.getAsignaturaId().getAsignaturaId());
+                        asignturasdisponibles.add(as);
+                    }
+                    asignaturasprofes = asignaturaCicloEjb.asignaturasProfesorPeriodo(profesor, cursoSelected, periodoSelected);
+                    System.out.println("JJKJKJ"+profesor+"   "+cursoSelected+"    "+per);
+                    for (Asignaturaciclo asc : asignaturasprofes) {
+                        System.out.println("asignatura entro "+asc);
+                        Asignatura as = asignaturaEjb.find(asc.getAsignaturaId().getAsignaturaId());
+                        asignturasSelecionadas.add(as);
+                    }
+                    this.pickList = new DualListModel<Asignatura>(asignturasdisponibles, asignturasSelecionadas);
+                }else{
+                    this.banderaAsig = true;
+                    asignturasdisponibles = new ArrayList<Asignatura>();
+                    asignturasSelecionadas = new ArrayList<Asignatura>();
+                    cursoSelected = cursoEjb.find(cursoSelected.getCursoId());
+                    System.out.println("FUNCIONO:::::" + cursoSelected.getAnlectivoId());
+                    Anlectivo an = anlectivoEjb.find(cursoSelected.getAnlectivoId().getAnlectivoId());
+                    //Configuracion cf = anlectivoEjb.getConfiguracionCurso(cursoSelected);
+                    System.out.println("FUNCIONO:::::" + an);
+                    Periodo per = periodoEjb.getPeriodoMinByAnio(an);
+                    System.out.println("FUNCIONO********oo" + per);
+                    asignaturasprofes = asignaturaCicloEjb.asignaturasDisponibles(profesor, cursoSelected);
+                    for (Asignaturaciclo asc : asignaturasprofes) {
+                        Asignatura as = asignaturaEjb.find(asc.getAsignaturaId().getAsignaturaId());
+                        asignturasdisponibles.add(as);
+                    }
+                    asignaturasprofes = asignaturaCicloEjb.asignaturasProfesor(profesor, cursoSelected, per);
+                    System.out.println("JJKJKJ"+profesor+"   "+cursoSelected+"    "+per);
+                    for (Asignaturaciclo asc : asignaturasprofes) {
+                        System.out.println("asignatura entro "+asc);
+                        Asignatura as = asignaturaEjb.find(asc.getAsignaturaId().getAsignaturaId());
+                        asignturasSelecionadas.add(as);
+                    }
+                    this.pickList = new DualListModel<Asignatura>(asignturasdisponibles, asignturasSelecionadas);
                 }
-                asignaturasprofes = asignaturaCicloEjb.asignaturasProfesor(profesor, cursoSelected, per);
-                System.out.println("JJKJKJ"+profesor+"   "+cursoSelected+"    "+per);
-                for (Asignaturaciclo asc : asignaturasprofes) {
-                    System.out.println("asignatura entro "+asc);
-                    Asignatura as = asignaturaEjb.find(asc.getAsignaturaId().getAsignaturaId());
-                    asignturasSelecionadas.add(as);
-                }
-                this.pickList = new DualListModel<Asignatura>(asignturasdisponibles, asignturasSelecionadas);
             }
 
         } catch (Exception e) {
@@ -300,13 +326,15 @@ public class mbvCargaAcademica implements Serializable {
                     Asignatura asg = asignaturaEjb.find(Integer.parseInt(item.toString()));
                     asSelecteds.remove(asg);
                     asignturasSelecionadas.remove(asg);
-                    System.out.println("FUNCIONO********" + asSelecteds+"ESTE MEJOR"+asignturasSelecionadas);
+                    asignturasdisponibles.add(asg);
+                    System.out.println("FUNCIONO********" + asignturasdisponibles+"ESTE MEJOR"+asignturasSelecionadas+"NHNH "+asg);
                 }
                 if (event.isAdd()) {
                     Asignatura asg = asignaturaEjb.find(Integer.parseInt(item.toString()));
                     asSelecteds.add(asg);
                     asignturasSelecionadas.add(asg);
-                    System.out.println("FUNCIONO********" + asSelecteds+"ESTE MEJOR"+asignturasSelecionadas);
+                    asignturasdisponibles.remove(asg);
+                    System.out.println("FUNCIONO********" + asignturasdisponibles+"ESTE MEJOR"+asignturasSelecionadas+"MJMJM "+asg);
                 }
             }
         } catch (Exception e) {
@@ -320,24 +348,57 @@ public class mbvCargaAcademica implements Serializable {
     public void cargarMaterias() throws IllegalStateException, SecurityException, SystemException {
         try {
             tx.begin();
-            System.out.println("DELETE****" + contenidoEjb.removeByProfesorCurso(profesor, cursoSelected));
-            cursoSelected = cursoEjb.find(cursoSelected.getCursoId());
-            Anlectivo an = anlectivoEjb.find(cursoSelected.getAnlectivoId().getAnlectivoId());
-            //Configuracion cf = anlectivoEjb.getConfiguracionCurso(cursoSelected);
-            List<Periodo> periodos = periodoEjb.getPeriodosByAnio(an);
-            Estadocontenidotematico est = estadocontenidoEjb.find(1);
-            System.out.println("FUNCIONO********" + asSelecteds+"ESTE MEJOR"+asignturasSelecionadas);
-            Curso cur = cursoEjb.find(cursoSelected.getCursoId());
-            for (int i = 0; i < asignturasSelecionadas.size(); i++) {
-                Asignaturaciclo asg = asignaturaCicloEjb.asignaturasCiclo(cur.getCicloId(), asignturasSelecionadas.get(i));
-                for (Periodo aux : periodos) {
-                    Contenidotematico con = new Contenidotematico();
-                    con.setCursoId(cursoSelected);
-                    con.setPeriodoId(aux);
-                    con.setProfesorId(profesor);
-                    con.setAsignaturacicloId(asg);
-                    con.setEstado(est);
-                    contenidoEjb.create(con);
+            if(isPeriodo){
+                System.out.println("ES por periodo"+asignturasdisponibles.size()+" seleccionadas "+asignturasSelecionadas.size());
+                cursoSelected = cursoEjb.find(cursoSelected.getCursoId());
+                for (int i = 0; i < asignturasdisponibles.size(); i++) {
+                    Asignaturaciclo asg = asignaturaCicloEjb.asignaturasCiclo(cursoSelected.getCicloId(), asignturasdisponibles.get(i));
+                    Contenidotematico conAux = contenidoEjb.getContenidoByAll(profesor, cursoSelected, asg, periodoSelected);
+                    System.out.println("asignatura ciclo "+conAux);
+                    // advertencia
+                    Estadocontenidotematico estAux = estadocontenidoEjb.find(5);
+                    conAux.setEstado(estAux);
+                    contenidoEjb.edit(conAux);
+                }
+                for (int i = 0; i < asignturasSelecionadas.size(); i++) {
+                    Asignaturaciclo asg = asignaturaCicloEjb.asignaturasCiclo(cursoSelected.getCicloId(), asignturasSelecionadas.get(i));
+                    System.out.println("asignatura ciclo AUX "+asg);
+                    Contenidotematico conAux = contenidoEjb.getContenidoByCambio(cursoSelected, asg, periodoSelected);
+                    System.out.println("asignatura ciclo "+conAux);
+                    // advertencia
+                    Estadocontenidotematico estAux;
+                    if(periodoSelected.getEstadoPeriodoId().getEstadoPeriodoId()==1){
+                        estAux = estadocontenidoEjb.find(1);
+                    }
+                    else{
+                        estAux = estadocontenidoEjb.find(2);
+                    }
+                    conAux.setProfesorId(profesor);;
+                    conAux.setEstado(estAux);
+                    contenidoEjb.edit(conAux);
+                }
+                //return;
+            }
+            else{
+                System.out.println("DELETE****" + contenidoEjb.removeByProfesorCurso(profesor, cursoSelected));
+                cursoSelected = cursoEjb.find(cursoSelected.getCursoId());
+                Anlectivo an = anlectivoEjb.find(cursoSelected.getAnlectivoId().getAnlectivoId());
+                //Configuracion cf = anlectivoEjb.getConfiguracionCurso(cursoSelected);
+                List<Periodo> periodos = periodoEjb.getPeriodosByAnio(an);
+                Estadocontenidotematico est = estadocontenidoEjb.find(1);
+                System.out.println("FUNCIONO********" + asSelecteds+"ESTE MEJOR"+asignturasSelecionadas);
+                Curso cur = cursoEjb.find(cursoSelected.getCursoId());
+                for (int i = 0; i < asignturasSelecionadas.size(); i++) {
+                    Asignaturaciclo asg = asignaturaCicloEjb.asignaturasCiclo(cur.getCicloId(), asignturasSelecionadas.get(i));
+                    for (Periodo aux : periodos) {
+                        Contenidotematico con = new Contenidotematico();
+                        con.setCursoId(cursoSelected);
+                        con.setPeriodoId(aux);
+                        con.setProfesorId(profesor);
+                        con.setAsignaturacicloId(asg);
+                        con.setEstado(est);
+                        contenidoEjb.create(con);
+                    }
                 }
             }
             tx.commit();
@@ -392,6 +453,10 @@ public class mbvCargaAcademica implements Serializable {
                 }
             }
             this.banderaSearch = true;
+            this.banderaAsig = false;
+            this.isPeriodo = false;
+            this.periodoSelected = new Periodo();
+            this.cursoSelected = new Curso();
             //profesor debe estar activo 
             //alño esdcolar iniciado 
             // al menos un curso para ese año
@@ -417,6 +482,19 @@ public class mbvCargaAcademica implements Serializable {
         }
     }
     public void cargarPeriodo(){
-        
+        if(periodoSelected.getPeriodoId()!=null){
+            periodoSelected = periodoEjb.find(periodoSelected.getPeriodoId());
+            if(periodoSelected.getEstadoPeriodoId().getEstadoPeriodoId()!=2){
+                mostrarCursos = true;
+            }else{
+                mostrarCursos = false;
+                FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Este periodo ya termino"));
+            }
+            
+            
+        }else{
+            mostrarCursos = false;
+        }
     }
 }

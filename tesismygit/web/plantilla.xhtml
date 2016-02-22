@@ -84,6 +84,9 @@
                             </p:submenu>
                             <p:menuitem value="Cerrar Sesion" actionListener="#{mbsLogin.cerrarSession}"/>  
                         </p:menubar>
+                        <p:menubar id="menuProfesor" rendered="true">  
+                            <p:menuitem value="Cerrar Sesion" actionListener="#{mbsLogin.cerrarSession}"/>  
+                        </p:menubar>
                     </h:form>
                     <ui:insert name="content">Content #{mbvPrueba.prof.nombre} login #{mbvPrueba.login} #{mbsLogin.profesor.apellido} TIME #{session.maxInactiveInterval * 1000}</ui:insert>
                 </div>
