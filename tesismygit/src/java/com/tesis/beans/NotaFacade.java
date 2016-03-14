@@ -6,9 +6,11 @@ package com.tesis.beans;
 
 import com.tesis.entity.Anlectivo;
 import com.tesis.entity.Asignaturaciclo;
+import com.tesis.entity.Contenidotematico;
 import com.tesis.entity.Curso;
 import com.tesis.entity.Estudiante;
 import com.tesis.entity.Nota;
+import java.math.BigDecimal;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -56,5 +58,25 @@ public class NotaFacade extends AbstractFacade<Nota> {
             return null;
         }
         
+    }
+    public BigDecimal getNotaFinalPeriodo(Contenidotematico contenido,Estudiante estudiante){
+        try {
+            Query cq = em.createNamedQuery("Nota.findByFinal");
+            cq.setParameter("estudiante", estudiante);
+            cq.setParameter("contenido", contenido);
+            if(cq.getResultList()!=null){
+                return (BigDecimal)cq.getSingleResult();
+            }
+            else{
+                return null;
+            }
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+            return null;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

@@ -10,9 +10,11 @@
         <ui:composition template="./../plantilla.xhtml">
             <ui:define name="content">
                 <h:form id="frmListaEscala">
-                    <p:commandButton rendered="true" value="Nueva Escala" icon="ui-icon-document" actionListener="#{mbvEscala.newEscala}">
-                        <p:ajax event="dialogReturn" listener="#{mbvEscala.closeDialog}" update="frmListaEscala" />
-                    </p:commandButton>
+                    <p:outputPanel id="panelReporteMatriculas" styleClass="btn-new" >
+                        <p:commandButton rendered="true" value="Nueva Escala" icon="ui-icon-document" actionListener="#{mbvEscala.newEscala}">
+                            <p:ajax event="dialogReturn" listener="#{mbvEscala.closeDialog}" update="frmListaEscala" />
+                        </p:commandButton>
+                    </p:outputPanel>
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
                     <p:remoteCommand name="onCellEdit" update="testContainer" />
                     <p:outputPanel id="testContainer">
@@ -117,6 +119,14 @@
                         </p:outputPanel>
                     </h:form>
                 </p:dialog>
+                <p:confirmDialog header="Advertencia" widgetVar="enUso" appendTo="@(body)" resizable="false" id="digEnUso"
+                                 showEffect="fade" hideEffect="explode" modal="true" message="Escala en uso usted no se puede editar">
+                    <h:form id="frmNoiniciado">
+                        <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+                            <p:commandButton id="cancelButton" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('enUso').hide();" value="OK"/>
+                        </h:panelGrid>
+                    </h:form>
+                </p:confirmDialog>
             </ui:define>
         </ui:composition>
 

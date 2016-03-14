@@ -7,6 +7,7 @@ package com.tesis.managedbeans;
 import com.tesis.beans.AnlectivoFacade;
 import com.tesis.beans.AprobacionFacade;
 import com.tesis.beans.CicloFacade;
+import com.tesis.beans.CursoFacade;
 import com.tesis.beans.EstadoMatriculaFacade;
 import com.tesis.beans.EstudianteFacade;
 import com.tesis.beans.MatriculaFacade;
@@ -47,9 +48,12 @@ public class mbvMatricula implements Serializable {
     private boolean contenidoCancelar;
     private boolean contenidoCambiar;
     private boolean contenido;
+    private boolean mostrarPrincipal;
+    private boolean mostrarMatriculados;
     private String mensaje;
     private String mensajeCancelar;
     private String txtmensaje;
+    private boolean contenidoSuspender;
     @EJB
     private CicloFacade cicloEjb;
     @EJB
@@ -62,8 +66,34 @@ public class mbvMatricula implements Serializable {
     private EstudianteFacade estudianteEJb;
     @EJB
     private AnlectivoFacade aEscolarEjb;
+    @EJB
+    private CursoFacade CursoEjb;
     
     public mbvMatricula() {
+    }
+
+    public boolean isContenidoSuspender() {
+        return contenidoSuspender;
+    }
+
+    public void setContenidoSuspender(boolean contenidoSuspender) {
+        this.contenidoSuspender = contenidoSuspender;
+    }
+
+    public boolean isMostrarPrincipal() {
+        return mostrarPrincipal;
+    }
+
+    public void setMostrarPrincipal(boolean mostrarPrincipal) {
+        this.mostrarPrincipal = mostrarPrincipal;
+    }
+
+    public boolean isMostrarMatriculados() {
+        return mostrarMatriculados;
+    }
+
+    public void setMostrarMatriculados(boolean mostrarMatriculados) {
+        this.mostrarMatriculados = mostrarMatriculados;
     }
 
     public boolean isContenidoCambiar() {
@@ -183,6 +213,7 @@ public class mbvMatricula implements Serializable {
         this.matricula = new Matricula();
         this.cursos = new ArrayList<Curso>();
         this.estMatriculados = new ArrayList<Estudiante>(); 
+        this.contenidoSuspender = false;
         //mbvEstudiante estudiante = (mbvEstudiante) FacesContext.getCurrentInstance().getViewRoot().getViewMap().get("mbvEstudiante");
         Estudiante aux = (Estudiante) FacesContext.getCurrentInstance()
                 .getExternalContext()
@@ -222,6 +253,7 @@ public class mbvMatricula implements Serializable {
     }
     private void cargarDatos(Estudiante aux){
         if (aux != null) {
+            this.mostrarPrincipal = true;
             this.estudiante = estudianteEJb.find(aux.getEstudianteId());
             System.out.println("QQQQQ1" + this.estudiante + "EEE1" + estudiante.getNombre()+"estado"+estudiante.getEstadoEstudianteId());
             if(estudiante.getEstadoEstudianteId().getEstadoEstudianteId()==1){
@@ -237,6 +269,8 @@ public class mbvMatricula implements Serializable {
                         }
                     }
                     if(!bandera){
+                        FacesContext.getCurrentInstance().
+                                addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Actualmente no se ofrece el ciclo para este estudiante")); 
                         System.out.println("No se ofrece el ciclo");
                     }
                     else{
@@ -252,6 +286,8 @@ public class mbvMatricula implements Serializable {
                             }
                         }
                         if(cursos.isEmpty()){
+                            FacesContext.getCurrentInstance().
+                                addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "No hay cursos registrados para el ciclo del estudiante")); 
                             System.out.println("No se ofrece curso");
                         }else{
                             System.out.println("se ofrece curso");
@@ -301,9 +337,17 @@ public class mbvMatricula implements Serializable {
                 //comprobar que el estudiante no tenga ninguna matrocula activa
                 // si tiene una matricula activa comprobar si es dle mismo año activo
                 
+            }else if(estudiante.getEstadoEstudianteId().getEstadoEstudianteId()==2){
+                FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "El estudiante ya termindo los estudios"));
+            }
+            else if(estudiante.getEstadoEstudianteId().getEstadoEstudianteId()==2){
+                FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "El estudiante se encuentra inactivo en el sistema"));
             }
             //cargarCursos();
         } else {
+            this.mostrarPrincipal = false;
             this.contenido=false;
             this.mensaje = "";
             System.out.println("QQQQQ2" + this.estudiante);
@@ -322,6 +366,9 @@ public class mbvMatricula implements Serializable {
                 this.mensaje = "";
             } else {
                 //this.banderaSearch = false;
+                FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Estudiante no encontrado", "no se encontro ningun estudiante"));
+                
                 this.contenido = false;
                 this.mensaje = "";
             }
@@ -338,6 +385,7 @@ public class mbvMatricula implements Serializable {
         try {
             System.out.println("curso");
             if (cursoSelected != null) {
+                cursoSelected = CursoEjb.find(cursoSelected.getCursoId());
                 EstadoMatricula esmatricula = new EstadoMatricula();
                 esmatricula = estadomatriculaEjB.find(1);
                 Aprobacion aprobacion = new Aprobacion();
@@ -347,8 +395,12 @@ public class mbvMatricula implements Serializable {
                 this.matricula.setEstadoMatriculaId(esmatricula);
                 this.matricula.setEstudianteId(estudiante);
                 matriculaEjb.create(matricula);
+                this.contenidoMatricular = false;
+                this.contenidoCambiar = true;
+                this.contenidoCancelar = true;
                 FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Matricula exitosa", ""));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Matricula exitosa", "Estudiante matriulado al Ciclo "+cursoSelected.getCicloId().getNumero()+ " Curso "+cursoSelected.getNombre()));
+                
                 //inicio();
             }
         } catch (Exception e) {
@@ -370,5 +422,31 @@ public class mbvMatricula implements Serializable {
             this.matricula.setCursoId(cursoSelected);
             matriculaEjb.edit(matricula);
         }
+    }
+    public void initRender(){
+        Anlectivo aEscolarAux = aEscolarEjb.getIniciado();
+        if(aEscolarAux==null){
+            FacesContext.getCurrentInstance().
+                addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Aun no ha iniciado el año escolar"));
+        }else{
+            
+        }
+    }
+    public String getMatricula(Estudiante estAux){
+        System.out.println("AUX EST"+estAux);
+        Matricula auxMatricula = matriculaEjb.getActivaByEstudiante(estAux);
+        if(auxMatricula!=null){
+            return auxMatricula.getCursoId().getNombre();
+        }else{
+            return "PENDIENTE";
+        }
+    }
+    public void suspenderMatricula(){
+        EstadoMatricula esmatricula = new EstadoMatricula();
+        esmatricula = estadomatriculaEjB.find(3);
+        this.matricula.setEstadoMatriculaId(esmatricula);
+        matriculaEjb.edit(matricula);
+        contenidoMatricular=true;
+        contenidoCancelar=false;
     }
 }

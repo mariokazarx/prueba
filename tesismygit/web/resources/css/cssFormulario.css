@@ -15,6 +15,17 @@ body
     width: 100%;
     text-align: left;
 }
+.prueba label,.prueba input{
+    width: 60% !important;
+    margin-left: 20% !important;
+    text-align: left !important;
+    margin-bottom: 5px !important;
+}
+
+.prueba td{
+    text-align: left !important;
+    
+}
 .formulario
 {
     background-color: #F3F3F3;

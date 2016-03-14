@@ -17,8 +17,12 @@
     <h:body>
         <ui:composition template="./../plantilla.xhtml">
             <ui:define name="content">
-                <h:form id="frmMatricula">
+                <h:form id="frmMatricula" styleClass="container-form">
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
+                    <f:metadata>
+                        <f:event type="preRenderView" listener="#{mbvMatricula.initRender}" />
+                    </f:metadata>
                     <p:outputLabel for="txtIdentificacion" value="Identificacion del estudaiante: "/>
                     <p:autoComplete id="txtIdentificacion" value="#{mbvMatricula.estudiante}" completeMethod="#{mbvMatricula.completeEstudiante}"
                                     var="estudiante" itemLabel="#{estudiante.identificiacion}" itemValue="#{estudiante}" converter="estudianteConverter"  forceSelection="true">
@@ -32,12 +36,12 @@
                     </p:autoComplete>
                     <p:commandButton id="btnbusqueda" value="Buscar" actionListener="#{mbvMatricula.buscar}" ajax="true" update="frmMatricula" />
                     <br/>
-                    <p:outputLabel id="profesorlbl" value="#{mbvMatricula.estudiante.nombre}"/>
+                    
 
-                    <h:panelGroup id="panelEstudiante">
+                    <h:panelGroup id="panelEstudiante" rendered="#{mbvMatricula.mostrarPrincipal}" styleClass="cont-control">
                         <p:panelGrid columns="2" id="estudianteTable">
                             <f:facet name="header">
-                                <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/fotosprofesores/#{mbvMatricula.estudiante.foto}" width="240" height="240" cache="false" alt="Sin definir" style="border-radius: 4px;box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7)"/>
+                                <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/fotosestudiantes/#{mbvMatricula.estudiante.foto}" width="240" height="240" cache="false" alt="Sin definir" style="border-radius: 4px;box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7)"/>
                             </f:facet>
 
                             <h:outputText value="Identificacion:" />
@@ -52,17 +56,17 @@
 
                             <h:outputText value="Ciclo:" />
                             <h:outputText value="#{mbvMatricula.estudiante.ultimoaprobado}" />
+                            
+                            <h:outputText value="Matricula"/>
+                            <h:outputText value="#{mbvMatricula.getMatricula(mbvMatricula.estudiante)}" />
+                            
                         </p:panelGrid>
                        
                         <p:outputPanel id="msgPanel">
                             <h1>#{mbvMatricula.mensaje}</h1>
                         </p:outputPanel>
                         
-                        <p:outputPanel id="panelCancelar" rendered="#{mbvMatricula.contenidoCancelar}">
-                            <h2>#{mbvMatricula.mensajeCancelar}</h2>
-                            <br />
-                            <p:commandButton id="btnCancelarMatricula" value="Cancelar" actionListener="#{mbvMatricula.cancelarMatricula}" style="margin-top:5px" />
-                        </p:outputPanel>
+                        
                         
                         <p:outputPanel id="panelMatricular" rendered="#{mbvMatricula.contenidoMatricular}">
                             <p:outputLabel for="selectCourse" value="Curso: " />
@@ -71,7 +75,7 @@
                                 <f:selectItem itemLabel="Seleccione."/>
                                 <f:selectItems value="#{mbvMatricula.cursos}" var="curso" itemLabel="ciclo #{curso.cicloId.numero} - #{curso.nombre} " itemValue="#{curso.cursoId}"/>
                             </p:selectOneMenu>
-                            <p:commandButton id="btnMatricular" value="Confirmar" actionListener="#{mbvMatricula.matricularEstudiante}" style="margin-top:5px" />
+                            <p:commandButton id="btnMatricular" value="Confirmar" ajax="true" update="frmMatricula" actionListener="#{mbvMatricula.matricularEstudiante}" style="margin-top:5px" />
                         </p:outputPanel>         
                         
                         <p:outputPanel id="panelCambiar" rendered="#{mbvMatricula.contenidoCambiar}">
@@ -80,10 +84,18 @@
                                 <f:selectItem itemLabel="Seleccione."/>
                                 <f:selectItems value="#{mbvMatricula.cursos}" var="curso" itemLabel="ciclo #{curso.cicloId.numero} - #{curso.nombre} " itemValue="#{curso.cursoId}"/>
                             </p:selectOneMenu>
-                            <p:commandButton id="btnCambiar" value="Confirmar" actionListener="#{mbvMatricula.cambiarMatricularEstudiante}" style="margin-top:5px" />
+                            <p:commandButton id="btnCambiar" value="Confirmar" update="frmMatricula" actionListener="#{mbvMatricula.cambiarMatricularEstudiante}" style="margin-top:5px" />
                         </p:outputPanel>
                         
-                        <p:outputPanel id="panelListado">
+                        <p:outputPanel id="panelCancelar" rendered="#{mbvMatricula.contenidoCancelar}">
+                            <p:commandButton id="btnCancelarMatricula" value="Cancelar matricula" actionListener="#{mbvMatricula.cancelarMatricula}" style="margin-top:5px" />
+                        </p:outputPanel>
+                        
+                        <p:outputPanel id="panelSuspender" rendered="#{mbvMatricula.contenidoSuspender}">
+                            <p:commandButton id="btnSuspenderMatricula" value="suspender matricular" actionListener="#{mbvMatricula.suspenderMatricula}" style="margin-top:5px" />
+                        </p:outputPanel>
+                        
+                        <p:outputPanel id="panelListado" rendered="#{mbvMatricula.mostrarMatriculados}">
                             <p:dataTable id="tableMatriculados" var="estMatriculado" rowIndexVar="index" value="#{mbvMatricula.estMatriculados}">
                                 <p:column headerText="Numero">
                                     <h:outputText value="#{index+1}" />
@@ -100,7 +112,12 @@
                             </p:dataTable>
                         </p:outputPanel>
                         
-                    </h:panelGroup>              
+                    </h:panelGroup>  
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+ 
+                    <p:dialog widgetVar="statusDialog" appendTo="@(body)" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage library="imagenes" name="load1.gif"/>
+                    </p:dialog>
                 </h:form>        
             </ui:define>
         </ui:composition>

@@ -14,12 +14,12 @@
                         <p:ajax event="dialogReturn" listener="#{mbvCiclo.closeDialog}" update="frmListaCiclos" />
                     </p:commandButton>
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
-                    <p:dataTable id="tablaListaCiclos" var="item" value="#{mbvCiclo.ciclos}" paginator="true" rows="10" selection="#{mbvCiclo.ciclo}" selectionMode="single" lazy="true" rowKey="#{item.cicloId}" >
+                    <p:dataTable id="tablaListaCiclos" reflow="true" var="item" value="#{mbvCiclo.ciclos}" paginator="true" rows="10" selection="#{mbvCiclo.ciclo}" selectionMode="single" lazy="true" rowKey="#{item.cicloId}" >
                         <p:ajax event="rowSelect" update=":frmListaCiclos:panelDetalleCiclo" oncomplete="PF('dialogoDetalleCiclo').show()"/>
                         <f:facet name="header">
                             Lista de Ciclos
                         </f:facet>
-                        <p:column headerText="Numero" filterBy="numero">
+                        <p:column headerText="Numero"  filterBy="numero">
                             <h:outputText value="#{item.numero}"/>
                         </p:column>
                         <p:column headerText="Descripcion" filterBy="descripcion">
@@ -58,8 +58,8 @@
                     <h:form id="frmRemoveCiclo">
                         <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
 
-                            <h:outputText value="Name:" />
-                            <h:outputText value="#{mbvCiclo.ciclo}" style="font-weight:bold"/>                                               
+                            <h:outputText value="Numero:" />
+                            <h:outputText value="#{mbvCiclo.ciclo.numero}" style="font-weight:bold"/>                                               
                             <p:commandButton id="deleteButton" actionListener="#{mbvCiclo.eliminarCiclo(mbvCiclo.ciclo)}" oncomplete="PF('removeciclo').hide();" 
                                              update=":frmListaCiclos" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" value="Aceptar"/>
                             <p:commandButton id="cancelButton" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('removeciclo').hide();" value="Cancelar"/>
@@ -87,6 +87,14 @@
                         </p:outputPanel>
                     </h:form>
                 </p:dialog>
+                <p:confirmDialog header="Advertencia" widgetVar="enUso" appendTo="@(body)" resizable="false" id="digEnUso"
+                                 showEffect="fade" hideEffect="explode" modal="true" message="Escala en uso usted no se puede editar">
+                    <h:form id="frmNoiniciado">
+                        <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+                            <p:commandButton id="cancelButton" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('enUso').hide();" value="OK"/>
+                        </h:panelGrid>
+                    </h:form>
+                </p:confirmDialog>
             </ui:define>
         </ui:composition>
     </body>

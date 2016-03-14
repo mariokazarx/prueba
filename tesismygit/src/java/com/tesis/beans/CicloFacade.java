@@ -4,8 +4,10 @@
  */
 package com.tesis.beans;
 
+import com.tesis.entity.Anlectivo;
 import com.tesis.entity.Ciclo;
 import com.tesis.entity.Configuracion;
+import com.tesis.entity.Curso;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;

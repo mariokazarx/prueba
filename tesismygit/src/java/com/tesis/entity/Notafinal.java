@@ -34,10 +34,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Notafinal.findAll", query = "SELECT n FROM Notafinal n"),
+    @NamedQuery(name = "Notafinal.findDetailRecuperacion", query = "SELECT n FROM Notafinal n WHERE n.asignaturacicloId = :asignatura AND n.anlectivoId = :anlectivo AND n.profesorId = :profesor"),
     @NamedQuery(name = "Notafinal.findByNotafinalId", query = "SELECT n FROM Notafinal n WHERE n.notafinalId = :notafinalId"),
     @NamedQuery(name = "Notafinal.findByRecuperacion", query = "SELECT n FROM Notafinal n WHERE n.recuperacion = :recuperacion"),
     @NamedQuery(name = "Notafinal.findByValor", query = "SELECT n FROM Notafinal n WHERE n.valor = :valor"),
-    @NamedQuery(name = "Notafinal.findByActual", query = "SELECT n FROM Notafinal n WHERE n.estudianteId = :estudianteId and n.asignaturacicloId = :asignaturacicloId"),
+    @NamedQuery(name = "Notafinal.findByActual", query = "SELECT n FROM Notafinal n WHERE n.estudianteId = :estudianteId and n.asignaturacicloId = :asignaturacicloId AND n.anlectivoId = :anlectivo"),
     @NamedQuery(name = "Notafinal.findByFechamodificacion", query = "SELECT n FROM Notafinal n WHERE n.fechamodificacion = :fechamodificacion"),
     @NamedQuery(name = "Notafinal.findByObservaciones", query = "SELECT n FROM Notafinal n WHERE n.observaciones = :observaciones")})
 public class Notafinal implements Serializable {
@@ -72,7 +73,10 @@ public class Notafinal implements Serializable {
     @JoinColumn(name = "asignaturaciclo_id", referencedColumnName = "asignaturaciclo_id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Asignaturaciclo asignaturacicloId;
-
+    @JoinColumn(name = "anlectivo_id", referencedColumnName = "anlectivo_id", nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Anlectivo anlectivoId;
+    
     public Notafinal() {
     }
 
@@ -148,6 +152,14 @@ public class Notafinal implements Serializable {
 
     public void setAsignaturacicloId(Asignaturaciclo asignaturacicloId) {
         this.asignaturacicloId = asignaturacicloId;
+    }
+
+    public Anlectivo getAnlectivoId() {
+        return anlectivoId;
+    }
+
+    public void setAnlectivoId(Anlectivo anlectivoId) {
+        this.anlectivoId = anlectivoId;
     }
 
     @Override

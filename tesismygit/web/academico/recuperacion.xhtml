@@ -11,65 +11,82 @@
         <ui:composition template="./../plantilla.xhtml">
             <ui:define name="content">
                 <h:form id="frmMateriasCiclos">
-                    <p:outputLabel for="sltCursos" value="Curso:" />
-                    <p:selectOneMenu id="sltCursos" value="#{mbvNotas.cursoSelected.cursoId}">
-                        <p:ajax listener="#{mbvNotas.cargarAsignaturas()}" update="frmMateriasCiclos"/>
+                    <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
+                    <p:outputLabel for="selectAnio" value="Año: " />
+                    
+                    <p:selectOneMenu id="selectAnio" value="#{mbvRecuperacion.anlectivoselected.anlectivoId}">
+                        <p:ajax listener="#{mbvRecuperacion.cargarAnio}" update="frmMateriasCiclos"/>
                         <f:selectItem itemLabel="Seleccione."/>
-                        <f:selectItems value="#{mbvNotas.cursos}" var="curso" itemLabel="#{curso.nombre}" itemValue="#{curso.cursoId}"/>
-                    </p:selectOneMenu>
-                    <p:outputLabel for="sltAsignaturas" value="Asignaturas:" />
-                    <p:selectOneMenu id="sltAsignaturas" value="#{mbvNotas.asignaturaSelected.asignaturaId}">
-                        <p:ajax listener="#{mbvNotas.cargarContenido()}" update="frmMateriasCiclos"/>
-                        <f:selectItem itemLabel="Seleccione."/>
-                        <f:selectItems value="#{mbvNotas.asignaturas}" var="asignatura" itemLabel="#{asignatura.nombre}" itemValue="#{asignatura.asignaturaId}"/>
+                        <f:selectItems value="#{mbvRecuperacion.anlectivos}" var="anio" itemLabel="#{anio.anio}" itemValue="#{anio.anlectivoId}"/>
                     </p:selectOneMenu>
                     
-                    <br />
-                    <p:remoteCommand name="onCellEdit" update="tablanotas" />
-                    
-                    <p:outputPanel id="testContainer" rendered="#{mbvNotas.contenidoNotas}">
-                        <p:dataTable tableStyle="width:auto" editable="true" id="tablanotas" var="estudiante" value="#{mbvNotas.estudiantesN}" widgetVar="tablaEstudiantes" >                    
-                            <p:ajax event="rowEdit" listener="#{mbvNotas.onRowEdit}" oncomplete="onCellEdit()" />
-                            <p:column headerText="Nombres Y Apellidos" sortBy="#{estudiante.nombre}">
-                                <h:outputText value="#{estudiante.apellido} #{estudiante.nombre}" />
-                            </p:column>
-                            <c:forEach items="#{mbvNotas.columns}" var="column" varStatus="loop">
-                                <p:column headerText="#{column.property}">
-                                    <f:facet name="header">
-                                        <h:outputText value="#{column.header}" />
-                                    </f:facet>
-                                    <p:cellEditor>
-                                        <f:facet name="output"><h:outputText value="#{estudiante.notasLogros[column.property]}" /></f:facet>
-                                        <f:facet name="input"><p:inputMask id="modelInput_#{loop.index}" maxlength="2" mask="9.9" value="#{estudiante.notasLogros[column.property]}" style="width:98%"/></f:facet>
-                                        <ui:param name="idLogro#{estudiante.estudianteId}_#{loop.index}" value="#{column.property}"/> 
-                                    </p:cellEditor>
+                    <h:panelGroup rendered="#{mbvRecuperacion.contenidPrincipal}">
+                        <p:outputLabel for="sltCursos" value="Curso:" />
+                        <p:selectOneMenu id="sltCursos" value="#{mbvRecuperacion.cursoSelected.cursoId}">
+                            <p:ajax listener="#{mbvRecuperacion.cargarAsignaturas()}" update="frmMateriasCiclos"/>
+                            <f:selectItem itemLabel="Seleccione."/>
+                            <f:selectItems value="#{mbvRecuperacion.cursos}" var="curso" itemLabel="#{curso.nombre}" itemValue="#{curso.cursoId}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel for="sltAsignaturas" value="Asignaturas:" />
+                        <p:selectOneMenu id="sltAsignaturas" value="#{mbvRecuperacion.asignaturaSelected.asignaturaId}">
+                            <p:ajax listener="#{mbvRecuperacion.cargarContenido()}" update="frmMateriasCiclos"/>
+                            <f:selectItem itemLabel="Seleccione."/>
+                            <f:selectItems value="#{mbvRecuperacion.asignaturas}" var="asignatura" itemLabel="#{asignatura.nombre}" itemValue="#{asignatura.asignaturaId}"/>
+                        </p:selectOneMenu>
+
+                        <br />
+                        
+                        <h:panelGroup rendered="#{mbvRecuperacion.mostrarRecuperacion}">
+                            <p:dataTable tableStyle="width:auto" id="tablanotasfinales" var="notafinal" value="#{mbvRecuperacion.notas}" widgetVar="tablaNotas" >                    
+                                <p:column headerText="Nombres Y Apellidos" sortBy="#{notafinal.estudianteId.apellido}">
+                                    <h:outputText value="#{notafinal.estudianteId.apellido} #{notafinal.estudianteId.nombre}" />
                                 </p:column>
-                            </c:forEach>
-                            <p:column headerText="Nota" id="columnNota">
-                                <h:outputText value="#{estudiante.nota}" />
-                            </p:column>
-                            <p:column style="width:32px">
-                                <p:rowEditor />
-                            </p:column>
-                            <p:column headerText="Observaciones" style="width:auto">
-                                <p:commandButton value="ver" icon="ui-icon-search" actionListener="#{mbvNotas.cargarObservacion(estudiante.id)}"/>
-                            </p:column>
-                            <p:column>
-                                <p:commandButton value="editar" icon="ui-icon-pencil" actionListener="#{mbvNotas.insertarObservacion(estudiante.id)}"/>
-                            </p:column>
-                            
-                        </p:dataTable>
-                    </p:outputPanel>
-                    
+                                <p:columns value="#{mbvRecuperacion.columns}" var="column" >
+                                        <f:facet name="header">
+                                            <h:outputText value="#{column.header}" />
+                                        </f:facet>
+
+                                    <h:outputText value="#{mbvRecuperacion.getNotaPeriodo(notafinal.estudianteId,column.property)}" />
+
+
+                                </p:columns>>
+                                <p:column headerText="Nota" id="columnNota">
+                                    <h:outputText value="#{notafinal.valor}" />
+                                </p:column>
+                                <p:column headerText="Nota Recuperacion" id="columnNotaRecuperacion">
+                                    <h:outputText value="#{mbvRecuperacion.getNotaRecuperacion(notafinal.notafinalId)!=0 ? mbvRecuperacion.getNotaRecuperacion(notafinal.notafinalId) : ' ' }" />
+                                </p:column>
+                                <p:column>
+                                    <p:commandButton value="Recuperar" icon="ui-icon-star" actionListener="#{mbvRecuperacion.cargarRecuperacion(notafinal.notafinalId)}" ajax="true" update="frmMateriasCiclos" />
+                                </p:column>
+
+                            </p:dataTable>
+                        </h:panelGroup>
+                        
+                        <p:commandButton id="Confirmar" actionListener="#{mbvRecuperacion.pruebafinal}" value="Confirmar" style="margin-top:5px" />
+                        <h:commandButton value="PDF" actionListener="#{mbvRecuperacion.imprimir}"/>
+
+
+                        
+
+                        
+                    </h:panelGroup>
                     <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
- 
+
                     <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
                         <p:graphicImage library="imagenes" name="load1.gif"/>
                     </p:dialog>
-                    
-                    <p:commandButton id="Confirmar" actionListener="#{mbvNotas.pruebafinal}" value="Confirmar" style="margin-top:5px" />
-                    <h:commandButton value="PDF" actionListener="#{mbvNotas.pdf}"/>
                 </h:form>
+                <p:dialog header="Reuperacion" widgetVar="dialogoRecuperarNota" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
+                    <h:form id="frmRecuperarNota">
+                        <p:outputPanel id="panelRecuperarNota" >
+                            <p:outputLabel for="txtRecuperacion" value="Valor: " />
+                            <p:inputMask id="txtRecuperacion" maxlength="2" mask="9.9" value="#{mbvRecuperacion.notaRecuperacion}" />
+                            <p:message for="txtRecuperacion"/> 
+                            <p:commandButton value="Registrar Recuperacion" actionListener="#{mbvRecuperacion.recuperarNota()}" ajax="true" update=":frmMateriasCiclos" />
+                        </p:outputPanel>
+                    </h:form>
+                </p:dialog>
             </ui:define>
         </ui:composition>
     </body>

@@ -10,72 +10,84 @@
     <body>
         <ui:composition template="./../plantilla.xhtml">
             <ui:define name="content">
-                <h:form id="frmMateriasCiclos">
+                <h:form id="frmRectificar">
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
                     
-                    <p:outputLabel for="selectContenido" value="Asignatura: " />
-                    <p:selectOneMenu id="selectContenido" value="#{mbvRectificarNota.contenidoSelected.contenidotematicoId}" rendered="true">
-                        <p:ajax listener="#{mbvRectificarNota.cargarContenido}" update="frmMateriasCiclos"/>
+                    <p:outputLabel for="selectAnio" value="Año: " />
+                    <p:selectOneMenu id="selectAnio" value="#{mbvRectificarNota.anlectivoselected.anlectivoId}">
+                        <p:ajax listener="#{mbvRectificarNota.cargarAnio}" update="frmRectificar"/>
                         <f:selectItem itemLabel="Seleccione."/>
-                        <f:selectItems value="#{mbvRectificarNota.contenidos}" var="contenido" itemLabel="#{contenido.asignaturacicloId.asignaturaId.nombre} - #{contenido.cursoId.nombre} - Periodo #{contenido.periodoId.numero}" itemValue="#{contenido.contenidotematicoId}"/>
+                        <f:selectItems value="#{mbvRectificarNota.anlectivos}" var="anio" itemLabel="#{anio.anio}" itemValue="#{anio.anlectivoId}"/>
                     </p:selectOneMenu>
                     
-                    
-                    
-                    <br />
-                    <p:commandButton value="Crear Logro" icon="ui-icon-pencil" actionListener="#{mbvRectificarNota.newLogro}" rendered="#{mbvRectificarNota.contenidoLogros}"/>
+                    <h:panelGroup rendered="#{mbvRectificarNota.contenidoPrincipal}">
+                        <p:outputLabel for="selectContenido" value="Asignatura: " />
+                        <p:selectOneMenu id="selectContenido" value="#{mbvRectificarNota.contenidoSelected.contenidotematicoId}" rendered="true">
+                            <p:ajax listener="#{mbvRectificarNota.cargarContenido}" update="frmRectificar"/>
+                            <f:selectItem itemLabel="Seleccione."/>
+                            <f:selectItems value="#{mbvRectificarNota.contenidos}" var="contenido" itemLabel="#{contenido.asignaturacicloId.asignaturaId.nombre} - #{contenido.cursoId.nombre} - Periodo #{contenido.periodoId.numero}" itemValue="#{contenido.contenidotematicoId}"/>
+                        </p:selectOneMenu>
 
-                    <p:dataTable id="tableLogros" var="logro" value="#{mbvRectificarNota.logros}" sortBy="#{logro.porcentaje}" rendered="#{mbvRectificarNota.contenidoLogros}">
-                        <p:column headerText="Id" sortBy="#{logro.logroId}">
-                            <h:outputText value="#{logro.logroId}" />
-                        </p:column>
-                        <p:column headerText="Titulo" sortBy="#{logro.titulo}">
-                            <h:outputText value="#{logro.titulo}" />
-                        </p:column>
-                        <p:column headerText="Descripcion" sortBy="#{logro.descripcion}">
-                            <h:outputText value="#{logro.descripcion}" />
-                        </p:column>
-                        <p:column headerText="Porcentaje" sortBy="#{logro.porcentaje}">
-                            <h:outputText value="#{logro.porcentaje}" />
-                        </p:column>
-                        <p:column>
-                            <p:commandButton value="Eliminar"  icon="ui-icon-close" actionListener="#{mbvRectificarNota.eliminarLogro(logro)}" ajax="true" update=":frmMateriasCiclos"/>
-                        </p:column>
-                    </p:dataTable>
-                    <p:remoteCommand name="onCellEdit" update="tablanotas" />
-                    
-                    <p:outputPanel id="testContainer" rendered="#{mbvRectificarNota.contenidoNotas}">
-                        <p:dataTable tableStyle="width:auto" editable="true" id="tablanotas" var="estudiante" value="#{mbvRectificarNota.estudiantesN}" widgetVar="tablaEstudiantes" >                    
-                            <p:ajax event="rowEdit" listener="#{mbvRectificarNota.onRowEdit}" oncomplete="onCellEdit()" />
-                            <p:column headerText="Nombres Y Apellidos" sortBy="#{estudiante.nombre}">
-                                <h:outputText value="#{estudiante.apellido} #{estudiante.nombre}" />
+                        <br />
+                        <p:commandButton value="Crear Logro" icon="ui-icon-pencil" actionListener="#{mbvRectificarNota.newLogro}" rendered="#{mbvRectificarNota.contenidoLogros}"/>
+
+                        <p:dataTable id="tableLogros" tableStyle="width:auto" var="logro" value="#{mbvRectificarNota.logros}" sortBy="#{logro.porcentaje}" rendered="#{mbvRectificarNota.contenidoLogros}">
+                            <p:column headerText="Id" sortBy="#{logro.logroId}">
+                                <h:outputText value="#{logro.logroId}" />
                             </p:column>
-                            <c:forEach items="#{mbvRectificarNota.columns}" var="column" varStatus="loop">
-                                <p:column headerText="#{column.property}">
-                                    <f:facet name="header">
-                                        <h:outputText value="#{column.header}" />
-                                    </f:facet>
-                                    <p:cellEditor>
-                                        <f:facet name="output"><h:outputText value="#{estudiante.notasLogros[column.property]}" /></f:facet>
-                                        <f:facet name="input"><p:inputMask id="modelInput_#{loop.index}" maxlength="2" mask="9.9" value="#{estudiante.notasLogros[column.property]}" style="width:98%"/></f:facet>
-                                        <ui:param name="idLogro#{estudiante.estudianteId}_#{loop.index}" value="#{column.property}"/> 
-                                    </p:cellEditor>
-                                </p:column>
-                            </c:forEach>
-                            <p:column headerText="Nota" id="columnNota">
-                                <h:outputText value="#{estudiante.nota}" />
+                            <p:column headerText="Titulo" sortBy="#{logro.titulo}">
+                                <h:outputText value="#{logro.titulo}" />
                             </p:column>
-                            <p:column style="width:32px">
-                                <p:rowEditor />
+                            <p:column headerText="Descripcion" sortBy="#{logro.descripcion}">
+                                <h:outputText value="#{logro.descripcion}" />
                             </p:column>
-                            <p:column headerText="Observaciones" style="width:auto">
-                                <p:commandButton value="ver" icon="ui-icon-search" actionListener="#{mbvRectificarNota.cargarObservacion(estudiante.id)}"/>
+                            <p:column headerText="Porcentaje" sortBy="#{logro.porcentaje}">
+                                <h:outputText value="#{logro.porcentaje}" />
                             </p:column>
                             <p:column>
-                                <p:commandButton value="editar" icon="ui-icon-pencil" actionListener="#{mbvRectificarNota.insertarObservacion(estudiante.id)}"/>
+                                <p:commandButton value="Eliminar"  icon="ui-icon-close" actionListener="#{mbvRectificarNota.eliminarLogro(logro)}" ajax="true" update=":frmRectificar"/>
                             </p:column>
-                            
                         </p:dataTable>
-                    </p:outputPanel>
+                        <p:remoteCommand name="onCellEdit" update="tablanotas" />
+
+                        <p:outputPanel id="testContainer" rendered="#{mbvRectificarNota.contenidoNotas}">
+                            <p:dataTable tableStyle="width:auto" editable="true" id="tablanotas" var="estudiante" value="#{mbvRectificarNota.estudiantesN}" widgetVar="tablaEstudiantes" >                    
+                                <p:ajax event="rowEdit" listener="#{mbvRectificarNota.onRowEdit}" oncomplete="onCellEdit()" />
+                                <p:column headerText="Nombres Y Apellidos" sortBy="#{estudiante.nombre}">
+                                    <h:outputText value="#{estudiante.apellido} #{estudiante.nombre}" />
+                                </p:column>
+                                <c:forEach items="#{mbvRectificarNota.columns}" var="column" varStatus="loop">
+                                    <p:column headerText="#{column.property}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{column.header}" />
+                                        </f:facet>
+                                        <p:cellEditor>
+                                            <f:facet name="output"><h:outputText value="#{estudiante.notasLogros[column.property]}" /></f:facet>
+                                            <f:facet name="input"><p:inputMask id="modelInput_#{loop.index}" maxlength="2" mask="9.9" value="#{estudiante.notasLogros[column.property]}" style="width:98%"/></f:facet>
+                                            <ui:param name="idLogro#{estudiante.estudianteId}_#{loop.index}" value="#{column.property}"/> 
+                                        </p:cellEditor>
+                                    </p:column>
+                                </c:forEach>
+                                <p:column headerText="Nota" id="columnNota">
+                                    <h:outputText value="#{estudiante.nota}" />
+                                </p:column>
+                                <p:column style="width:32px">
+                                    <p:rowEditor />
+                                </p:column>
+                                <p:column headerText="Observaciones" style="width:auto">
+                                    <p:commandButton value="ver" icon="ui-icon-search" actionListener="#{mbvRectificarNota.cargarObservacion(estudiante.id)}"/>
+                                </p:column>
+                                <p:column>
+                                    <p:commandButton value="editar" icon="ui-icon-pencil" actionListener="#{mbvRectificarNota.insertarObservacion(estudiante.id)}"/>
+                                </p:column>
+
+                            </p:dataTable>
+                        </p:outputPanel>
+
+                        <p:commandButton id="Confirmar" value="Confirmar" ajax="false" actionListener="#{mbvRectificarNota.imprimir}" style="margin-top:5px" />
+                        <h:commandButton value="PDF" actionListener="#{mbvRectificarNota.pdf}"/>
+
+                    </h:panelGroup>
                     
                     <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
  
@@ -83,8 +95,7 @@
                         <p:graphicImage library="imagenes" name="load1.gif"/>
                     </p:dialog>
                     
-                    <p:commandButton id="Confirmar" value="Confirmar" update="frmMateriasCiclos" style="margin-top:5px" />
-                    <h:commandButton value="PDF" actionListener="#{mbvRectificarNota.pdf}"/>
+                    
                 </h:form>
                 <p:dialog header="Nuevo Logro" widgetVar="dialogoCrearLogro" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
                     <h:form id="frmCrearLogro">
@@ -102,7 +113,7 @@
                                 <p:inputTextarea id="txtDescripcion" value="#{mbvRectificarNota.logro.descripcion}" rows="5" cols="22" />
                                 <p:message for="txtDescripcion"/>
                                 <h:panelGroup></h:panelGroup>
-                                <p:commandButton value="Registrar Logro" actionListener="#{mbvRectificarNota.insertarLogro}" ajax="true" update=":frmMateriasCiclos" />
+                                <p:commandButton value="Registrar Logro" actionListener="#{mbvRectificarNota.insertarLogro}" ajax="true" update=":frmRectificar" />
                             </h:panelGrid> 
                         </p:outputPanel>
                     </h:form>
@@ -120,7 +131,7 @@
                             <p:outputLabel for="txtObservacion" value="Observaciones: " />
                             <p:inputTextarea id="txtObservacion" value="#{mbvRectificarNota.observaciones}" rows="5"  />
                             <p:message for="txtObservacion"/> 
-                            <p:commandButton value="Registrar Observacion" actionListener="#{mbvRectificarNota.insertarObservacionDB()}" ajax="true" update=":frmMateriasCiclos" />
+                            <p:commandButton value="Registrar Observacion" actionListener="#{mbvRectificarNota.insertarObservacionDB()}" ajax="true" update=":frmRectificar" />
                         </p:outputPanel>
                     </h:form>
                 </p:dialog>

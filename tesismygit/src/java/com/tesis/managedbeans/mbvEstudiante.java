@@ -8,10 +8,12 @@ import com.sun.xml.rpc.processor.modeler.j2ee.xml.paramValueType;
 import com.tesis.beans.DocumentoFacade;
 import com.tesis.beans.EstadoEstudianteFacade;
 import com.tesis.beans.EstudianteFacade;
+import com.tesis.beans.MatriculaFacade;
 import com.tesis.beans.TipoUsuarioFacade;
 import com.tesis.entity.Documento;
 import com.tesis.entity.EstadoEstudiante;
 import com.tesis.entity.Estudiante;
+import com.tesis.entity.Matricula;
 import com.tesis.entity.TipoUsuario;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -24,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -47,6 +50,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.DefaultUploadedFile;
 import org.primefaces.model.UploadedFile;
 
 /**
@@ -62,6 +66,8 @@ public class mbvEstudiante implements Serializable {
     private List<Documento> documentos;
     private Documento documento;
     private UploadedFile foto;
+    private List<EstadoEstudiante> estadosEstudiante;
+    private EstadoEstudiante estadoSelected;
     private String ruta;
     String prueba;
     @EJB
@@ -72,8 +78,26 @@ public class mbvEstudiante implements Serializable {
     private TipoUsuarioFacade tusuEjb;
     @EJB
     private DocumentoFacade docuemntoEjb;
+    @EJB
+    private MatriculaFacade matriculaEjb;
     
     public mbvEstudiante() {
+    }
+
+    public List<EstadoEstudiante> getEstadosEstudiante() {
+        return estadosEstudiante;
+    }
+
+    public void setEstadosEstudiante(List<EstadoEstudiante> estadosEstudiante) {
+        this.estadosEstudiante = estadosEstudiante;
+    }
+
+    public EstadoEstudiante getEstadoSelected() {
+        return estadoSelected;
+    }
+
+    public void setEstadoSelected(EstadoEstudiante estadoSelected) {
+        this.estadoSelected = estadoSelected;
     }
 
     public List<Documento> getDocumentos() {
@@ -149,8 +173,12 @@ public class mbvEstudiante implements Serializable {
     public void inicioPagina() {
         System.out.println("AAAAAAAAAAAAAAA" + this.prueba);
         this.estudiante = new Estudiante();
+        this.estadoSelected = new EstadoEstudiante();
+        this.estadosEstudiante = new ArrayList<EstadoEstudiante>();
+        this.estadosEstudiante = estadoEjb.findAll();
         this.documento = new Documento();
-        this.estudiantes = this.estudianteEjb.findAll();
+        this.estudiantes = this.estudianteEjb.getOrdenados();
+        this.foto = new DefaultUploadedFile();
         ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
         this.ruta = (String) servletContext.getRealPath("/");
     }
@@ -171,8 +199,8 @@ public class mbvEstudiante implements Serializable {
                 if (this.foto.getSize() <= 0) {
                     this.estudiante.setFoto("default.png");
                 } else {
-                    if (!this.foto.getFileName().endsWith(".png")) {
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error:", "El archivo debe ser con extensión \".png\""));
+                    if (!this.foto.getFileName().endsWith(".png") || !this.foto.getFileName().endsWith(".jpg")) {
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error:", "El archivo debe ser con extensión \".png\" o \".jpg\" "));
                         return "";
                     }
                     if (this.foto.getSize() > 20971520) {
@@ -295,51 +323,87 @@ public class mbvEstudiante implements Serializable {
         }
     }
 
-    public void subirFoto() throws IOException {
+    public void subirFoto(FileUploadEvent event) throws IOException {
         InputStream inputStream = null;
         OutputStream outputStream = null;
+        ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
+        String carpetaEstudiantes = (String) servletContext.getRealPath("/fotosestudiantes");
+        File file = new File(carpetaEstudiantes+estudiante.getFoto());
+        //file.delete();
+            
+        try {            
+            System.out.println("ENTRA 2"+ event.getFile().getFileName());
+            if (event.getFile().getSize() <= 0) {
 
-        try {
-            if (this.foto.getSize() <= 0) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error:", "Ud. debe seleccionar un archivo de imagen \".png\""));
-                return;
-            }
+            } else {
+                System.out.println("ENTRA 4" + event.getFile().getFileName().endsWith(".jpg"));
+                boolean ban = false;
+                if (event.getFile().getFileName().endsWith(".jpg") == true) {
+                    ban = true;
+                }
+                if (event.getFile().getFileName().endsWith(".png") == true){
+                    ban = true;
+                }
+                if (ban==false){
+                    System.out.println("ENTRA 5"+event.getFile().getFileName());
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error:", "El archivo debe ser con extensión \".png\" o \".jpg\" "));
+                    //inicioPagina();  
+                    return;
+                }
+                if (event.getFile().getSize() > 20971520) {
+                    System.out.println("ENTRA 6");
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error:", "El archivo no puede ser más de 20mb"));
+                    return;
+                }
+                if (file.delete()) {
+                    System.out.println("ENTRA 7");
+                    String nombreArchivo = "/";
+                    nombreArchivo += this.estudiante.getIdentificiacion();
+                    Calendar fecha = new GregorianCalendar();
+                    int año = fecha.get(Calendar.YEAR);
+                    int mes = fecha.get(Calendar.MONTH);
+                    int dia = fecha.get(Calendar.DAY_OF_MONTH);
+                    int hora = fecha.get(Calendar.HOUR_OF_DAY);
+                    int minuto = fecha.get(Calendar.MINUTE);
+                    int segundo = fecha.get(Calendar.SECOND);
+                    int milseg = fecha.get(Calendar.MILLISECOND);
+                    nombreArchivo += año + "-" + mes + "-" + dia + "-" + hora + "-" + minuto + "-" + segundo + "-" + milseg;
+                    Random nrd = new Random();
+                    nombreArchivo += nrd.nextInt() + ".png";
+                    outputStream = new FileOutputStream(new File(carpetaEstudiantes + nombreArchivo));
+                    inputStream = event.getFile().getInputstream();
 
-            if (!this.foto.getFileName().endsWith(".png")) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error:", "El archivo debe ser con extensión \".png\""));
-                return;
-            }
+                    int read = 0;
+                    byte[] bytes = new byte[1024];
 
-            if (this.foto.getSize() > 2097152) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error:", "El archivo no puede ser más de 2mb"));
-                return;
-            }
-
-            ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
-            String carpetaAvatar = (String) servletContext.getRealPath("/avatar");
-            System.out.println("RITA IMAGEN" + carpetaAvatar);
-            outputStream = new FileOutputStream(new File(carpetaAvatar + "/prueba.png"));
-            inputStream = this.foto.getInputstream();
-
-            int read = 0;
-            byte[] bytes = new byte[1024];
-
-            while ((read = inputStream.read(bytes)) != -1) {
-                outputStream.write(bytes, 0, read);
-            }
-
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Correcto:", "Avatar actualizado correctamente"));
+                    while ((read = inputStream.read(bytes)) != -1) {
+                        outputStream.write(bytes, 0, read);
+                    }
+                    this.estudiante.setFoto(nombreArchivo);
+                    System.out.println("ENTRA 8");
+                    estudianteEjb.edit(estudiante);
+                    FacesContext.getCurrentInstance().
+                                addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Foto actualizada exitosamente", ""));
+                    //RequestContext.getCurrentInstance().execute("PF('dialogoEditarEstudiante').hide()");
+                    //inicioPagina();
+                } else {
+                    System.out.println("Delete operation is failed.");
+                }
+            }           
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error fatal:", "Por favor contacte con su administrador " + ex.getMessage()));
-        } finally {
+        }finally {
             if (inputStream != null) {
+                System.out.println("ENTRA 10");
                 inputStream.close();
             }
 
             if (outputStream != null) {
+                System.out.println("ENTRA 10");
                 outputStream.close();
             }
         }
+        
     }
     private DefaultStreamedContent download;
 
@@ -453,8 +517,8 @@ public class mbvEstudiante implements Serializable {
 
     public void newEstudiante() {
         Map<String, Object> options = new HashMap<String, Object>();
-        options.put("contentHeight", 440);
-        options.put("height", 460);
+        options.put("contentHeight", 720);
+        options.put("height", 740);
         options.put("width", 700);
         options.put("modal", true);
         options.put("draggable", true);
@@ -465,6 +529,7 @@ public class mbvEstudiante implements Serializable {
     public void cargarEstudiante(int estudianteid) {
         try {
             this.estudiante = estudianteEjb.find(estudianteid);
+            this.estadoSelected = estadoEjb.find(estudiante.getEstadoEstudianteId().getEstadoEstudianteId());
             RequestContext.getCurrentInstance().update("frmEditarEstudiante:panelEditarEstudiante");
             RequestContext.getCurrentInstance().execute("PF('dialogoEditarEstudiante').show()");
         } catch (Exception e) {
@@ -489,6 +554,31 @@ public class mbvEstudiante implements Serializable {
             this.documentos = this.docuemntoEjb.getByEstudiante(estudiante);
             RequestContext.getCurrentInstance().update("frmArchivosView:panelArchivosEstudiante");
             RequestContext.getCurrentInstance().execute("PF('dialogoExaminarArchivos').show()");
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+        }
+    }
+    public String getMatricula(Estudiante estAux){
+        Matricula auxMatricula = matriculaEjb.getActivaByEstudiante(estAux);
+        if(auxMatricula!=null){
+            return "MATRICULADO";
+        }else{
+            return "PENDIENTE";
+        }
+    }
+    public void editar(){
+        try {
+                System.out.println("ENTRA 8");
+                this.estadoSelected = estadoEjb.find(estadoSelected.getEstadoEstudianteId());
+                estudiante.setEstadoEstudianteId(estadoSelected);
+                estudianteEjb.edit(estudiante);
+                FacesContext.getCurrentInstance().
+                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Estudiante editado exitosamente", ""));
+                RequestContext.getCurrentInstance().execute("PF('dialogoEditarEstudiante').hide()");
+                inicioPagina();       
+            
+
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));

@@ -63,7 +63,7 @@
                     <h:form id="frmRemoveAsignatura">
                         <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
 
-                            <h:outputText value="Name:" />
+                            <h:outputText value="Nombre:" />
                             <h:outputText value="#{mbvAsignatura.asignatura.nombre}" style="font-weight:bold"/>                                               
                             <p:commandButton id="deleteButton" actionListener="#{mbvAsignatura.eliminarAsignatura(mbvAsignatura.asignatura)}" oncomplete="PF('removeasignatura').hide();" 
                                              update=":frmListaAsignaturas" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" value="Aceptar"/>
@@ -99,6 +99,14 @@
                         </p:outputPanel>
                     </h:form>
                 </p:dialog>
+                <p:confirmDialog header="Advertencia" widgetVar="enUso" appendTo="@(body)" resizable="false" id="digEnUso"
+                                 showEffect="fade" hideEffect="explode" modal="true" message="Escala en uso usted no se puede editar">
+                    <h:form id="frmNoiniciado">
+                        <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+                            <p:commandButton id="cancelButton" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('enUso').hide();" value="OK"/>
+                        </h:panelGrid>
+                    </h:form>
+                </p:confirmDialog>
             </ui:define>
         </ui:composition>
     </body>

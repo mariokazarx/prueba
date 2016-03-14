@@ -1,0 +1,297 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.tesis.managedbeans;
+
+import com.lowagie.text.Document;
+import com.lowagie.text.Element;
+import com.lowagie.text.Font;
+import com.lowagie.text.FontFactory;
+import com.lowagie.text.Image;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.Rectangle;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
+import com.tesis.beans.AnlectivoFacade;
+import com.tesis.beans.AsignaturaFacade;
+import com.tesis.beans.AsignaturacicloFacade;
+import com.tesis.beans.CicloFacade;
+import com.tesis.beans.ConfiguracionFacade;
+import com.tesis.beans.ContenidotematicoFacade;
+import com.tesis.beans.CriterioevaluacionFacade;
+import com.tesis.beans.CursoFacade;
+import com.tesis.beans.EscalaFacade;
+import com.tesis.beans.EstadoAniolectivoFacade;
+import com.tesis.beans.EstadoEstudianteFacade;
+import com.tesis.beans.EstadoMatriculaFacade;
+import com.tesis.beans.EstadocontenidotematicoFacade;
+import com.tesis.beans.EstudianteFacade;
+import com.tesis.beans.FormacriterioevaluacionFacade;
+import com.tesis.beans.MatriculaFacade;
+import com.tesis.beans.NotafinalFacade;
+import com.tesis.beans.NotafinalrecuperacionFacade;
+import com.tesis.beans.UsuarioRoleFacade;
+import com.tesis.entity.Anlectivo;
+import com.tesis.entity.Asignatura;
+import com.tesis.entity.Asignaturaciclo;
+import com.tesis.entity.Ciclo;
+import com.tesis.entity.Criterioevaluacion;
+import com.tesis.entity.Curso;
+import com.tesis.entity.Escala;
+import com.tesis.entity.EstadoEstudiante;
+import com.tesis.entity.EstadoMatricula;
+import com.tesis.entity.Estudiante;
+import com.tesis.entity.Matricula;
+import com.tesis.entity.Notafinal;
+import com.tesis.entity.Notafinalrecuperacion;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ *
+ * @author Mario Jurado
+ */
+@ManagedBean
+@ViewScoped
+public class mbvConsolidadoFinal {
+
+    @EJB
+    private AnlectivoFacade anlectivoEjb;
+    @EJB
+    private ContenidotematicoFacade contenidoEjb;
+    @EJB
+    private ConfiguracionFacade configuracionEjb;
+    @EJB
+    private MatriculaFacade matriculaEjb;
+    @EJB
+    private AsignaturacicloFacade asiganturaCicloEjb;
+    @EJB
+    private EstudianteFacade estdudianteEjb;
+    @EJB
+    private EscalaFacade escalaEjb;
+    @EJB
+    private CriterioevaluacionFacade criterioEjb;
+    @EJB
+    private FormacriterioevaluacionFacade formaEvaluacionEjb;
+    @EJB
+    private AsignaturaFacade asignaturaEjb;
+    @EJB
+    private CursoFacade cursoEjb;
+    @EJB
+    private NotafinalFacade notaFinalEjb;
+    @EJB
+    private NotafinalrecuperacionFacade notaFinalRecEjb;
+    @EJB
+    private EstadoEstudianteFacade estadoEstuainteEjb;
+    @EJB
+    private EstadoMatriculaFacade estadoMatriculaEjb;
+    @EJB
+    private CicloFacade cicloEjb;
+    
+    public mbvConsolidadoFinal() {
+    }
+    @PostConstruct()
+    public void inicio() {
+        System.out.println("Entro POSTCOSTRUCT");        
+    }
+    
+    public void imprimir(){
+        System.out.println("Entro 1");
+        List <Matricula> matriculasAnio;
+        List<Curso> cursos;
+        Anlectivo anlectivo = anlectivoEjb.getIniciado();
+        Escala escala = escalaEjb.find(anlectivo.getConfiguracionId().getEscalaId().getEscalaId());
+        Criterioevaluacion criterio = criterioEjb.find(anlectivo.getConfiguracionId().getCriterioevaluacionId().getCriterioevaluacionId());
+        Document document = new Document(PageSize.LETTER.rotate());
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        if(!anlectivo.getCursoList().isEmpty()){
+            System.out.println("Entro 2");
+            try {
+                System.out.println("Entro 3");
+                PdfWriter.getInstance(document, baos);
+                document.open();
+                cursos = anlectivo.getCursoList();
+                for(Curso cur : cursos){
+                    URL url = FacesContext.getCurrentInstance().getExternalContext().getResource("/escudo.png");
+                    Image image = Image.getInstance(url);
+                    image.scaleAbsolute(100,100);        
+                    PdfPTable table2 = new PdfPTable(2);
+                    table2.setWidthPercentage(100);
+                    table2.setWidths(new int[]{1, 4});
+                    PdfPCell cell = new PdfPCell(image, true);
+                    cell.setBorder(Rectangle.NO_BORDER);
+                    cell.setRowspan(2);
+                    table2.addCell(cell);
+                    PdfPCell cell2 = new PdfPCell();
+                    Paragraph par = new Paragraph("CENTRO EDUCATIVO  “ANTONIO RICAURTE” ",FontFactory.getFont("arial",14,Font.BOLD));
+                    par.setAlignment(Element.ALIGN_CENTER);
+                    cell2.addElement(par);
+                    cell2.setVerticalAlignment(Element.ALIGN_CENTER);
+                    cell2.setBorder(Rectangle.NO_BORDER);
+                    table2.addCell(cell2);
+                    PdfPCell cell3 = new PdfPCell();
+                    Paragraph par3 = new Paragraph("Licencia de funcionamiento 366 de Abril 4 de 2001, Resolución 1861  Junio 30 de 2005 de  la Secretaría "
+                            + "de Educación y Cultura Departamental  CODIGO SNP ICFES 114454 Código DANE 352612001093 "
+                            ,FontFactory.getFont("arial",9,Font.NORMAL));
+                    par3.setAlignment(Element.ALIGN_CENTER);
+                    cell3.addElement(par3);
+                    cell3.setVerticalAlignment(Element.ALIGN_CENTER);
+                    cell3.setBorder(Rectangle.NO_BORDER);
+                    table2.addCell(cell3);
+                    document.add(table2);
+                    
+                    Ciclo cicloaux = cicloEjb.find(cur.getCicloId().getCicloId());
+                    List<Asignatura> asignaturasAux = new ArrayList<Asignatura>();
+                    asignaturasAux = asignaturaEjb.findByCiclo(cicloaux);
+                    PdfPTable tablaContenido = new PdfPTable(2+asignaturasAux.size());
+                    int tam = 2+asignaturasAux.size();
+                    tablaContenido.setWidthPercentage(100);      
+                    float[] ft = new float[tam];
+                    for(int i=0;i<tam;i++){
+                        System.out.println(i);
+                        if(i==0){
+                            ft[i]=80f; 
+                        }else if(i==tam-1){
+                            ft[i] = 30f;
+                        }else{
+                            ft[i] = 20f;
+                        }         
+                    }
+                    tablaContenido.setWidths(ft);
+                    
+                    PdfPCell cellT1 = new PdfPCell();
+                    Paragraph parT1 = new Paragraph("Estudiante",FontFactory.getFont("arial",10,Font.BOLD));
+                    parT1.setAlignment(Element.ALIGN_CENTER);
+                    cellT1.addElement(parT1);
+                    //cellT1.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                    tablaContenido.addCell(cellT1);
+                    for(Asignatura asg : asignaturasAux){
+                        PdfPCell cellT2 = new PdfPCell();
+                        Paragraph parT2 = new Paragraph(asg.getNombre(),FontFactory.getFont("arial",10,Font.BOLD));
+                        parT2.setAlignment(Element.ALIGN_CENTER);
+                        cellT2.addElement(parT2);
+                        cellT2.setRotation(90);
+                        cellT2.setFixedHeight(100);
+                        //cellT1.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                        tablaContenido.addCell(cellT2);
+                    }
+                    
+                    PdfPCell cellT3 = new PdfPCell();
+                    Paragraph parT3 = new Paragraph("Estado",FontFactory.getFont("arial",10,Font.BOLD));
+                    parT3.setAlignment(Element.ALIGN_CENTER);
+                    cellT3.addElement(parT3);
+                    //cellT1.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                    tablaContenido.addCell(cellT3);
+                    
+                    matriculasAnio = matriculaEjb.matriculasCurso(cur);
+                    for(Matricula maticula : matriculasAnio){
+                        Estudiante est = estdudianteEjb.find(maticula.getEstudianteId().getEstudianteId());
+                        List<Asignatura> asignaturas = new ArrayList<Asignatura>();
+                        Curso curso = cursoEjb.find(maticula.getCursoId().getCursoId());
+                        Ciclo ciclo = cicloEjb.find(curso.getCicloId().getCicloId());
+                        asignaturas = asignaturaEjb.findByCiclo(ciclo);
+                        int perdidas = 0;
+                        PdfPCell cellC1 = new PdfPCell();
+                        Paragraph parC1 = new Paragraph(est.getApellido()+" "+est.getNombre(),FontFactory.getFont("arial",10,Font.NORMAL));
+                        parC1.setAlignment(Element.ALIGN_CENTER);
+                        cellC1.addElement(parC1);
+                        tablaContenido.addCell(cellC1);
+                        for(Asignatura asignatura : asignaturas){
+                            Asignaturaciclo asg = asiganturaCicloEjb.asignaturasCiclo(ciclo, asignatura);
+                            Notafinal notafinalEst = notaFinalEjb.findNotaFinalActual(asg, est, anlectivo);
+                            BigDecimal max = new BigDecimal(escala.getNotaminimaaprob());
+                            if(notafinalEst.getRecuperacion().compareTo("SI")==0){
+                                
+                                //tiene recupeacion
+                                Notafinalrecuperacion notaRecuperacion = notaFinalRecEjb.getNotaFinalRecuperar(notafinalEst);
+                                //queda sacar la nota y comprar para vere si pasa o no
+                                PdfPCell cellC2 = new PdfPCell();
+                                Paragraph parC2 = new Paragraph(""+notaRecuperacion.getValor(),FontFactory.getFont("arial",10,Font.NORMAL));
+                                parC2.setAlignment(Element.ALIGN_CENTER);
+                                cellC2.addElement(parC2);
+                                tablaContenido.addCell(cellC2);
+                                if(notaRecuperacion.getValor().compareTo(max)>=0){
+                                    //paso
+                                }else{
+                                    //no paso
+                                    perdidas ++;
+                                }
+
+                            }else{
+                                PdfPCell cellC2 = new PdfPCell();
+                                Paragraph parC2 = new Paragraph(""+notafinalEst.getValor(),FontFactory.getFont("arial",10,Font.NORMAL));
+                                parC2.setAlignment(Element.ALIGN_CENTER);
+                                cellC2.addElement(parC2);
+                                tablaContenido.addCell(cellC2);
+                                //no tiene recuperacion
+                                if(notafinalEst.getValor().compareTo(max)>=0){
+                                    //paso
+                                }else{
+                                    //no paso
+                                    perdidas ++;
+                                }
+                            }                           
+                        }
+                        if(perdidas>criterio.getMinaprob()){
+                            //perdio año
+                            PdfPCell cellC3 = new PdfPCell();
+                            Paragraph parC3 = new Paragraph("REPROBO",FontFactory.getFont("arial",10,Font.NORMAL));
+                            parC3.setAlignment(Element.ALIGN_CENTER);
+                            cellC3.addElement(parC3);
+                            tablaContenido.addCell(cellC3);
+                        }else{
+                            //gano el año
+                            PdfPCell cellC4 = new PdfPCell();
+                            Paragraph parC4 = new Paragraph("APROBO",FontFactory.getFont("arial",10,Font.NORMAL));
+                            parC4.setAlignment(Element.ALIGN_CENTER);
+                            cellC4.addElement(parC4);
+                            tablaContenido.addCell(cellC4);
+                        }
+                    }
+                    document.add(tablaContenido);
+                    document.newPage();
+                }
+            } catch (Exception e) {
+                
+            System.out.println("ENTRO 3 ");
+            System.out.println("Error " + e.getMessage());
+            }
+            document.close(); 
+            FacesContext context = FacesContext.getCurrentInstance();
+            Object response = context.getExternalContext().getResponse();
+            if (response instanceof HttpServletResponse) {
+                System.out.println("ENTRO 4 ");
+                HttpServletResponse hsr = (HttpServletResponse) response;
+                hsr.setContentType("application/pdf");
+                hsr.setHeader("Content-disposition", "attachment; filename=report.pdf"); 
+                hsr.setContentLength(baos.size());
+                try {
+                    System.out.println("ENTRO 5 ");
+                    ServletOutputStream out = hsr.getOutputStream();
+                    baos.writeTo(out);
+                    out.flush();
+                } catch (IOException ex) {
+                    System.out.println("ENTRO 6 ");
+                    System.out.println("Error:  " + ex.getMessage());
+                }
+                System.out.println("ENTRO 7 ");
+                context.responseComplete();
+            }
+        }       
+    }
+}

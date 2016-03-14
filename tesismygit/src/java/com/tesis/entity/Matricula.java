@@ -28,8 +28,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Matricula.findAll", query = "SELECT m FROM Matricula m"),
+    @NamedQuery(name = "Matricula.findEstudianteTerminadas", query = "SELECT m FROM Matricula m where m.estudianteId = :estudiante AND m.estadoMatriculaId.estadoMatriculaId = 4 ORDER BY m.cursoId.anlectivoId.anio"),
+    @NamedQuery(name = "Matricula.findMatAño", query = "SELECT m FROM Matricula m WHERE m.cursoId.anlectivoId = :anlectivoId AND (m.estadoMatriculaId.estadoMatriculaId != 2 or m.estadoMatriculaId.estadoMatriculaId != 3)"),
     @NamedQuery(name = "Matricula.findMatriculaActiva", query = "SELECT m FROM Matricula m WHERE m.estudianteId = :estudiante AND m.estadoMatriculaId.estadoMatriculaId = 1"),
-    @NamedQuery(name = "Matricula.findMatriculaByCurso", query = "SELECT m FROM Matricula m WHERE m.cursoId = :curso AND m.estadoMatriculaId.estadoMatriculaId = 1"),
+    @NamedQuery(name = "Matricula.findMatriculaByCurso", query = "SELECT m FROM Matricula m WHERE m.cursoId = :curso AND m.estadoMatriculaId.estadoMatriculaId = 1 ORDER BY m.estudianteId.apellido"),
+    @NamedQuery(name = "Matricula.findMatriculaTerminadaByCurso", query = "SELECT m FROM Matricula m WHERE m.cursoId = :curso AND m.estadoMatriculaId.estadoMatriculaId = 4 ORDER BY m.estudianteId.apellido"),
     @NamedQuery(name = "Matricula.findMatriculasAnio", query = "SELECT m FROM Matricula m WHERE m.cursoId IN (SELECT c FROM Curso c where c.anlectivoId = :anlectivoId) and m.estadoMatriculaId.estadoMatriculaId != 2 or m.estadoMatriculaId.estadoMatriculaId != 3"),
     @NamedQuery(name = "Matricula.findByMatriculaId", query = "SELECT m FROM Matricula m WHERE m.matriculaId = :matriculaId")})
 public class Matricula implements Serializable {

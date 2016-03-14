@@ -50,7 +50,13 @@
                             <h:outputText value="#{mbvRectificar.profesor.tituloProfesional}" />
                         </p:panelGrid>
 
-                                                
+                        <p:outputLabel for="selectAnio" value="Año: " />
+                        <p:selectOneMenu id="selectAnio" value="#{mbvRectificar.anlectivoselected.anlectivoId}">
+                            <p:ajax listener="#{mbvRectificar.cargarAnio}" update="frmRectificar"/>
+                            <f:selectItem itemLabel="Seleccione."/>
+                            <f:selectItems value="#{mbvRectificar.anlectivos}" var="anio" itemLabel="#{anio.anio}" itemValue="#{anio.anlectivoId}"/>
+                        </p:selectOneMenu>
+                        
                         <p:outputLabel for="selectPeriodo" value="Periodos: " />
                         <p:selectOneMenu id="selectPeriodo" value="#{mbvRectificar.periodoSelected.periodoId}">
                             <p:ajax listener="#{mbvRectificar.cargarContenido}" update="frmRectificar"/>
@@ -58,6 +64,7 @@
                             <f:selectItems value="#{mbvRectificar.periodosSelecteds}" var="periodo" itemLabel="#{periodo.numero}" itemValue="#{periodo.periodoId}"/>
                         </p:selectOneMenu>
                         
+                        <p:outputLabel for="selectContenido" value="Asignatura: " />
                         <p:selectOneMenu id="selectContenido" value="#{mbvRectificar.contenidoSelected.contenidotematicoId}" rendered="true">
                             <p:ajax listener="#{mbvRectificar.cargarBoton}" update="frmRectificar"/>
                             <f:selectItem itemLabel="Seleccione."/>

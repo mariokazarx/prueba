@@ -39,6 +39,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.AbstractList;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -379,6 +380,7 @@ public class mbvNotas implements Serializable {
 
     public void newLogro() {
         try {
+            this.logro = new Logro();
             RequestContext.getCurrentInstance().update("frmCrearLogro:panelCrearLogro");
             RequestContext.getCurrentInstance().execute("PF('dialogoCrearLogro').show()");
         } catch (Exception e) {
@@ -409,6 +411,7 @@ public class mbvNotas implements Serializable {
                 this.contenidoNotas=true;
             }
             if (contenido != null) {
+                tx.begin();
                 this.logro.setContenidotematicoId(contenido);
                 this.logroEjb.create(logro);
                 this.logro = new Logro();
@@ -428,6 +431,16 @@ public class mbvNotas implements Serializable {
                             BigDecimal auxnota = logNota.getNota().multiply(auxporcentaje);
                             nota = nota.add(auxnota);
                             //System.out.println("NOTAS***"+auxnota+"OTRA"+nota+"PORCENTJE"+p);
+                        }else{
+                            Logronota logNotaNew = new Logronota();
+                            Estadologronota estLogroNota = new Estadologronota();
+                            estLogroNota = estadologroEjb.find(1);
+                            BigDecimal notaLogro = new BigDecimal(0);
+                            logNotaNew.setLogroId(aux);
+                            logNotaNew.setEstado(estLogroNota);
+                            logNotaNew.setEstudianteId(es);
+                            logNotaNew.setNota(notaLogro);
+                            logroNotaEjb.create(logNotaNew);
                         }
                     }
                     notaEst = estudianteEjB.findNotaEst(contenido, es);
@@ -436,14 +449,17 @@ public class mbvNotas implements Serializable {
                         notaEstAux.setContenidotematicoId(contenido);
                         notaEstAux.setEstudianteId(es);
                         notaEstAux.setValor(nota);
-                        notaEstEJB.create(notaEstAux);
+                        notaEstEJB.create(notaEstAux); 
                     } else {
                         notaEst.setValor(nota);
                         notaEstEJB.edit(notaEst);
                     }
+                    actualizarNota(contenido, es);
                 }
+                tx.commit();
                 RequestContext.getCurrentInstance().execute("PF('dialogoCrearLogro').hide()");
                 updateColumns();
+                cargarContenido();
                 this.logros = logroEjb.getContenidoByAll(contenido);
             }
         } catch (Exception e) {
@@ -591,39 +607,52 @@ public class mbvNotas implements Serializable {
                 //System.out.println("NOTAS***"+auxnota+"OTRA"+nota+"PORCENTJE"+p);
             }
         }
+        Date fecha = new Date();
+        System.out.println("NoTA ESTTTTT"+nota);
+        nota = nota.setScale(1, RoundingMode.HALF_UP);
+        System.out.println("NoTA ESTTTTT22222"+nota);
         notaEst = estudianteEjB.findNotaEst(contenido, es);
         if (notaEst == null) {
             Nota notaEstAux = new Nota();
             notaEstAux.setContenidotematicoId(contenido);
             notaEstAux.setEstudianteId(es);
             notaEstAux.setValor(nota);
+            notaEstAux.setFechamodificacion(fecha);
             System.out.println("MM QUE SERA NOTA DIFERENTE"+notaEstAux.getValor());
             notaEstEJB.create(notaEstAux);
         } else {
+            notaEst.setFechamodificacion(fecha);
             notaEst.setValor(nota);
             System.out.println("MM QUE SERA NOTA DIFERENTE"+notaEst.getValor());
             notaEstEJB.edit(notaEst);
         }
+        Anlectivo aEscolarAux = anlectivoEjb.getIniciado();
         Asignaturaciclo asc = new Asignaturaciclo();
         asc = asignaturaCicloEjb.find(contenido.getAsignaturacicloId().getAsignaturacicloId());
-        notaf = notafEjb.findNotaFinalActual(asc, es);
+        notaf = notafEjb.findNotaFinalActual(asc, es,aEscolarAux);
         Anlectivo anlectivoAux = new Anlectivo();
         cursoSelected = cursoEjb.find(cursoSelected.getCursoId());
         anlectivoAux = anlectivoEjb.find(cursoSelected.getAnlectivoId().getAnlectivoId());
         //System.out.println("MM QUE SERA::::"+notaf.toString()+"aa a"+asc.toString()+"bbb"+es.toString());
         Double notaFinal = notaEstEJB.getNotaFinal(anlectivoAux, es, cursoSelected,contenido.getAsignaturacicloId());        
-        BigDecimal notaFinalDef = new BigDecimal(notaFinal);
+        BigDecimal notaFinalDef = new BigDecimal(notaFinal.toString());
         System.out.println("NOTA FINAL OK"+notaFinalDef);
+        notaFinalDef = notaFinalDef.setScale(1, RoundingMode.HALF_UP);
+        System.out.println("NOTA FINAL OK2222"+notaFinalDef);
         if(notaf == null){
             Notafinal notaFinalAux = new Notafinal();
             notaFinalAux.setAsignaturacicloId(asc);
             notaFinalAux.setEstudianteId(es);
             notaFinalAux.setProfesorId(profesor);
             notaFinalAux.setValor(notaFinalDef);
+            notaFinalAux.setFechamodificacion(fecha);
+            notaFinalAux.setAnlectivoId(anlectivoEjb.getIniciado());
             notaFinalAux.setRecuperacion("NO");
             System.out.println("NOTA FINAL OKKaKKK"+notaFinalAux.getValor());
             notafEjb.create(notaFinalAux);
         }else{
+            notaf.setFechamodificacion(fecha);
+            notaf.setProfesorId(profesor);
             notaf.setValor(notaFinalDef);
             notafEjb.edit(notaf);
         }
@@ -638,6 +667,7 @@ public class mbvNotas implements Serializable {
             RequestContext.getCurrentInstance().execute("PF('dialogoCrearLogro').hide()");
             updateColumns();
             this.contenidoNotas = false;
+            cargarContenido();
             this.logros = logroEjb.getContenidoByAll(contenido);
         } catch (Exception e) {
             System.out.println("ERROR ELIMINAR LOGRO");
@@ -716,6 +746,7 @@ public class mbvNotas implements Serializable {
                 Logronota logNota = new Logronota();
                 logNota = estudianteEjB.findNotaEstudiante(log, es);
                 System.out.println("RESPUESTA****" + logNota);
+                Date fecha = new Date();
                 if (logNota == null) {
                     Logronota logNotaNew = new Logronota();
                     Estadologronota estLogroNota = new Estadologronota();
@@ -725,10 +756,12 @@ public class mbvNotas implements Serializable {
                     logNotaNew.setEstado(estLogroNota);
                     logNotaNew.setEstudianteId(es);
                     logNotaNew.setNota(notaLogroValidacion);
+                    logNotaNew.setFechamodificacion(fecha);
                     logroNotaEjb.create(logNotaNew);
                 } else {
                     //BigDecimal notaLogro = new BigDecimal(entry.getValue().toString());
                     //System.out.println("LOGRO NOTA¨¨¨¨***" + logNota + "NEW" + notaLogro);
+                    logNota.setFechamodificacion(fecha);
                     logNota.setNota(notaLogroValidacion);
                     logroNotaEjb.edit(logNota);
 
@@ -796,7 +829,52 @@ public class mbvNotas implements Serializable {
         Anlectivo anlectivoAux = anlectivoEjb.getIniciado();
         Estudiante es = estudianteEjB.find(1);
         Double notaFinal = notaEstEJB.getNotaFinal(anlectivoAux, es, cursoSelected,contenido.getAsignaturacicloId());        
-        BigDecimal notaFinalDef = new BigDecimal(notaFinal);
+        BigDecimal notaFinalDef = new BigDecimal(notaFinal.toString());
         System.out.println("NOTA FINAL OK"+notaFinalDef);
+    }
+    public void cargarActualizar(Logro logroId){
+        try {
+            this.logro = this.logroEjb.find(logroId.getLogroId());
+            RequestContext.getCurrentInstance().update("frmEditarLogro:panelEditarLogro");
+            RequestContext.getCurrentInstance().execute("PF('dialogoEditarLogro').show()");
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+        }
+    }
+    public void actualizarLogro(){
+        try {
+            Integer suma = 0;
+            if(this.logro.getPorcentaje()<0 || this.logro.getPorcentaje()>100){
+                System.out.println("LOGRO FUERA DE RAMGO");
+                return;
+            }
+            System.out.println("contenido"+contenido+"    "+contenido.getLogroList());//traer por sql
+            for(Logro logAuxSum:logroEjb.getByContenido(contenido)){
+                System.out.println("SUMARRRR"+logAuxSum.getLogroId()+"el otro"+logro.getLogroId());
+                if(logAuxSum.getLogroId()==this.logro.getLogroId()){
+                    suma += this.logro.getPorcentaje();
+                }else{
+                    suma += logAuxSum.getPorcentaje();
+                }
+            }
+            //suma += this.logro.getPorcentaje();
+            System.out.println("SUMA FINAL"+suma);
+            if(suma>100){
+                System.out.println("SE PASA DE 100");
+                return;
+            }
+            if(suma==100){
+                this.contenidoNotas=true;
+            }
+            this.logroEjb.edit(logro);
+            RequestContext.getCurrentInstance().execute("PF('dialogoEditarLogro').hide()");
+            updateColumns();
+            cargarContenido();
+            this.logros = logroEjb.getContenidoByAll(contenido);
+
+        } catch (Exception e) {
+            System.out.println("FALLO INGRESO LOGRO");
+        }
     }
 }

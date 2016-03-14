@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:head>
+        <title>Nueva Escala</title>
+        <style type="text/css">
+            .ui-widget {
+                font-size: 90%;
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <ui:composition template="./../plantilla.xhtml">
+            <ui:define name="content">
+                <h:form id="frmReporteFinal">
+                    <h:panelGroup>
+                        <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+                            <p:outputLabel for="txtBusqueda" value="No identificacion: " />
+                            <p:inputText id="txtNombre" value="#{mbvConstanciaEstudios.identificacion}"  size="13" />
+                            <p:commandButton id="txtBusqueda" value="Buscar" ajax="true" icon="icon-search" actionListener="#{mbvConstanciaEstudios.buscar}" update="frmReporteFinal" style="margin-top:5px" />
+                        </h:panelGrid>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:panelGrid columns="2" id="estudianteTable">
+                            <f:facet name="header">
+                                <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/fotosprofesores/#{mbvConstanciaEstudios.estudiante.foto}" width="240" height="240" cache="false" alt="Sin definir" style="border-radius: 4px;box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7)"/>
+                            </f:facet>
+
+                            <h:outputText value="Identificacion:" />
+                            <h:outputText value="#{mbvConstanciaEstudios.estudiante.identificiacion}" />
+
+
+                            <h:outputText value="Nombres:" />
+                            <h:outputText value="#{mbvConstanciaEstudios.estudiante.nombre}" />
+
+                            <h:outputText value="Apellidos:" />
+                            <h:outputText value="#{mbvConstanciaEstudios.estudiante.apellido}" />
+
+                            <h:outputText value="Ciclo:" />
+                            <h:outputText value="#{mbvConstanciaEstudios.estudiante.ultimoaprobado}" />
+                        </p:panelGrid>
+                    </h:panelGroup>
+                        <p:outputPanel id="panelReporteMatriculas" rendered="true">
+                            <p:commandButton id="btnReporte" value="Confirmar" ajax="false" icon="icon-report" actionListener="#{mbvConstanciaEstudios.imprimir}" style="margin-top:5px" />
+                        </p:outputPanel>                      
+                </h:form>        
+            </ui:define>
+        </ui:composition>
+
+    </h:body>
+</html>
+

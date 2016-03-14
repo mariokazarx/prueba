@@ -4,9 +4,12 @@
  */
 package com.tesis.beans;
 
+import com.tesis.entity.Anlectivo;
 import com.tesis.entity.Asignaturaciclo;
 import com.tesis.entity.Estudiante;
 import com.tesis.entity.Notafinal;
+import com.tesis.entity.Profesor;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -31,13 +34,38 @@ public class NotafinalFacade extends AbstractFacade<Notafinal> {
     public NotafinalFacade() {
         super(Notafinal.class);
     }
-    public Notafinal findNotaFinalActual(Asignaturaciclo asc,Estudiante est){
+    public Notafinal findNotaFinalActual(Asignaturaciclo asc,Estudiante est,Anlectivo aEscolar){
         try {
             Query cq = em.createNamedQuery("Notafinal.findByActual");
             cq.setParameter("asignaturacicloId", asc);
             cq.setParameter("estudianteId", est);
+            cq.setParameter("anlectivo", aEscolar);
             if(cq.getResultList()!=null){
                 return (Notafinal)cq.getSingleResult();
+            }
+            else{
+                System.out.println("1");
+                return null;
+            }
+        } catch (PersistenceException e) {
+            System.out.println("2");
+            return null;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("3"+e.toString());
+            return null;
+        }
+        
+    }
+    public List<Notafinal> findByRecuperacion(Asignaturaciclo asc,Profesor profesor,Anlectivo aEscolar){
+        try {
+            Query cq = em.createNamedQuery("Notafinal.findDetailRecuperacion");
+            cq.setParameter("asignatura", asc);
+            cq.setParameter("profesor", profesor);
+            cq.setParameter("anlectivo", aEscolar);
+            if(cq.getResultList()!=null){
+                return cq.getResultList();
             }
             else{
                 System.out.println("1");

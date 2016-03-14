@@ -41,7 +41,9 @@
                             <p:commandButton value="Editar" icon="ui-icon-pencil" actionListener="#{mbvUsuario.cargarUsuario(item.usuarioId)}"/>
                         </p:column>
                         <p:column>
-                            <p:commandButton value="Materias" icon="ui-icon-pencil" action="#{mbvUsuario.cargarMaterias(item)}"/>
+                            <p:commandButton value="Eliminar" update=":frmRemoveUsuario:display" oncomplete="PF('usuarioDialog').show();" icon="ui-icon-search" title="View">
+                                <f:setPropertyActionListener value="#{item}" target="#{mbvUsuario.usuario}" />
+                            </p:commandButton>
                         </p:column>
                     </p:dataTable>
 
@@ -57,7 +59,20 @@
                             </p:panelGrid>
                         </p:outputPanel>
                     </p:dialog>                   
-                </h:form>        
+                </h:form> 
+               <p:confirmDialog header="Eliminar Usuario" widgetVar="usuarioDialog" appendTo="@(body)" resizable="false" id="usuarioDlg" 
+                                 showEffect="fade" hideEffect="explode" modal="true" message="Esta Seguro que desea eliminar este usuario?">
+                    <h:form id="frmRemoveUsuario">
+                        <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                            <h:outputText value="Nombre :" />
+                            <h:outputText value="#{mbvUsuario.usuario.apellidos} #{mbvUsuario.usuario.nombres}" style="font-weight:bold"/>                                               
+                            <p:commandButton id="deleteButton" actionListener="#{mbvUsuario.eliminarUsuario(mbvUsuario.usuario)}" oncomplete="PF('usuarioDialog').hide();" 
+                                             update=":frmListaUsuarios" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" value="Aceptar"/>
+                            <p:commandButton id="cancelButton" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('usuarioDialog').hide();" value="Cancelar"/>
+                        </h:panelGrid>
+                    </h:form>
+                </p:confirmDialog> 
                 <p:dialog header="Datos Usuario" widgetVar="dialogoEditarUsuario" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
                     <h:form id="frmEditarUsuario">
                         <p:outputPanel id="panelEditarUsuario" >
@@ -117,15 +132,19 @@
                                     <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
                                         <h:outputText value="Consultar: " />
                                         <p:selectBooleanButton id="chkConsultar" value="#{mbvUsuario.roleActual.consultar}" onLabel="Yes" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:60px">
-                                            <p:ajax update="tablaperfil" listener="#{mbvUsuario.checkPermiso}" />
+                                            <p:ajax update="tablaperfil chkPermisos" listener="#{mbvUsuario.checkPermiso}" />
                                         </p:selectBooleanButton>
                                         <h:outputText value="Edita: " />
                                         <p:selectBooleanButton id="chkEsditar" value="#{mbvUsuario.roleActual.editar}" onLabel="Yes" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:60px">
-                                            <p:ajax update="tablaperfil" listener="#{mbvUsuario.checkPermiso}" />
+                                            <p:ajax update="tablaperfil chkPermisos" listener="#{mbvUsuario.checkPermiso}" />
                                         </p:selectBooleanButton> 
                                         <h:outputText value="Adicionar: " />
                                         <p:selectBooleanButton id="chkAdicionar" value="#{mbvUsuario.roleActual.agregar}" onLabel="Yes" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:60px">
-                                            <p:ajax update="tablaperfil" listener="#{mbvUsuario.checkPermiso}" />
+                                            <p:ajax update="tablaperfil chkPermisos" listener="#{mbvUsuario.checkPermiso}" />
+                                        </p:selectBooleanButton>
+                                        <h:outputText value="Eliminar: " />
+                                        <p:selectBooleanButton id="chkEliminar" value="#{mbvUsuario.roleActual.eliminar}" onLabel="Si" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:60px">
+                                            <p:ajax update="tablaperfil chkPermisos" listener="#{mbvUsuario.checkPermiso}" />
                                         </p:selectBooleanButton>
                                     </h:panelGrid>
                                 </h:panelGroup>
@@ -148,6 +167,10 @@
 
                                 <p:column headerText="Adicionar">
                                     <h:outputText value="#{rol.agregar}" />
+                                </p:column>
+                                
+                                <p:column headerText="Eliminar">
+                                    <h:outputText value="#{rol.eliminar}" />
                                 </p:column>
                             </p:dataTable>
                         </p:outputPanel>

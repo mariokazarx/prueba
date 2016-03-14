@@ -10,6 +10,7 @@
         <ui:composition template="./../plantilla.xhtml">
             <ui:define name="content">
                 <h:form id="frmPeriodos">
+                    <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
                     <p:outputLabel for="selectAnio" value="Año:" />
                     <p:selectOneMenu id="selectAnio" value="#{mbvPeriodo.anlectivoselected.anlectivoId}">
                         <p:ajax listener="#{mbvPeriodo.cargarAnio}" update="tablaListaPeriodos"/>
@@ -56,7 +57,7 @@
                     
                     <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
  
-                    <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                    <p:dialog widgetVar="statusDialog" modal="true" appendTo="@(body)" draggable="false" closable="false" resizable="false" showHeader="false">
                         <p:graphicImage library="imagenes" name="load.gif"/>
                     </p:dialog>
                     
@@ -65,7 +66,7 @@
                                  showEffect="fade" hideEffect="explode" modal="true" message="Esta Seguro que desea eliminar esta periodo?">
                     <h:form id="frmRemovePeriodo">
                         <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
-                            <h:outputText value="Name:" />
+                            <h:outputText value="Numero:" />
                             <h:outputText value="#{mbvPeriodo.periodo.numero}" style="font-weight:bold"/>                                               
                             <p:commandButton id="deleteButton" actionListener="#{mbvPeriodo.eliminarPeriodo(mbvPeriodo.periodo)}" oncomplete="PF('removePeriodo').hide();" 
                                              update=":frmPeriodos" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" value="Aceptar"/>

@@ -154,8 +154,9 @@ public class mbvCurso implements Serializable {
             this.curso.setAnlectivoId(anlectivoSelected);
             this.curso.setCicloId(cicloselected);
             this.cursoEjb.create(curso);
+            RequestContext.getCurrentInstance().closeDialog(this);
             FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Criterio Evaluacion creado Satisfactoriamente", ""));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Curso creado Satisfactoriamente", ""));
             inicioPagina();
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error fatal:", "Por favor contacte con su administrador " + ex.getMessage()));
@@ -208,8 +209,12 @@ public class mbvCurso implements Serializable {
         try {
             this.curso = this.cursoEjb.find(cursoId);
             this.anlectivoSelected = this.anlectivoEJB.find(this.curso.getAnlectivoId().getAnlectivoId());
-            RequestContext.getCurrentInstance().update("frmEditarCurso:panelEditarCurso");
-            RequestContext.getCurrentInstance().execute("PF('dialogoEditarCurso').show()");
+            if(anlectivoSelected.getTerminado()){
+                RequestContext.getCurrentInstance().execute("PF('enUso').show()"); 
+            }else{
+                RequestContext.getCurrentInstance().update("frmEditarCurso:panelEditarCurso");
+                RequestContext.getCurrentInstance().execute("PF('dialogoEditarCurso').show()");
+            }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));

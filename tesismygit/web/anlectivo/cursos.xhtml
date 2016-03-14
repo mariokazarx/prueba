@@ -66,7 +66,7 @@
                     <h:form id="frmRemoveCurso">
                         <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
 
-                            <h:outputText value="Name:" />
+                            <h:outputText value="Nombre:" />
                             <h:outputText value="#{mbvCurso.curso.nombre}" style="font-weight:bold"/>                                               
                             <p:commandButton id="deleteButton" actionListener="#{mbvCurso.eliminarCurso(mbvCurso.curso)}" oncomplete="PF('removecurso').hide();" 
                                              update=":frmListaCursos" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" value="Aceptar"/>
@@ -100,7 +100,7 @@
                                 </p:selectOneMenu>
                                 <p:message for="sltCiclos"/>
                                 <h:panelGroup></h:panelGroup>
-                                <p:commandButton value="Registrar Escala" actionListener="#{mbvcriterioevaluacion.actualizar}" ajax="true" update=":frmListaCursos" />
+                                <p:commandButton value="Editar Curso" actionListener="#{mbvcriterioevaluacion.actualizar}" ajax="true" update=":frmListaCursos" />
                             </h:panelGrid> 
                         </p:outputPanel>
                     </h:form>
@@ -111,6 +111,14 @@
                     <h:form id="frmNoiniciado">
                         <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
                             <p:commandButton id="cancelButton" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('añoNoIniciado').hide();" value="OK"/>
+                        </h:panelGrid>
+                    </h:form>
+                </p:confirmDialog>
+                <p:confirmDialog header="Advertencia" widgetVar="enUso" appendTo="@(body)" resizable="false" id="digEnUso"
+                                 showEffect="fade" hideEffect="explode" modal="true" message="El año escolar de este curso ya termino, no se puede editar">
+                    <h:form id="frmEnUso">
+                        <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+                            <p:commandButton id="cancelButton" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('enUso').hide();" value="OK"/>
                         </h:panelGrid>
                     </h:form>
                 </p:confirmDialog>

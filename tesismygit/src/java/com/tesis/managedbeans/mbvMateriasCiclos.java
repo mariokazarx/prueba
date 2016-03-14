@@ -4,6 +4,7 @@
  */
 package com.tesis.managedbeans;
 
+import com.tesis.beans.AnlectivoFacade;
 import com.tesis.beans.AsignaturaFacade;
 import com.tesis.beans.AsignaturacicloFacade;
 import com.tesis.beans.CicloFacade;
@@ -40,6 +41,7 @@ public class mbvMateriasCiclos implements Serializable{
     private Asignaturaciclo asigCiclo;
     private Asignatura asg;
     private boolean banAsig;
+    private Ciclo cicloTabla;
     @EJB
     private ConfiguracionFacade configuracionEJB;
     @EJB
@@ -48,8 +50,18 @@ public class mbvMateriasCiclos implements Serializable{
     private AsignaturaFacade asignaturaEJB;
     @EJB
     private AsignaturacicloFacade asigCicloaEJB;
+    @EJB
+    private AnlectivoFacade anlectivoEJB;
     
     public mbvMateriasCiclos() {
+    }
+
+    public Ciclo getCicloTabla() {
+        return cicloTabla;
+    }
+
+    public void setCicloTabla(Ciclo cicloTabla) {
+        this.cicloTabla = cicloTabla;
     }
 
     public List<Asignatura> getAsignturasSelecionadas() {
@@ -185,6 +197,12 @@ public class mbvMateriasCiclos implements Serializable{
             if(this.ciclosSlected.isEmpty()==true){
                 this.banAsig=false;
             }
+            Configuracion auxcfg = configuracionEJB.find(configuracionSelected.getConfiguracionId());
+            if(anlectivoEJB.configuracionEnUso(auxcfg)){
+                //en uso
+            }else{
+                //no en uso
+            }
         } catch (Exception e) {
             this.banAsig=false;
         }    
@@ -192,6 +210,7 @@ public class mbvMateriasCiclos implements Serializable{
     public void cargarAsignaturas(){
         try {
             System.out.println(cicloselected.getCicloId());
+            cicloTabla = cicloEJB.find(cicloselected.getCicloId());
             this.banAsig = true;
             this.configuraciones = this.configuracionEJB.findAll();
             this.asignturasdisponibles = this.asignaturaEJB.findByConfiguracion(configuracionSelected, cicloselected);

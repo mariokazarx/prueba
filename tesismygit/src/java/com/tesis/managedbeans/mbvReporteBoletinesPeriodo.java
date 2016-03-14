@@ -4,6 +4,17 @@
  */
 package com.tesis.managedbeans;
 
+import com.lowagie.text.Document;
+import com.lowagie.text.Element;
+import com.lowagie.text.Font;
+import com.lowagie.text.FontFactory;
+import com.lowagie.text.Image;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.Rectangle;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
 import com.tesis.beans.AnlectivoFacade;
 import com.tesis.beans.AprobacionFacade;
 import com.tesis.beans.CicloFacade;
@@ -29,15 +40,22 @@ import com.tesis.entity.Logronota;
 import com.tesis.entity.Matricula;
 import com.tesis.entity.Nota;
 import com.tesis.entity.Periodo;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIComponent;
@@ -57,12 +75,19 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
  */
 @ManagedBean
 @ViewScoped
-public class mbvReporteBoletinesPeriodo {
+public class mbvReporteBoletinesPeriodo implements Serializable{
     
     private List<Curso> cursos;
     private Curso cursoSelected;
     //private List<MatriculaReporte> reporte;
     private List<ReporteBoletin> reporte;
+    private boolean mostrarPrincipal;
+    private boolean mostrarPeriodos;
+    private Periodo periodoSelected;
+    private List<Periodo> periodos;
+    private boolean mostrarCursos;
+    private boolean mostrarBoton;
+    
     @EJB
     private CicloFacade cicloEjb;
     @EJB
@@ -93,6 +118,54 @@ public class mbvReporteBoletinesPeriodo {
     public mbvReporteBoletinesPeriodo() {
     }
 
+    public boolean isMostrarPrincipal() {
+        return mostrarPrincipal;
+    }
+
+    public void setMostrarPrincipal(boolean mostrarPrincipal) {
+        this.mostrarPrincipal = mostrarPrincipal;
+    }
+
+    public boolean isMostrarPeriodos() {
+        return mostrarPeriodos;
+    }
+
+    public void setMostrarPeriodos(boolean mostrarPeriodos) {
+        this.mostrarPeriodos = mostrarPeriodos;
+    }
+
+    public Periodo getPeriodoSelected() {
+        return periodoSelected;
+    }
+
+    public void setPeriodoSelected(Periodo periodoSelected) {
+        this.periodoSelected = periodoSelected;
+    }
+
+    public List<Periodo> getPeriodos() {
+        return periodos;
+    }
+
+    public void setPeriodos(List<Periodo> periodos) {
+        this.periodos = periodos;
+    }
+
+    public boolean isMostrarCursos() {
+        return mostrarCursos;
+    }
+
+    public void setMostrarCursos(boolean mostrarCursos) {
+        this.mostrarCursos = mostrarCursos;
+    }
+
+    public boolean isMostrarBoton() {
+        return mostrarBoton;
+    }
+
+    public void setMostrarBoton(boolean mostrarBoton) {
+        this.mostrarBoton = mostrarBoton;
+    }
+
     public List<Curso> getCursos() {
         return cursos;
     }
@@ -111,21 +184,27 @@ public class mbvReporteBoletinesPeriodo {
     
     @PostConstruct()
     public void inicio() {
-        //verificar permisos
-        //verificar año iniciado
-        //verificar cursos
         this.cursos = new ArrayList<Curso>();
         this.reporte = new ArrayList<ReporteBoletin>();
+        this.periodos = new ArrayList<Periodo>();
+        this.mostrarBoton = false;
+        this.mostrarCursos = false;
+        this.mostrarPeriodos = false;
+        this.mostrarPrincipal = false;
         this.cursoSelected = new Curso();
+        this.periodoSelected = new Periodo();
         this.cursos.clear();
         Anlectivo auxEscolar = aEscolarEjb.getIniciado();
         if(auxEscolar!=null){
             //hay año iniciado
-            if(auxEscolar.getCursoList().isEmpty()){
+            this.periodos = periodoEjb.getPeriodosByAnioTerminados(auxEscolar);
+            if(this.periodos.isEmpty()){
                 //no hay cursos activos
             }else{
-                this.cursos = auxEscolar.getCursoList();
+                this.mostrarPrincipal = true;
             }
+        }else{
+            
         }
     }
     public void init() throws JRException{
@@ -152,7 +231,7 @@ public class mbvReporteBoletinesPeriodo {
             Curso cur = cursoEjb.find(cursoSelected.getCursoId());
             List<Contenidotematico> contenidos = new ArrayList<Contenidotematico>();
             List<Estudiante> estudiantes = new ArrayList<Estudiante>();
-            Periodo periodo = periodoEjb.find(15);
+            Periodo periodo = periodoEjb.find(1);
             contenidos = contenidoEJb.getByPeriodoCurso(periodo, cur);
             estudiantes = estudianteEjB.findByCurso(cursoSelected);
             for(Estudiante est:estudiantes){
@@ -196,5 +275,231 @@ public class mbvReporteBoletinesPeriodo {
             nota = notaEst.getValor();
         }
         return nota.setScale(1, RoundingMode.HALF_EVEN);
+    }
+    public void imprimir() {
+        Periodo periodo = periodoEjb.find(periodoSelected.getPeriodoId());
+        Curso cur = cursoEjb.find(cursoSelected.getCursoId());
+        List<Contenidotematico> contenidos = new ArrayList<Contenidotematico>();
+        List<Estudiante> estudiantes = new ArrayList<Estudiante>();
+        contenidos = contenidoEJb.getByPeriodoCurso(periodo, cur);
+        estudiantes = estudianteEjB.findByCurso(cursoSelected);
+        Document document = new Document(PageSize.LETTER);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try {
+            PdfWriter.getInstance(document, baos);
+            document.open();
+            for(Estudiante est:estudiantes){
+                URL url = FacesContext.getCurrentInstance().getExternalContext().getResource("/escudo.png");
+                Image image = Image.getInstance(url);
+                image.scaleAbsolute(100,100);        
+                PdfPTable table2 = new PdfPTable(2);
+                table2.setWidthPercentage(100);
+                table2.setWidths(new int[]{1, 4});
+                PdfPCell cell = new PdfPCell(image, true);
+                cell.setBorder(Rectangle.NO_BORDER);
+                cell.setRowspan(2);
+                table2.addCell(cell);
+                PdfPCell cell2 = new PdfPCell();
+                Paragraph par = new Paragraph("CENTRO EDUCATIVO  “ANTONIO RICAURTE” ",FontFactory.getFont("arial",14,Font.BOLD));
+                par.setAlignment(Element.ALIGN_CENTER);
+                cell2.addElement(par);
+                cell2.setVerticalAlignment(Element.ALIGN_CENTER);
+                cell2.setBorder(Rectangle.NO_BORDER);
+                table2.addCell(cell2);
+                PdfPCell cell3 = new PdfPCell();
+                Paragraph par3 = new Paragraph("Licencia de funcionamiento 366 de Abril 4 de 2001, Resolución 1861  Junio 30 de 2005 de  la Secretaría "
+                        + "de Educación y Cultura Departamental  CODIGO SNP ICFES 114454 Código DANE 352612001093 "
+                        ,FontFactory.getFont("arial",9,Font.NORMAL));
+                par3.setAlignment(Element.ALIGN_CENTER);
+                cell3.addElement(par3);
+                cell3.setVerticalAlignment(Element.ALIGN_CENTER);
+                cell3.setBorder(Rectangle.NO_BORDER);
+                table2.addCell(cell3);
+                document.add(table2);
+                // datos estudiante
+                Paragraph parEstudiante = new Paragraph("Boletin Periodo"+periodo.getNumero()+" Año escolar "+cur.getAnlectivoId().getAnio()
+                    + " "+cur.getNombre()
+                    ,FontFactory.getFont("arial",12,Font.NORMAL));
+                document.add(parEstudiante);
+                Paragraph parEstudiante2 = new Paragraph("Estudiante: "+ est.getApellido() + " " +est.getNombre()
+                    ,FontFactory.getFont("arial",12,Font.NORMAL));
+                document.add(parEstudiante2);
+                document.add(new Paragraph("\n"));
+                PdfPTable table = new PdfPTable(4);
+                table.setWidthPercentage(100);
+                table.setWidths(new int[]{100,8,8,8});
+                for(Contenidotematico cont:contenidos){
+                    PdfPCell cellProfesor = new PdfPCell();
+                    cellProfesor.setColspan(4);
+                    Paragraph parProfesor = new Paragraph("Profesor: "+cont.getProfesorId().getApellido()+" "+cont.getProfesorId().getNombre(),FontFactory.getFont("arial",12,Font.NORMAL));
+                    //parProfesor.setAlignment(Element.ALIGN_CENTER);
+                    cellProfesor.addElement(parProfesor);
+                    cellProfesor.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                    table.addCell(cellProfesor);
+                    PdfPCell cellAsignatura = new PdfPCell();
+                    cellAsignatura.setColspan(4);
+                    Paragraph parAsignatura = new Paragraph("Asigantura: "+cont.getAsignaturacicloId().getAsignaturaId().getNombre(),FontFactory.getFont("arial",12,Font.NORMAL));
+                    //parAsignatura.setAlignment(Element.ALIGN_CENTER);
+                    cellAsignatura.addElement(parAsignatura);
+                    cellAsignatura.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                    table.addCell(cellAsignatura);
+                    PdfPCell cellTituloLogro = new PdfPCell();
+                    Paragraph partituloLogro= new Paragraph("Logro",FontFactory.getFont("arial",12));
+                    partituloLogro.setAlignment(Element.ALIGN_CENTER);
+                    cellTituloLogro.addElement(partituloLogro);
+                    //cellTituloLogro.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                    table.addCell(cellTituloLogro);
+                    PdfPCell cellTituloPorcentaje = new PdfPCell();
+                    Paragraph partituloPorcentaje = new Paragraph("%",FontFactory.getFont("arial",12));
+                    partituloPorcentaje.setAlignment(Element.ALIGN_CENTER);
+                    cellTituloPorcentaje.addElement(partituloPorcentaje);
+                    //cellTituloPorcentaje.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                    table.addCell(cellTituloPorcentaje);
+                    PdfPCell cellTituloNotaL = new PdfPCell();
+                    Paragraph partituloNotaL = new Paragraph("Nota Logro",FontFactory.getFont("arial",12));
+                    partituloNotaL.setAlignment(Element.ALIGN_CENTER);
+                    cellTituloNotaL.addElement(partituloNotaL);
+                    //cellTituloNotaL.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                    table.addCell(cellTituloNotaL);
+                    PdfPCell cellTituloNotaF = new PdfPCell();
+                    Paragraph partituloNotaF = new Paragraph("Nota Final",FontFactory.getFont("arial",12));
+                    partituloNotaF.setAlignment(Element.ALIGN_CENTER);
+                    cellTituloNotaF.addElement(partituloNotaF);
+                    //cellTituloNotaF.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                    table.addCell(cellTituloNotaF);
+                    List<Logro> logrosaux = logroEjb.getContenidoByAll(cont);
+                    boolean ban= false;
+                    String observacion = "";
+                    for (Logro aux : logrosaux) {
+                        Logronota logN = logroNotaEjb.getByLogroestudiante(est, aux);
+                        PdfPCell cellDescripcion = new PdfPCell();
+                        Paragraph parDescripcion = new Paragraph(aux.getTitulo()+"\n"+aux.getDescripcion(),FontFactory.getFont("arial",12));
+                        cellDescripcion.addElement(parDescripcion);
+                        cellDescripcion.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                        table.addCell(cellDescripcion);
+                        String porcentaje = Integer.toString(aux.getPorcentaje());
+                        PdfPCell cellPorcentaje = new PdfPCell();
+                        Paragraph parPorcentaje = new Paragraph(porcentaje,FontFactory.getFont("arial",12));
+                        parPorcentaje.setAlignment(Element.ALIGN_CENTER);
+                        cellPorcentaje.addElement(parPorcentaje);
+                        cellPorcentaje.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                        table.addCell(cellPorcentaje);
+                        String notaLogro = logN.getNota().toString();
+                        PdfPCell cellNotalog = new PdfPCell();
+                        Paragraph parNotalog = new Paragraph(notaLogro,FontFactory.getFont("arial",12));
+                        parNotalog.setAlignment(Element.ALIGN_CENTER);
+                        cellNotalog.addElement(parNotalog);
+                        cellNotalog.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                        table.addCell(cellNotalog);
+                        if(ban==false){
+                            ban = true;
+                            String notaF = getNotaEst(est,cont).toString();
+                            PdfPCell cellNota = new PdfPCell();
+                            cellNota.setRowspan(logrosaux.size());
+                            Paragraph parNotaF = new Paragraph(notaF,FontFactory.getFont("arial",12));
+                            parNotaF.setAlignment(Element.ALIGN_CENTER);
+                            cellNota.addElement(parNotaF);
+                            cellNota.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                            table.addCell(cellNota);
+                        }
+                        
+                    }
+                    
+                    Nota notaEst = new Nota();
+                    notaEst = estudianteEjB.findNotaEst(cont, est);
+                    if (notaEst != null) {
+                        observacion = notaEst.getObservaciones()==null?"":notaEst.getObservaciones();
+                    }
+                    
+                    PdfPCell cellObservacion = new PdfPCell();
+                    cellObservacion.setColspan(4);
+                    Paragraph parObservacion = new Paragraph("OBSERVACIONES: "+observacion,FontFactory.getFont("arial",12,Font.NORMAL));
+                    //parObservacion.setAlignment(Element.ALIGN_CENTER);
+                    cellObservacion.addElement(parObservacion);
+                    cellObservacion.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                    table.addCell(cellObservacion);
+                    PdfPCell cellBlanca = new PdfPCell();
+                    cellBlanca.setBorder(Rectangle.NO_BORDER);
+                    cellBlanca.setColspan(4);
+                    cellBlanca.setPaddingBottom(15);
+                    table.addCell(cellBlanca);
+                    
+                }
+                document.add(table);
+                document.newPage();
+            }
+        } catch (Exception e) {
+            System.out.println("ENTRO 3 ");
+            System.out.println("Error " + e.getMessage());
+        }
+        document.close(); 
+        FacesContext context = FacesContext.getCurrentInstance();
+        Object response = context.getExternalContext().getResponse();
+        if (response instanceof HttpServletResponse) {
+            System.out.println("ENTRO 4 ");
+            HttpServletResponse hsr = (HttpServletResponse) response;
+            hsr.setContentType("application/pdf");
+            hsr.setHeader("Content-disposition", "attachment; filename=report.pdf"); 
+            hsr.setContentLength(baos.size());
+            try {
+                System.out.println("ENTRO 5 ");
+                ServletOutputStream out = hsr.getOutputStream();
+                baos.writeTo(out);
+                out.flush();
+            } catch (IOException ex) {
+                System.out.println("ENTRO 6 ");
+                System.out.println("Error:  " + ex.getMessage());
+            }
+            System.out.println("ENTRO 7 ");
+            context.responseComplete();
+        }
+   }
+    public void initRender(){
+        Anlectivo auxEscolar = aEscolarEjb.getIniciado();
+        System.out.println("ENTRO 1 ");
+        //this.periodos = new ArrayList<Periodo>();
+        if(auxEscolar!=null){
+            System.out.println("ENTRO 2 ");
+            //hay año iniciado
+            this.periodos = periodoEjb.getPeriodosByAnioTerminados(auxEscolar);
+            if(this.periodos.isEmpty()){
+                System.out.println("ENTRO 3 ");
+                this.mostrarPrincipal = false;
+                FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Aun no hay periodos terminados"));
+            }else{
+                System.out.println("ENTRO 4 ");
+                this.mostrarPrincipal = true;
+                this.mostrarPeriodos = true;
+            }
+            if(auxEscolar.getCursoList().isEmpty()){
+                this.mostrarPrincipal = false;
+                FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Aun no hay cursos para el año escolar"));
+            }
+        }else{
+            this.mostrarPrincipal = false;
+            FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Aun no ha iniciado el año escolar"));
+        }
+    }
+    public void cargarPeriodo(){
+        if(periodoSelected.getPeriodoId()!=null){
+            this.cursos = aEscolarEjb.getIniciado().getCursoList();
+            cursoSelected = new Curso();
+            this.mostrarCursos = true;
+            this.mostrarBoton = false;
+        }else{
+            cursoSelected = new Curso();
+            this.mostrarBoton = false;
+            this.mostrarCursos = false;
+        }
+    }
+    public void seleccionCurso(){
+        if(cursoSelected.getCursoId()!=null){
+            this.mostrarBoton = true;
+        }else{
+            this.mostrarBoton = false;
+        }
     }
 }

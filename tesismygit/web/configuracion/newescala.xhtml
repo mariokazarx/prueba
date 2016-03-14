@@ -32,7 +32,7 @@
                 <p:message for="txtMax" />
                 <p:outputLabel for="txtMinaprob" value="Nota Minima Aprobacion:" />
                 <p:inputText id="txtMinaprob" value="#{mbvEscala.escala.notaminimaaprob}"/>
-                <p:message for="txtMinaprob"/>
+                <p:message for="txtMinaprob" id="msgPrueba"/>
                 <h:panelGroup></h:panelGroup>
                 <p:commandButton value="Registrar Escala" actionListener="#{mbvEscala.insertar}" onclick="#{mbvEscala.setMensage(false)}" ajax="true" update="frmescala" />
             </h:panelGrid> 

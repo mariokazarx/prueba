@@ -37,6 +37,11 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Anlectivo.findAll", query = "SELECT a FROM Anlectivo a"),
+    @NamedQuery(name = "Anlectivo.findAnlectivoUtil", query = "SELECT a FROM Anlectivo a WHERE a.estadoAniolectivoId.estadoAniolectivoId = 2 OR a.estadoAniolectivoId.estadoAniolectivoId = 5"),
+    @NamedQuery(name = "Anlectivo.findAnlectivosfinalizados", query = "SELECT a FROM Anlectivo a WHERE a.estadoAniolectivoId.estadoAniolectivoId = 3 OR a.estadoAniolectivoId.estadoAniolectivoId = 5"),
+    @NamedQuery(name = "Anlectivo.escalaEnUso", query = "SELECT COUNT(a) FROM Anlectivo a WHERE a.configuracionId.escalaId = :escala AND (a.estadoAniolectivoId.estadoAniolectivoId = 2 OR a.estadoAniolectivoId.estadoAniolectivoId = 3 OR a.estadoAniolectivoId.estadoAniolectivoId = 5)"),
+    @NamedQuery(name = "Anlectivo.criterioEnUso", query = "SELECT COUNT(a) FROM Anlectivo a WHERE a.configuracionId.criterioevaluacionId = :criterio AND (a.estadoAniolectivoId.estadoAniolectivoId = 2 OR a.estadoAniolectivoId.estadoAniolectivoId = 3 OR a.estadoAniolectivoId.estadoAniolectivoId = 5)"),
+    @NamedQuery(name = "Anlectivo.configuracionEnUso", query = "SELECT COUNT(a) FROM Anlectivo a WHERE a.configuracionId = :configuracion AND (a.estadoAniolectivoId.estadoAniolectivoId = 2 OR a.estadoAniolectivoId.estadoAniolectivoId = 3 OR a.estadoAniolectivoId.estadoAniolectivoId = 5)"),
     @NamedQuery(name = "Anlectivo.findByAnlectivoId", query = "SELECT a FROM Anlectivo a WHERE a.anlectivoId = :anlectivoId"),
     @NamedQuery(name = "Anlectivo.findByEstadocopiado", query = "SELECT a FROM Anlectivo a WHERE a.estadocopiado = :estadocopiado"),
     @NamedQuery(name = "Anlectivo.findByNoPeriodos", query = "SELECT a FROM Anlectivo a WHERE a.noPeriodos = :noPeriodos"),

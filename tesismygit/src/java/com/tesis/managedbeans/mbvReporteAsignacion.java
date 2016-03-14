@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -50,8 +51,18 @@ public class mbvReporteAsignacion {
      * Creates a new instance of mbvReporteAsignacion
      */
     private List<Curso> cursos;
+    private List<Curso> cursosReporte;
     private Curso cursoSelected;
     private List<ReporteAsignacionAcademica> reporte;
+    private boolean mostrarPeriodos;
+    private boolean mostrarCursos;
+    private String seleccion;
+    private List<Periodo> periodos;
+    private Periodo periodoSelected;
+    private Anlectivo aEscolar;
+    private boolean mostrarPrincipal;
+    private boolean mostrarOpciones;
+    private boolean mostrarBoton;
     @EJB
     private CicloFacade cicloEjb;
     @EJB
@@ -74,41 +85,150 @@ public class mbvReporteAsignacion {
     
     public mbvReporteAsignacion() {
     }
+
+    public boolean isMostrarPrincipal() {
+        return mostrarPrincipal;
+    }
+
+    public void setMostrarPrincipal(boolean mostrarPrincipal) {
+        this.mostrarPrincipal = mostrarPrincipal;
+    }
+
+    public boolean isMostrarOpciones() {
+        return mostrarOpciones;
+    }
+
+    public void setMostrarOpciones(boolean mostrarOpciones) {
+        this.mostrarOpciones = mostrarOpciones;
+    }
+
+    public boolean isMostrarBoton() {
+        return mostrarBoton;
+    }
+
+    public void setMostrarBoton(boolean mostrarBoton) {
+        this.mostrarBoton = mostrarBoton;
+    }
+
+    public List<Curso> getCursos() {
+        return cursos;
+    }
+
+    public void setCursos(List<Curso> cursos) {
+        this.cursos = cursos;
+    }
+
+    public Curso getCursoSelected() {
+        return cursoSelected;
+    }
+
+    public void setCursoSelected(Curso cursoSelected) {
+        this.cursoSelected = cursoSelected;
+    }
+
+    public boolean isMostrarPeriodos() {
+        return mostrarPeriodos;
+    }
+
+    public void setMostrarPeriodos(boolean mostrarPeriodos) {
+        this.mostrarPeriodos = mostrarPeriodos;
+    }
+
+    public boolean isMostrarCursos() {
+        return mostrarCursos;
+    }
+
+    public void setMostrarCursos(boolean mostrarCursos) {
+        this.mostrarCursos = mostrarCursos;
+    }
+
+    public String getSeleccion() {
+        return seleccion;
+    }
+
+    public void setSeleccion(String seleccion) {
+        this.seleccion = seleccion;
+    }
+
+    public List<Periodo> getPeriodos() {
+        return periodos;
+    }
+
+    public void setPeriodos(List<Periodo> periodos) {
+        this.periodos = periodos;
+    }
+
+    public Periodo getPeriodoSelected() {
+        return periodoSelected;
+    }
+
+    public void setPeriodoSelected(Periodo periodoSelected) {
+        this.periodoSelected = periodoSelected;
+    }
+
+    public PeriodoFacade getPeriodoEJb() {
+        return periodoEJb;
+    }
+
+    public void setPeriodoEJb(PeriodoFacade periodoEJb) {
+        this.periodoEJb = periodoEJb;
+    }
+    
     @PostConstruct()
     public void inicio() {
         //verificar permisos
         //verificar año iniciado
         //verificar cursos
+        this.seleccion = "";
         this.cursos = new ArrayList<Curso>();
+        this.cursosReporte = new ArrayList<Curso>();
+        this.mostrarCursos = false;
+        this.mostrarPeriodos = false;
+        this.mostrarBoton = false;
+        this.mostrarOpciones = false;
+        this.periodos = new ArrayList<Periodo>();
         this.reporte = new ArrayList<ReporteAsignacionAcademica>();
         this.cursoSelected = new Curso();
+        this.periodoSelected = new Periodo();
         this.cursos.clear();
-        Anlectivo auxEscolar = aEscolarEjb.getIniciado();
-        if(auxEscolar!=null){
+        this.aEscolar = aEscolarEjb.getIniciado();
+        if(aEscolar!=null){
             //hay año iniciado
-            if(auxEscolar.getCursoList().isEmpty()){
-                //no hay cursos activos
+            if(aEscolar.getPeriodoList().isEmpty()){
+                this.mostrarPrincipal = false;
+                //no hay periodos
             }else{
-                this.cursos = auxEscolar.getCursoList();
+                this.periodos = periodoEJb.getPeriodosByAnio(aEscolar);
+                this.mostrarPeriodos = true;
+                this.mostrarPrincipal = true;
+                //this.cursos = aEscolar.getCursoList();
             }
+        }else{
+            this.mostrarPrincipal = false;
         }
     }
     public void generar(){
         try {
-            Curso curReporte = cursoEjb.find(9);
-            Periodo periodo = periodoEJb.find(17);
-            List<Contenidotematico> con = new ArrayList<Contenidotematico>();
-            ReporteAsignacionAcademica mtrReporte = new ReporteAsignacionAcademica();
-            mtrReporte.setAño(aEscolarEjb.getIniciado().getAnio());
-            mtrReporte.setCurso(curReporte.getNombre());
-            mtrReporte.setNumero(periodo.getNumero());
-            System.out.println("MMMMMM"+mtrReporte.getNumero()+"   "+mtrReporte.getAño()+"    "+cursoSelected+"   "+matriculaEjb.matriculasCurso(cursoSelected));
-            for(Contenidotematico conenido : contenidoEjb.getByPeriodoCurso(periodo,curReporte)){
-                System.out.println("entro for"+conenido.getAsignaturacicloId().getAsignaturaId().getNombre());
-                con.add(conenido);
+            if (cursoSelected != null && this.seleccion.compareTo("curso")==0) {
+                cursoSelected = cursoEjb.find(cursoSelected.getCursoId());
+                this.cursosReporte.add(cursoSelected);
             }
-            mtrReporte.setContenidos(con);
-            reporte.add(mtrReporte);
+            reporte.clear();
+            for(Curso curReporte:cursosReporte){
+                Periodo periodo = periodoSelected;
+                List<Contenidotematico> con = new ArrayList<Contenidotematico>();
+                ReporteAsignacionAcademica mtrReporte = new ReporteAsignacionAcademica();
+                mtrReporte.setAño(aEscolarEjb.getIniciado().getAnio());
+                mtrReporte.setCurso(curReporte.getNombre());
+                mtrReporte.setNumero(periodo.getNumero());
+                System.out.println("MMMMMM"+mtrReporte.getNumero()+"   "+mtrReporte.getAño()+"    "+cursoSelected+"   "+matriculaEjb.matriculasCurso(cursoSelected));
+                for(Contenidotematico conenido : contenidoEjb.getByPeriodoCurso(periodo,curReporte)){
+                    System.out.println("entro for"+conenido.getAsignaturacicloId().getAsignaturaId().getNombre());
+                    con.add(conenido);
+                }
+                mtrReporte.setContenidos(con);
+                reporte.add(mtrReporte);
+            }
             init();
             
         } catch (Exception e) {
@@ -134,4 +254,80 @@ public class mbvReporteAsignacion {
         JasperExportManager.exportReportToPdfStream(jasperPrint, servletOutputStream);  
         FacesContext.getCurrentInstance().responseComplete(); 
     } 
+    public void cargarPeriodo(){
+        if(this.periodoSelected.getPeriodoId()!=null){
+            this.periodoSelected = periodoEJb.find(periodoSelected.getPeriodoId());
+            //this.cursos.clear();
+            this.mostrarOpciones = true;
+            this.mostrarCursos = false;
+            this.cursoSelected = new Curso();
+            if(this.seleccion.compareTo("todos")==0){
+                this.mostrarBoton = true;
+            }else{
+                this.mostrarBoton = false;
+            }
+            if(this.seleccion.compareTo("curso")==0){
+                this.cursoSelected = new Curso();
+                this.cursosReporte.clear();
+                this.cursos = aEscolar.getCursoList();
+                this.mostrarCursos = true;
+                this.mostrarBoton = false;
+            }
+        }else{
+            this.mostrarBoton = false;
+            this.mostrarOpciones = false;
+            this.mostrarCursos = false;
+            this.cursoSelected = new Curso();
+            this.cursos.clear();
+        }
+    }
+    public void cargarCurso(){
+        if(this.seleccion.compareTo("todos")==0){
+            Anlectivo auxEscolar = aEscolarEjb.getIniciado();
+            this.cursosReporte.clear();
+            this.cursosReporte = auxEscolar.getCursoList();
+            this.cursoSelected = new Curso();
+            this.mostrarBoton = true;
+            this.mostrarCursos = false;
+        }
+        if(this.seleccion.compareTo("curso")==0){
+            this.cursoSelected = new Curso();
+            this.cursosReporte.clear();
+            this.cursos = aEscolar.getCursoList();
+            this.mostrarCursos = true;
+            this.mostrarBoton = false;
+        }
+    }
+    public void seleccionCurso(){
+        if(this.cursoSelected.getCursoId()!=null){
+            this.mostrarBoton = true;
+        }else{
+            this.mostrarBoton = false;
+        }
+    }
+    public void initRender(){
+        this.aEscolar = aEscolarEjb.getIniciado();
+        if(aEscolar!=null){
+            if(aEscolar.getCursoList().isEmpty()){
+                this.mostrarPrincipal = false;
+                FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Aun no ha han registrado cursos"));
+            }
+            if(aEscolar.getPeriodoList().isEmpty()){
+                this.mostrarPrincipal = false;
+                FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Aun no ha han registrado periodos"));
+            }
+            if(!aEscolar.getPeriodoList().isEmpty() && !aEscolar.getCursoList().isEmpty()){
+                this.mostrarPeriodos = true;
+                this.mostrarPrincipal = true;
+                //this.cursos = aEscolar.getCursoList();
+            }
+        }
+        else{
+            this.mostrarPrincipal = false;
+            FacesContext.getCurrentInstance().
+                addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Aun no ha iniciado el año escolar"));
+        }
+    }
 }

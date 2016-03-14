@@ -11,7 +11,11 @@
             <ui:define name="content">
                 <h:form id="frmescala">
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
-                    <p:outputLabel for="txtCedula" value="Cedula: "/>
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
+                    <f:metadata>
+                        <f:event type="preRenderView" listener="#{mbvCargaAcademica.initRender}" />
+                    </f:metadata>
+                    <p:outputLabel for="txtCedula" value="Cedula Profesor: "/>
                     <p:autoComplete id="txtCedula" value="#{mbvCargaAcademica.profesor}" completeMethod="#{mbvCargaAcademica.completeProfesor}"
                                     var="profesor" itemLabel="#{profesor.cedula}" itemValue="#{profesor}" converter="profesorConverter"  forceSelection="true">
                         <p:column>
@@ -22,7 +26,7 @@
                             <h:outputText value="#{profesor.cedula} #{profesor.nombre} #{profesor.apellido}" />
                         </p:column>
                     </p:autoComplete>
-                    <p:commandButton value="prueba" actionListener="#{mbvCargaAcademica.prueba}" ajax="true" update="frmescala" />
+                    <p:commandButton value="Buscar" actionListener="#{mbvCargaAcademica.prueba}" ajax="true" update="frmescala" />
                     <br/>
                     <p:outputLabel id="profesorlbl" value="#{mbvCargaAcademica.profesor.nombre}"/>
 
@@ -54,8 +58,8 @@
                             <h1>#{mbvCargaAcademica.mensaje}</h1>
                         </p:outputPanel>
                         
-                        <h:outputText value="Asignacion por periodo: " />
-                        <p:inputSwitch value="#{mbvCargaAcademica.isPeriodo}" onLabel="SI" offLabel="NO">
+                        <h:outputText value="Asignacion por periodo: " rendered="#{mbvCargaAcademica.mostrarSeleccion}"/>
+                        <p:inputSwitch value="#{mbvCargaAcademica.isPeriodo}" onLabel="SI" offLabel="NO" rendered="#{mbvCargaAcademica.mostrarSeleccion}">
                             <p:ajax listener="#{mbvCargaAcademica.activarByPeriodo}" update="frmescala" />
                         </p:inputSwitch>
                         
@@ -85,7 +89,7 @@
                             <h3>#{mbvCargaAcademica.mensajeError}</h3>
                         </p:outputLabel>
                         
-                        <p:pickList id="pickList" value="#{mbvCargaAcademica.pickList}" var="asignatura" itemLabel="#{asignatura.nombre}" itemValue="#{asignatura.asignaturaId}" rendered="#{mbvCargaAcademica.banderaAsig}">
+                        <p:pickList responsive="true" id="pickList" value="#{mbvCargaAcademica.pickList}" var="asignatura" itemLabel="#{asignatura.nombre}" itemValue="#{asignatura.asignaturaId}" rendered="#{mbvCargaAcademica.banderaAsig}">
                             <f:facet name="sourceCaption">Asiganturas</f:facet>
                             <f:facet name="targetCaption">Ciclo</f:facet>
                             <p:ajax event="transfer" listener="#{mbvCargaAcademica.onTransfer}"  />
@@ -97,7 +101,11 @@
                     
                      
 
-
+                     <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+ 
+                    <p:dialog widgetVar="statusDialog" appendTo="@(body)" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage library="imagenes" name="load1.gif"/>
+                    </p:dialog>
                 </h:form>
             </ui:define>
         </ui:composition>

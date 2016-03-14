@@ -4,6 +4,7 @@
  */
 package com.tesis.managedbeans;
 
+import com.tesis.beans.AnlectivoFacade;
 import com.tesis.beans.AreaFacade;
 import com.tesis.beans.AsignaturaFacade;
 import com.tesis.beans.ConfiguracionFacade;
@@ -51,6 +52,12 @@ public class mbvAsignatura implements Serializable{
     private AsignaturaFacade asignaturaEjb;
     @EJB
     private UsuarioRoleFacade usrRoleEjb;
+    @EJB
+    private AnlectivoFacade anlectivoEjb;
+    @EJB
+    private AreaFacade areaEjb;
+    @EJB
+    private ConfiguracionFacade configuracionEjb;
 
     public mbvAsignatura() {
     }
@@ -128,11 +135,6 @@ public class mbvAsignatura implements Serializable{
     public void setConfiguracionEjb(ConfiguracionFacade configuracionEjb) {
         this.configuracionEjb = configuracionEjb;
     }
-    @EJB
-    private AreaFacade areaEjb;
-    @EJB
-    private ConfiguracionFacade configuracionEjb;
-    
     
     @PostConstruct
     public void inicioPagina(){
@@ -143,8 +145,8 @@ public class mbvAsignatura implements Serializable{
             System.out.println("usuario"+usr.getNombres()+"Login"+login);
         } catch (Exception e) {
             System.out.println(e.toString());
-        }
-        login=false;
+            login=false;
+        }       
         this.asignatura=new Asignatura();
         this.asignaturas= new LazyAsignaturaDataModel(this.asignaturaEjb.findAll());
         //this.areas = this.areaEjb.findAll();
@@ -173,7 +175,15 @@ public class mbvAsignatura implements Serializable{
                     }
                 }
             }
+            if(this.usr.getTipoUsuarioId().getTipoUsuarioId()==4){
+                permiso=true;
+            }
             if(permiso){
+                if(anlectivoEjb.configuracionEnUso(confuguracionselected)){
+                    FacesContext.getCurrentInstance().
+                            addMessage("frmCrearrAsignatura:stlConfiguracion", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Esta configuracion esta en uso"));
+                    return;
+                }
                 asignatura.setAreaId(areaselected);
                 asignatura.setConfiguracionId(confuguracionselected);
                 RequestContext.getCurrentInstance().closeDialog(this);
@@ -240,16 +250,22 @@ public class mbvAsignatura implements Serializable{
     }
     public void cargarAreas(){
         this.confuguracionselected = this.configuracionEjb.find(this.confuguracionselected.getConfiguracionId());
-        this.areas = this.confuguracionselected.getAreaList();
+        this.areas = this.areaEjb.getByConfiguracion(confuguracionselected);
     }
     public void cargarAsignatura(int asignaturaid){
         try {
             this.asignatura =  this.asignaturaEjb.find(asignaturaid);
-            this.areaselected = this.areaEjb.find(asignatura.getAreaId().getAreaId());
-            this.confuguracionselected = this.configuracionEjb.find(asignatura.getConfiguracionId().getConfiguracionId());
-            this.areas = this.confuguracionselected.getAreaList();
-            RequestContext.getCurrentInstance().update("frmEditarAsignatura:panelEditarAsignatura");
-            RequestContext.getCurrentInstance().execute("PF('dialogoEditarAsignatura').show()");
+            Configuracion auxcfg = configuracionEjb.find(this.asignatura.getConfiguracionId().getConfiguracionId());
+            if(!anlectivoEjb.configuracionEnUso(auxcfg)){
+                this.areaselected = this.areaEjb.find(asignatura.getAreaId().getAreaId());
+                this.confuguracionselected = this.configuracionEjb.find(asignatura.getConfiguracionId().getConfiguracionId());
+                this.areas = this.confuguracionselected.getAreaList();
+                RequestContext.getCurrentInstance().update("frmEditarAsignatura:panelEditarAsignatura");
+                RequestContext.getCurrentInstance().execute("PF('dialogoEditarAsignatura').show()");
+            }
+            else{
+                RequestContext.getCurrentInstance().execute("PF('enUso').show()");
+            }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));

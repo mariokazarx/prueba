@@ -274,7 +274,10 @@ public class mbvUsuario implements Serializable {
 
     public void checkPermiso() {
         if (recursoSelected != null) {
-            if (roleActual.getAgregar() == false && roleActual.getConsultar() == false && roleActual.getEditar() == false) {
+            if((roleActual.getAgregar() || roleActual.getEditar() || roleActual.getEditar()) && roleActual.getConsultar() == false ){
+                roleActual.setConsultar(true);
+            }
+            if (roleActual.getAgregar() == false && roleActual.getConsultar() == false && roleActual.getEditar() == false && roleActual.getEliminar() == false ) {
                 if (rolesRecursos.size() > 0) {
                     for (Role aux : rolesRecursos) {
                         if (aux.getRecursoId().equals(recursoSelected)) {
@@ -283,7 +286,8 @@ public class mbvUsuario implements Serializable {
                         }
                     }
                 }
-            } else {
+            }
+            else {
                 if (rolesRecursos.size() > 0) {
                     boolean noesta = true;
                     for (Role aux : rolesRecursos) {
@@ -359,5 +363,13 @@ public class mbvUsuario implements Serializable {
         inicioPagina();
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Escala Registrada", "exitosamente");
         FacesContext.getCurrentInstance().addMessage(null, message);
+    }
+    public void eliminarUsuario(Usuario usuario) {
+        try {
+            
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+        }
     }
 }

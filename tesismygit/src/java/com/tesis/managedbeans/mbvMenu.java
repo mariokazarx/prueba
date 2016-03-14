@@ -50,6 +50,7 @@ public class mbvMenu implements Serializable{
     public void inicioPagina() {
         this.usr = new Usuario();
         this.profesor = new Profesor();
+        aEscolar = new Anlectivo();
         login=false;
         try {
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
@@ -80,24 +81,45 @@ public class mbvMenu implements Serializable{
             //esta logueaod como usuario
             //First submenu
             System.out.println("usuario MENU"+usr);
-            DefaultSubMenu firstSubmenu = new DefaultSubMenu("Dynamic Submenu");
+            DefaultSubMenu firstSubmenu = new DefaultSubMenu("Año escolar Vigente");
 
-            DefaultMenuItem item = new DefaultMenuItem("Año escolar Vigente");
+            DefaultMenuItem item = new DefaultMenuItem("Reporte de Matriculas");
             item.setUrl("/faces/reportes/reporteMatriculas.xhtml");
-            item.setIcon("ui-icon-home");
+            item.setIcon("ui-icon-document");
             firstSubmenu.addElement(item);
 
+            DefaultMenuItem item2 = new DefaultMenuItem("Reporte Asignacion academica");
+            item2.setUrl("/faces/reportes/reporteAsignacionAcademica.xhtml");
+            item2.setIcon("ui-icon-document");
+            firstSubmenu.addElement(item2);
+            
+            DefaultMenuItem item3 = new DefaultMenuItem("Consolidado por Periodo");
+            item3.setUrl("/faces/reportes/consolidadoPeriodo.xhtml");
+            item3.setIcon("ui-icon-document");
+            firstSubmenu.addElement(item3);
+            
+            DefaultMenuItem item4 = new DefaultMenuItem("Consolidado Cierre de año");
+            item4.setUrl("/faces/reportes/consolidadofinal.xhtml");
+            item4.setIcon("ui-icon-document");
+            firstSubmenu.addElement(item4);
+            
+            DefaultMenuItem item5 = new DefaultMenuItem("Boletines");
+            item5.setUrl("/faces/reportes/boletinPeriodo.xhtml");
+            item5.setIcon("ui-icon-document");
+            firstSubmenu.addElement(item5);
+            
             model.addElement(firstSubmenu);
 
             //Second submenu
-            DefaultSubMenu secondSubmenu = new DefaultSubMenu("Año Escolar Vigente");
+            DefaultSubMenu secondSubmenu = new DefaultSubMenu("Años Escolares antiguos");
 
-            item = new DefaultMenuItem(aEscolar.getAnio());
-            item.setIcon("ui-icon-disk");
-            item.setCommand("#{menuView.save}");
-            //item.setUpdate("messages");
-            secondSubmenu.addElement(item);
-
+            if(aEscolar.getAnlectivoId()!=null){
+                item = new DefaultMenuItem(aEscolar.getAnio());
+                item.setIcon("ui-icon-disk");
+                item.setCommand("#{menuView.save}");
+                //item.setUpdate("messages");
+                secondSubmenu.addElement(item);
+            }
             item = new DefaultMenuItem("Delete");
             item.setIcon("ui-icon-close");
             item.setCommand("#{menuView.delete}");
@@ -127,6 +149,11 @@ public class mbvMenu implements Serializable{
             item2.setIcon("ui-icon-home");
             firstSubmenu.addElement(item2);
 
+            DefaultMenuItem item3 = new DefaultMenuItem("Recuperaciones");
+            item3.setUrl("/faces/academico/recuperacion.xhtml");
+            item3.setIcon("ui-icon-home");
+            firstSubmenu.addElement(item3);
+            
             model.addElement(firstSubmenu);
 
             //Second submenu

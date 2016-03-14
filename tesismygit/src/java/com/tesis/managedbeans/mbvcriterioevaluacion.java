@@ -4,6 +4,7 @@
  */
 package com.tesis.managedbeans;
 
+import com.tesis.beans.AnlectivoFacade;
 import com.tesis.beans.CriterioevaluacionFacade;
 import com.tesis.beans.FormacriterioevaluacionFacade;
 import com.tesis.entity.Criterioevaluacion;
@@ -42,6 +43,8 @@ public class mbvcriterioevaluacion implements Serializable {
     private CriterioevaluacionFacade criterioevalEjb;
     @EJB
     private FormacriterioevaluacionFacade fcriterioejb;
+    @EJB
+    private AnlectivoFacade anlectivoEjb;
 
     public mbvcriterioevaluacion() {
     }
@@ -159,10 +162,14 @@ public class mbvcriterioevaluacion implements Serializable {
     public void cargarCriterioseval(int criterioevalid) {
         try {
             this.criterioeval = this.criterioevalEjb.find(criterioevalid);
-            this.fcriterioselected = this.fcriterioejb.find(criterioeval.getFormacriterioevaluacionId().getFormacriterioevaluacionId());
-            this.nomoriginal = criterioeval.getNombre();
-            RequestContext.getCurrentInstance().update("frmEditarEscala:panelEditarEscala");
-            RequestContext.getCurrentInstance().execute("PF('dialogoEditarEscala').show()");
+            if(!anlectivoEjb.criterioEnUso(criterioeval)){
+                this.fcriterioselected = this.fcriterioejb.find(criterioeval.getFormacriterioevaluacionId().getFormacriterioevaluacionId());
+                this.nomoriginal = criterioeval.getNombre();
+                RequestContext.getCurrentInstance().update("frmEditarEscala:panelEditarEscala");
+                RequestContext.getCurrentInstance().execute("PF('dialogoEditarEscala').show()");
+            }else{
+                RequestContext.getCurrentInstance().execute("PF('enUso').show()"); 
+            }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));

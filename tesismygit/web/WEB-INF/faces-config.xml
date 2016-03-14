@@ -16,6 +16,8 @@
         <view-handler>
         org.primefaces.application.DialogViewHandler
       </view-handler>
-  </application>
-
+    </application>
+    <lifecycle>
+        <phase-listener>com.tesis.clases.CheckSession</phase-listener>
+    </lifecycle>
 </faces-config>

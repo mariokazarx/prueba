@@ -4,6 +4,7 @@
  */
 package com.tesis.managedbeans;
 
+import com.tesis.beans.AnlectivoFacade;
 import com.tesis.beans.EscalaFacade;
 import com.tesis.beans.UsuarioRoleFacade;
 import com.tesis.entity.Escala;
@@ -19,14 +20,10 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIComponent;
-import javax.faces.component.behavior.AjaxBehavior;
 import javax.faces.component.html.HtmlInputText;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
 import org.primefaces.context.RequestContext;
-import org.primefaces.push.PushContext;
-import org.primefaces.push.PushContextFactory;
-
 /**
  *
  * @author Mario Jurado 
@@ -46,6 +43,8 @@ public class mbvEscala implements Serializable {
     private EscalaFacade escalaEjb;
     @EJB
     private UsuarioRoleFacade usrRoleEjb;
+    @EJB
+    private AnlectivoFacade anlectivoEjb;
     
     public mbvEscala() {
     }
@@ -154,6 +153,9 @@ public class mbvEscala implements Serializable {
                     }
                 }
             }
+            if(this.usr.getTipoUsuarioId().getTipoUsuarioId()==4){
+                permiso=true;
+            }
             if(permiso){
                 System.out.println("Puede insertar");
                 if (escala.getMax() <= escala.getMin()) {
@@ -166,7 +168,7 @@ public class mbvEscala implements Serializable {
                 if (escala.getNotaminimaaprob() <= escala.getMin() || escala.getNotaminimaaprob() >= escala.getMax()) {
                     this.mensage = true;
                     FacesContext.getCurrentInstance().
-                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Nota minima aprobacion debe ser superior a la nota minima e inferior a la maxima"));
+                            addMessage("frmescala:txtMinaprob", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Nota minima aprobacion debe ser superior a la nota minima e inferior a la maxima"));
                     //this.mensage=false;
                     return;
                 }
@@ -216,6 +218,9 @@ public class mbvEscala implements Serializable {
                     }
                 }
             }
+            if(this.usr.getTipoUsuarioId().getTipoUsuarioId()==4){
+                permiso=true;
+            }
             if(permiso){
                 if (escala.getMax() <= escala.getMin()) {
                     this.mensage = true;
@@ -254,9 +259,14 @@ public class mbvEscala implements Serializable {
     public void cargarEscala(int escalaid) {
         try {
             this.escala = this.escalaEjb.find(escalaid);
-            this.nomoriginal = this.escala.getNombre();
-            RequestContext.getCurrentInstance().update("frmEditarEscala:panelEditarEscala");
-            RequestContext.getCurrentInstance().execute("PF('dialogoEditarEscala').show()");
+            System.out.println("En uso "+anlectivoEjb.escalaEnUso(escala));
+            if(!anlectivoEjb.escalaEnUso(escala)){
+                this.nomoriginal = this.escala.getNombre();
+                RequestContext.getCurrentInstance().update("frmEditarEscala:panelEditarEscala");
+                RequestContext.getCurrentInstance().execute("PF('dialogoEditarEscala').show()");
+            }else{
+                RequestContext.getCurrentInstance().execute("PF('enUso').show()"); 
+            }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
@@ -292,6 +302,9 @@ public class mbvEscala implements Serializable {
                         }
                     }
                 }
+            }
+            if(this.usr.getTipoUsuarioId().getTipoUsuarioId()==4){
+                permiso=true;
             }
             if(permiso){
                 //this.escala = this.escalaEjb.find(escalaid);

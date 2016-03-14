@@ -9,6 +9,7 @@
         <meta content='text/html; charset=iso-8859-1' http-equiv="Content-Type"/>
         <link href="./../resources/css/default.css" rel="stylesheet" type="text/css" />
         <link href="./../resources/css/cssLayout.css" rel="stylesheet" type="text/css" />
+        <link href="./../resources/css/style.css" rel="stylesheet" type="text/css" />
         <title>Sistema de Registro y Control</title>
     </h:head>
     <h:body rendered="false">
@@ -29,7 +30,7 @@
             </p:dialog>
         </h:form>
         <p:layout fullPage="true">
-            <p:layoutUnit position="west" size="20%"  header="Menu Principal"  collapsible="true" id="left1">
+            <p:layoutUnit position="west" size="20%"  header="Menu Principal" resizable="true" collapsible="true" id="left1">
                 <div id="left">
                     <ui:insert name="left"><br></br>
                         <center>
@@ -54,17 +55,18 @@
                 </div>
                 <div id="center_content">
                     <h:form>
-                        <p:menubar rendered="false">  
-                            <p:submenu label="Configuracion Año Escolar" icon="ui-icon-gear"> 
+                        <p:menubar rendered="#{mbsLogin.loginUsuario}">  
+                            <p:submenu label="Parametros de configuracion" icon="ui-icon-gear"> 
                                 <p:menuitem value="Escalas" outcome="/configuracion/escalas.xhtml" />
                                 <p:menuitem value="Criterios Evaluacion" outcome="/configuracion/criterioevaluacion.xhtml" />
-                                <p:menuitem value="Configuracion" outcome="/configuracion/configuracion.xhtml" />
+                                <p:menuitem value="Configuracion general" outcome="/configuracion/configuracion.xhtml" />
+                            </p:submenu> 
+                            <p:submenu label="Plan de estudios" icon="ui-icon-gear"> 
                                 <p:menuitem value="Areas" outcome="/configuracion/areas.xhtml" />
                                 <p:menuitem value="Asignaturas" outcome="/configuracion/asignaturas.xhtml" />
                                 <p:menuitem value="Ciclos" outcome="/configuracion/ciclos.xhtml" />
-                                <p:menuitem value="Materias Pör ciclos" outcome="/configuracion/materiasciclos.xhtml" />
-                                <p:separator />  
-                                <p:menuitem value="Seguridad Perfil" url="../Usuarios/Seguridad.xhtml"/>  
+                                <p:menuitem value="Asignaturas por ciclo" outcome="/configuracion/materiasciclos.xhtml" />
+                                 
                             </p:submenu>  
                             <p:submenu label="Año Escolar" icon="ui-icon-gear"> 
                                 <p:menuitem value="Años Escolares" outcome="/anlectivo/anlectivos.xhtml" />
@@ -72,10 +74,11 @@
                                 <p:menuitem value="Periodos" outcome="/anlectivo/periodos.xhtml" />
                             </p:submenu>
                             <p:submenu label="Academico" icon="ui-icon-gear"> 
-                                <p:menuitem value="Matriculas" outcome="/academico/matriculas.xhtml" />
                                 <p:menuitem value="Estudiantes" outcome="/academico/estudiantes.xhtml" />
+                                <p:menuitem value="Matriculas" outcome="/academico/matriculas.xhtml" />
                                 <p:menuitem value="Profesores" outcome="/profesores/profesores.xhtml" />
-                                <p:menuitem value="Carga Academica" outcome="/profesores/cargaAcademica.xhtml" />
+                                <p:menuitem value="Asignacion academica" outcome="/profesores/cargaAcademica.xhtml" />
+                                <p:menuitem value="Rectificar nota" outcome="/profesores/rectificarNotas.xhtml" />
                             </p:submenu>
                             <p:submenu label="Configuracion" icon="ui-icon-gear"> 
                                 <p:menuitem value="Editar Perfil" outcome="/anlectivo/anlectivos.xhtml" />
@@ -84,8 +87,8 @@
                             </p:submenu>
                             <p:menuitem value="Cerrar Sesion" actionListener="#{mbsLogin.cerrarSession}"/>  
                         </p:menubar>
-                        <p:menubar id="menuProfesor" rendered="true">  
-                            <p:menuitem value="Cerrar Sesion" actionListener="#{mbsLogin.cerrarSession}"/>  
+                        <p:menubar id="menuProfesor" rendered="#{mbsLogin.loginProfesor}">  
+                            <p:menuitem value="Cerrar Sesion" actionListener="#{mbsLogin.cerrarSession}" />  
                         </p:menubar>
                     </h:form>
                     <ui:insert name="content">Content #{mbvPrueba.prof.nombre} login #{mbvPrueba.login} #{mbsLogin.profesor.apellido} TIME #{session.maxInactiveInterval * 1000}</ui:insert>

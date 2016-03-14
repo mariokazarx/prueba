@@ -14,7 +14,7 @@
                         <p:ajax event="dialogReturn" listener="#{mbvProfesor.closeDialog}" update="frmListaProfesor" />
                     </p:commandButton>
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
-                    <p:dataTable id="tablaListaProfesor" var="item" value="#{mbvProfesor.profesores}" paginator="true" rows="10" selection="#{mbvProfesor.profesor}" selectionMode="single" lazy="true" rowKey="#{item.profesorId}" >
+                    <p:dataTable id="tablaListaProfesor" reflow="true" var="item" value="#{mbvProfesor.profesores}" paginator="true" rows="10" selection="#{mbvProfesor.profesor}" selectionMode="single" lazy="true" rowKey="#{item.profesorId}" >
                         <p:ajax event="rowSelect" update=":frmListaProfesor:panelDetalleProfesor" oncomplete="PF('dialogoDetalleProfesor').show()"/>
                         <f:facet name="header">
                             Lista de Profesores
@@ -58,7 +58,7 @@
                         </p:outputPanel>
                     </p:dialog>                   
                 </h:form>        
-                <p:dialog header="Datos Profesor" widgetVar="dialogoEditarProfesor" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
+                <p:dialog header="Datos Profesor" responsive="true" widgetVar="dialogoEditarProfesor" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
                     <h:form id="frmEditarProfesor">
                         <p:outputPanel id="panelEditarProfesor" >
                             <h:panelGrid columns="3">
@@ -104,9 +104,31 @@
                                 </p:selectOneRadio>
                                 <p:message for="rdbSexo"/>
                                 
+                                <p:outputLabel for="stlEstado" value="Estado: " />
+                                <p:selectOneMenu id="stlEstado" value="#{mbvProfesor.estadoSelected.estadoProfesorId}">
+                                    <f:selectItems value="#{mbvProfesor.estadosProfesor}" var="estado" itemLabel="#{estado.nombre}" itemValue="#{estado.estadoProfesorId}"/>
+                                </p:selectOneMenu>
+                                <p:message for="stlEstado"/>
+                                
+                                <h:outputText value="Cambiar Contraseña: " />
+                                <p:inputSwitch value="#{mbvProfesor.cambiarContraseña}" onLabel="SI" offLabel="NO">
+                                    <p:ajax listener="#{mbvProfesor.activarContraseña}" update="frmEditarProfesor" />
+                                </p:inputSwitch>
                                 <h:panelGroup></h:panelGroup>
+                                
+                                <p:outputLabel value="Contraseña" for="txtContrasenia" rendered="#{mbvProfesor.cambiarContraseña}"/>
+                                <p:password id="txtContrasenia" label="Contraseña: " rendered="#{mbvProfesor.cambiarContraseña}" match="txtContraseniaRepita" size="50" value="#{mbvProfesor.profesor.contraseña}">
+                                    <f:validator validatorId="validatorVacio"/>
+                                </p:password>
+                                <p:message for="txtContrasenia" rendered="#{mbvProfesor.cambiarContraseña}"/>
+                                <p:outputLabel value="Repita contraseña" for="txtContraseniaRepita" rendered="#{mbvProfesor.cambiarContraseña}"/>
+                                <p:password id="txtContraseniaRepita" label="Repita contraseña: " size="50" value="#{mbvProfesor.txtRepiteContrasenia}" rendered="#{mbvProfesor.cambiarContraseña}"/>
+                                <h:panelGroup rendered="#{mbvProfesor.cambiarContraseña}"></h:panelGroup>
+
+                                
                                 <h:panelGroup></h:panelGroup>
-                                <p:commandButton value="Registrar Profesor" actionListener="#{mbvProfesor.insertar}" ajax="true" update=":frmListaProfesor" />
+                                
+                                <p:commandButton value="Registrar Profesor" actionListener="#{mbvProfesor.actualizar}" ajax="true" update=":frmListaProfesor" />
                             </h:panelGrid>  
                         </p:outputPanel>
                     </h:form>

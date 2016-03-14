@@ -4,6 +4,7 @@
  */
 package com.tesis.beans;
 
+import com.tesis.entity.Anlectivo;
 import com.tesis.entity.Curso;
 import com.tesis.entity.Periodo;
 import com.tesis.entity.Profesor;
@@ -40,7 +41,19 @@ public class CursoFacade extends AbstractFacade<Curso> {
         cq.setParameter("periodoId", periodo);
         return cq.getResultList();
     }
-
+    public List<Curso> getCursosByAño(Anlectivo anlectivo){
+        try {
+            Query cq = em.createNamedQuery("Curso.findByAño");
+            cq.setParameter("anlectivo",anlectivo);
+            if(cq.getResultList()==null){
+                return null;
+            }else{
+                return cq.getResultList();
+            }
+        } catch (Exception e) {
+            return null;
+        }
+    }
     public boolean removeById(Curso curso) {
         try {
             Query cq = em.createNamedQuery("Curso.removeById");

@@ -48,7 +48,7 @@ public class Logro implements Serializable {
     @Column(name = "logro_id", nullable = false)
     private Integer logroId;
     @Size(max = 200)
-    @Column(name = "descripcion", length = 200)
+    @Column(name = "descripcion", length = 400)
     private String descripcion;
     @Basic(optional = false)
     @NotNull

@@ -18,15 +18,44 @@
         <ui:composition template="./../plantilla.xhtml">
             <ui:define name="content">
                 <h:form id="frmReporteMatriculas">
-                        <p:outputPanel id="panelReporteMatriculas" rendered="true">
-                            <p:outputLabel for="selectCourse" value="Curso: " />
-                            <p:selectOneMenu id="selectCourse" value="#{mbvReporteMatriculas.cursoSelected.cursoId}">
-                                <f:selectItem itemLabel="Seleccione."/>
-                                <f:selectItems value="#{mbvReporteMatriculas.cursos}" var="curso" itemLabel="ciclo #{curso.cicloId.numero} - #{curso.nombre} " itemValue="#{curso.cursoId}"/>
-                            </p:selectOneMenu>
-                            <h:commandButton value="PDF" actionListener="#{mbvReporteMatriculas.pdf}"/>
-                            <p:commandButton id="btnMatricular" value="Confirmar" actionListener="#{mbvReporteMatriculas.pdf}" style="margin-top:5px" />
-                        </p:outputPanel>                      
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
+                    
+                    
+                    <f:metadata>
+                        <f:event type="preRenderView" listener="#{mbvReporteMatriculas.initRender}" />
+                    </f:metadata>
+                    
+                    
+                    <p:outputPanel id="panelReporteMatriculas" rendered="#{mbvReporteMatriculas.mostrarPrincipal}">
+                        <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+                            <p:outputLabel for="options" value="Tipo de reporte:" />
+                            <p:selectOneRadio id="options" value="#{mbvReporteMatriculas.todos}">
+                                <p:ajax listener="#{mbvReporteMatriculas.cargarCurso()}" update="frmReporteMatriculas"/>
+                                <f:selectItem itemLabel="Todos" itemValue="todos" />
+                                <f:selectItem itemLabel="Por curso" itemValue="curso" />
+                            </p:selectOneRadio>
+                        </h:panelGrid>
+                        <p:outputPanel rendered="#{mbvReporteMatriculas.mostrarCursos}">
+                            <div class="ui-grid ui-grid-responsive">
+                                <div class="ui-grid-row">
+                                    <div class="ui-grid-col-1">
+                                        <p:outputLabel for="selectCourse" value="Curso:" />
+                                    </div>
+                                    <div class="ui-grid-col-1">
+                                        <p:selectOneMenu id="selectCourse" value="#{mbvReporteMatriculas.cursoSelected.cursoId}">
+                                            <p:ajax listener="#{mbvReporteMatriculas.seleccionCurso}" update="frmReporteMatriculas"/>
+                                            <f:selectItem itemLabel="Seleccione."/>
+                                            <f:selectItems value="#{mbvReporteMatriculas.cursos}" var="curso" itemLabel="ciclo #{curso.cicloId.numero} - #{curso.nombre} " itemValue="#{curso.cursoId}"/>
+                                        </p:selectOneMenu>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </p:outputPanel>
+                        <p:commandButton id="btnMatricular" ajax="false" value="Confirmar" actionListener="#{mbvReporteMatriculas.pdf}" style="margin-top:5px" rendered="#{mbvReporteMatriculas.mostrarBoton}"/>
+                   
+                    </p:outputPanel>      
+                                                                        
                 </h:form>        
             </ui:define>
         </ui:composition>

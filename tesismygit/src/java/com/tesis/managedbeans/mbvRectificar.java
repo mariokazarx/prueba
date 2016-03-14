@@ -49,6 +49,8 @@ public class mbvRectificar implements Serializable {
     private boolean contenidoPrincipal;
     private boolean banderaRectificar;
     private Contenidotematico contenidoSelected;
+    private Anlectivo anlectivoselected;
+    private List<Anlectivo> anlectivos;
     @EJB
     private ProfesorFacade profesorEjb;
     @EJB
@@ -71,6 +73,22 @@ public class mbvRectificar implements Serializable {
     UserTransaction tx;
 
     public mbvRectificar() {
+    }
+
+    public Anlectivo getAnlectivoselected() {
+        return anlectivoselected;
+    }
+
+    public void setAnlectivoselected(Anlectivo anlectivoselected) {
+        this.anlectivoselected = anlectivoselected;
+    }
+
+    public List<Anlectivo> getAnlectivos() {
+        return anlectivos;
+    }
+
+    public void setAnlectivos(List<Anlectivo> anlectivos) {
+        this.anlectivos = anlectivos;
     }
 
     public List<Contenidotematico> getContenidosRectificar() {
@@ -170,10 +188,13 @@ public class mbvRectificar implements Serializable {
     
     @PostConstruct
     public void inicioPagina() {
-        this.aEscolar = anlectivoEjb.getIniciado();
+        //this.aEscolar = anlectivoEjb.getIniciado();
         this.contenidosRectificados = new ArrayList<Contenidotematico>();
         this.contenidosRectificar = new ArrayList<Contenidotematico>();
-        this.periodosSelecteds = periodoEjb.getPeriodosByAnio(aEscolar);
+        this.periodosSelecteds = new ArrayList<Periodo>();
+        this.anlectivoselected = new Anlectivo();
+        this.anlectivos = new ArrayList<Anlectivo>();
+        //this.periodosSelecteds = periodoEjb.getPeriodosByAnio(aEscolar);
         this.contenidoPrincipal = false;
         this.banderaRectificar = false;
         this.periodoSelected = new Periodo();
@@ -282,17 +303,12 @@ public class mbvRectificar implements Serializable {
             if(profesor.getEstadoProfesorId().getEstadoProfesorId()==1){
                 //profesor activo
                 System.out.println("entro 1");
-                if(aEscolar!=null){ 
+                anlectivos = anlectivoEjb.getAñosEnUso();
+                if(!this.anlectivos.isEmpty()){ 
                     //hay año iniciado
-                    System.out.println("entro 2");
-                    if(!periodosSelecteds.isEmpty()){
-                        System.out.println("entro 3");
-                        this.contenidoPrincipal = true;
-                    }
-                    else{
-                        System.out.println("entro 4");
-                        //no hay periodos
-                    }
+                    System.out.println("entro 3");
+                    this.contenidoPrincipal = true;
+                    
                 }else{
                     System.out.println("entro 5");
                     this.contenidoPrincipal = false;
@@ -312,5 +328,13 @@ public class mbvRectificar implements Serializable {
             this.profesor = new Profesor();
         }
     }
-    
+    public void cargarAnio(){
+        if(anlectivoselected!=null){
+            this.aEscolar = anlectivoEjb.find(anlectivoselected.getAnlectivoId());
+            this.periodosSelecteds = periodoEjb.getPeriodosByAnio(anlectivoselected);
+        }else{
+            this.periodosSelecteds.clear();
+            this.periodoSelected = new Periodo();
+        }
+    }
 }

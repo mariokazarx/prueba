@@ -34,6 +34,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Nota.findAll", query = "SELECT n FROM Nota n"),
+    @NamedQuery(name = "Nota.findByFinal", query = "SELECT n.valor FROM Nota n WHERE n.estudianteId = :estudiante AND n.contenidotematicoId = :contenido"),
     @NamedQuery(name = "Nota.findByNotaId", query = "SELECT n FROM Nota n WHERE n.notaId = :notaId"),
     @NamedQuery(name = "Nota.findByValor", query = "SELECT n FROM Nota n WHERE n.valor = :valor"),
     @NamedQuery(name = "Nota.findNotaFinal", query = "SELECT AVG(n.valor) FROM Nota n WHERE n.estudianteId = :estudianteId and n.contenidotematicoId IN (SELECT c FROM Contenidotematico c WHERE c.periodoId IN (SELECT p FROM Periodo p WHERE p.anlectivoId = :anlectivoId ) and c.cursoId = :cursoId AND c.asignaturacicloId = :asignatura)"),

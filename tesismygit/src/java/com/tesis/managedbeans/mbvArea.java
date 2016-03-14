@@ -46,7 +46,9 @@ public class mbvArea implements Serializable{
     private AnlectivoFacade añoEJB;
     @EJB
     private UsuarioRoleFacade usrRoleEjb;
-
+    @EJB
+    private AnlectivoFacade anlectivoEjb;
+    
     /**
      * Creates a new instance of mbvArea
      */
@@ -110,8 +112,8 @@ public class mbvArea implements Serializable{
             System.out.println("usuario"+usr.getNombres()+"Login"+login);
         } catch (Exception e) {
             System.out.println(e.toString());
+            login=false;
         }
-        login=false;
         this.area=new Area();
         this.areas=this.areaEJB.findAll();
         this.configs = this.confEJB.findAll();
@@ -136,8 +138,16 @@ public class mbvArea implements Serializable{
                     }
                 }
             }
+            if(this.usr.getTipoUsuarioId().getTipoUsuarioId()==4){
+                permiso=true;
+            }
             if(permiso){
                 Configuracion auxcfg = confEJB.find(confselected.getConfiguracionId());
+                if(añoEJB.configuracionEnUso(auxcfg)){
+                    FacesContext.getCurrentInstance().
+                            addMessage("frmcriterioeval:stlCriterio", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Esta configuracion esta en uso"));
+                    return;
+                }
                 for(Area auxarea:auxcfg.getAreaList()){
                     System.out.print(auxarea.getNombre()+"la otra"+ area.getNombre());
                     if(area.getNombre().trim().equals(auxarea.getNombre().trim())){
@@ -207,13 +217,13 @@ public class mbvArea implements Serializable{
             
             this.area = this.areaEJB.find(areaId);
             Configuracion auxcfg = confEJB.find(this.area.getConfiguracionId().getConfiguracionId());
-            if(añoEJB.existeConfiguracionEnUso(auxcfg)){
-                System.out.println("En Uso");
-                return;
+            if(añoEJB.configuracionEnUso(auxcfg)){
+                RequestContext.getCurrentInstance().execute("PF('enUso').show()");
+            }else{
+                this.confselected = this.confEJB.find(area.getConfiguracionId().getConfiguracionId());
+                RequestContext.getCurrentInstance().update("frmEditarEscala:panelEditarEscala");
+                RequestContext.getCurrentInstance().execute("PF('dialogoEditarEscala').show()");
             }
-            this.confselected = this.confEJB.find(area.getConfiguracionId().getConfiguracionId());
-            RequestContext.getCurrentInstance().update("frmEditarEscala:panelEditarEscala");
-            RequestContext.getCurrentInstance().execute("PF('dialogoEditarEscala').show()");
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));

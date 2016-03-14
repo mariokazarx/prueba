@@ -28,9 +28,6 @@
                     <p:commandButton value="Crear Logro" icon="ui-icon-pencil" actionListener="#{mbvNotas.newLogro}" rendered="#{mbvNotas.contenidoLogros}"/>
 
                     <p:dataTable id="tableLogros" var="logro" value="#{mbvNotas.logros}" sortBy="#{logro.porcentaje}" rendered="#{mbvNotas.contenidoLogros}">
-                        <p:column headerText="Id" sortBy="#{logro.logroId}">
-                            <h:outputText value="#{logro.logroId}" />
-                        </p:column>
                         <p:column headerText="Titulo" sortBy="#{logro.titulo}">
                             <h:outputText value="#{logro.titulo}" />
                         </p:column>
@@ -42,6 +39,9 @@
                         </p:column>
                         <p:column>
                             <p:commandButton value="Eliminar"  icon="ui-icon-close" actionListener="#{mbvNotas.eliminarLogro(logro)}" ajax="true" update=":frmMateriasCiclos"/>
+                        </p:column>
+                        <p:column>
+                            <p:commandButton value="Editar"  icon="ui-icon-pencil" actionListener="#{mbvNotas.cargarActualizar(logro)}" ajax="true" update=":frmMateriasCiclos"/>
                         </p:column>
                     </p:dataTable>
                     <p:remoteCommand name="onCellEdit" update="tablanotas" />
@@ -106,6 +106,27 @@
                                 <p:message for="txtDescripcion"/>
                                 <h:panelGroup></h:panelGroup>
                                 <p:commandButton value="Registrar Logro" actionListener="#{mbvNotas.insertarLogro}" ajax="true" update=":frmMateriasCiclos" />
+                            </h:panelGrid> 
+                        </p:outputPanel>
+                    </h:form>
+                </p:dialog>
+                <p:dialog header="Editar Logro" widgetVar="dialogoEditarLogro" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
+                    <h:form id="frmEditarLogro">
+                        <p:outputPanel id="panelEditarLogro" >
+                            <h:panelGrid columns="3">
+                                <p:outputLabel for="txtTitulo" value="Titulo: "/>
+                                <p:inputText id="txtTitulo" value="#{mbvNotas.logro.titulo}" validator="#{mbvEscala.validateNombreUnique}">
+                                    <f:validator validatorId="validatorVacio"/>
+                                </p:inputText>
+                                <p:message for="txtTitulo"/>
+                                <p:outputLabel for="txtPorcentaje" value="Porcentaje:" />
+                                <p:inputText id="txtPorcentaje" value="#{mbvNotas.logro.porcentaje}"/>
+                                <p:message for="txtPorcentaje"/>
+                                <p:outputLabel for="txtDescripcion" value="Descripcion: " />
+                                <p:inputTextarea id="txtDescripcion" value="#{mbvNotas.logro.descripcion}" rows="5" cols="22" />
+                                <p:message for="txtDescripcion"/>
+                                <h:panelGroup></h:panelGroup>
+                                <p:commandButton value="Editar Logro" actionListener="#{mbvNotas.actualizarLogro}" ajax="true" update=":frmMateriasCiclos" />
                             </h:panelGrid> 
                         </p:outputPanel>
                     </h:form>

@@ -34,10 +34,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Notafinalrecuperacion.findAll", query = "SELECT n FROM Notafinalrecuperacion n"),
+    @NamedQuery(name = "Notafinalrecuperacion.findByNotafinal", query = "SELECT n.valor FROM Notafinalrecuperacion n WHERE n.notafinalId = :notafinal"),
+    @NamedQuery(name = "Notafinalrecuperacion.findByNotafinalRecuperar", query = "SELECT n FROM Notafinalrecuperacion n WHERE n.notafinalId = :notafinal"),
     @NamedQuery(name = "Notafinalrecuperacion.findByNotafinalrecuperacionId", query = "SELECT n FROM Notafinalrecuperacion n WHERE n.notafinalrecuperacionId = :notafinalrecuperacionId"),
     @NamedQuery(name = "Notafinalrecuperacion.findByValor", query = "SELECT n FROM Notafinalrecuperacion n WHERE n.valor = :valor"),
-    @NamedQuery(name = "Notafinalrecuperacion.findByFechamodificacion", query = "SELECT n FROM Notafinalrecuperacion n WHERE n.fechamodificacion = :fechamodificacion"),
-    @NamedQuery(name = "Notafinalrecuperacion.findByObservaciones", query = "SELECT n FROM Notafinalrecuperacion n WHERE n.observaciones = :observaciones")})
+    @NamedQuery(name = "Notafinalrecuperacion.findByFechamodificacion", query = "SELECT n FROM Notafinalrecuperacion n WHERE n.fechamodificacion = :fechamodificacion")})
+    //@NamedQuery(name = "Notafinalrecuperacion.findByObservaciones", query = "SELECT n FROM Notafinalrecuperacion n WHERE n.observaciones = :observaciones")})
 public class Notafinalrecuperacion implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -53,9 +55,6 @@ public class Notafinalrecuperacion implements Serializable {
     @Column(name = "fechamodificacion")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodificacion;
-    @Size(max = 2147483647)
-    @Column(name = "observaciones", length = 2147483647)
-    private String observaciones;
     @JoinColumn(name = "profesor_id", referencedColumnName = "profesor_id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Profesor profesorId;
@@ -65,7 +64,10 @@ public class Notafinalrecuperacion implements Serializable {
     @JoinColumn(name = "asignaturaciclo_id", referencedColumnName = "asignaturaciclo_id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Asignaturaciclo asignaturacicloId;
-
+    @JoinColumn(name = "notafinal_id", referencedColumnName = "notafinal_id", nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Notafinal notafinalId;
+    
     public Notafinalrecuperacion() {
     }
 
@@ -102,14 +104,6 @@ public class Notafinalrecuperacion implements Serializable {
         this.fechamodificacion = fechamodificacion;
     }
 
-    public String getObservaciones() {
-        return observaciones;
-    }
-
-    public void setObservaciones(String observaciones) {
-        this.observaciones = observaciones;
-    }
-
     public Profesor getProfesorId() {
         return profesorId;
     }
@@ -132,6 +126,14 @@ public class Notafinalrecuperacion implements Serializable {
 
     public void setAsignaturacicloId(Asignaturaciclo asignaturacicloId) {
         this.asignaturacicloId = asignaturacicloId;
+    }
+
+    public Notafinal getNotafinalId() {
+        return notafinalId;
+    }
+
+    public void setNotafinalId(Notafinal notafinalId) {
+        this.notafinalId = notafinalId;
     }
 
     @Override

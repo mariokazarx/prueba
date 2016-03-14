@@ -9,6 +9,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
 /**
@@ -60,7 +61,10 @@ public class EscalaFacade extends AbstractFacade<Escala> {
             else{
                 return false;
             }
-        } catch (Exception e) {
+        } catch (PersistenceException e) {
+            return false;
+        }
+        catch (Exception e) {
             return false;
         }
 

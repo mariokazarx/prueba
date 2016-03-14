@@ -40,6 +40,9 @@
                         <p:column headerText="Ciclo" filterBy="ciclo">
                             <h:outputText value="#{estudiante.ultimoaprobado}"/>
                         </p:column>
+                        <p:column headerText="Matricula" >
+                            <h:outputText value="#{mbvEstudiante.getMatricula(estudiante)}"/>
+                        </p:column>
                         <p:column>
                             <p:commandButton value="Editar" icon="ui-icon-pencil" actionListener="#{mbvEstudiante.cargarEstudiante(estudiante.estudianteId)}"/>
                         </p:column>
@@ -99,8 +102,8 @@
                 </p:dialog>
 
 
-                <p:dialog header="Datos del usuario" widgetVar="dialogoEditarEstudiante" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
-                    <h:form id="frmEditarEstudiante">
+                <p:dialog header="Datos del Estudiante" widgetVar="dialogoEditarEstudiante" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
+                    <h:form id="frmEditarEstudiante" enctype="multipart/form-data">
                         <p:outputPanel id="panelEditarEstudiante" >
                             <h:panelGrid columns="3">
                                 <p:outputLabel for="selectTipo" value="Tipo Identificacion: " />
@@ -151,7 +154,7 @@
                                     <f:validator validatorId="validatorVacio"/>
                                 </p:inputText>
                                 <p:message for="txtAcudiente"/>
-                                <p:outputLabel for="txtUltimo" value="Ultimo ciclo Aprobado: " />
+                                <p:outputLabel for="txtUltimo" value="Ciclo al que se va a matricular: " />
                                 <p:inputText id="txtUltimo" value="#{mbvEstudiante.estudiante.ultimoaprobado}" size="50">
                                     <f:validator validatorId="validatorVacio"/>
                                 </p:inputText>
@@ -187,10 +190,19 @@
                                 <p:message for="rdbResguardo"/>
 
                                 <p:outputLabel for="txtFoto" value="Foto:" />
-                                <p:fileUpload id="txtFoto" mode="simple" value="#{mbvEstudiante.foto}" />
+                                <p:fileUpload id="txtFoto" fileUploadListener="#{mbvEstudiante.subirFoto}" multiple="false" mode="advanced" update=":frmEditarEstudiante :frmListaEstudiantes"  allowTypes="/(\.|\/)(png|jpg)$/" cancelLabel="Cancelar" uploadLabel="Subir foto" label="Seleccione foto">
+
+                                </p:fileUpload>   
                                 <p:message for="txtFoto"/>
+                                
+                                <p:outputLabel for="stlEstado" value="Estado: " />
+                                <p:selectOneMenu id="stlEstado" value="#{mbvEstudiante.estadoSelected.estadoEstudianteId}">
+                                    <f:selectItems value="#{mbvEstudiante.estadosEstudiante}" var="estado" itemLabel="#{estado.nombre}" itemValue="#{estado.estadoEstudianteId}"/>
+                                </p:selectOneMenu>
+                                <p:message for="stlEstado"/>
+                                
                                 <h:panelGroup></h:panelGroup>
-                                <p:commandButton value="Registrar Profesor" action="#{mbvEstudiante.insertar}" ajax="false" update=":frmListaEstudiantes" />
+                                <p:commandButton value="Editar Estudiante" actionListener="#{mbvEstudiante.editar}" ajax="true"  update=":frmEditarEstudiante :frmListaEstudiantes" />
                             </h:panelGrid>  
                         </p:outputPanel>
                     </h:form>

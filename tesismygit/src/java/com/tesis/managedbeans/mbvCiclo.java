@@ -4,6 +4,7 @@
  */
 package com.tesis.managedbeans;
 
+import com.tesis.beans.AnlectivoFacade;
 import com.tesis.beans.CicloFacade;
 import com.tesis.beans.ConfiguracionFacade;
 import com.tesis.entity.Ciclo;
@@ -36,6 +37,8 @@ public class mbvCiclo implements Serializable{
     private CicloFacade cicloEjb;
     @EJB
     private ConfiguracionFacade configuracionEjb;
+    @EJB
+    private AnlectivoFacade anlectivoEjb;
     
     public mbvCiclo() {
     }
@@ -99,6 +102,11 @@ public class mbvCiclo implements Serializable{
     
     public void insertar(){
         try{
+            if(anlectivoEjb.configuracionEnUso(confuguracionselected)){
+                FacesContext.getCurrentInstance().
+                        addMessage("frmCrearCiclo:stlConfiguracion", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Configuracion esta en uso"));
+                return;
+            }
             ciclo.setConfiguracion(confuguracionselected);
             RequestContext.getCurrentInstance().closeDialog(this);
             cicloEjb.create(ciclo);
@@ -119,6 +127,11 @@ public class mbvCiclo implements Serializable{
     public void actualizar(){
         try{
             this.confuguracionselected = this.configuracionEjb.find(confuguracionselected.getConfiguracionId());
+            if(anlectivoEjb.configuracionEnUso(confuguracionselected)){
+                FacesContext.getCurrentInstance().
+                        addMessage("frmEditarCiclo:stlConfiguracion", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Configuracion esta en uso"));
+                return;
+            }
             ciclo.setConfiguracion(confuguracionselected);
             cicloEjb.edit(ciclo);
             FacesContext.getCurrentInstance().
@@ -133,9 +146,14 @@ public class mbvCiclo implements Serializable{
     public void cargarCiclo(int cicloId){
         try {
             this.ciclo = this.cicloEjb.find(cicloId);
-            this.confuguracionselected = this.configuracionEjb.find(ciclo.getConfiguracion().getConfiguracionId());
-            RequestContext.getCurrentInstance().update("frmEditarCiclo:panelEditarCiclo");
-            RequestContext.getCurrentInstance().execute("PF('dialogoEditarCiclo').show()");
+            Configuracion auxcfg = configuracionEjb.find(this.ciclo.getConfiguracion().getConfiguracionId());
+            if(!anlectivoEjb.configuracionEnUso(auxcfg)){
+                this.confuguracionselected = this.configuracionEjb.find(ciclo.getConfiguracion().getConfiguracionId());
+                RequestContext.getCurrentInstance().update("frmEditarCiclo:panelEditarCiclo");
+                RequestContext.getCurrentInstance().execute("PF('dialogoEditarCiclo').show()");
+            }else{
+                RequestContext.getCurrentInstance().execute("PF('enUso').show()");
+            }
         } catch (Exception e) {
             e.printStackTrace();
             FacesContext.getCurrentInstance().

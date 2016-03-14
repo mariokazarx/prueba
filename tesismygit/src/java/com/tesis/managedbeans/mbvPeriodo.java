@@ -5,13 +5,16 @@
 package com.tesis.managedbeans;
 
 import com.tesis.beans.AnlectivoFacade;
+import com.tesis.beans.AsignaturacicloFacade;
 import com.tesis.beans.ContenidotematicoFacade;
+import com.tesis.beans.CursoFacade;
 import com.tesis.beans.EstadoPeriodoFacade;
 import com.tesis.beans.EstadocontenidotematicoFacade;
 import com.tesis.beans.LogronotaFacade;
 import com.tesis.beans.PeriodoFacade;
 import com.tesis.entity.Anlectivo;
 import com.tesis.entity.Contenidotematico;
+import com.tesis.entity.Curso;
 import com.tesis.entity.EstadoPeriodo;
 import com.tesis.entity.Estadocontenidotematico;
 import com.tesis.entity.Periodo;
@@ -57,6 +60,8 @@ public class mbvPeriodo implements Serializable {
     @EJB
     private AnlectivoFacade anlectivoEjb;
     @EJB
+    private AsignaturacicloFacade asignaturaCicloEjb;
+    @EJB
     private ContenidotematicoFacade contenidoEjb;
     @EJB
     private PeriodoFacade periodoEjb;
@@ -68,6 +73,8 @@ public class mbvPeriodo implements Serializable {
     private EstadocontenidotematicoFacade estadoContenidoEjb;    
     @EJB
     private EstadoPeriodoFacade estadoEjb;
+    @EJB
+    private CursoFacade cursoEjb;
     @Resource
     UserTransaction tx;
     
@@ -262,7 +269,17 @@ public class mbvPeriodo implements Serializable {
             //periodo a evaluar
             //comprobamos si no hay uno en evaluacion
             //verificar que no alla contenidos con advertencias
+            //verificar que las asignaturas del ciclo sean iguales a la asigacion
             if(!contenidoEjb.tieneAdvertencias(periodo)){
+                List<Curso> cursosAux = cursoEjb.getCursosByAño(periodo.getAnlectivoId());
+                for(Curso cur : cursosAux){
+                    if(asignaturaCicloEjb.countAsignaturasCiclo(cur.getCicloId())!=contenidoEjb.countAsignaturasCursoPerido(cur, periodo)){
+                        System.out.println("Falta completar la asignacion academica del curso"+cur.getNombre());
+                        FacesContext.getCurrentInstance().
+                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia","Falta completar la asignacion academica del curso"+cur.getNombre()));
+                        return;
+                    }
+                }
                 if(!periodoEjb.enUso(aEscolar)){ 
                     Calendar cal = Calendar.getInstance();
                     cal.add(Calendar.MONTH, +1);

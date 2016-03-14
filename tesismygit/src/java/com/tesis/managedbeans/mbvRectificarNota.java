@@ -4,6 +4,17 @@
  */
 package com.tesis.managedbeans;
 
+import com.lowagie.text.Document;
+import com.lowagie.text.Element;
+import com.lowagie.text.Font;
+import com.lowagie.text.FontFactory;
+import com.lowagie.text.Image;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.Rectangle;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
 import com.tesis.beans.AnlectivoFacade;
 import com.tesis.beans.AsignaturaFacade;
 import com.tesis.beans.AsignaturacicloFacade;
@@ -32,10 +43,12 @@ import com.tesis.entity.Nota;
 import com.tesis.entity.Notafinal;
 import com.tesis.entity.Periodo;
 import com.tesis.entity.Profesor;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -97,8 +110,9 @@ public class mbvRectificarNota {
     private List<Estudiante> estudiantes;
     private List<Contenidotematico> contenidos;
     private Contenidotematico contenidoSelected;
-    
-    
+    private Anlectivo anlectivoselected;
+    private List<Anlectivo> anlectivos;
+    private boolean contenidoPrincipal;
     @EJB
     private CursoFacade cursoEjb;
     @EJB
@@ -130,6 +144,30 @@ public class mbvRectificarNota {
     private JasperPrint jasperPrint;
     
     public mbvRectificarNota() {
+    }
+
+    public boolean isContenidoPrincipal() {
+        return contenidoPrincipal;
+    }
+
+    public void setContenidoPrincipal(boolean contenidoPrincipal) {
+        this.contenidoPrincipal = contenidoPrincipal;
+    }
+
+    public Anlectivo getAnlectivoselected() {
+        return anlectivoselected;
+    }
+
+    public void setAnlectivoselected(Anlectivo anlectivoselected) {
+        this.anlectivoselected = anlectivoselected;
+    }
+
+    public List<Anlectivo> getAnlectivos() {
+        return anlectivos;
+    }
+
+    public void setAnlectivos(List<Anlectivo> anlectivos) {
+        this.anlectivos = anlectivos;
     }
 
     public List<Contenidotematico> getContenidos() {
@@ -297,9 +335,12 @@ public class mbvRectificarNota {
 
     @PostConstruct
     public void inicioPagina() {
+        System.out.println("ENTRA POSTCONSTRUCT");
         this.contenidoSelected = new Contenidotematico();
         this.contenidos = new ArrayList<Contenidotematico>();
-        
+        this.anlectivoselected = new Anlectivo();
+        this.anlectivos = new ArrayList<Anlectivo>();
+        this.contenidoPrincipal = false;
         try {
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
              profesor = mbslogin.getProfesor();
@@ -320,7 +361,8 @@ public class mbvRectificarNota {
         this.cursoSelected = new Curso();
         if(profesor!=null){
             // verificar profesor activo
-            this.contenidos = contenidoEjb.getRectificar(profesor);
+            anlectivos = anlectivoEjb.getAñosEnUso();
+            //this.contenidos = contenidoEjb.getRectificar(profesor);
             System.out.println("logueado como profesor");
             anlectivo = anlectivoEjb.getIniciado();
             //año iniciado
@@ -514,65 +556,6 @@ public class mbvRectificarNota {
         createDynamicColumns();
     }
 
-    public void onCellEdit(CellEditEvent event) {
-        try {
-            //editable = false;
-            Anlectivo auxEscolar = anlectivoEjb.getIniciado();
-            BigDecimal notaLogroValidacion = new BigDecimal(event.getNewValue().toString());
-            BigDecimal min = new BigDecimal(auxEscolar.getConfiguracionId().getEscalaId().getMin());
-            BigDecimal max = new BigDecimal(auxEscolar.getConfiguracionId().getEscalaId().getMax());
-            System.out.println("MIN"+min+" MAX"+max+"Nota"+notaLogroValidacion);
-            if(notaLogroValidacion.compareTo(max)>0 || notaLogroValidacion.compareTo(min)<0){
-                System.out.println("FUNCIONOOOOO");
-                return;
-            }
-            FaceletContext faceletContext = (FaceletContext) FacesContext.getCurrentInstance().getAttributes().get(FaceletContext.FACELET_CONTEXT_KEY);
-            DataTable dataTable = (DataTable) event.getSource();
-            Integer logroId = Integer.parseInt(event.getColumn().getHeaderText().trim());
-            Logro log = new Logro();
-            log = logroEjb.find(logroId);
-            Estudiante es = (Estudiante) dataTable.getRowData();
-            Logronota logNota = new Logronota();
-            logNota = estudianteEjB.findNotaEstudiante(log, es);
-            System.out.println("RESPUESTA****" + logNota);
-            if (logNota == null) {
-                Logronota logNotaNew = new Logronota();
-                Estadologronota estLogroNota = new Estadologronota();
-                estLogroNota = estadologroEjb.find(1);
-                BigDecimal notaLogro = new BigDecimal(event.getNewValue().toString());
-                Object oldValue = event.getOldValue();
-                Object newValue = event.getNewValue();
-                System.out.println("OLD" + oldValue + "NEW" + newValue + "COSO" + logroId);
-                logNotaNew.setLogroId(log);
-                logNotaNew.setEstado(estLogroNota);
-                logNotaNew.setEstudianteId(es);
-                logNotaNew.setNota(notaLogro);
-                logroNotaEjb.create(logNotaNew);
-            } else {
-                BigDecimal notaLogro = new BigDecimal(event.getNewValue().toString());
-                System.out.println("LOGRO NOTA¨¨¨¨***" + logNota + "NEW" + notaLogro);
-                logNota.setNota(notaLogro);
-                logroNotaEjb.edit(logNota);
-            }
-            actualizarNota(contenido, es);
-            cargarContenido();
-            updateColumns();
-            this.editable = true;
-            this.notaxxLogro = "";
-            //RequestContext.getCurrentInstance().update("testContainer");
-            //frmMateriasCiclos
-            //estudiantes = estudianteEjB.findByCurso(cursoSelected);
-            //UIComponent table = FacesContext.getCurrentInstance().getViewRoot().findComponent(":frmMateriasCiclos:tablanotas");
-            //createDynamicColumns();
-        } catch (Exception e) {
-            System.out.println("EERROORR" + e.toString());
-            cargarContenido();
-            updateColumns();
-        }
-
-
-    }
-
     public BigDecimal getNotaEstudiante(Estudiante es, Integer logroId) {
         //System.out.println("INGRESA GET NOTA ******" + es + "LOGRO" + logroId);
         Logro logro = new Logro();
@@ -615,6 +598,7 @@ public class mbvRectificarNota {
                 //System.out.println("NOTAS***"+auxnota+"OTRA"+nota+"PORCENTJE"+p);
             }
         }
+        nota = nota.setScale(1, RoundingMode.HALF_UP);
         notaEst = estudianteEjB.findNotaEst(contenido, es);
         if (notaEst == null) {
             Nota notaEstAux = new Nota();
@@ -630,24 +614,30 @@ public class mbvRectificarNota {
         }
         Asignaturaciclo asc = new Asignaturaciclo();
         asc = asignaturaCicloEjb.find(contenido.getAsignaturacicloId().getAsignaturacicloId());
-        notaf = notafEjb.findNotaFinalActual(asc, es);
+        Anlectivo anlectivoAuxSelected = anlectivoEjb.find(anlectivoselected.getAnlectivoId());
+        notaf = notafEjb.findNotaFinalActual(asc, es,anlectivoAuxSelected);
         Anlectivo anlectivoAux = new Anlectivo();
-        cursoSelected = cursoEjb.find(cursoSelected.getCursoId());
-        anlectivoAux = anlectivoEjb.find(cursoSelected.getAnlectivoId().getAnlectivoId());
+        //cursoSelected = cursoEjb.find(cursoSelected.getCursoId());
+        //anlectivoAux = anlectivoEjb.find(cursoSelected.getAnlectivoId().getAnlectivoId());
         //System.out.println("MM QUE SERA::::"+notaf.toString()+"aa a"+asc.toString()+"bbb"+es.toString());
-        Double notaFinal = notaEstEJB.getNotaFinal(anlectivoAux, es, cursoSelected,contenido.getAsignaturacicloId());        
-        BigDecimal notaFinalDef = new BigDecimal(notaFinal);
+        Double notaFinal = notaEstEJB.getNotaFinal(anlectivoAuxSelected, es, contenido.getCursoId(),contenido.getAsignaturacicloId());        
+        System.out.println("NOTA FINAL OKkkkkzzzzz"+notaFinal);
+        BigDecimal notaFinalDef = new BigDecimal(notaFinal.toString());
+        System.out.println("NOTA FINAL OKkkkk"+notaFinalDef);
+        notaFinalDef = notaFinalDef.setScale(1, RoundingMode.HALF_UP); 
         System.out.println("NOTA FINAL OK"+notaFinalDef);
         if(notaf == null){
             Notafinal notaFinalAux = new Notafinal();
             notaFinalAux.setAsignaturacicloId(asc);
             notaFinalAux.setEstudianteId(es);
             notaFinalAux.setProfesorId(profesor);
+            notaFinalAux.setAnlectivoId(anlectivoAuxSelected);
             notaFinalAux.setValor(notaFinalDef);
             notaFinalAux.setRecuperacion("NO");
             System.out.println("NOTA FINAL OKKaKKK"+notaFinalAux.getValor());
             notafEjb.create(notaFinalAux);
         }else{
+            notaf.setProfesorId(profesor);
             notaf.setValor(notaFinalDef);
             notafEjb.edit(notaf);
         }
@@ -722,7 +712,7 @@ public class mbvRectificarNota {
                 //BigDecimal value = entry.getValue();
                 System.out.println("Edito 22"+key+"   "+entry.getValue());
                 //editable = false;
-                Anlectivo auxEscolar = anlectivoEjb.getIniciado();
+                Anlectivo auxEscolar = anlectivoEjb.find(anlectivoselected.getAnlectivoId());
                 BigDecimal notaLogroValidacion = new BigDecimal(entry.getValue().toString());
                 BigDecimal min = new BigDecimal(auxEscolar.getConfiguracionId().getEscalaId().getMin());
                 BigDecimal max = new BigDecimal(auxEscolar.getConfiguracionId().getEscalaId().getMax());
@@ -814,5 +804,155 @@ public class mbvRectificarNota {
         JasperExportManager.exportReportToPdfStream(jasperPrint, servletOutputStream);  
         FacesContext.getCurrentInstance().responseComplete(); 
     }
-    
+    public void cargarAnio(){
+        
+        if(anlectivoselected.getAnlectivoId()!=null){
+            anlectivoselected = anlectivoEjb.find(anlectivoselected.getAnlectivoId());
+            this.contenidos = contenidoEjb.getRectificarAño(profesor,anlectivoselected);
+            if(this.contenidos.isEmpty()){
+                FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "INFORMACION", "No tiene ninguna asignatura habilitada para corregir notas"));
+            }else{
+                this.contenidoPrincipal = true;
+            }
+        }else{
+            System.out.println("ENTRA ELSE PRUEBA ");
+            contenidoPrincipal = false;
+        }    
+    }
+    public void imprimir(){
+        cursoSelected = cursoEjb.find(this.contenido.getCursoId().getCursoId());
+        Document document = new Document(PageSize.LETTER);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try {
+            PdfWriter.getInstance(document, baos);
+            document.open();
+            URL url = FacesContext.getCurrentInstance().getExternalContext().getResource("/escudo.png");
+            Image image = Image.getInstance(url);
+            image.scaleAbsolute(100,100);        
+            PdfPTable table2 = new PdfPTable(2);
+            table2.setWidthPercentage(100);
+            table2.setWidths(new int[]{1, 4});
+            PdfPCell cell = new PdfPCell(image, true);
+            cell.setBorder(Rectangle.NO_BORDER);
+            cell.setRowspan(2);
+            table2.addCell(cell);
+            PdfPCell cell2 = new PdfPCell();
+            Paragraph par = new Paragraph("CENTRO EDUCATIVO  “ANTONIO RICAURTE” ",FontFactory.getFont("arial",14,Font.BOLD));
+            par.setAlignment(Element.ALIGN_CENTER);
+            cell2.addElement(par);
+            cell2.setVerticalAlignment(Element.ALIGN_CENTER);
+            cell2.setBorder(Rectangle.NO_BORDER);
+            table2.addCell(cell2);
+            PdfPCell cell3 = new PdfPCell();
+            Paragraph par3 = new Paragraph("Licencia de funcionamiento 366 de Abril 4 de 2001, Resolución 1861  Junio 30 de 2005 de  la Secretaría "
+                    + "de Educación y Cultura Departamental  CODIGO SNP ICFES 114454 Código DANE 352612001093 "
+                    ,FontFactory.getFont("arial",9,Font.NORMAL));
+            par3.setAlignment(Element.ALIGN_CENTER);
+            cell3.addElement(par3);
+            cell3.setVerticalAlignment(Element.ALIGN_CENTER);
+            cell3.setBorder(Rectangle.NO_BORDER);
+            table2.addCell(cell3);
+            document.add(table2);
+            // datos estudiante
+            Paragraph parDescrip = new Paragraph("Reporte notas año escolar "+cursoSelected.getAnlectivoId().getAnio()
+                + " "+cursoSelected.getNombre()+" ciclo "+cursoSelected.getCicloId().getNumero()+" periodo "+contenido.getPeriodoId().getNumero()
+                ,FontFactory.getFont("arial",12,Font.NORMAL));
+            document.add(parDescrip);
+            Paragraph parProf = new Paragraph("Profesor: "+ profesor.getApellido() + " " +profesor.getNombre()
+                ,FontFactory.getFont("arial",12,Font.NORMAL));
+            document.add(parProf);
+            document.add(new Paragraph("\n"));
+            
+            PdfPTable tablaLogros = new PdfPTable(3);
+            tablaLogros.setWidths(new int[]{30,80,10});
+           
+            PdfPCell cellTituloLogro = new PdfPCell();
+            Paragraph partituloLogro= new Paragraph("Logro",FontFactory.getFont("arial",12));
+            partituloLogro.setAlignment(Element.ALIGN_CENTER);
+            cellTituloLogro.addElement(partituloLogro);
+            tablaLogros.addCell(cellTituloLogro);
+            
+            PdfPCell cellTituloDescrip = new PdfPCell();
+            Paragraph partituloDescrip = new Paragraph("Descripcion",FontFactory.getFont("arial",12));
+            partituloDescrip.setAlignment(Element.ALIGN_CENTER);
+            cellTituloDescrip.addElement(partituloDescrip);
+            tablaLogros.addCell(cellTituloDescrip);
+            
+            PdfPCell cellTituloPorcentaje = new PdfPCell();
+            Paragraph partituloPorcentaje = new Paragraph("%",FontFactory.getFont("arial",12));
+            partituloPorcentaje.setAlignment(Element.ALIGN_CENTER);
+            cellTituloPorcentaje.addElement(partituloPorcentaje);
+            tablaLogros.addCell(cellTituloPorcentaje);
+            
+            for(Logro log : logros){
+                tablaLogros.addCell(log.getTitulo());
+                tablaLogros.addCell(log.getDescripcion());
+                tablaLogros.addCell(log.getPorcentaje()+"");
+            }
+            document.add(tablaLogros);
+            document.add(new Paragraph("\n"));
+            PdfPTable table = new PdfPTable(2+columns.size());
+            table.setWidthPercentage(100);
+            int tam = 2+columns.size();
+            float[] ft = new float[tam];
+            for(int i=0;i<tam;i++){
+                System.out.println(i);
+                if(i==0){
+                    ft[i]=80f; 
+                }else if(i==tam-1){
+                    ft[i] = 9f;
+                }else{
+                    ft[i] = 30f;
+                }         
+            }
+            table.setWidths(ft);
+            PdfPCell cellTituloEstudiante = new PdfPCell();
+            Paragraph partituloEstudiante= new Paragraph("ESTUDIANTE ",FontFactory.getFont("arial",12));
+            partituloLogro.setAlignment(Element.ALIGN_CENTER);
+            cellTituloEstudiante.addElement(partituloEstudiante);
+            table.addCell(cellTituloEstudiante);
+            for(mbvNotas.ColumnModel col:columns){
+                table.addCell(col.getHeader());
+            }
+            PdfPCell cellTituloNotaF = new PdfPCell();
+            Paragraph partituloNotaF= new Paragraph("Nota ",FontFactory.getFont("arial",12));
+            partituloNotaF.setAlignment(Element.ALIGN_CENTER);
+            cellTituloNotaF.addElement(partituloNotaF);
+            table.addCell(cellTituloNotaF);
+            for(Estudiante est : estudiantes){
+                table.addCell(est.getApellido()+" "+est.getNombre());
+                for (Logro aux : logros) {
+                    table.addCell(getNotaEstudiante(est,aux.getLogroId())+"");
+                }
+                table.addCell(getNotaEst(est)+"");
+            }
+            document.add(table);
+            
+        } catch (Exception e) {
+            System.out.println("ENTRO 3 ");
+            System.out.println("Error " + e.getMessage());
+        }
+        document.close(); 
+        FacesContext context = FacesContext.getCurrentInstance();
+        Object response = context.getExternalContext().getResponse();
+        if (response instanceof HttpServletResponse) {
+            System.out.println("ENTRO 4 ");
+            HttpServletResponse hsr = (HttpServletResponse) response;
+            hsr.setContentType("application/pdf");
+            hsr.setHeader("Content-disposition", "attachment; filename=report.pdf"); 
+            hsr.setContentLength(baos.size());
+            try {
+                System.out.println("ENTRO 5 ");
+                ServletOutputStream out = hsr.getOutputStream();
+                baos.writeTo(out);
+                out.flush();
+            } catch (IOException ex) {
+                System.out.println("ENTRO 6 ");
+                System.out.println("Error:  " + ex.getMessage());
+            }
+            System.out.println("ENTRO 7 ");
+            context.responseComplete();
+        }
+    }
 }

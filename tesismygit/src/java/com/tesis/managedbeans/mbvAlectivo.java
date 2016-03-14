@@ -1,27 +1,48 @@
 package com.tesis.managedbeans;
 
 import com.tesis.beans.AnlectivoFacade;
+import com.tesis.beans.AprobacionFacade;
+import com.tesis.beans.AsignaturaFacade;
 import com.tesis.beans.AsignaturacicloFacade;
+import com.tesis.beans.CicloFacade;
 import com.tesis.beans.ConfiguracionFacade;
+import com.tesis.beans.ContenidotematicoFacade;
 import com.tesis.beans.CriterioevaluacionFacade;
+import com.tesis.beans.CursoFacade;
 import com.tesis.beans.EscalaFacade;
 import com.tesis.beans.EstadoAniolectivoFacade;
+import com.tesis.beans.EstadoEstudianteFacade;
+import com.tesis.beans.EstadoMatriculaFacade;
+import com.tesis.beans.EstadocontenidotematicoFacade;
 import com.tesis.beans.EstudianteFacade;
 import com.tesis.beans.FormacriterioevaluacionFacade;
 import com.tesis.beans.MatriculaFacade;
+import com.tesis.beans.NotafinalFacade;
+import com.tesis.beans.NotafinalrecuperacionFacade;
+import com.tesis.beans.PeriodoFacade;
 import com.tesis.beans.UsuarioRoleFacade;
 import com.tesis.entity.Anlectivo;
+import com.tesis.entity.Aprobacion;
+import com.tesis.entity.Asignatura;
 import com.tesis.entity.Asignaturaciclo;
+import com.tesis.entity.Ciclo;
 import com.tesis.entity.Configuracion;
 import com.tesis.entity.Criterioevaluacion;
+import com.tesis.entity.Curso;
 import com.tesis.entity.Escala;
 import com.tesis.entity.EstadoAniolectivo;
+import com.tesis.entity.EstadoEstudiante;
+import com.tesis.entity.EstadoMatricula;
+import com.tesis.entity.Estadocontenidotematico;
 import com.tesis.entity.Estudiante;
 import com.tesis.entity.Formacriterioevaluacion;
 import com.tesis.entity.Matricula;
+import com.tesis.entity.Notafinal;
+import com.tesis.entity.Notafinalrecuperacion;
 import com.tesis.entity.Usuario;
 import com.tesis.entity.UsuarioRole;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -29,12 +50,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.transaction.UserTransaction;
 import org.primefaces.context.RequestContext;
 
 @ManagedBean
@@ -55,8 +78,18 @@ public class mbvAlectivo implements Serializable {
     private String copia;
     private boolean estCopia;
     boolean mensage = false;
+    private boolean mostrarEditar = false;
+    private boolean mostrarLabel = false;
     @EJB
     private AnlectivoFacade anlectivoEjb;
+    @EJB
+    private PeriodoFacade periodoEjb;
+    @EJB
+    private AprobacionFacade aprobacionEjb;
+    @EJB
+    private EstadocontenidotematicoFacade estadoContenidoEjb;
+    @EJB
+    private ContenidotematicoFacade contenidoEjb;
     @EJB
     private EstadoAniolectivoFacade estadoAlectivoEjb;
     @EJB
@@ -74,13 +107,44 @@ public class mbvAlectivo implements Serializable {
     @EJB
     private FormacriterioevaluacionFacade formaEvaluacionEjb;
     @EJB
+    private AsignaturaFacade asignaturaEjb;
+    @EJB
     private UsuarioRoleFacade usrRoleEjb;
-    
+    @EJB
+    private CursoFacade cursoEjb;
+    @EJB
+    private NotafinalFacade notaFinalEjb;
+    @EJB
+    private NotafinalrecuperacionFacade notaFinalRecEjb;
+    @EJB
+    private EstadoEstudianteFacade estadoEstuainteEjb;
+    @EJB
+    private EstadoMatriculaFacade estadoMatriculaEjb;
+    @EJB
+    private CicloFacade cicloEjb;
+    @Resource
+    UserTransaction tx;
     public mbvAlectivo() {
     }
 
     public String getCopia() {
         return copia;
+    }
+
+    public boolean isMostrarEditar() {
+        return mostrarEditar;
+    }
+
+    public void setMostrarEditar(boolean mostrarEditar) {
+        this.mostrarEditar = mostrarEditar;
+    }
+
+    public boolean isMostrarLabel() {
+        return mostrarLabel;
+    }
+
+    public void setMostrarLabel(boolean mostrarLabel) {
+        this.mostrarLabel = mostrarLabel;
     }
 
     public void setCopia(String copia) {
@@ -193,8 +257,11 @@ public class mbvAlectivo implements Serializable {
             System.out.println("usuario"+usr.getNombres()+"Login"+login);
         } catch (Exception e) {
             System.out.println(e.toString());
+            login=false;
         }
-        login=false;
+        if(this.usr.getUsuarioId()==null){
+            login=false;
+        }
         this.estCopia = false;
         this.anlectivo = new Anlectivo();
         this.configuracionselected = new Configuracion();
@@ -234,6 +301,9 @@ public class mbvAlectivo implements Serializable {
                     }
                 }
             }
+            if(this.usr.getTipoUsuarioId().getTipoUsuarioId()==4){
+                permiso=true;
+            }
             if(permiso){
                 EstadoAniolectivo est = new EstadoAniolectivo();
                 est = estadoAlectivoEjb.find(1);
@@ -245,6 +315,7 @@ public class mbvAlectivo implements Serializable {
                 }
                 this.anlectivo.setEstadocopiado(copia);
                 anlectivoEjb.create(anlectivo);
+                RequestContext.getCurrentInstance().closeDialog(this);
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Criterio Evaluacion creado Satisfactoriamente", ""));
                 inicioPagina();
@@ -288,7 +359,11 @@ public class mbvAlectivo implements Serializable {
                     }
                 }
             }
+            if(this.usr.getTipoUsuarioId().getTipoUsuarioId()==4){
+                permiso=true;
+            }
             if(permiso){
+                tx.begin();
                 System.out.println("AUX"+this.estadoAlectivoselectedAux.getEstadoAniolectivoId()+"cambio"+this.estadoAlectivoselected.getEstadoAniolectivoId());
                 if(this.estadoAlectivoselected.getEstadoAniolectivoId() != this.estadoAlectivoselectedAux.getEstadoAniolectivoId()){
                     if(anlectivoEjb.existActivo() && estadoAlectivoselected.getEstadoAniolectivoId()==5){
@@ -306,7 +381,25 @@ public class mbvAlectivo implements Serializable {
                 this.estadoAlectivoselected = this.estadoAlectivoEjb.find(estadoAlectivoselected.getEstadoAniolectivoId());
                 this.anlectivo.setConfiguracionId(configuracionselected);
                 this.anlectivo.setEstadoAniolectivoId(estadoAlectivoselected);
+                
                 if(estadoAlectivoselected.getEstadoAniolectivoId()==3){
+                    if(periodoEjb.getNumeroPeriodosAño(anlectivo)!=periodoEjb.getNumeroPeriodosTerminadosAño(anlectivo)){
+                        FacesContext.getCurrentInstance().
+                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No ha terminado de evaluar todos los periodos"));
+                        return;
+                    }
+                    // verificar que todos los periodos esten terminados 
+                    // poner todos lo contenidos de ese año en terminado
+                    // traer las asignaturas del ciclo mdel estudiante
+                    // comprobar si el año ta estaba terminado
+                    // comprobar si perdio mas de la permitidas 
+                    // sacar el numero del ciclo dependiendo de si aprobo o no restar o aumentar
+                    //cmbiar estados matricua
+                    
+                    
+                    //4
+                    Estadocontenidotematico estadoContenido = estadoContenidoEjb.find(4);
+                    contenidoEjb.updateTerminarAño(anlectivo, estadoContenido);
                     this.anlectivo.setTerminado(true);
                     Escala escala = escalaEjb.find(anlectivo.getConfiguracionId().getEscalaId().getEscalaId());
                     Criterioevaluacion criterio = criterioEjb.find(anlectivo.getConfiguracionId().getCriterioevaluacionId().getCriterioevaluacionId());
@@ -316,25 +409,77 @@ public class mbvAlectivo implements Serializable {
                     //hacer transacion 1 asignatura 2 areas 
                     List <Matricula> matriculasAnio;
                     matriculasAnio = matriculaEjb.getMatriculasAnio(anlectivo);
-                    for(Matricula maticula : matriculasAnio){
-                        if(criterio.getFormacriterioevaluacionId().getFormacriterioevaluacionId()==1){
-                            Long aprobadas = this.asiganturaCicloEjb.asignaturasAprobadasAnio(new Integer(escala.getNotaminimaaprob()),maticula.getEstudianteId(),maticula.getCursoId());
-                            if(aprobadas<criterio.getMinaprob()){
-                                System.out.println("PERDIO");
-                            }else{
-                                System.out.println("GANO");
+                    if(!matriculasAnio.isEmpty()){
+                        for(Matricula maticula : matriculasAnio){
+                            Estudiante est = estdudianteEjb.find(maticula.getEstudianteId().getEstudianteId());
+                            List<Asignatura> asignaturas = new ArrayList<Asignatura>();
+                            Curso curso = cursoEjb.find(maticula.getCursoId().getCursoId());
+                            Ciclo ciclo = cicloEjb.find(curso.getCicloId().getCicloId());
+                            asignaturas = asignaturaEjb.findByCiclo(ciclo);
+                            int perdidas = 0;
+                            if(asignaturas.isEmpty()){
+                                FacesContext.getCurrentInstance().
+                                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "hay un ciclo sin asignaturas"));
+                                tx.rollback();
+                                return;
                             }
-                        }else if(criterio.getFormacriterioevaluacionId().getFormacriterioevaluacionId()==2){
+                            for(Asignatura asignatura : asignaturas){
+                                Asignaturaciclo asg = asiganturaCicloEjb.asignaturasCiclo(ciclo, asignatura);
+                                Notafinal notafinalEst = notaFinalEjb.findNotaFinalActual(asg, est, anlectivo);
+                                BigDecimal max = new BigDecimal(escala.getNotaminimaaprob());
+                                System.out.println("NMNMNM"+notafinalEst+"ESTUDIANTE "+est+"asignatura "+asg+"año escolar "+anlectivo+"MATRICULA "+maticula);
+                                if(notafinalEst.getRecuperacion().compareTo("SI")==0){
+                                    //tiene recupeacion
+                                    Notafinalrecuperacion notaRecuperacion = notaFinalRecEjb.getNotaFinalRecuperar(notafinalEst);
+                                    //queda sacar la nota y comprar para vere si pasa o no
 
+                                    if(notaRecuperacion.getValor().compareTo(max)>=0){
+                                        //paso
+                                    }else{
+                                        //no paso
+                                        perdidas ++;
+                                    }
+
+                                }else{
+                                    //no tiene recuperacion
+                                    if(notafinalEst.getValor().compareTo(max)>=0){
+                                        //paso
+                                    }else{
+                                        //no paso
+                                        perdidas ++;
+                                    }
+                                }                           
+                            }
+                            if(perdidas>criterio.getMinaprob()){
+                                //perdio año
+                                est.setUltimoaprobado(ciclo.getNumero());
+                                Aprobacion aprobacion = aprobacionEjb.find(3);
+                                maticula.setAprobacionId(aprobacion);
+                            }else{
+                                //gano el año
+                                est.setUltimoaprobado(ciclo.getNumero()+1);
+                                Aprobacion aprobacion = aprobacionEjb.find(2);
+                                maticula.setAprobacionId(aprobacion);
+                                if(ciclo.getNumero()+1>5){//este es importante
+                                    EstadoEstudiante estadoEst = estadoEstuainteEjb.find(2);
+                                    est.setEstadoEstudianteId(estadoEst);
+                                }
+                            }
+                            EstadoMatricula estadoMat = estadoMatriculaEjb.find(4);
+                            maticula.setEstadoMatriculaId(estadoMat);
+                            estdudianteEjb.edit(est);
+                            matriculaEjb.edit(maticula);
+                            System.out.println("estudiante "+est+"matricula "+maticula+"perdidos "+perdidas);
                         }
-                        //Estudiante est = estdudianteEjb.find(maticula.getEstudianteId().getEstudianteId());
-                        //Long aprobadas = this.asiganturaCicloEjb.asignaturasAprobadasAnio(new Integer(3),maticula.getEstudianteId(),maticula.getCursoId());
-                        //System.out.println("MATRICULA ESTUDIANTE !!!!"+maticula.getEstudianteId()+"NUMERO APROABAS"+aprobadas);
-
+                    }else{
+                        FacesContext.getCurrentInstance().
+                                addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se encontro matrculas activas para este año"));
+                        tx.rollback();
+                        return;
                     }
-                    return;
                 }
                 this.anlectivoEjb.edit(anlectivo);
+                tx.commit();
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Escala creada Satisfactoriamente", ""));
                 RequestContext.getCurrentInstance().execute("PF('dialogoEditarAlectivo').hide()");
@@ -347,6 +492,7 @@ public class mbvAlectivo implements Serializable {
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
             }
         } catch (Exception e) {
+            e.printStackTrace();
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
         }
@@ -361,8 +507,34 @@ public class mbvAlectivo implements Serializable {
             this.estadoAlectivoselectedAux = this.estadoAlectivoEjb.find(this.anlectivo.getEstadoAniolectivoId().getEstadoAniolectivoId());
             if(anlectivo.getTerminado()){
                 this.estadosAlectivos = this.estadoAlectivoEjb.getEstadosAnTerminado();
+                this.mostrarEditar = false;
+                this.mostrarLabel = true;
             }else{
                 this.estadosAlectivos = this.estadoAlectivoEjb.findAll();
+            }
+            if(this.anlectivo.getEstadoAniolectivoId().getEstadoAniolectivoId()==1){
+                //inactivo
+                this.mostrarEditar = true;
+                this.mostrarLabel = false;
+                this.estadosAlectivos.clear();
+                EstadoAniolectivo estAux = estadoAlectivoEjb.find(1);
+                EstadoAniolectivo estAux2 = estadoAlectivoEjb.find(2);
+                EstadoAniolectivo estAux3 = estadoAlectivoEjb.find(4);
+                this.estadosAlectivos.add(estAux);
+                this.estadosAlectivos.add(estAux2);
+                this.estadosAlectivos.add(estAux3);
+            }
+            if(this.anlectivo.getEstadoAniolectivoId().getEstadoAniolectivoId()==2){
+                //iniciado
+                this.mostrarEditar = false;
+                this.mostrarLabel = true;
+                this.estadosAlectivos.clear();
+                EstadoAniolectivo estAux = estadoAlectivoEjb.find(3);
+                EstadoAniolectivo estAux2 = estadoAlectivoEjb.find(4);
+                EstadoAniolectivo estAux3 = estadoAlectivoEjb.find(2);
+                this.estadosAlectivos.add(estAux);
+                this.estadosAlectivos.add(estAux2);
+                this.estadosAlectivos.add(estAux3);
             }
             //this.areas = this.confuguracionselected.getAreaList();
             RequestContext.getCurrentInstance().update("frmEditarAlectivo:panelEditarAlectivo");
@@ -412,6 +584,9 @@ public class mbvAlectivo implements Serializable {
                         }
                     }
                 }
+            }
+            if(this.usr.getTipoUsuarioId().getTipoUsuarioId()==4){
+                permiso=true;
             }
             if(permiso){
                 //this.escala = this.escalaEjb.find(escalaid);

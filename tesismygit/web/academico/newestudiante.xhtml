@@ -5,7 +5,7 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core">
     <h:head>
-        <title>Nuevo Profesor</title>
+        <title>Nuevo Estudiante</title>
                 <style type="text/css">
             .ui-widget {
                 font-size: 90%;
@@ -66,7 +66,7 @@
                     <f:validator validatorId="validatorVacio"/>
                 </p:inputText>
                 <p:message for="txtAcudiente"/>
-                <p:outputLabel for="txtUltimo" value="Ultimo ciclo Aprobado: " />
+                <p:outputLabel for="txtUltimo" value="Ciclo al que se va a matricular: " />
                 <p:inputText id="txtUltimo" value="#{mbvEstudiante.estudiante.ultimoaprobado}" size="50">
                     <f:validator validatorId="validatorVacio"/>
                 </p:inputText>
@@ -105,7 +105,7 @@
                 <p:fileUpload id="txtFoto" mode="simple" value="#{mbvEstudiante.foto}" />
                 <p:message for="txtFoto"/>
                 <h:panelGroup></h:panelGroup>
-                <p:commandButton value="Registrar Profesor" action="#{mbvEstudiante.insertar}" ajax="false" update="frmProfesor" />
+                <p:commandButton value="Registrar Estudiante" action="#{mbvEstudiante.insertar}" ajax="false" update="frmProfesor" />
             </h:panelGrid> 
         </h:form>
     </h:body>

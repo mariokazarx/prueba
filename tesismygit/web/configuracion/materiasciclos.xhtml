@@ -29,6 +29,25 @@
                         <p:ajax event="transfer" listener="#{mbvMateriasCiclos.onTransfer}"  />
                     </p:pickList>
                     <p:commandButton id="Confirmar" value="Confirmar" update="frmMateriasCiclos" style="margin-top:5px" />
+                    <div>
+                        <span>
+                            Asignaturas para el ciclo #{mbvMateriasCiclos.cicloTabla.numero} 
+                        </span>
+                    </div>
+                    <p:dataTable id="tablaAsignadas" var="asignatura" rowIndexVar="index" value="#{mbvMateriasCiclos.asignturasSelecionadas}" tableStyle="width:auto">
+                        
+                        <p:column headerText="Numero">
+                            <h:outputText value="#{index+1}" />
+                        </p:column>
+
+                        <p:column headerText="Asignatura">
+                            <h:outputText value="#{asignatura.nombre}" />
+                        </p:column>
+                        <p:column headerText="Ciclo">
+                            <h:outputText value="#{mbvMateriasCiclos.cicloTabla.numero}" />
+                        </p:column>
+
+                    </p:dataTable>
                 </h:form>
             </ui:define>
         </ui:composition>

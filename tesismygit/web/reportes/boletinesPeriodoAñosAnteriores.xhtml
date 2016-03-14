@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:head>
+        <title>Nueva Escala</title>
+        <style type="text/css">
+            .ui-widget {
+                font-size: 90%;
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <ui:composition template="./../plantilla.xhtml">
+            <ui:define name="content">
+                <h:form id="frmReporteMatriculas" styleClass="container-form">
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
+                    <f:metadata>
+                        <f:event type="preRenderView" listener="#{mbvBoletinesAnteriores.initRender}" />
+                    </f:metadata>                    
+                    <p:outputPanel rendered="#{mbvBoletinesAnteriores.mostrarPrincipal}">
+                        <h3>Titulo</h3>
+                        <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5" styleClass="cont-control">
+                            <p:outputLabel for="selectanlectivo" value="Año Escolar: " styleClass="control-label"/>
+                            <p:selectOneMenu id="selectanlectivo" value="#{mbvBoletinesAnteriores.anlectivoSelected.anlectivoId}" styleClass="control">
+                                <p:ajax listener="#{mbvBoletinesAnteriores.cargarAño}" update="frmReporteMatriculas"/>
+                                <f:selectItem itemLabel="Seleccione."/>
+                                <f:selectItems value="#{mbvBoletinesAnteriores.anlectivos}" var="anlectivo" itemLabel="#{anlectivo.anio}" itemValue="#{anlectivo.anlectivoId}"/>
+                            </p:selectOneMenu>
+                        </h:panelGrid>
+                        
+                        <h:panelGroup rendered="#{mbvBoletinesAnteriores.mostrarPeriodos}" >
+                            <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5" styleClass="cont-control">
+                                <p:outputLabel for="selectPeriodo" value="Periodo: " styleClass="control-label"/>
+                                <p:selectOneMenu id="selectPeriodo" value="#{mbvBoletinesAnteriores.periodoSelected.periodoId}" styleClass="control">
+                                    <p:ajax listener="#{mbvBoletinesAnteriores.cargarPeriodo}" update="frmReporteMatriculas"/>
+                                    <f:selectItem itemLabel="Seleccione."/>
+                                    <f:selectItems value="#{mbvBoletinesAnteriores.periodos}" var="periodo" itemLabel="#{periodo.numero}" itemValue="#{periodo.periodoId}"/>
+                                </p:selectOneMenu>
+                            </h:panelGrid>
+                        </h:panelGroup>
+                        <p:outputPanel rendered="#{mbvBoletinesAnteriores.mostrarCursos}">
+                            <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5" styleClass="cont-control">
+                                <p:outputLabel for="selectCourse" value="Curso: "  styleClass="control-label"/>
+                                <p:selectOneMenu id="selectCourse" value="#{mbvBoletinesAnteriores.cursoSelected.cursoId}" styleClass="control">
+                                    <p:ajax listener="#{mbvBoletinesAnteriores.seleccionCurso}" update="frmReporteMatriculas"/>
+                                    <f:selectItem itemLabel="Seleccione."/>
+                                    <f:selectItems value="#{mbvBoletinesAnteriores.cursos}" var="curso" itemLabel="ciclo #{curso.cicloId.numero} - #{curso.nombre} " itemValue="#{curso.cursoId}"/>
+                                </p:selectOneMenu>
+                            </h:panelGrid>
+                        </p:outputPanel>
+                        <p:outputPanel id="panelReporteMatriculas" rendered="#{mbvBoletinesAnteriores.mostrarBoton}" style="text-align: center">
+                            <p:commandButton ajax="false" value="Generar Reporte" actionListener="#{mbvBoletinesAnteriores.imprimir}" />
+                        </p:outputPanel> 
+                    </p:outputPanel>                    
+                </h:form>        
+            </ui:define>
+        </ui:composition>
+
+    </h:body>
+</html>
+

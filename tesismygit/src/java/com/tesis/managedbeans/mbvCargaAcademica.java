@@ -59,6 +59,7 @@ public class mbvCargaAcademica implements Serializable {
     private boolean banderaAsig = false;
     private boolean banderaSearch = false;
     private boolean isPeriodo = false;
+    private boolean mostrarSeleccion;
     private boolean mostrarCursos;
     private Contenidotematico contenido;
     private String mensaje;
@@ -83,6 +84,14 @@ public class mbvCargaAcademica implements Serializable {
     UserTransaction tx;
 
     public mbvCargaAcademica() {
+    }
+
+    public boolean isMostrarSeleccion() {
+        return mostrarSeleccion;
+    }
+
+    public void setMostrarSeleccion(boolean mostrarSeleccion) {
+        this.mostrarSeleccion = mostrarSeleccion;
     }
 
     public boolean isMostrarCursos() {
@@ -243,6 +252,8 @@ public class mbvCargaAcademica implements Serializable {
                 this.cargarDatos(profesor);
             } else {
                 this.banderaSearch = false;
+                FacesContext.getCurrentInstance().
+                                addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Advertencia", "Profesor no encontrado"));
             }
 
         } catch (Exception e) {
@@ -426,13 +437,27 @@ public class mbvCargaAcademica implements Serializable {
                 Anlectivo anescolar = new Anlectivo();
                 Anlectivo auxEscolar = anlectivoEjb.getIniciado();
                 if(auxEscolar!=null){
+                    System.out.println("ENTRO 1"); 
                     //hay año iniciado
                     if(auxEscolar.getCursoList().isEmpty()){
                         //no hay cursos activos
+                        System.out.println("ENTRO 2");
+                        this.banderaSearch = true;
+                        this.mostrarSeleccion = false;
+                        this.mostrarCursos = false;
+                        FacesContext.getCurrentInstance().
+                                addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "aun no hay cursos para realizar la asignacion academica"));
                     }else{
+                        System.out.println("ENTRO 3");
                         this.cursos = auxEscolar.getCursoList();
+                        this.banderaAsig = false;
+                        this.isPeriodo = false;
+                        this.mostrarSeleccion = true;
+                        this.banderaSearch = true;
+                        this.periodoSelected = new Periodo();
+                        this.cursoSelected = new Curso();
                     }
-                    List<Anlectivo> auxAnlectivos;
+                    /*List<Anlectivo> auxAnlectivos;
                     auxAnlectivos = anlectivoEjb.findAll();
                     for(Anlectivo auxan : auxAnlectivos){
                         if(auxan.getEstadoAniolectivoId().getEstadoAniolectivoId()==2){
@@ -449,21 +474,21 @@ public class mbvCargaAcademica implements Serializable {
                         for(Curso cur:anescolar.getCursoList()){
                             System.out.println(cur);
                         }
-                    }
+                    }*/
                 }
             }
-            this.banderaSearch = true;
-            this.banderaAsig = false;
-            this.isPeriodo = false;
-            this.periodoSelected = new Periodo();
-            this.cursoSelected = new Curso();
+            
             //profesor debe estar activo 
             //alño esdcolar iniciado 
             // al menos un curso para ese año
             //prueba();
         }
         else{
+            System.out.println("ENTRO 65");
             this.profesor = new Profesor();
+            this.mostrarSeleccion = false;
+            /*FacesContext.getCurrentInstance().
+                                addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Advertencia", "Profesor no encontrado"));*/
         }
         
     }
@@ -495,6 +520,15 @@ public class mbvCargaAcademica implements Serializable {
             
         }else{
             mostrarCursos = false;
+        }
+    }
+    public void initRender(){
+        Anlectivo aEscolarAux = anlectivoEjb.getIniciado();
+        if(aEscolarAux==null){
+            FacesContext.getCurrentInstance().
+                addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Aun no ha iniciado el año escolar"));
+        }else{
+            
         }
     }
 }

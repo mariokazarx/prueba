@@ -4,7 +4,10 @@
  */
 package com.tesis.beans;
 
+import com.tesis.entity.Anlectivo;
 import com.tesis.entity.Area;
+import com.tesis.entity.Configuracion;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -45,6 +48,28 @@ public class AreaFacade extends AbstractFacade<Area> {
         catch (Exception e) {
             return false;
         }
+    }
+    public List<Area> getByConfiguracion(Configuracion configuracion){
+        try {
+            Query cq = em.createNamedQuery("Area.findByConfiguraion");
+            cq.setParameter("configuracion",configuracion);
+            if(cq.getResultList()!=null){
+                return cq.getResultList();
+            }
+            else{
+                return null;
+            }
+        } catch (PersistenceException e) {
+            System.out.println("llega b");
+            e.printStackTrace();
+            return null;
+        }
+        catch (Exception e) {
+            System.out.println("llega c");
+            e.printStackTrace();
+            return null;
+        }
+        
     }
     
 }

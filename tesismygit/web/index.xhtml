@@ -14,20 +14,20 @@
         <div class="contenedorLogin">
             <h:form id="frmLogin" class="formulario">
                 <p:growl id="mensageGeneral" showDetail="true" sticky="false"/>
-                <p:graphicImage library="imagenes" name="escudo.png" height="125" width="125"/>
+                <p:graphicImage library="imagenes" name="escudo.png" height="125" width="125" style="margin-top:15px"/>
                 <h2>Inicio de sesión</h2>
-                <h:panelGrid columns="1" style="width: 100%">
+                <h:panelGrid columns="1" style="width: 100%" class="prueba">
                     <p:outputLabel value="Correo electrónico" for="txtCorreoElectronico" />
-                    <p:inputText placeholder="Correo" id="txtCorreoElectronico" style="width:60%" value="#{mbsLogin.txtCorreo}"/>
+                    <p:inputText placeholder="Correo" id="txtCorreoElectronico"  value="#{mbsLogin.txtCorreo}"/>
                     <p:outputLabel value="Contraseña" for="txtContrasenia"/>
-                    <p:password placeholder="Contraseña" id="txtContrasenia" style="width:60%" value="#{mbsLogin.clave}"/>
+                    <p:password placeholder="Contraseña" id="txtContrasenia"  value="#{mbsLogin.clave}"/>
                     <p:outputLabel for="selectTipoUsu" value="Tipo de Usuario" />
-                    <p:selectOneMenu id="selectTipoUsu" value="#{mbsLogin.tipoUsuario}" style="width:58%">
+                    <p:selectOneMenu id="selectTipoUsu" value="#{mbsLogin.tipoUsuario}" style="margin-left: 20%;width:auto" >
                         <f:selectItem itemLabel="Docente" itemValue="profesor" />
                         <f:selectItem itemLabel="Administrativo" itemValue="administrativo" />
                     </p:selectOneMenu>
                     <h:panelGroup></h:panelGroup>
-                    <p:commandButton value="Ingresar" ajax="false" actionListener="#{mbsLogin.confirmar}"/>
+                    <p:commandButton value="Ingresar"  actionListener="#{mbsLogin.confirmar}" style="margin-left: 42%;margin-bottom: 15px"/>
                 </h:panelGrid>
             </h:form>
         </div>

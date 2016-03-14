@@ -6,7 +6,9 @@ package com.tesis.beans;
 
 import com.tesis.entity.Anlectivo;
 import com.tesis.entity.Configuracion;
+import com.tesis.entity.Criterioevaluacion;
 import com.tesis.entity.Curso;
+import com.tesis.entity.Escala;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -55,7 +57,72 @@ public class AnlectivoFacade extends AbstractFacade<Anlectivo> {
         }
         return bandera;
     }
-    
+    public boolean escalaEnUso(Escala escala) {
+        try {
+            Query cq = em.createNamedQuery("Anlectivo.escalaEnUso");
+            cq.setParameter("escala", escala);
+            if(cq.getSingleResult()!=null){
+                Long count = (Long) cq.getSingleResult();
+                if(count != 0){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+            else{
+                return false;
+            }
+        } catch (PersistenceException e) {
+            return false;
+        }
+        catch (Exception e) {
+            return false;
+        }
+    }
+    public boolean criterioEnUso(Criterioevaluacion criterio) {
+        try {
+            Query cq = em.createNamedQuery("Anlectivo.criterioEnUso");
+            cq.setParameter("criterio", criterio);
+            if(cq.getSingleResult()!=null){
+                Long count = (Long) cq.getSingleResult();
+                if(count != 0){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+            else{
+                return false;
+            }
+        } catch (PersistenceException e) {
+            return false;
+        }
+        catch (Exception e) {
+            return false;
+        }
+    }
+    public boolean configuracionEnUso(Configuracion configuracion) {
+        try {
+            Query cq = em.createNamedQuery("Anlectivo.configuracionEnUso");
+            cq.setParameter("configuracion", configuracion);
+            if(cq.getSingleResult()!=null){
+                Long count = (Long) cq.getSingleResult();
+                if(count != 0){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+            else{
+                return false;
+            }
+        } catch (PersistenceException e) {
+            return false;
+        }
+        catch (Exception e) {
+            return false;
+        }
+    }
     public boolean existeConfiguracionEnUso(Configuracion configuracion) {
         boolean bandera;
         try {
@@ -212,6 +279,48 @@ public class AnlectivoFacade extends AbstractFacade<Anlectivo> {
     public List<Anlectivo> getEnUso(){
         try {
             Query cq = em.createNamedQuery("Anlectivo.findUso");
+            if(cq.getResultList()!=null){
+                return cq.getResultList();
+            }
+            else{
+                return null;
+            }
+        } catch (PersistenceException e) {
+            System.out.println("llega b");
+            e.printStackTrace();
+            return null;
+        }
+        catch (Exception e) {
+            System.out.println("llega c");
+            e.printStackTrace();
+            return null;
+        }
+        
+    }
+    public List<Anlectivo> getTerminados(){
+        try {
+            Query cq = em.createNamedQuery("Anlectivo.findAnlectivosfinalizados");
+            if(cq.getResultList()!=null){
+                return cq.getResultList();
+            }
+            else{
+                return null;
+            }
+        } catch (PersistenceException e) {
+            System.out.println("llega b");
+            e.printStackTrace();
+            return null;
+        }
+        catch (Exception e) {
+            System.out.println("llega c");
+            e.printStackTrace();
+            return null;
+        }
+        
+    }
+    public List<Anlectivo> getAñosEnUso(){
+        try {
+            Query cq = em.createNamedQuery("Anlectivo.findAnlectivoUtil");
             if(cq.getResultList()!=null){
                 return cq.getResultList();
             }

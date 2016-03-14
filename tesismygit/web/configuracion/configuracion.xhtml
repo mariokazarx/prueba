@@ -96,7 +96,7 @@
                 <p:dialog header="Advertencia" widgetVar="dlg2" modal="true" height="100" showEffect="clip" hideEffect="clip" appendTo="@(body)">
                     <h:outputText value="esta configuracion ya esta en uso no es posible si edicion" />
                 </p:dialog>   
-                <p:dialog header="Datos del usuario" widgetVar="dialogoEditarEscala" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
+                <p:dialog header="Datos de la configuracion" widgetVar="dialogoEditarEscala" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
                     <h:form id="frmEditarEscala">
                         <p:outputPanel id="panelEditarEscala" >
                             <h:panelGrid columns="3">
@@ -119,7 +119,7 @@
                                 </p:selectOneMenu>
                                 <p:message for="sltEscala"/>                
                                 <h:panelGroup></h:panelGroup>
-                                <p:commandButton value="Registrar Escala" actionListener="#{mbvConfiguracion.actualizar}" ajax="true" update=":frmListaConf"/>
+                                <p:commandButton value="Editar" actionListener="#{mbvConfiguracion.actualizar}" ajax="true" update=":frmListaConf"/>
                             </h:panelGrid>
                         </p:outputPanel>
                     </h:form>

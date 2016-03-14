@@ -62,6 +62,22 @@ public class EstudianteFacade extends AbstractFacade<Estudiante> {
             return null;
         }
     }
+    public Estudiante getEstudianteByIdentificacion(String identificacion) {
+        try {
+            Query cq = em.createNamedQuery("Estudiante.findByIdentificiacion");
+            cq.setParameter("identificiacion", identificacion);
+            if (cq.getSingleResult() != null) {
+                //System.out.println("***ENCONTRO****");
+                return (Estudiante) cq.getSingleResult();
+            } else {
+                //System.out.println("***NO ENCONTRO****");
+                return null;
+            }
+        } catch (Exception e) {
+            //System.out.println("***ERROR****"+e.toString());
+            return null;
+        }
+    }
 
     public Nota findNotaEst(Contenidotematico contenido, Estudiante estudiante) {
         try {
@@ -85,6 +101,25 @@ public class EstudianteFacade extends AbstractFacade<Estudiante> {
             Query cq = em.createNamedQuery("Estudiante.findPromedioNotaPeriodo");
             cq.setParameter("periodo", periodo);
             cq.setParameter("curso", curso);
+            if(cq.getResultList()!=null){
+                return cq.getResultList();
+            }
+            else{
+                return null;
+            }
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+            return null;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        
+    }
+    public List<Estudiante> getOrdenados(){
+        try {
+            Query cq = em.createNamedQuery("Estudiante.findAllOrdenado");
             if(cq.getResultList()!=null){
                 return cq.getResultList();
             }

@@ -72,24 +72,28 @@
                 <h:panelGroup id="chkPermisos">
                     <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
                         <h:outputText value="Consultar: " />
-                        <p:selectBooleanButton id="chkConsultar" value="#{mbvUsuario.roleActual.consultar}" onLabel="Yes" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:60px">
-                            <p:ajax update="tablaperfil" listener="#{mbvUsuario.checkPermiso}" />
+                        <p:selectBooleanButton id="chkConsultar" value="#{mbvUsuario.roleActual.consultar}" onLabel="Si" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:60px">
+                            <p:ajax update="tablaperfil chkPermisos" listener="#{mbvUsuario.checkPermiso}" />
                         </p:selectBooleanButton>
                         <h:outputText value="Edita: " />
-                        <p:selectBooleanButton id="chkEsditar" value="#{mbvUsuario.roleActual.editar}" onLabel="Yes" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:60px">
-                            <p:ajax update="tablaperfil" listener="#{mbvUsuario.checkPermiso}" />
+                        <p:selectBooleanButton id="chkEsditar" value="#{mbvUsuario.roleActual.editar}" onLabel="Si" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:60px">
+                            <p:ajax update="tablaperfil chkPermisos" listener="#{mbvUsuario.checkPermiso}" />
                         </p:selectBooleanButton> 
                         <h:outputText value="Adicionar: " />
-                        <p:selectBooleanButton id="chkAdicionar" value="#{mbvUsuario.roleActual.agregar}" onLabel="Yes" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:60px">
-                            <p:ajax update="tablaperfil" listener="#{mbvUsuario.checkPermiso}" />
+                        <p:selectBooleanButton id="chkAdicionar" value="#{mbvUsuario.roleActual.agregar}" onLabel="Si" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:60px">
+                            <p:ajax update="tablaperfil chkPermisos" listener="#{mbvUsuario.checkPermiso}" />
+                        </p:selectBooleanButton>
+                        <h:outputText value="Eliminar: " />
+                        <p:selectBooleanButton id="chkEliminar" value="#{mbvUsuario.roleActual.eliminar}" onLabel="Si" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:60px">
+                            <p:ajax update="tablaperfil chkPermisos" listener="#{mbvUsuario.checkPermiso}" />
                         </p:selectBooleanButton>
                     </h:panelGrid>
                 </h:panelGroup>
                 <h:panelGroup></h:panelGroup>
                 <h:panelGroup></h:panelGroup>
-                <p:commandButton value="Registrar Profesor" actionListener="#{mbvUsuario.insertar}" ajax="true" update="frmUsuario" />
+                <p:commandButton value="Registrar Usuario" actionListener="#{mbvUsuario.insertar}" ajax="true" update="frmUsuario" />
             </h:panelGrid> 
-            <p:dataTable var="rol" value="#{mbvUsuario.rolesRecursos}" id="tablaperfil">
+            <p:dataTable emptyMessage="No se han asignado permisos aun" var="rol" value="#{mbvUsuario.rolesRecursos}" id="tablaperfil">
                 <p:column headerText="Recurso">
                     <h:outputText value="#{rol.recursoId.nombre}" />
                 </p:column>
@@ -104,6 +108,10 @@
 
                 <p:column headerText="Adicionar">
                     <h:outputText value="#{rol.agregar}" />
+                </p:column>
+                
+                <p:column headerText="Eliminar">
+                    <h:outputText value="#{rol.eliminar}" />
                 </p:column>
             </p:dataTable>
         </h:form>

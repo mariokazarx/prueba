@@ -4,6 +4,17 @@
  */
 package com.tesis.managedbeans;
 
+import com.lowagie.text.Document;
+import com.lowagie.text.Element;
+import com.lowagie.text.Font;
+import com.lowagie.text.FontFactory;
+import com.lowagie.text.Image;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.Rectangle;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
 import com.tesis.beans.AnlectivoFacade;
 import com.tesis.beans.AsignaturaFacade;
 import com.tesis.beans.AsignaturacicloFacade;
@@ -15,6 +26,7 @@ import com.tesis.beans.LogroFacade;
 import com.tesis.beans.LogronotaFacade;
 import com.tesis.beans.NotaFacade;
 import com.tesis.beans.NotafinalFacade;
+import com.tesis.beans.NotafinalrecuperacionFacade;
 import com.tesis.beans.PeriodoFacade;
 import com.tesis.beans.ProfesorFacade;
 import com.tesis.clases.EstudianteNotas;
@@ -31,12 +43,15 @@ import com.tesis.entity.Logro;
 import com.tesis.entity.Logronota;
 import com.tesis.entity.Nota;
 import com.tesis.entity.Notafinal;
+import com.tesis.entity.Notafinalrecuperacion;
 import com.tesis.entity.Periodo;
 import com.tesis.entity.Profesor;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -73,7 +88,7 @@ import org.primefaces.event.RowEditEvent;
 @ViewScoped
 public class mbvRecuperacion {
 
-   private List<ReporteNotasProfesor> reporte;
+    private List<ReporteNotasProfesor> reporte;
     private String notaxxLogro;
     private Map<String,Integer> datosNotas = new HashMap<String, Integer>();
     private boolean login;
@@ -95,10 +110,19 @@ public class mbvRecuperacion {
     private List<Curso> cursos;
     private List<Asignatura> asignaturas;
     private List<Asignaturaciclo> asignaturasCiclo;
-    private List<mbvNotas.ColumnModel> columns;
+    private List<mbvRecuperacion.ColumnModel> columns;
     private List<Estudiante> estudiantes;
+    private List<Notafinal> notas;
+    private BigDecimal notaRecuperacion;
+    private Notafinal ntRecuperar;
+    private Anlectivo anlectivoselected;
+    private List<Anlectivo> anlectivos;
+    private boolean contenidPrincipal;
+    private boolean mostrarRecuperacion;
     @EJB
     private CursoFacade cursoEjb;
+    @EJB
+    private NotafinalrecuperacionFacade notaFinalREjb;
     @EJB
     private ProfesorFacade profesorEjb;
     @EJB
@@ -128,6 +152,54 @@ public class mbvRecuperacion {
     private JasperPrint jasperPrint;
     
     public mbvRecuperacion() {
+    }
+
+    public boolean isMostrarRecuperacion() {
+        return mostrarRecuperacion;
+    }
+
+    public void setMostrarRecuperacion(boolean mostrarRecuperacion) {
+        this.mostrarRecuperacion = mostrarRecuperacion;
+    }
+
+    public boolean isContenidPrincipal() {
+        return contenidPrincipal;
+    }
+
+    public void setContenidPrincipal(boolean contenidPrincipal) {
+        this.contenidPrincipal = contenidPrincipal;
+    }
+
+    public Anlectivo getAnlectivoselected() {
+        return anlectivoselected;
+    }
+
+    public void setAnlectivoselected(Anlectivo anlectivoselected) {
+        this.anlectivoselected = anlectivoselected;
+    }
+
+    public List<Anlectivo> getAnlectivos() {
+        return anlectivos;
+    }
+
+    public void setAnlectivos(List<Anlectivo> anlectivos) {
+        this.anlectivos = anlectivos;
+    }
+
+    public BigDecimal getNotaRecuperacion() {
+        return notaRecuperacion;
+    }
+
+    public void setNotaRecuperacion(BigDecimal notaRecuperacion) {
+        this.notaRecuperacion = notaRecuperacion;
+    }
+
+    public List<Notafinal> getNotas() {
+        return notas;
+    }
+
+    public void setNotas(List<Notafinal> notas) {
+        this.notas = notas;
     }
 
     public List<EstudianteNotas> getEstudiantesN() {
@@ -236,11 +308,11 @@ public class mbvRecuperacion {
         this.logros = logros;
     }
 
-    public List<mbvNotas.ColumnModel> getColumns() {
+    public List<mbvRecuperacion.ColumnModel> getColumns() {
         return columns;
     }
 
-    public void setColumns(List<mbvNotas.ColumnModel> columns) {
+    public void setColumns(List<mbvRecuperacion.ColumnModel> columns) {
         this.columns = columns;
     }
 
@@ -288,6 +360,8 @@ public class mbvRecuperacion {
             System.out.println(e.toString());
             profesor = null;
         }
+        this.cursos = new ArrayList<Curso>();
+        this.notaRecuperacion = new BigDecimal(0);
         this.estudiantesN = new ArrayList<EstudianteNotas>();
         this.editable=true;
         this.contenidoLogros = false;
@@ -297,14 +371,17 @@ public class mbvRecuperacion {
         this.asignaturaSelected = new Asignatura();
         this.contenido = new Contenidotematico();
         this.cursoSelected = new Curso();
+        this.anlectivoselected = new Anlectivo();
+        this.anlectivos = new ArrayList<Anlectivo>();
+        this.contenidPrincipal = false;
+        this.mostrarRecuperacion = false;
         if(profesor!=null){
+            anlectivos = anlectivoEjb.getAñosEnUso();
             System.out.println("logueado como profesor");
-            anlectivo = anlectivoEjb.getIniciado();
+            //anlectivo = anlectivoEjb.getIniciado();
             //año iniciado
-            this.periodo = periodoEjb.getPeriodEvaluar(anlectivo);
-            this.cursos = cursoEjb.findCursosProfeso(profesor, periodo);
-            this.estudiantes = new ArrayList<Estudiante>();
-            this.notaxxLogro = new String();
+            //traer el ultimo periodo dictado 
+            
         }
          
         //this.profesor = profesorEjb.find(1); 
@@ -316,40 +393,48 @@ public class mbvRecuperacion {
     }
 
     public void cargarAsignaturas() {
-        asignaturas = new ArrayList<Asignatura>();
-        contenidoLogros = false;
-        contenidoNotas = false;
-        asignaturasCiclo = asignaturaCicloEjb.asignaturasProfesor(profesor, cursoSelected, periodo);
-        for (Asignaturaciclo asc : asignaturasCiclo) {
-            Asignatura as = asignaturaEjb.find(asc.getAsignaturaId().getAsignaturaId());
-            asignaturas.add(as);
-        }
         asignaturaSelected = new Asignatura();
+        if(cursoSelected.getCursoId()!=null){
+            asignaturas = new ArrayList<Asignatura>();
+            contenidoLogros = false;
+            contenidoNotas = false;
+            this.asignaturaSelected = new Asignatura();
+            this.mostrarRecuperacion = false;
+            asignaturasCiclo = asignaturaCicloEjb.asignaturasProfesor(profesor, cursoSelected, periodo);
+            if(!asignaturasCiclo.isEmpty()){
+                for (Asignaturaciclo asc : asignaturasCiclo) {
+                    Asignatura as = asignaturaEjb.find(asc.getAsignaturaId().getAsignaturaId());
+                    asignaturas.add(as);
+                }
+            }else{
+                this.mostrarRecuperacion = false;
+            }
+            
+            
+        }else{
+            this.asignaturas.clear();
+            this.asignaturaSelected = new Asignatura();
+            this.mostrarRecuperacion = false;
+        }
     }
 
     public void cargarContenido() {
-        Curso cur = cursoEjb.find(cursoSelected.getCursoId());
-        Asignaturaciclo asg = asignaturaCicloEjb.asignaturasCiclo(cur.getCicloId(), asignaturaSelected);
-        this.contenido = contenidoEjb.getContenidoByAll(profesor, cursoSelected, asg, periodo);
-        System.out.println("AAAAA" + cursoSelected + "Periodo" + periodo + "Profesor" + profesor + "asignaturaciclo" + asg + "contenido" + contenido);
-        this.logros = logroEjb.getContenidoByAll(contenido);
-        estudiantes = estudianteEjB.findByCurso(cursoSelected);
-        notaxxLogro = "";
-        Integer suma =0;
-        for(Logro logAuxSum:logroEjb.getByContenido(contenido)){
-            System.out.println("SUMARRRR"+logAuxSum.getPorcentaje());
-            suma += logAuxSum.getPorcentaje();
-        }
-        System.out.println("SUMAAAA"+suma);
-        if(suma==100){
-            contenidoNotas=true;
+        if(asignaturaSelected.getAsignaturaId()!=null){
+            Curso cur = cursoEjb.find(cursoSelected.getCursoId());
+            Asignaturaciclo asg = asignaturaCicloEjb.asignaturasCiclo(cur.getCicloId(), asignaturaSelected);
+            createDynamicColumns();
+            notas = notafEjb.findByRecuperacion(asg, profesor, anlectivo);
+            if(!notas.isEmpty()){
+                for(Notafinal notaAux:notas){
+                    System.out.println("ESTUDIANTE "+notaAux.getEstudianteId().getNombre()+"NOTA "+notaAux.getValor());
+                }
+                this.mostrarRecuperacion = true;
+            }else{
+                this.mostrarRecuperacion = false;
+            }
         }else{
-            contenidoNotas = false;
+            this.mostrarRecuperacion = false;
         }
-        contenidoLogros = true;
-        UIComponent table = FacesContext.getCurrentInstance().getViewRoot().findComponent(":frmMateriasCiclos:tablanotas");
-        createDynamicColumns();
-        cargarEstudiantes();
     }
     
     private void cargarEstudiantes(){
@@ -376,82 +461,6 @@ public class mbvRecuperacion {
             estudiantesN.add(estNota);
         }
     }
-
-    public void newLogro() {
-        try {
-            RequestContext.getCurrentInstance().update("frmCrearLogro:panelCrearLogro");
-            RequestContext.getCurrentInstance().execute("PF('dialogoCrearLogro').show()");
-        } catch (Exception e) {
-            FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
-        }
-    }
-
-    public void insertarLogro() {
-        try {
-            Integer suma = 0;
-            if(this.logro.getPorcentaje()<0 || this.logro.getPorcentaje()>100){
-                System.out.println("LOGRO FUERA DE RAMGO");
-                return;
-            }
-            System.out.println("contenido"+contenido+"    "+contenido.getLogroList());//traer por sql
-            for(Logro logAuxSum:logroEjb.getByContenido(contenido)){
-                System.out.println("SUMARRRR"+logAuxSum.getPorcentaje());
-                suma += logAuxSum.getPorcentaje();
-            }
-            suma += this.logro.getPorcentaje();
-            System.out.println("SUMA FINAL"+suma);
-            if(suma>100){
-                System.out.println("SE PASA DE 100");
-                return;
-            }
-            if(suma==100){
-                this.contenidoNotas=true;
-            }
-            if (contenido != null) {
-                this.logro.setContenidotematicoId(contenido);
-                this.logroEjb.create(logro);
-                this.logro = new Logro();
-                List<Logro> logrosaux = logroEjb.getContenidoByAll(contenido);
-                //System.out.println("ESTUDIANTES***"+estudiantes);
-                for (Estudiante es : estudiantes) {
-                    //System.out.println("ENTRA ESTUDIANTES***");
-                    BigDecimal nota = new BigDecimal(0);
-                    Nota notaEst = new Nota();
-                    for (Logro aux : logrosaux) {
-                        //System.out.println("ENTRA LOGROS***");
-                        Logronota logNota = new Logronota();
-                        logNota = estudianteEjB.findNotaEstudiante(aux, es);
-                        if (logNota != null) {
-                            Double porcentaje = new Double(aux.getPorcentaje() / 100.0);
-                            BigDecimal auxporcentaje = new BigDecimal(porcentaje);
-                            BigDecimal auxnota = logNota.getNota().multiply(auxporcentaje);
-                            nota = nota.add(auxnota);
-                            //System.out.println("NOTAS***"+auxnota+"OTRA"+nota+"PORCENTJE"+p);
-                        }
-                    }
-                    notaEst = estudianteEjB.findNotaEst(contenido, es);
-                    if (notaEst == null) {
-                        Nota notaEstAux = new Nota();
-                        notaEstAux.setContenidotematicoId(contenido);
-                        notaEstAux.setEstudianteId(es);
-                        notaEstAux.setValor(nota);
-                        notaEstEJB.create(notaEstAux);
-                    } else {
-                        notaEst.setValor(nota);
-                        notaEstEJB.edit(notaEst);
-                    }
-                }
-                RequestContext.getCurrentInstance().execute("PF('dialogoCrearLogro').hide()");
-                updateColumns();
-                this.logros = logroEjb.getContenidoByAll(contenido);
-            }
-        } catch (Exception e) {
-            System.out.println("FALLO INGRESO LOGRO");
-        }
-
-    }
-
     static public class ColumnModel implements Serializable {
 
         private String header;
@@ -472,12 +481,10 @@ public class mbvRecuperacion {
     }
 
     private void createDynamicColumns() {
-        columns = new ArrayList<mbvNotas.ColumnModel>();
-        List<Logro> logrosaux = logroEjb.getContenidoByAll(contenido);
-        System.out.println("CONTENIDOOOOOO "+contenido);
-        for (Logro aux : logrosaux) {
-            System.out.println("QAAAAAAAAAAAAA" + aux.getTitulo().toUpperCase()+"  ffffFFFFF"+ aux.getLogroId());
-            columns.add(new mbvNotas.ColumnModel(aux.getTitulo().toUpperCase(), aux.getLogroId()));
+        columns = new ArrayList<mbvRecuperacion.ColumnModel>();
+        List<Periodo> periodosaux = periodoEjb.getPeriodosByAnio(anlectivo);
+        for (Periodo aux : periodosaux) {
+            columns.add(new mbvRecuperacion.ColumnModel("Periodo "+ aux.getNumero(), aux.getPeriodoId()));
         }
 
     }
@@ -490,65 +497,7 @@ public class mbvRecuperacion {
         createDynamicColumns();
     }
 
-    public void onCellEdit(CellEditEvent event) {
-        try {
-            //editable = false;
-            Anlectivo auxEscolar = anlectivoEjb.getIniciado();
-            BigDecimal notaLogroValidacion = new BigDecimal(event.getNewValue().toString());
-            BigDecimal min = new BigDecimal(auxEscolar.getConfiguracionId().getEscalaId().getMin());
-            BigDecimal max = new BigDecimal(auxEscolar.getConfiguracionId().getEscalaId().getMax());
-            System.out.println("MIN"+min+" MAX"+max+"Nota"+notaLogroValidacion);
-            if(notaLogroValidacion.compareTo(max)>0 || notaLogroValidacion.compareTo(min)<0){
-                System.out.println("FUNCIONOOOOO");
-                return;
-            }
-            FaceletContext faceletContext = (FaceletContext) FacesContext.getCurrentInstance().getAttributes().get(FaceletContext.FACELET_CONTEXT_KEY);
-            DataTable dataTable = (DataTable) event.getSource();
-            Integer logroId = Integer.parseInt(event.getColumn().getHeaderText().trim());
-            Logro log = new Logro();
-            log = logroEjb.find(logroId);
-            Estudiante es = (Estudiante) dataTable.getRowData();
-            Logronota logNota = new Logronota();
-            logNota = estudianteEjB.findNotaEstudiante(log, es);
-            System.out.println("RESPUESTA****" + logNota);
-            if (logNota == null) {
-                Logronota logNotaNew = new Logronota();
-                Estadologronota estLogroNota = new Estadologronota();
-                estLogroNota = estadologroEjb.find(1);
-                BigDecimal notaLogro = new BigDecimal(event.getNewValue().toString());
-                Object oldValue = event.getOldValue();
-                Object newValue = event.getNewValue();
-                System.out.println("OLD" + oldValue + "NEW" + newValue + "COSO" + logroId);
-                logNotaNew.setLogroId(log);
-                logNotaNew.setEstado(estLogroNota);
-                logNotaNew.setEstudianteId(es);
-                logNotaNew.setNota(notaLogro);
-                logroNotaEjb.create(logNotaNew);
-            } else {
-                BigDecimal notaLogro = new BigDecimal(event.getNewValue().toString());
-                System.out.println("LOGRO NOTA¨¨¨¨***" + logNota + "NEW" + notaLogro);
-                logNota.setNota(notaLogro);
-                logroNotaEjb.edit(logNota);
-            }
-            actualizarNota(contenido, es);
-            cargarContenido();
-            updateColumns();
-            this.editable = true;
-            this.notaxxLogro = "";
-            //RequestContext.getCurrentInstance().update("testContainer");
-            //frmMateriasCiclos
-            //estudiantes = estudianteEjB.findByCurso(cursoSelected);
-            //UIComponent table = FacesContext.getCurrentInstance().getViewRoot().findComponent(":frmMateriasCiclos:tablanotas");
-            //createDynamicColumns();
-        } catch (Exception e) {
-            System.out.println("EERROORR" + e.toString());
-            cargarContenido();
-            updateColumns();
-        }
-
-
-    }
-
+   
     public BigDecimal getNotaEstudiante(Estudiante es, Integer logroId) {
         //System.out.println("INGRESA GET NOTA ******" + es + "LOGRO" + logroId);
         Logro logro = new Logro();
@@ -574,180 +523,6 @@ public class mbvRecuperacion {
         return nota.setScale(1, RoundingMode.HALF_EVEN);
     }
 
-    private void actualizarNota(Contenidotematico contenido, Estudiante es) {
-        BigDecimal nota = new BigDecimal(0);
-        Nota notaEst = new Nota();
-        Notafinal notaf = new Notafinal();
-        List<Logro> logrosaux = logroEjb.getContenidoByAll(contenido);
-        for (Logro aux : logrosaux) {
-            //System.out.println("ENTRA LOGROS***");
-            Logronota logNota = new Logronota();
-            logNota = estudianteEjB.findNotaEstudiante(aux, es);
-            if (logNota != null) {
-                Double porcentaje = new Double(aux.getPorcentaje() / 100.0);
-                BigDecimal auxporcentaje = new BigDecimal(porcentaje);
-                BigDecimal auxnota = logNota.getNota().multiply(auxporcentaje);
-                nota = nota.add(auxnota);
-                //System.out.println("NOTAS***"+auxnota+"OTRA"+nota+"PORCENTJE"+p);
-            }
-        }
-        notaEst = estudianteEjB.findNotaEst(contenido, es);
-        if (notaEst == null) {
-            Nota notaEstAux = new Nota();
-            notaEstAux.setContenidotematicoId(contenido);
-            notaEstAux.setEstudianteId(es);
-            notaEstAux.setValor(nota);
-            System.out.println("MM QUE SERA NOTA DIFERENTE"+notaEstAux.getValor());
-            notaEstEJB.create(notaEstAux);
-        } else {
-            notaEst.setValor(nota);
-            System.out.println("MM QUE SERA NOTA DIFERENTE"+notaEst.getValor());
-            notaEstEJB.edit(notaEst);
-        }
-        Asignaturaciclo asc = new Asignaturaciclo();
-        asc = asignaturaCicloEjb.find(contenido.getAsignaturacicloId().getAsignaturacicloId());
-        notaf = notafEjb.findNotaFinalActual(asc, es);
-        Anlectivo anlectivoAux = new Anlectivo();
-        cursoSelected = cursoEjb.find(cursoSelected.getCursoId());
-        anlectivoAux = anlectivoEjb.find(cursoSelected.getAnlectivoId().getAnlectivoId());
-        //System.out.println("MM QUE SERA::::"+notaf.toString()+"aa a"+asc.toString()+"bbb"+es.toString());
-        Double notaFinal = notaEstEJB.getNotaFinal(anlectivoAux, es, cursoSelected,contenido.getAsignaturacicloId());        
-        BigDecimal notaFinalDef = new BigDecimal(notaFinal);
-        System.out.println("NOTA FINAL OK"+notaFinalDef);
-        if(notaf == null){
-            Notafinal notaFinalAux = new Notafinal();
-            notaFinalAux.setAsignaturacicloId(asc);
-            notaFinalAux.setEstudianteId(es);
-            notaFinalAux.setProfesorId(profesor);
-            notaFinalAux.setValor(notaFinalDef);
-            notaFinalAux.setRecuperacion("NO");
-            System.out.println("NOTA FINAL OKKaKKK"+notaFinalAux.getValor());
-            notafEjb.create(notaFinalAux);
-        }else{
-            notaf.setValor(notaFinalDef);
-            notafEjb.edit(notaf);
-        }
-    }
-
-    public void eliminarLogro(Logro logroId) {
-        try {
-            logroEjb.remove(logroId);
-            for (Estudiante es : estudiantes) {
-                actualizarNota(contenido, es);
-            }
-            RequestContext.getCurrentInstance().execute("PF('dialogoCrearLogro').hide()");
-            updateColumns();
-            this.contenidoNotas = false;
-            this.logros = logroEjb.getContenidoByAll(contenido);
-        } catch (Exception e) {
-            System.out.println("ERROR ELIMINAR LOGRO");
-        }
-    }
-    public void cargarObservacion(Integer estId){
-        Estudiante estAux = estudianteEjB.find(estId);
-        Nota notaEst = new Nota();
-        notaEst = estudianteEjB.findNotaEst(contenido, estAux);
-        System.out.println("insertar observacion"+estAux+"NOTA EST"+notaEst);
-        this.estActual = estAux;
-        this.notaEstudianteActual = notaEst;
-        this.observaciones = notaEst.getObservaciones();
-        try {
-            RequestContext.getCurrentInstance().update("frmObservaciones:panelObservaciones");
-            RequestContext.getCurrentInstance().execute("PF('dialogoObservaciones').show()");
-        } catch (Exception e) {
-            FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
-        }
-    }
-    public void insertarObservacion(Integer estId){
-        Estudiante estAux = estudianteEjB.find(estId);
-        Nota notaEst = new Nota();
-        notaEst = estudianteEjB.findNotaEst(contenido, estAux);
-        System.out.println("insertar observacion"+estAux+"NOTA EST"+notaEst);
-        this.estActual = estAux;
-        this.notaEstudianteActual = notaEst;
-        this.observaciones = notaEst.getObservaciones();
-        try {
-            RequestContext.getCurrentInstance().update("frmCrearObservaciones:panelCrearObservaciones");
-            RequestContext.getCurrentInstance().execute("PF('dialogoCrearObservaciones').show()");
-        } catch (Exception e) {
-            FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
-        }
-    }
-    public void insertarObservacionDB(){
-        System.out.println("insertar observacionDB"+estActual+"NOTA ESTDB"+notaEstudianteActual+"OBSERVACION"+this.observaciones);
-        this.notaEstudianteActual.setObservaciones(observaciones);
-        this.notaEstEJB.edit(notaEstudianteActual);
-    }
-    public void onRowCancel(RowEditEvent event) {
-        //FacesMessage msg = new FacesMessage("Edit Cancelled", ((Car) event.getObject()).getId());
-        //FacesContext.getCurrentInstance().addMessage(null, msg);
-        System.out.println("Edito");
-    }
-    public void onRowEdit(RowEditEvent event) throws IllegalStateException, SecurityException, SystemException {
-        EstudianteNotas estNotaAux = (EstudianteNotas) event.getObject();
-        Estudiante es = estudianteEjB.find(estNotaAux.getId());
-        try {
-            
-            System.out.println("Edito"+estNotaAux.getNombre());
-            
-            tx.begin();
-            for (Map.Entry<Integer, Object> entry : estNotaAux.getNotasLogros().entrySet()) {
-                Integer key = entry.getKey();
-                //BigDecimal value = entry.getValue();
-                System.out.println("Edito 22"+key+"   "+entry.getValue());
-                //editable = false;
-                Anlectivo auxEscolar = anlectivoEjb.getIniciado();
-                BigDecimal notaLogroValidacion = new BigDecimal(entry.getValue().toString());
-                BigDecimal min = new BigDecimal(auxEscolar.getConfiguracionId().getEscalaId().getMin());
-                BigDecimal max = new BigDecimal(auxEscolar.getConfiguracionId().getEscalaId().getMax());
-                //System.out.println("MIN"+min+" MAX"+max+"Nota"+notaLogroValidacion);
-                if(notaLogroValidacion.compareTo(max)>0 || notaLogroValidacion.compareTo(min)<0){
-                    System.out.println("FUNCIONOOOOO");
-                    tx.rollback();
-                    cargarContenido();
-                    return;
-                }
-                Integer logroId = key;
-                Logro log = new Logro();
-                log = logroEjb.find(logroId);
-               
-                Logronota logNota = new Logronota();
-                logNota = estudianteEjB.findNotaEstudiante(log, es);
-                System.out.println("RESPUESTA****" + logNota);
-                if (logNota == null) {
-                    Logronota logNotaNew = new Logronota();
-                    Estadologronota estLogroNota = new Estadologronota();
-                    estLogroNota = estadologroEjb.find(1);
-                    //BigDecimal notaLogro = new BigDecimal(entry.getValue().toString());
-                    logNotaNew.setLogroId(log);
-                    logNotaNew.setEstado(estLogroNota);
-                    logNotaNew.setEstudianteId(es);
-                    logNotaNew.setNota(notaLogroValidacion);
-                    logroNotaEjb.create(logNotaNew);
-                } else {
-                    //BigDecimal notaLogro = new BigDecimal(entry.getValue().toString());
-                    //System.out.println("LOGRO NOTA¨¨¨¨***" + logNota + "NEW" + notaLogro);
-                    logNota.setNota(notaLogroValidacion);
-                    logroNotaEjb.edit(logNota);
-
-                }
-            }          
-            actualizarNota(contenido, es);
-            cargarContenido();
-            tx.commit();
-        }
-        catch (Exception e) {
-            System.out.println("EERROORR" + e.toString());
-            e.printStackTrace();
-            //actualizarNota(contenido, es);
-            //cargarEstudiantes();
-            tx.rollback();
-            cargarContenido();
-            //updateColumns();
-        }
-    }
     public void prueba(){
         System.out.println("PRUEBA");
         this.editable = false;
@@ -793,12 +568,229 @@ public class mbvRecuperacion {
         FacesContext.getCurrentInstance().responseComplete(); 
     } 
     public void pruebafinal(){
-        Anlectivo anlectivoAux = anlectivoEjb.getIniciado();
+        Anlectivo anlectivoAux = anlectivoEjb.find(anlectivoselected.getAnlectivoId());
         Estudiante es = estudianteEjB.find(1);
         Double notaFinal = notaEstEJB.getNotaFinal(anlectivoAux, es, cursoSelected,contenido.getAsignaturacicloId());        
         BigDecimal notaFinalDef = new BigDecimal(notaFinal);
         System.out.println("NOTA FINAL OK"+notaFinalDef);
     }
-    
-
+    public BigDecimal getNotaPeriodo(Estudiante estudiante,Integer periodoId){
+        BigDecimal nota = new BigDecimal(0);
+        Periodo periodoParam = periodoEjb.find(periodoId);
+        Curso cur = cursoEjb.find(cursoSelected.getCursoId());
+        Asignaturaciclo asg = asignaturaCicloEjb.asignaturasCiclo(cur.getCicloId(), asignaturaSelected);
+        this.contenido = contenidoEjb.getContenidoByCambio(cur, asg, periodoParam);
+        nota = notaEstEJB.getNotaFinalPeriodo(contenido, estudiante);
+        return nota;
+    }
+    public BigDecimal getNotaRecuperacion(Integer notaFinalId ){
+        Notafinal notaFinalAux = notafEjb.find(notaFinalId);
+        BigDecimal nota = new BigDecimal(0);
+        BigDecimal aux = notaFinalREjb.getNotaFinalRecuperacion(notaFinalAux);
+        if(aux!=null){
+            nota = aux;
+        }
+        return nota;
+    }
+    public void cargarRecuperacion(Integer notaFinalId ){
+        try {
+            Anlectivo auxEscolar = anlectivoEjb.find(anlectivoselected.getAnlectivoId());
+            Notafinal notaFinalAux = notafEjb.find(notaFinalId);
+            BigDecimal max = new BigDecimal(auxEscolar.getConfiguracionId().getEscalaId().getNotaminimaaprob());
+            if(notaFinalAux.getValor().compareTo(max)>=0){
+                FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "El estudiante no necesita recuperar"));
+            }else{
+                this.ntRecuperar = notaFinalAux;
+                BigDecimal aux = notaFinalREjb.getNotaFinalRecuperacion(notaFinalAux);
+                if(aux!=null){
+                    this.notaRecuperacion = aux;
+                }
+                RequestContext.getCurrentInstance().update("frmRecuperarNota:panelRecuperarNota");
+                RequestContext.getCurrentInstance().execute("PF('dialogoRecuperarNota').show()");
+            }
+            
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+        }
+    }
+    public void recuperarNota() throws IllegalStateException, IllegalStateException, SecurityException, SystemException{
+        System.out.println("NOTA RECUPERACION "+notaRecuperacion);
+        try {
+            System.out.println("ENTRO 1");
+            tx.begin();
+            ntRecuperar.setRecuperacion("SI");
+            notafEjb.edit(ntRecuperar);
+            Notafinalrecuperacion notaFinalRecuAux = notaFinalREjb.getNotaFinalRecuperar(ntRecuperar);
+            if(notaFinalRecuAux==null){
+                System.out.println("ENTRO 2"+ntRecuperar.getAsignaturacicloId());
+                Asignaturaciclo asg = asignaturaCicloEjb.find(ntRecuperar.getAsignaturacicloId().getAsignaturacicloId());
+                Estudiante est = estudianteEjB.find(ntRecuperar.getEstudianteId().getEstudianteId());
+                System.out.println("ENTRO 5"+est+"vv "+asg);
+                notaFinalRecuAux = new Notafinalrecuperacion();
+                notaFinalRecuAux.setAsignaturacicloId(asg);
+                notaFinalRecuAux.setEstudianteId(est);
+                notaFinalRecuAux.setNotafinalId(ntRecuperar);
+                notaFinalRecuAux.setProfesorId(profesor);
+                notaFinalRecuAux.setValor(notaRecuperacion);
+                notaFinalREjb.create(notaFinalRecuAux);
+            }else{
+                System.out.println("ENTRO 3");
+                notaFinalRecuAux.setProfesorId(profesor);
+                notaFinalRecuAux.setValor(notaRecuperacion);
+                notaFinalREjb.edit(notaFinalRecuAux);
+            }
+            tx.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("ENTRO 4"+e.getMessage());
+            tx.rollback();
+        }
+        
+    }
+    public void cargarAnio(){
+        try {
+            System.out.println("ENTRO 1");
+            if(anlectivoselected.getAnlectivoId()!=null){
+                anlectivo = anlectivoEjb.find(anlectivoselected.getAnlectivoId());
+                System.out.println("ENTRO 2");
+                this.cursos.clear();
+                this.periodo = periodoEjb.getPeriodoMaxByAnio(anlectivo);
+                System.out.println("Periodo maximo "+periodo+"numero "+periodo.getNumero());
+                this.cursos = cursoEjb.findCursosProfeso(profesor, periodo);
+                this.estudiantes = new ArrayList<Estudiante>();
+                this.notaxxLogro = new String();
+                if(!this.cursos.isEmpty()){
+                    this.contenidPrincipal = true;
+                }else{
+                    this.contenidPrincipal = false;
+                }
+            }else{
+                this.asignaturas.clear();
+                this.mostrarRecuperacion = false;
+                this.asignaturaSelected = new Asignatura();
+                this.contenidPrincipal = false;
+                this.mostrarRecuperacion = false;
+                this.cursoSelected = new Curso();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("ENTRO 4");
+        }
+           
+    }
+    public void imprimir(){
+        cursoSelected = cursoEjb.find(this.contenido.getCursoId().getCursoId());
+        Document document = new Document(PageSize.LETTER);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try {
+            PdfWriter.getInstance(document, baos);
+            document.open();
+            URL url = FacesContext.getCurrentInstance().getExternalContext().getResource("/escudo.png");
+            Image image = Image.getInstance(url);
+            image.scaleAbsolute(100,100);        
+            PdfPTable table2 = new PdfPTable(2);
+            table2.setWidthPercentage(100);
+            table2.setWidths(new int[]{1, 4});
+            PdfPCell cell = new PdfPCell(image, true);
+            cell.setBorder(Rectangle.NO_BORDER);
+            cell.setRowspan(2);
+            table2.addCell(cell);
+            PdfPCell cell2 = new PdfPCell();
+            Paragraph par = new Paragraph("CENTRO EDUCATIVO  “ANTONIO RICAURTE” ",FontFactory.getFont("arial",14,Font.BOLD));
+            par.setAlignment(Element.ALIGN_CENTER);
+            cell2.addElement(par);
+            cell2.setVerticalAlignment(Element.ALIGN_CENTER);
+            cell2.setBorder(Rectangle.NO_BORDER);
+            table2.addCell(cell2);
+            PdfPCell cell3 = new PdfPCell();
+            Paragraph par3 = new Paragraph("Licencia de funcionamiento 366 de Abril 4 de 2001, Resolución 1861  Junio 30 de 2005 de  la Secretaría "
+                    + "de Educación y Cultura Departamental  CODIGO SNP ICFES 114454 Código DANE 352612001093 "
+                    ,FontFactory.getFont("arial",9,Font.NORMAL));
+            par3.setAlignment(Element.ALIGN_CENTER);
+            cell3.addElement(par3);
+            cell3.setVerticalAlignment(Element.ALIGN_CENTER);
+            cell3.setBorder(Rectangle.NO_BORDER);
+            table2.addCell(cell3);
+            document.add(table2);
+            // datos estudiante
+            Paragraph parDescrip = new Paragraph("Reporte notas año escolar "+cursoSelected.getAnlectivoId().getAnio()
+                + " "+cursoSelected.getNombre()+" ciclo "+cursoSelected.getCicloId().getNumero(),FontFactory.getFont("arial",12,Font.NORMAL));
+            document.add(parDescrip);
+            Paragraph parProf = new Paragraph("Profesor: "+ profesor.getApellido() + " " +profesor.getNombre()
+                ,FontFactory.getFont("arial",12,Font.NORMAL));
+            document.add(parProf);
+            document.add(new Paragraph("\n"));
+            
+            PdfPTable table = new PdfPTable(3+columns.size());
+            table.setWidthPercentage(100);
+            int tam = 3+columns.size();
+            float[] ft = new float[tam];
+            for(int i=0;i<tam;i++){
+                if(i==0){
+                    ft[i]=80f; 
+                }else{
+                    ft[i] = 15f;
+                }         
+            }
+            table.setWidths(ft);
+            PdfPCell cellTituloEstudiante = new PdfPCell();
+            Paragraph partituloEstudiante= new Paragraph("ESTUDIANTE ",FontFactory.getFont("arial",12));
+            partituloEstudiante.setAlignment(Element.ALIGN_CENTER);
+            cellTituloEstudiante.addElement(partituloEstudiante);
+            table.addCell(cellTituloEstudiante);
+            for(mbvRecuperacion.ColumnModel col:columns){
+                table.addCell(col.getHeader());
+            }
+            PdfPCell cellTituloNotaF = new PdfPCell();
+            Paragraph partituloNotaF= new Paragraph("Nota Final",FontFactory.getFont("arial",12));
+            partituloNotaF.setAlignment(Element.ALIGN_CENTER);
+            cellTituloNotaF.addElement(partituloNotaF);
+            table.addCell(cellTituloNotaF);
+            PdfPCell cellTituloNotaR = new PdfPCell();
+            Paragraph partituloNotaR= new Paragraph("Recuperacion ",FontFactory.getFont("arial",12));
+            partituloNotaR.setAlignment(Element.ALIGN_CENTER);
+            cellTituloNotaR.addElement(partituloNotaR);
+            table.addCell(cellTituloNotaR);
+            List<Periodo> periodosReporte = periodoEjb.getPeriodosByAnio(anlectivoselected);
+            System.out.println("AÑO ESCOLAR "+anlectivoselected+" PERIODOS "+periodosReporte);
+            for(Notafinal ntf : notas){
+                table.addCell(ntf.getEstudianteId().getApellido()+" "+ntf.getEstudianteId().getNombre());
+                
+                for (Periodo aux : periodosReporte) {
+                    table.addCell(getNotaPeriodo(ntf.getEstudianteId(),aux.getPeriodoId()).toString());
+                }
+                table.addCell(ntf.getValor().toString());
+                
+                table.addCell(getNotaRecuperacion(ntf.getNotafinalId()).toString());
+            }
+            document.add(table);
+            
+        } catch (Exception e) {
+            System.out.println("ENTRO 3 ");
+            System.out.println("Error " + e.getMessage());
+        }
+        document.close(); 
+        FacesContext context = FacesContext.getCurrentInstance();
+        Object response = context.getExternalContext().getResponse();
+        if (response instanceof HttpServletResponse) {
+            System.out.println("ENTRO 4 ");
+            HttpServletResponse hsr = (HttpServletResponse) response;
+            hsr.setContentType("application/pdf");
+            hsr.setHeader("Content-disposition", "attachment; filename=report.pdf"); 
+            hsr.setContentLength(baos.size());
+            try {
+                System.out.println("ENTRO 5 ");
+                ServletOutputStream out = hsr.getOutputStream();
+                baos.writeTo(out);
+                out.flush();
+            } catch (IOException ex) {
+                System.out.println("ENTRO 6 ");
+                System.out.println("Error:  " + ex.getMessage());
+            }
+            System.out.println("ENTRO 7 ");
+            context.responseComplete();
+        }
+    }
 }

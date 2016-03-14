@@ -2,7 +2,32 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="AsignacionAcademica" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2202e8a2-a634-45a5-9e77-6f964643d7ee">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="55"/>
+	<property name="ireport.y" value="54"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="New Dataset 1" uuid="30ad8231-418d-4e6c-a7b4-f771a517b720">
+		<field name="profesorId.nombre" class="java.lang.String"/>
+		<field name="profesorId.apellido" class="java.lang.String"/>
+		<field name="asignaturacicloId.asignaturaId.nombre" class="java.lang.String"/>
+	</subDataset>
 	<field name="numero" class="java.lang.Integer"/>
 	<field name="curso" class="java.lang.String"/>
 	<field name="año" class="java.lang.Integer"/>
@@ -10,77 +35,137 @@
 	<background>
 		<band splitType="Stretch"/>
 	</background>
-	<title>
-		<band height="26" splitType="Stretch"/>
-	</title>
-	<pageHeader>
-		<band height="175" splitType="Stretch">
+	<columnHeader>
+		<band height="126" splitType="Stretch">
 			<staticText>
-				<reportElement x="134" y="25" width="378" height="34" uuid="1c3a9c10-4b04-4b66-bc18-86fe6b3d67e6"/>
+				<reportElement x="139" y="30" width="378" height="34" uuid="1c3a9c10-4b04-4b66-bc18-86fe6b3d67e6"/>
 				<textElement textAlignment="Center">
-					<font size="16" isBold="true"/>
+					<font fontName="Arial" size="16" isBold="true"/>
 				</textElement>
 				<text><![CDATA[CENTRO EDUCATIVO  “ANTONIO RICAURTE”]]></text>
 			</staticText>
 			<image>
-				<reportElement x="10" y="10" width="100" height="93" uuid="f60b8f90-6fe7-4a47-b4c2-4b26bc6bc6c1"/>
+				<reportElement x="15" y="15" width="100" height="93" uuid="f60b8f90-6fe7-4a47-b4c2-4b26bc6bc6c1"/>
 				<imageExpression><![CDATA["C:\\Users\\Mario Jurado\\Pictures\\Escudo colegio.png"]]></imageExpression>
 			</image>
 			<staticText>
-				<reportElement x="110" y="59" width="424" height="30" uuid="c00a9ead-c6e7-4a32-9750-4cbabf4d7b34"/>
+				<reportElement x="115" y="64" width="424" height="30" uuid="c00a9ead-c6e7-4a32-9750-4cbabf4d7b34"/>
 				<textElement textAlignment="Center" verticalAlignment="Top">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<text><![CDATA[Licencia de funcionamiento 366 de Abril 4 de 2001, Resolución 1861  Junio 30 de 2005 de  la Secretaría de Educación y Cultura Departamental  CODIGO SNP ICFES 114454 Código DANE 352612001093
 ]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="10" y="127" width="174" height="31" uuid="ff1b1364-16a3-4873-b9d0-8404c839124d"/>
-				<textElement textAlignment="Justified" verticalAlignment="Middle">
-					<font size="12"/>
-				</textElement>
-				<text><![CDATA[Asignacion academica periodo ]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="184" y="127" width="66" height="31" uuid="f5ced320-02d7-4d6e-8711-5d186e5f6715"/>
-				<textElement textAlignment="Justified" verticalAlignment="Middle">
-					<font size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{numero}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="250" y="127" width="83" height="31" uuid="4208c1a3-901d-44d2-ab42-35e1f93a52b4"/>
-				<textElement textAlignment="Justified" verticalAlignment="Middle">
-					<font size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{curso}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="333" y="127" width="77" height="31" uuid="f52fafc8-12b8-4e46-93b4-2df796c059c9"/>
-				<textElement textAlignment="Justified" verticalAlignment="Middle">
-					<font size="12"/>
-				</textElement>
-				<text><![CDATA[, año escolar]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="410" y="127" width="99" height="31" uuid="1e3bf50e-2f7e-48ed-833a-e0314adb0714"/>
-				<textElement textAlignment="Justified" verticalAlignment="Middle">
-					<font size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{año}]]></textFieldExpression>
-			</textField>
 		</band>
-	</pageHeader>
-	<columnHeader>
-		<band height="21" splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="229" splitType="Stretch">
-			<subreport>
-				<reportElement x="0" y="0" width="572" height="229" uuid="788c01fd-7940-4265-9ac9-a6b8bbf5a58c"/>
-				<dataSourceExpression><![CDATA[$F{contenidoDS}]]></dataSourceExpression>
-				<subreportExpression><![CDATA["AsignacionAcademica_subreport1.jasper"]]></subreportExpression>
-			</subreport>
+		<band height="287" splitType="Stretch">
+			<componentElement>
+				<reportElement key="table" style="table" x="33" y="61" width="501" height="62" uuid="d729f631-88b9-4d8d-92c3-f35af5d3ddfb"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="New Dataset 1" uuid="8da6dcfa-a949-4e2a-8fd2-b4060997b39a">
+						<dataSourceExpression><![CDATA[$F{contenidoDS}]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column width="25" uuid="af9a68b3-0bbe-4960-8f19-41ff571ebb90">
+						<jr:columnHeader style="table_CH" height="21" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="25" height="21" uuid="44d78fa7-c73d-404d-8b4c-5bcf120419d6"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[No]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table_TD" height="39" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="25" height="39" uuid="53e4a6c7-c265-48ec-8d8d-8deb556b54a6"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="238" uuid="c54cf77f-955f-4943-a1d4-ee37ae574795">
+						<jr:columnHeader style="table_CH" height="21" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="238" height="21" uuid="d022e684-b1e0-47b5-ab5f-fc4c61b4a253"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Asignatura]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table_TD" height="39" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="238" height="39" uuid="5ef244fe-8b78-42b4-89b3-7619c6c92183"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{asignaturacicloId.asignaturaId.nombre}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="135" uuid="de4dcbfd-2627-4b47-877b-977866cc7f7e">
+						<jr:columnHeader style="table_CH" height="21" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="135" height="21" uuid="92b7ba44-59c5-47f5-90b6-a9bed58609e0"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Apellidos]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table_TD" height="39" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="135" height="39" uuid="f368c97f-ef71-447e-a62c-5a71b0b701a9"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{profesorId.apellido}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="134" uuid="694da14b-9814-49c8-b348-94de9365068a">
+						<jr:columnHeader style="table_CH" height="21" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="134" height="21" uuid="80b5b27d-e47e-4609-82e1-d880919d2c17"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Nombres]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table_TD" height="39" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="134" height="39" uuid="2e8d5628-38e1-48e1-a2c9-9ff3f390a044"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{profesorId.nombre}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<textField>
+				<reportElement x="33" y="0" width="526" height="43" uuid="f5ced320-02d7-4d6e-8711-5d186e5f6715"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Asignacion academica periodo "+$F{numero}+" "+$F{curso}+" "+"año escolar "+$F{año}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
+	<pageFooter>
+		<band height="43">
+			<textField pattern="EEE, d MMM yyyy HH:mm:ss">
+				<reportElement x="412" y="14" width="134" height="20" uuid="434eb418-d71f-40f4-a62f-3a9a4689fb0b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
 </jasperReport>
