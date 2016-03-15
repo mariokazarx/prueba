@@ -50,7 +50,20 @@ public class MatriculaFacade extends AbstractFacade<Matricula> {
         }
 
     }
-    
+    public Matricula getSuspendidaByEstudiante(Estudiante est, Anlectivo anlectivo) {
+        try {
+            Query cq = em.createNamedQuery("Matricula.findMatriculaSuspendida");
+            cq.setParameter("estudiante", est);
+            cq.setParameter("anlectivo", anlectivo);
+            if (cq.getSingleResult() != null) {
+                return (Matricula) cq.getSingleResult();
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            return null;
+        }
+    }
     public List<Matricula> matriculasCurso (Curso curso) {
         try {
             Query cq = em.createNamedQuery("Matricula.findMatriculaByCurso");

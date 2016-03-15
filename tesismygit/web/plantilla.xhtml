@@ -11,6 +11,19 @@
         <link href="./../resources/css/cssLayout.css" rel="stylesheet" type="text/css" />
         <link href="./../resources/css/style.css" rel="stylesheet" type="text/css" />
         <title>Sistema de Registro y Control</title>
+        <style type="text/css">
+            .ui-layout-north {
+                z-index:20 !important;
+                overflow:visible !important;;
+            }
+            .ui-layout-north .ui-layout-unit-content {
+                overflow:visible !important;
+            }
+            
+            body {
+                background-color: #409FBA;
+            }
+        </style>
     </h:head>
     <h:body rendered="false">
         <center>
@@ -45,6 +58,16 @@
             </p:layoutUnit>
 
             <p:layoutUnit position="center" id="content1">
+                
+                <div id="center_content">
+                    
+                    <ui:insert name="content">Content #{mbvPrueba.prof.nombre} login #{mbvPrueba.login} #{mbsLogin.profesor.apellido} TIME #{session.maxInactiveInterval * 1000}</ui:insert>
+                </div>
+            </p:layoutUnit>
+            <p:layoutUnit position="south" size="100"  header="" resizable="true"  collapsible="true">
+                <h:outputText value="South unit content." />
+            </p:layoutUnit>
+            <p:layoutUnit position="north" size="100" header="" resizable="true" closable="true" collapsible="true">
                 <div id="top">
                     <ui:insert name="top">
                         <h:panelGrid columns="2">
@@ -52,8 +75,6 @@
                             <h:outputLabel value="CENTRO EDUCATIVO ANTONIO RICAURTE"/>
                         </h:panelGrid>
                     </ui:insert>
-                </div>
-                <div id="center_content">
                     <h:form>
                         <p:menubar rendered="#{mbsLogin.loginUsuario}">  
                             <p:submenu label="Parametros de configuracion" icon="ui-icon-gear"> 
@@ -91,9 +112,9 @@
                             <p:menuitem value="Cerrar Sesion" actionListener="#{mbsLogin.cerrarSession}" />  
                         </p:menubar>
                     </h:form>
-                    <ui:insert name="content">Content #{mbvPrueba.prof.nombre} login #{mbvPrueba.login} #{mbsLogin.profesor.apellido} TIME #{session.maxInactiveInterval * 1000}</ui:insert>
                 </div>
             </p:layoutUnit>
+            
         </p:layout>
     </h:body>
 </html>

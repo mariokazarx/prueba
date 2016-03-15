@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
@@ -131,11 +132,15 @@ public class mbsLogin implements Serializable {
                 } else {
                     //clave mal
                     System.out.println("clave mal");
+                    FacesContext.getCurrentInstance().
+                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Datos incorrectos"));
                     return;
                 }
             } else {
                 //usuario no existe
                 System.out.println("usuario no existe");
+                FacesContext.getCurrentInstance().
+                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Datos incorrectos"));
                 return;
             }
         } else {
@@ -153,15 +158,21 @@ public class mbsLogin implements Serializable {
                     } else {
                         //clave mal
                         System.out.println("clave mal");
+                        FacesContext.getCurrentInstance().
+                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Datos incorrectos"));
                         return;
                     }
                 } else {
                     //usuario no existe
                     System.out.println("usuario no existe");
+                    FacesContext.getCurrentInstance().
+                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Datos incorrectos"));
                     return;
                 }
             } else {
                 //no existe el tipo de usurario
+                FacesContext.getCurrentInstance().
+                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Datos incorrectos"));
                 return;
             }
         }

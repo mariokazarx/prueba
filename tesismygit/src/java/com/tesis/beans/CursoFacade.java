@@ -5,6 +5,7 @@
 package com.tesis.beans;
 
 import com.tesis.entity.Anlectivo;
+import com.tesis.entity.Ciclo;
 import com.tesis.entity.Curso;
 import com.tesis.entity.Periodo;
 import com.tesis.entity.Profesor;
@@ -71,4 +72,22 @@ public class CursoFacade extends AbstractFacade<Curso> {
             return false;
         }
     }
+    public Long countCursosCiclo(Anlectivo anlectivo,Ciclo ciclo){
+        try {
+            Query cq = em.createNamedQuery("Curso.countCicloAño");
+            cq.setParameter("ciclo", ciclo);
+            cq.setParameter("anlectivo", anlectivo);
+            if(cq.getResultList()!=null){
+                return (Long)cq.getSingleResult();
+            }
+            else{
+                return null;
+            }
+        } catch (PersistenceException e) {
+            return null;
+        }
+        catch (Exception e) {
+            return null;
+        }
+     }
 }

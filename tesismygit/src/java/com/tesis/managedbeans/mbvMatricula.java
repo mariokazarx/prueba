@@ -54,6 +54,7 @@ public class mbvMatricula implements Serializable {
     private String mensajeCancelar;
     private String txtmensaje;
     private boolean contenidoSuspender;
+    private boolean contenidoActivar;
     @EJB
     private CicloFacade cicloEjb;
     @EJB
@@ -70,6 +71,14 @@ public class mbvMatricula implements Serializable {
     private CursoFacade CursoEjb;
     
     public mbvMatricula() {
+    }
+
+    public boolean isContenidoActivar() {
+        return contenidoActivar;
+    }
+
+    public void setContenidoActivar(boolean contenidoActivar) {
+        this.contenidoActivar = contenidoActivar;
     }
 
     public boolean isContenidoSuspender() {
@@ -214,6 +223,7 @@ public class mbvMatricula implements Serializable {
         this.cursos = new ArrayList<Curso>();
         this.estMatriculados = new ArrayList<Estudiante>(); 
         this.contenidoSuspender = false;
+        contenidoActivar = false;
         //mbvEstudiante estudiante = (mbvEstudiante) FacesContext.getCurrentInstance().getViewRoot().getViewMap().get("mbvEstudiante");
         Estudiante aux = (Estudiante) FacesContext.getCurrentInstance()
                 .getExternalContext()
@@ -299,31 +309,58 @@ public class mbvMatricula implements Serializable {
                                 if(auxMatricula.getCursoId().getAnlectivoId().getAnlectivoId()==auxEscolar.getAnlectivoId()){
                                     //son matriculas del mismo año
                                     System.out.println("mismo año");
-                                    contenidoCancelar=true;
-                                    contenidoMatricular=false;
-                                    contenidoCambiar = true;
-                                    matricula = auxMatricula;
-                                    mensajeCancelar="Detalle matricula";
-                                    cursos.remove(auxMatricula.getCursoId());
-                                    estMatriculados.clear();
-                                    for(Matricula matriculasCurso : matriculaEjb.matriculasCurso(auxMatricula.getCursoId())){
-                                        estMatriculados.add(matriculasCurso.getEstudianteId());
+                                    Long cursosCount = CursoEjb.countCursosCiclo(auxEscolar, auxMatricula.getCursoId().getCicloId());
+                                    if(cursosCount>1){
+                                        contenidoCancelar=true;
+                                        contenidoMatricular=false;
+                                        contenidoCambiar = true;
+                                        contenidoSuspender = true;
+                                        contenidoActivar = false;
+                                        matricula = auxMatricula;
+                                        mensajeCancelar="Detalle matricula";
+                                        cursos.remove(auxMatricula.getCursoId());
+                                        estMatriculados.clear();
+                                        for(Matricula matriculasCurso : matriculaEjb.matriculasCurso(auxMatricula.getCursoId())){
+                                            estMatriculados.add(matriculasCurso.getEstudianteId());
+                                        }
+                                    }else{
+                                        contenidoCancelar=true;
+                                        contenidoMatricular=false;
+                                        contenidoCambiar = false;
+                                        contenidoSuspender = true;
+                                        contenidoActivar = false;
                                     }
+                                    
                                 }
                                 else{
                                     System.out.println("diferente año");
                                     // no son en el mismo año 
                                     contenidoCancelar=true;
                                     contenidoMatricular=false;
+                                    contenidoSuspender = false;
+                                    contenidoActivar = false;
                                     matricula = auxMatricula;
                                     mensajeCancelar="El estudiante tiene una matricula activa en otro año debe cancelarla para realizar matricula al año actual";
                                 }
                             }else{
                                 //no esta matriculado
-                                System.out.println("No matriculado");
-                                contenidoMatricular=true;
-                                contenidoCambiar = false;
-                                contenidoCancelar=false;
+                                Matricula suspendida = matriculaEjb.getSuspendidaByEstudiante(estudiante,auxEscolar);
+                                if(suspendida!=null){
+                                    contenidoActivar = true;
+                                    contenidoCambiar = false;
+                                    contenidoCancelar = true;
+                                    contenidoSuspender = false;
+                                    contenidoMatricular = false;
+                                    
+                                }else{
+                                    System.out.println("No matriculado");
+                                    contenidoMatricular=true;
+                                    contenidoCambiar = false;
+                                    contenidoCancelar=false;
+                                    contenidoSuspender = false;
+                                    contenidoActivar = false;
+                                }
+                                
                             }
                         }
                     }
@@ -349,6 +386,7 @@ public class mbvMatricula implements Serializable {
         } else {
             this.mostrarPrincipal = false;
             this.contenido=false;
+            contenidoActivar = false;
             this.mensaje = "";
             System.out.println("QQQQQ2" + this.estudiante);
             System.out.println("OTRO"+this.estudiante);

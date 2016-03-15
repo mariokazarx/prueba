@@ -47,7 +47,7 @@
 }
 
 #top a:link, #top a:visited {
-  color: white;
+  /*color: white;*/
   font-weight : bold;
   text-decoration: none;
 }

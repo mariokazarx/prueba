@@ -27,8 +27,15 @@
                         <f:selectItem itemLabel="Administrativo" itemValue="administrativo" />
                     </p:selectOneMenu>
                     <h:panelGroup></h:panelGroup>
-                    <p:commandButton value="Ingresar"  actionListener="#{mbsLogin.confirmar}" style="margin-left: 42%;margin-bottom: 15px"/>
+                    <p:commandButton value="Ingresar" ajax="true" update="frmLogin" actionListener="#{mbsLogin.confirmar}" style="margin-left: 42%;margin-bottom: 15px"/>
                 </h:panelGrid>
+                
+                <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+ 
+                <p:dialog widgetVar="statusDialog" appendTo="@(body)" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                    <p:graphicImage library="imagenes" name="load1.gif"/>
+                </p:dialog>
+                
             </h:form>
         </div>
 
