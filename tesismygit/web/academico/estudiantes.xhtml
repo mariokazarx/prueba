@@ -14,7 +14,7 @@
                         <p:ajax event="dialogReturn" listener="#{mbvEstudiante.closeDialog}" update="frmListaEstudiantes" />
                     </p:commandButton>
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
-                    <p:dataTable id="tablaListaEstudiante" var="estudiante" value="#{mbvEstudiante.estudiantes}" paginator="true" rows="10" selection="#{mbvEstudiante.estudiante}" selectionMode="single" lazy="true" rowKey="#{estudiante.estudianteId}" >
+                    <p:dataTable id="tablaListaEstudiante" var="estudiante" value="#{mbvEstudiante.estudiantes}" reflow="true" paginator="true" rows="10" selection="#{mbvEstudiante.estudiante}" selectionMode="single" lazy="true" rowKey="#{estudiante.estudianteId}" >
                         <p:ajax event="rowSelect" update=":frmListaEstudiantes:panelDetalleEstudiante" oncomplete="PF('dialogoDetalleEstudiante').show()"/>
                         <f:facet name="header">
                             Lista de Estudiantes

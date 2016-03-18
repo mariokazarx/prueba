@@ -7,10 +7,10 @@
       xmlns:p="http://primefaces.org/ui">
     <h:head >
         <meta content='text/html; charset=iso-8859-1' http-equiv="Content-Type"/>
+        <h:outputStylesheet name="css/cssPlantilla.css"/>
         <link href="./../resources/css/default.css" rel="stylesheet" type="text/css" />
         <link href="./../resources/css/cssLayout.css" rel="stylesheet" type="text/css" />
         <link href="./../resources/css/style.css" rel="stylesheet" type="text/css" />
-        <link href="./../resources/css/cssPlantilla.css" rel="stylesheet" type="text/css" />
         <title>Sistema de Registro y Control</title>
         <style type="text/css">
             .ui-layout-north {
@@ -20,7 +20,7 @@
             .ui-layout-north .ui-layout-unit-content {
                 overflow:visible !important;
             }
-            
+       
             body {
                 background-color: #409FBA;
             }
@@ -56,7 +56,20 @@
             </p:layoutUnit>
             <p:layoutUnit position="center" id="content1">
                 <div id="topPrueba" class="top">
-                    <ui:insert name="top">Top</ui:insert>
+                     <div class="contenedor-top1"> 
+                          <p:graphicImage library="imagenes" name="Escudo2.png" height="125" width="125"/>
+                     </div>
+                    <div class="contenedor-top2">
+                        <div class="titulos-top2">
+                        <span class="nombre-colegio-plantilla">Centro Educativo Antonio Ricaurte</span>
+                        </div>
+                        <div class="titulos-top2"> 
+                        <span class="nombre-colegio-plantilla">Nombre Software</span>
+                        </div>
+                    </div>
+                     <div class="contenedor-top3">
+                         <p:graphicImage library="imagenes" name="escudou.png" height="125" width="170"/>
+                     </div>
                 </div>
                 <h:form>
                     <p:menubar rendered="#{mbsLogin.loginUsuario}">  

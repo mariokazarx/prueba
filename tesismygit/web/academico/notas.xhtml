@@ -25,7 +25,7 @@
                     </p:selectOneMenu>
                     
                     <br />
-                    <p:commandButton value="Crear Logro" icon="ui-icon-pencil" actionListener="#{mbvNotas.newLogro}" rendered="#{mbvNotas.contenidoLogros}"/>
+                        <p:commandButton value="Crear Logro" icon="ui-icon-pencil" actionListener="#{mbvNotas.newLogro}" rendered="#{mbvNotas.contenidoLogros}"/>
 
                     <p:dataTable id="tableLogros" var="logro" value="#{mbvNotas.logros}" sortBy="#{logro.porcentaje}" rendered="#{mbvNotas.contenidoLogros}">
                         <p:column headerText="Titulo" sortBy="#{logro.titulo}">
@@ -34,7 +34,7 @@
                         <p:column headerText="Descripcion" sortBy="#{logro.descripcion}">
                             <h:outputText value="#{logro.descripcion}" />
                         </p:column>
-                        <p:column headerText="Porcentaje" sortBy="#{logro.porcentaje}">
+                        <p:column headerText="Porcentaje" sortBy="#{logro.porcentaje}" style="width: auto ">
                             <h:outputText value="#{logro.porcentaje}" />
                         </p:column>
                         <p:column>

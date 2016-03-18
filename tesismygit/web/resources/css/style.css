@@ -1,6 +1,7 @@
 /* formulario */
 .container-form{    
-    max-width: 500px;
+    /*max-width: 500px;*/
+    width: 50%;
     display: block;
     margin: 50px auto;
     border: 1px solid rgba(0,0,0,.5);
@@ -91,4 +92,30 @@ table.cont-control td:last-child{
 .div-cont-matricula{
     width: 50%;
     margin: 10px auto;
+}
+@media screen and (max-device-width: 480px) {
+  .container-form{    
+    width: 80%;
+    display: block;
+    margin: 50px auto;
+    border: 1px solid rgba(0,0,0,.5);
+    border-radius: 10px;
+    box-shadow: 3px 3px 3px #000;
+    min-height: 300px;
+    padding: 20px;
+    padding: 5px;
+}
+}
+@media screen and (max-width: 680px) {
+  .container-form{    
+    width: 90%;
+    display: block;
+    margin: 50px auto;
+    border: 1px solid rgba(0,0,0,.5);
+    border-radius: 10px;
+    box-shadow: 3px 3px 3px #000;
+    min-height: 300px;
+    padding: 20px;
+    padding: 5px;
+}
 }

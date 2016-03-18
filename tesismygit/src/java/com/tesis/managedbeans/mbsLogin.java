@@ -26,6 +26,7 @@ import javax.servlet.ServletContext;
 @ManagedBean
 @SessionScoped
 public class mbsLogin implements Serializable {
+    private static final long serialVersionUID = -5787167673908025405L;
 
     private String txtCorreo;
     private String clave;

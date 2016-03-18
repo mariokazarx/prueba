@@ -26,6 +26,7 @@ import org.primefaces.model.menu.MenuModel;
 @ManagedBean
 @ViewScoped
 public class mbvMenu implements Serializable{
+    private static final long serialVersionUID = 9151197840461324706L;
 
     private MenuModel model;
     private Anlectivo aEscolar;
@@ -111,9 +112,9 @@ public class mbvMenu implements Serializable{
             model.addElement(firstSubmenu);
 
             //Second submenu
-            DefaultSubMenu secondSubmenu = new DefaultSubMenu("Años Escolares antiguos");
+            DefaultSubMenu secondSubmenu = new DefaultSubMenu("Años Escolares anteriores");
 
-            if(aEscolar.getAnlectivoId()!=null){
+           /*if(aEscolar.getAnlectivoId()!=null){
                 item = new DefaultMenuItem(aEscolar.getAnio());
                 item.setIcon("ui-icon-disk");
                 item.setCommand("#{menuView.save}");
@@ -131,7 +132,46 @@ public class mbvMenu implements Serializable{
             item.setCommand("#{menuView.redirect}");
             secondSubmenu.addElement(item);
 
+            model.addElement(secondSubmenu);*/
+            DefaultMenuItem item6 = new DefaultMenuItem("Reporte de Matriculas");
+            item6.setUrl("/faces/reportes/reporteMatriculaAñosAnteriores.xhtml");
+            item6.setIcon("ui-icon-document");
+            secondSubmenu.addElement(item6);
+
+            DefaultMenuItem item7 = new DefaultMenuItem("Reporte Asignacion academica");
+            item7.setUrl("/faces/reportes/reporteAsignacionAñosAnteriores.xhtml");
+            item7.setIcon("ui-icon-document");
+            secondSubmenu.addElement(item7);
+           
+            DefaultMenuItem item8 = new DefaultMenuItem("Consolidado por Periodo");
+            item8.setUrl("/faces/reportes/consolidadoPeriodoAñosAnteriores.xhtml");
+            item8.setIcon("ui-icon-document");
+            secondSubmenu.addElement(item8);
+            
+            DefaultMenuItem item9 = new DefaultMenuItem("Consolidado Cierre de año");
+            item9.setUrl("/faces/reportes/consolidadofinal.xhtml");
+            item9.setIcon("ui-icon-document");
+            secondSubmenu.addElement(item9);
+            
+            DefaultMenuItem item10 = new DefaultMenuItem("Boletines");
+            item10.setUrl("/faces/reportes/boletinesPeriodoAñosAnteriores.xhtml");
+            item10.setIcon("ui-icon-document");
+            secondSubmenu.addElement(item10);
             model.addElement(secondSubmenu);
+            
+            DefaultSubMenu certificadosMenu = new DefaultSubMenu("Certificados");
+            
+            DefaultMenuItem item11 = new DefaultMenuItem("Constancia de estudios");
+            item11.setUrl("/faces/reportes/constanciaEstudios.xhtml");
+            item11.setIcon("ui-icon-document");
+            certificadosMenu.addElement(item11);
+            
+            DefaultMenuItem item12 = new DefaultMenuItem("Certificado matricula");
+            item12.setUrl("/faces/reportes/certificadoMatricula.xhtml");
+            item12.setIcon("ui-icon-document");
+            certificadosMenu.addElement(item12);
+            model.addElement(certificadosMenu);
+            
         } 
         if(profesor.getProfesorId()!=null){
             //esta logueado como profesor

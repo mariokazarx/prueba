@@ -1,0 +1,80 @@
+.top-1-cont{
+    height: 100%;
+}
+.caja-login-titulo{
+    margin-top: 13px;
+    padding-left: 5%
+}
+.div-caja-login{
+    padding-left: 5%
+}
+.div-caja-login div{
+    width: 82%;
+}
+.caja-texto{
+    width: 90%;
+}
+.select-login{
+    width: 83%;
+}
+.boton-login{
+    text-align: center;
+    margin-top: 38px;
+    margin-bottom: 21px;
+}
+.formulario-login{
+    max-width: 330px;
+    margin: 29px auto;
+    border: 2px solid rgba(0,0,0,0.5);
+    background-color: #DFEBED;
+    border-radius: 5px;
+    background: linear-gradient(to bottom, rgba(115, 153, 191, 0.39), #62C3BA);
+}
+.imagen-login{
+    margin: 18px auto;
+    max-width: 130px;
+}
+.inicio-sesion{
+    text-align: center;
+}
+.nombre-colegio{
+    text-align: center;
+    font-size: 35px;
+    margin-top: 69px;
+    font-family: serif;
+    font-style: italic;
+    color: dimgray;
+    font-weight: bold;
+}
+body
+{
+    background-image: url("#{resource['imagenes/fondoi4.png']}");
+    background-color: #DFEBED;
+    background-repeat: no-repeat;
+}
+.estilo-letra-login{
+    font-style: italic;
+    font-size: 19px;
+    font-weight: bold;
+}
+.estilo-iniciar{
+    font-style: normal;
+    font-size: 26px;
+    font-weight: bold;
+}
+.contenedor-top{
+    width: 100%;
+    display: inline-flex;
+}
+.contenedor-top1{
+    width: 15%;
+    display: inline-flex;
+}
+.contenedor-top2{
+    width: 70%;
+    display: inline-flex;
+}
+.contenedor-top3{
+    width: 15%;
+    display: inline-flex;
+}

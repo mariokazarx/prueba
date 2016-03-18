@@ -345,6 +345,7 @@ public class mbvMatricula implements Serializable {
                             }else{
                                 //no esta matriculado
                                 Matricula suspendida = matriculaEjb.getSuspendidaByEstudiante(estudiante,auxEscolar);
+                                matricula = suspendida;
                                 if(suspendida!=null){
                                     contenidoActivar = true;
                                     contenidoCambiar = false;
@@ -480,11 +481,45 @@ public class mbvMatricula implements Serializable {
         }
     }
     public void suspenderMatricula(){
-        EstadoMatricula esmatricula = new EstadoMatricula();
-        esmatricula = estadomatriculaEjB.find(3);
-        this.matricula.setEstadoMatriculaId(esmatricula);
-        matriculaEjb.edit(matricula);
-        contenidoMatricular=true;
-        contenidoCancelar=false;
+        try {
+            EstadoMatricula esmatricula = new EstadoMatricula();
+            esmatricula = estadomatriculaEjB.find(3);
+            this.matricula.setEstadoMatriculaId(esmatricula);
+            FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Matricula suspendida exitosamente", ""));
+            matriculaEjb.edit(matricula);
+            contenidoMatricular=false;
+            contenidoCancelar=false;
+            contenidoCambiar = false;
+            contenidoActivar = true;
+            contenidoSuspender = false;
+            this.matriculaEjb.edit(matricula);
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Error", "error inesperado"));
+            
+        }
+        
+    }
+    public void activarMatricula(){
+        try {
+            EstadoMatricula esmatricula = new EstadoMatricula();
+            esmatricula = estadomatriculaEjB.find(1);
+            this.matricula.setEstadoMatriculaId(esmatricula);
+            matriculaEjb.edit(matricula);
+            contenidoMatricular=false;
+            contenidoCancelar=true;
+            contenidoCambiar = false;
+            contenidoActivar = false;
+            contenidoSuspender = true;
+            this.matriculaEjb.edit(matricula);
+            FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Matricula activada exitosamente", ""));
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Error", "error inesperado"));
+            
+        }
+        
     }
 }

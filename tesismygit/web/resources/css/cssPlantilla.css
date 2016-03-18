@@ -2,14 +2,15 @@
     display: flex;
     min-height: 100px;
     width: 100%;
-    background-color: #036fab;
-    color: white;
+    background-color: white;
     padding: 5px;
+    align-items: flex-start
 }
 .content{
     display: flex;
     flex-direction: row;
-    min-height: 600px;
+    min-height: 400px;
+    background-image: url("#{resource['imagenes/fondoi.png']}");
     width: 100%;
 }
 .content-left{
@@ -28,4 +29,67 @@
     width: 100%;
     background-color: #c2dfef;
     padding: 5px;
+}
+.contenedor-top1{
+    background-size: cover;
+    width: 15%;
+    display: inline-flex;
+    justify-content: center;
+
+}
+.contenedor-top2{
+    justify-content: center;
+    width: 65%;
+    display: block;
+}
+.contenedor-top3{
+    background-size: cover;
+    width: 20%;
+    display: inline-flex;
+    justify-content: center;
+}
+.nombre-colegio-plantilla{
+    text-align: center;
+    font-size: 35px;
+    margin-top: 72px;
+    font-family: serif;
+    font-style: italic;
+    color: dimgray;
+    font-weight: bold;
+    margin-top: auto
+}
+@media screen and (max-width: 680px){
+    .contenedor-top1{
+        background-image: url("#{resource['imagenes/escudo2.png']}");
+        background-size: cover;
+        width: 30%;
+        display: none;
+    }
+    .nombre-colegio-plantilla{
+        text-align: center;
+        font-size: 30px;
+        margin-top: 72px;
+        font-family: serif;
+        font-style: italic;
+        color: dimgray;
+        font-weight: bold;
+        margin-top: auto
+    }
+    .contenedor-top2{
+
+        width: 100%;
+        display: block;
+    }
+    .contenedor-top3{
+        background-image: url("#{resource['imagenes/escudou.png']}");
+        background-size: cover;
+        width: 30%;
+        display: none;
+    }
+}
+
+.titulos-top2{
+    width: 100%;
+    text-align: center;
+    margin-top: 5px;
 }

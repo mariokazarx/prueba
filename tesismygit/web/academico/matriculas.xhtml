@@ -108,6 +108,10 @@
                             <p:outputPanel id="panelSuspender" rendered="#{mbvMatricula.contenidoSuspender}" styleClass="div-cont-matricula">
                                 <p:commandButton id="btnSuspenderMatricula" value="suspender matricular" actionListener="#{mbvMatricula.suspenderMatricula}" style="margin-top:5px" />
                             </p:outputPanel>
+                            
+                            <p:outputPanel id="panelActivar" rendered="#{mbvMatricula.contenidoActivar}" styleClass="div-cont-matricula">
+                                <p:commandButton id="btnActivatMatricula" ajax="true" update="frmMatricula" value="Activar matricular" actionListener="#{mbvMatricula.activarMatricula}" style="margin-top:5px" />
+                            </p:outputPanel>
 
                             <p:outputPanel id="panelListado" rendered="#{mbvMatricula.mostrarMatriculados}">
                                 <p:dataTable id="tableMatriculados" var="estMatriculado" rowIndexVar="index" value="#{mbvMatricula.estMatriculados}">

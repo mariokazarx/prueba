@@ -6,29 +6,47 @@
       xmlns:f="http://java.sun.com/jsf/core">
     <h:head>
         <title>Facelet Title</title>
-        <h:outputStylesheet name="css/cssFormulario.css"/>
+        <h:outputStylesheet name="css/cssIndex.css"/>
     </h:head>
     <h:body>
-        <h1>Centro Educativo Antonio Ricaurte</h1>
+        <div class="nombre-colegio">
+            <span>Centro Educativo Antonio Ricaurte</span>
+        </div> 
+        
 
-        <div class="contenedorLogin">
-            <h:form id="frmLogin" class="formulario">
+        <div class="formulario-login">
+            <h:form id="frmLogin">
                 <p:growl id="mensageGeneral" showDetail="true" sticky="false"/>
-                <p:graphicImage library="imagenes" name="escudo.png" height="125" width="125" style="margin-top:15px"/>
-                <h2>Inicio de sesión</h2>
-                <h:panelGrid columns="1" style="width: 100%" class="prueba">
-                    <p:outputLabel value="Correo electrónico" for="txtCorreoElectronico" />
-                    <p:inputText placeholder="Correo" id="txtCorreoElectronico"  value="#{mbsLogin.txtCorreo}"/>
-                    <p:outputLabel value="Contraseña" for="txtContrasenia"/>
-                    <p:password placeholder="Contraseña" id="txtContrasenia"  value="#{mbsLogin.clave}"/>
-                    <p:outputLabel for="selectTipoUsu" value="Tipo de Usuario" />
-                    <p:selectOneMenu id="selectTipoUsu" value="#{mbsLogin.tipoUsuario}" style="margin-left: 20%;width:auto" >
+             <div class="imagen-login"> 
+                <p:graphicImage library="imagenes" name="escudo.png" height="125" width="125"/>
+             </div>   
+                <div class="inicio-sesion">  
+                <span class="estilo-iniciar">INICIAR SESIÓN </span>
+                </div>
+                <div class="caja-login-titulo">
+                    <span class="estilo-letra-login">Correo electrónico</span>
+                </div>
+                <div class="div-caja-login">
+                    <p:inputText placeholder="Correo" id="txtCorreoElectronico"  value="#{mbsLogin.txtCorreo}" styleClass="caja-texto"/>
+                  </div>
+                  <div class="caja-login-titulo">  
+                      <span class="estilo-letra-login">Contraseña</span>
+                  </div>  
+                  <div class="div-caja-login">  
+                    <p:password placeholder="Contraseña" id="txtContrasenia"  value="#{mbsLogin.clave}" styleClass="caja-texto"/>
+                  </div>  
+                 <div class="caja-login-titulo">  
+                     <span class="estilo-letra-login">Tipo usuario</span>
+                  </div>  
+                 <div class="div-caja-login">  
+                    <p:selectOneMenu id="selectTipoUsu" value="#{mbsLogin.tipoUsuario}"  styleClass="select-login">
                         <f:selectItem itemLabel="Docente" itemValue="profesor" />
                         <f:selectItem itemLabel="Administrativo" itemValue="administrativo" />
                     </p:selectOneMenu>
-                    <h:panelGroup></h:panelGroup>
-                    <p:commandButton value="Ingresar" ajax="true" update="frmLogin" actionListener="#{mbsLogin.confirmar}" style="margin-left: 42%;margin-bottom: 15px"/>
-                </h:panelGrid>
+                  </div> 
+                <div class="boton-login">     
+                    <p:commandButton value="Ingresar" ajax="true" update="frmLogin" actionListener="#{mbsLogin.confirmar}"/>
+             </div>
                 
                 <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
  

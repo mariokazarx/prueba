@@ -57,7 +57,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Estudiante.findByCabezaFamilia", query = "SELECT e FROM Estudiante e WHERE e.cabezaFamilia = :cabezaFamilia"),
     @NamedQuery(name = "Estudiante.findByAcudiente", query = "SELECT e FROM Estudiante e WHERE e.acudiente = :acudiente"),
     @NamedQuery(name = "Estudiante.findByFoto", query = "SELECT e FROM Estudiante e WHERE e.foto = :foto"),
-    @NamedQuery(name = "Estudiante.findByCurso", query = "SELECT e FROM Estudiante e JOIN e.matriculaList m WHERE m.cursoId = :cursoId"),
+    @NamedQuery(name = "Estudiante.findByCurso", query = "SELECT e FROM Estudiante e JOIN e.matriculaList m WHERE m.cursoId = :cursoId AND (m.estadoMatriculaId.estadoMatriculaId = 1 OR m.estadoMatriculaId.estadoMatriculaId = 4)"),
     @NamedQuery(name = "Estudiante.findNotaLOgro", query = "SELECT logn FROM Estudiante e JOIN e.logronotaList logn WHERE logn.logroId = :logroId AND e.estudianteId = :estudianteId"),
     @NamedQuery(name = "Estudiante.findNotaEst", query = "SELECT nt FROM Estudiante e JOIN e.notaList nt WHERE nt.contenidotematicoId = :contenidotematicoId AND e.estudianteId = :estudianteId"),
     @NamedQuery(name = "Estudiante.findPromedioNotaPeriodo", query = "SELECT e,AVG(nt.valor) as promedio FROM Estudiante e JOIN e.notaList nt JOIN nt.contenidotematicoId c WHERE c.periodoId = :periodo AND c.cursoId = :curso GROUP BY e ORDER BY promedio"),

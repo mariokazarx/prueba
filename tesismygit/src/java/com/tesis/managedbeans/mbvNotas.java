@@ -73,6 +73,8 @@ import org.primefaces.event.RowEditEvent;
 @ManagedBean
 @ViewScoped
 public class mbvNotas implements Serializable {
+   
+    private static final long serialVersionUID = -3334971107153487494L;
 
     private List<ReporteNotasProfesor> reporte;
     private String notaxxLogro;
@@ -408,6 +410,7 @@ public class mbvNotas implements Serializable {
                 return;
             }
             if(suma==100){
+                //cambiar estado contenido a iniciado
                 this.contenidoNotas=true;
             }
             if (contenido != null) {
@@ -660,6 +663,7 @@ public class mbvNotas implements Serializable {
 
     public void eliminarLogro(Logro logroId) {
         try {
+            //aqui cambiar contenido a estado pendiente
             logroEjb.remove(logroId);
             for (Estudiante es : estudiantes) {
                 actualizarNota(contenido, es);
