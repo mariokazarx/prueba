@@ -133,6 +133,30 @@ public class ContenidotematicoFacade extends AbstractFacade<Contenidotematico> {
             return false;
         }
     }
+    public boolean tienePendientes(Periodo periodo) {
+        try {
+            Query cq = em.createNamedQuery("Contenidotematico.countPendientesPeriodo");
+            cq.setParameter("periodo", periodo);
+            if(cq.getSingleResult()!=null){
+                Long count = (Long) cq.getSingleResult();
+                if(count != 0){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+            else{
+                return false;
+            }
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+            return false;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
     public boolean removeByPeriodo(Periodo periodo) {
         try {
             Query cq = em.createNamedQuery("Contenidotematico.removeByPeriodo");

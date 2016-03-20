@@ -93,6 +93,46 @@ table.cont-control td:last-child{
     width: 50%;
     margin: 10px auto;
 }
+.form-principal{
+    width: 50%;
+    background-color: white;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 5px;
+    border: 2px solid rgba(0,0,0,0.5);
+    align-items: center;
+}
+.form-titulos{
+    width: 94%;
+    margin-top: 10px;
+}
+.form-select{
+    width: 90%;
+    margin-top: 10px;
+}
+.div-buscar-p{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+.div-tabla-p{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+.div-asignacion{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+}
 @media screen and (max-device-width: 480px) {
   .container-form{    
     width: 80%;
@@ -106,16 +146,51 @@ table.cont-control td:last-child{
     padding: 5px;
 }
 }
-@media screen and (max-width: 680px) {
-  .container-form{    
-    width: 90%;
-    display: block;
-    margin: 50px auto;
-    border: 1px solid rgba(0,0,0,.5);
-    border-radius: 10px;
-    box-shadow: 3px 3px 3px #000;
-    min-height: 300px;
-    padding: 20px;
-    padding: 5px;
+@media screen and (max-width: 1024px) {
+    .container-form{    
+        width: 90%;
+        display: block;
+        margin: 50px auto;
+        border: 1px solid rgba(0,0,0,.5);
+        border-radius: 10px;
+        box-shadow: 3px 3px 3px #000;
+        min-height: 300px;
+        padding: 20px;
+        padding: 5px;
+    }
+    .form-principal{
+        width: 75%;
+        background-color: white;
+        margin-top: 30px;
+        margin-bottom: 30px;
+        display: flex;
+        flex-direction: column;
+        border-radius: 5px;
+        border: 2px solid rgba(0,0,0,0.5);
+        align-items: center;
+    }
 }
+@media screen and (max-width: 680px) {
+    .container-form{    
+        width: 90%;
+        display: block;
+        margin: 50px auto;
+        border: 1px solid rgba(0,0,0,.5);
+        border-radius: 10px;
+        box-shadow: 3px 3px 3px #000;
+        min-height: 300px;
+        padding: 20px;
+        padding: 5px;
+    }
+    .form-principal{
+        width: 90%;
+        background-color: white;
+        margin-top: 30px;
+        margin-bottom: 30px;
+        display: flex;
+        flex-direction: column;
+        border-radius: 5px;
+        border: 2px solid rgba(0,0,0,0.5);
+        align-items: center;
+    }
 }

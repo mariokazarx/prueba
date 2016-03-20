@@ -14,7 +14,7 @@
                         <p:ajax event="dialogReturn" listener="#{mbvAlectivo.closeDialog}" update="frmanlectios" />
                     </p:commandButton>
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
-                    <p:dataTable id="tablaListaAlectivos" var="item" value="#{mbvAlectivo.anlectivos}" paginator="true" rows="10" selection="#{mbvAlectivo.anlectivo}" selectionMode="single" lazy="true" rowKey="#{item.anlectivoId}" >
+                    <p:dataTable id="tablaListaAlectivos" var="item" value="#{mbvAlectivo.anlectivos}" tableStyle="width:auto" reflow="true" paginator="true" rows="10" selection="#{mbvAlectivo.anlectivo}" selectionMode="single" lazy="true" rowKey="#{item.anlectivoId}" >
                         <p:ajax event="rowSelect" update=":frmanlectios:panelDetalleAlectivo" oncomplete="PF('dialogoDetalleAlectivo').show()"/>
                         <f:facet name="header">
                            Listado Años Escolares
@@ -44,7 +44,7 @@
                         </p:column>
                     </p:dataTable>
 
-                    <p:dialog header="Detalle Año Lectivo" widgetVar="dialogoDetalleAlectivo" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
+                    <p:dialog header="Detalle Año Lectivo" widgetVar="dialogoDetalleAlectivo" responsive="true" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
                         <p:outputPanel id="panelDetalleAlectivo">
                             <p:panelGrid columns="2">
                                 <p:outputLabel value="Id"/>
@@ -81,7 +81,7 @@
                     </h:form>
                 </p:confirmDialog>
                 
-                <p:dialog header="Datos año escolar" widgetVar="dialogoEditarAlectivo" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
+                <p:dialog header="Datos año escolar" widgetVar="dialogoEditarAlectivo" responsive="true" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
                     <h:form id="frmEditarAlectivo">
                         <p:outputPanel id="panelEditarAlectivo" >
                             <h:panelGrid columns="3">

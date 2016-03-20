@@ -42,7 +42,7 @@ public class mbvAsignatura implements Serializable{
     private Usuario usr;
     private boolean login;
     private Asignatura asignatura;
-    private LazyDataModel<Asignatura> asignaturas;
+    private List<Asignatura> asignaturas;
     private List<Area> areas;
     private Area areaselected;
     private List<Configuracion> configuraciones;
@@ -70,11 +70,11 @@ public class mbvAsignatura implements Serializable{
         this.asignatura = asignatura;
     }
 
-    public LazyDataModel<Asignatura> getAsignaturas() {
+    public List<Asignatura> getAsignaturas() {
         return asignaturas;
     }
 
-    public void setAsignaturas(LazyDataModel<Asignatura> asignaturas) {
+    public void setAsignaturas(List<Asignatura> asignaturas) {
         this.asignaturas = asignaturas;
     }
 
@@ -148,7 +148,7 @@ public class mbvAsignatura implements Serializable{
             login=false;
         }       
         this.asignatura=new Asignatura();
-        this.asignaturas= new LazyAsignaturaDataModel(this.asignaturaEjb.findAll());
+        this.asignaturas=  this.asignaturaEjb.findAll();
         //this.areas = this.areaEjb.findAll();
         this.areaselected = new Area();
         this.configuraciones = this.configuracionEjb.findAll();

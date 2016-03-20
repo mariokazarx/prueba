@@ -14,7 +14,7 @@
                         <p:ajax event="dialogReturn" listener="#{mbvConfiguracion.closeDialog}" update="frmListaConf" />
                     </p:commandButton>
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
-                    <p:dataTable id="tablaListaConf" var="item" value="#{mbvConfiguracion.configuraciones}" paginator="true" rows="10" selection="#{mbvConfiguracion.configuracion}" selectionMode="single" rowKey="#{item.configuracionId}" >
+                    <p:dataTable id="tablaListaConf" var="item" value="#{mbvConfiguracion.configuraciones}" tableStyle="width:auto" reflow="true" paginator="true" rows="10" selection="#{mbvConfiguracion.configuracion}" selectionMode="single" rowKey="#{item.configuracionId}" >
                         <p:ajax event="rowSelect" update=":frmListaConf:panelDetalleConf" oncomplete="PF('dialogoDetalleConf').show()"/>
                         <f:facet name="header">
                             Lista de Configuraciones
@@ -41,14 +41,12 @@
                         </p:column>
                     </p:dataTable>
 
-                    <p:dialog header="Detalle de Configuracion" widgetVar="dialogoDetalleConf" modal="true"  appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
+                    <p:dialog header="Detalle de Configuracion" responsive="true" widgetVar="dialogoDetalleConf" modal="true"  appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
                         <p:outputPanel id="panelDetalleConf">
                             <p:panelGrid columns="1">
                                 <p:outputLabel value="configuracion escala"/>
                             </p:panelGrid>
                             <p:panelGrid columns="2">
-                                <p:outputLabel value="Id"/>
-                                <h:outputText value="#{mbvConfiguracion.escala.escalaId}"/>
                                 <p:outputLabel value="Nombre"/>
                                 <h:outputText value="#{mbvConfiguracion.escala.nombre}"/>
                                 <p:outputLabel value="Descripcion"/>
@@ -77,7 +75,13 @@
 
                             </p:panelGrid>
                         </p:outputPanel>
-                    </p:dialog>                   
+                    </p:dialog>  
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" oncomplete="PF('statusDialog').hide()" />
+ 
+                    <p:dialog widgetVar="statusDialog" appendTo="@(body)" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage library="imagenes" name="load1.gif"/>
+                    </p:dialog>
+                    
                 </h:form>
 
                 <p:confirmDialog header="Eliminar Configuracion" widgetVar="removeconfiguracion" appendTo="@(body)" resizable="false" id="removeDlg"
@@ -93,10 +97,10 @@
                         </h:panelGrid>
                     </h:form>
                 </p:confirmDialog>
-                <p:dialog header="Advertencia" widgetVar="dlg2" modal="true" height="100" showEffect="clip" hideEffect="clip" appendTo="@(body)">
+                <p:dialog header="Advertencia" responsive="true" widgetVar="dlg2" modal="true" height="100" showEffect="clip" hideEffect="clip" appendTo="@(body)">
                     <h:outputText value="esta configuracion ya esta en uso no es posible si edicion" />
                 </p:dialog>   
-                <p:dialog header="Datos de la configuracion" widgetVar="dialogoEditarEscala" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
+                <p:dialog header="Datos de la configuracion" responsive="true" widgetVar="dialogoEditarEscala" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
                     <h:form id="frmEditarEscala">
                         <p:outputPanel id="panelEditarEscala" >
                             <h:panelGrid columns="3">

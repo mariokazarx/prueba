@@ -10,11 +10,11 @@
         <ui:composition template="./../plantilla.xhtml">
             <ui:define name="content">
                 <h:form id="frmListaArea">
-                    <p:commandButton value="Nueva Area" icon="ui-icon-document" actionListener="#{mbvArea.newArea}">
+                    <p:commandButton value="Nueva asignatura" icon="ui-icon-document" actionListener="#{mbvArea.newArea}">
                         <p:ajax event="dialogReturn" listener="#{mbvArea.closeDialog}" update="frmListaArea" />
                     </p:commandButton>
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
-                    <p:dataTable id="tablaListaArea" var="item" value="#{mbvArea.areas}" paginator="true" rows="10" selection="#{mbvArea.area}" selectionMode="single" rowKey="#{item.areaId}" >
+                    <p:dataTable id="tablaListaArea" tableStyle="width:auto" reflow="true" var="item" value="#{mbvArea.areas}" paginator="true" rows="10" selection="#{mbvArea.area}" selectionMode="single" rowKey="#{item.areaId}" >
                         <p:ajax event="rowSelect" update=":frmListaArea:panelDetalleArea" oncomplete="PF('dialogoDetalleArea').show()"/>
                         <f:facet name="header">
                             Lista de Areas
@@ -41,8 +41,6 @@
                     <p:dialog header="Detalle de Area" widgetVar="dialogoDetalleArea" modal="true"  appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
                         <p:outputPanel id="panelDetalleArea">
                             <p:panelGrid columns="2">
-                                <p:outputLabel value="Id"/>
-                                <h:outputText value="#{mbvArea.area.areaId}"/>
                                 <p:outputLabel value="Nombre"/>
                                 <h:outputText value="#{mbvArea.area.nombre}"/>
                                 <p:outputLabel value="Descripcion"/>
@@ -51,7 +49,12 @@
                                 <h:outputText value="#{mbvArea.area.configuracionId.nombre}"/>
                             </p:panelGrid>
                         </p:outputPanel>
-                    </p:dialog>                   
+                    </p:dialog>
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" oncomplete="PF('statusDialog').hide()" />
+ 
+                    <p:dialog widgetVar="statusDialog" appendTo="@(body)" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage library="imagenes" name="load1.gif"/>
+                    </p:dialog>
                 </h:form>
                 
                 <p:confirmDialog header="Eliminar Area" widgetVar="removearea" appendTo="@(body)" resizable="false" id="removeDlg"

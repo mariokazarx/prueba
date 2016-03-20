@@ -14,7 +14,7 @@
                         <p:ajax event="dialogReturn" listener="#{mbvCiclo.closeDialog}" update="frmListaCiclos" />
                     </p:commandButton>
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
-                    <p:dataTable id="tablaListaCiclos" reflow="true" var="item" value="#{mbvCiclo.ciclos}" paginator="true" rows="10" selection="#{mbvCiclo.ciclo}" selectionMode="single" lazy="true" rowKey="#{item.cicloId}" >
+                    <p:dataTable id="tablaListaCiclos" reflow="true" var="item" tableStyle="width:auto" value="#{mbvCiclo.ciclos}" paginator="true" rows="10" selection="#{mbvCiclo.ciclo}" selectionMode="single" lazy="true" rowKey="#{item.cicloId}" >
                         <p:ajax event="rowSelect" update=":frmListaCiclos:panelDetalleCiclo" oncomplete="PF('dialogoDetalleCiclo').show()"/>
                         <f:facet name="header">
                             Lista de Ciclos
@@ -37,11 +37,9 @@
                             </p:commandButton>
                         </p:column>
                     </p:dataTable>
-                    <p:dialog header="Detalle Ciclo" widgetVar="dialogoDetalleCiclo" modal="true"  appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
+                    <p:dialog header="Detalle Ciclo" responsive="true" widgetVar="dialogoDetalleCiclo" modal="true"  appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
                         <p:outputPanel id="panelDetalleCiclo">
                             <p:panelGrid columns="2">
-                                <p:outputLabel value="Id"/>
-                                <h:outputText value="#{mbvCiclo.ciclo.cicloId}"/>
                                 <p:outputLabel value="Nombre"/>
                                 <h:outputText value="#{mbvCiclo.ciclo.numero}"/>
                                 <p:outputLabel value="Descripcion"/>
@@ -50,7 +48,12 @@
                                 <h:outputText value="#{mbvCiclo.ciclo.configuracion.nombre}"/>
                             </p:panelGrid>
                         </p:outputPanel>
-                    </p:dialog>                   
+                    </p:dialog>     
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" oncomplete="PF('statusDialog').hide()" />
+ 
+                    <p:dialog widgetVar="statusDialog" appendTo="@(body)" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage library="imagenes" name="load1.gif"/>
+                    </p:dialog>
                 </h:form>
                 
                 <p:confirmDialog header="Eliminar Ciclo" widgetVar="removeciclo" appendTo="@(body)" resizable="false" id="removeDlg"
@@ -67,7 +70,7 @@
                     </h:form>
                 </p:confirmDialog>
                 
-                <p:dialog header="Datos Ciclo" widgetVar="dialogoEditarCiclo" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
+                <p:dialog header="Datos Ciclo" widgetVar="dialogoEditarCiclo" responsive="true" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
                     <h:form id="frmEditarCiclo">
                         <p:outputPanel id="panelEditarCiclo" >
                              <h:panelGrid columns="3">

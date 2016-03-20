@@ -497,10 +497,13 @@ public class mbvCargaAcademica implements Serializable {
             //esta habilitado ppor periodo
             System.out.println("ACTIVO PERIODO");
             this.mostrarCursos = false;
+            this.banderaAsig = false;
             this.periodos = periodoEjb.getPeriodosByAnio(anlectivoEjb.getIniciado());
             System.out.println("PERIODOS "+this.periodos);
         }else{
+            this.cursoSelected = new Curso();
             this.mostrarCursos=true;
+            this.banderaAsig = false;
             System.out.println("DESACTIVO PERIODO");
             this.periodoSelected = new Periodo();
             this.periodos.clear();

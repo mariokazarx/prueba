@@ -9,6 +9,7 @@ import com.tesis.beans.AsignaturaFacade;
 import com.tesis.beans.AsignaturacicloFacade;
 import com.tesis.beans.ContenidotematicoFacade;
 import com.tesis.beans.CursoFacade;
+import com.tesis.beans.EstadocontenidotematicoFacade;
 import com.tesis.beans.EstadologronotaFacade;
 import com.tesis.beans.EstudianteFacade;
 import com.tesis.beans.LogroFacade;
@@ -25,6 +26,7 @@ import com.tesis.entity.Asignatura;
 import com.tesis.entity.Asignaturaciclo;
 import com.tesis.entity.Contenidotematico;
 import com.tesis.entity.Curso;
+import com.tesis.entity.Estadocontenidotematico;
 import com.tesis.entity.Estadologronota;
 import com.tesis.entity.Estudiante;
 import com.tesis.entity.Logro;
@@ -100,8 +102,11 @@ public class mbvNotas implements Serializable {
     private List<Asignaturaciclo> asignaturasCiclo;
     private List<ColumnModel> columns;
     private List<Estudiante> estudiantes;
+    private boolean mostrarContenido;
     @EJB
     private CursoFacade cursoEjb;
+    @EJB
+    private EstadocontenidotematicoFacade estadoContenidoEjb;
     @EJB
     private ProfesorFacade profesorEjb;
     @EJB
@@ -131,6 +136,14 @@ public class mbvNotas implements Serializable {
     private JasperPrint jasperPrint;
     
     public mbvNotas() {
+    }
+
+    public boolean isMostrarContenido() {
+        return mostrarContenido;
+    }
+
+    public void setMostrarContenido(boolean mostrarContenido) {
+        this.mostrarContenido = mostrarContenido;
     }
 
     public List<EstudianteNotas> getEstudiantesN() {
@@ -291,6 +304,7 @@ public class mbvNotas implements Serializable {
             System.out.println(e.toString());
             profesor = null;
         }
+        this.mostrarContenido = false;
         this.estudiantesN = new ArrayList<EstudianteNotas>();
         this.editable=true;
         this.contenidoLogros = false;
@@ -412,6 +426,9 @@ public class mbvNotas implements Serializable {
             if(suma==100){
                 //cambiar estado contenido a iniciado
                 this.contenidoNotas=true;
+                Estadocontenidotematico estadoContenido = estadoContenidoEjb.find(2);
+                this.contenido.setEstado(estadoContenido);
+                this.contenidoEjb.edit(contenido);
             }
             if (contenido != null) {
                 tx.begin();
@@ -664,6 +681,9 @@ public class mbvNotas implements Serializable {
     public void eliminarLogro(Logro logroId) {
         try {
             //aqui cambiar contenido a estado pendiente
+            Estadocontenidotematico estadoContenido = estadoContenidoEjb.find(1);
+            this.contenido.setEstado(estadoContenido);
+            this.contenidoEjb.edit(contenido);
             logroEjb.remove(logroId);
             for (Estudiante es : estudiantes) {
                 actualizarNota(contenido, es);
@@ -880,5 +900,24 @@ public class mbvNotas implements Serializable {
         } catch (Exception e) {
             System.out.println("FALLO INGRESO LOGRO");
         }
+    }
+    public void initRender(){
+        this.periodo = periodoEjb.getPeriodEvaluar(anlectivo);
+        Date auxMin = new Date();
+        if(this.periodo!=null){
+            if(this.periodo.getEstadoPeriodoId().getEstadoPeriodoId()==3 && periodo.getFechacierre().before(auxMin)){
+                // se paso
+                this.mostrarContenido = false;
+                FacesContext.getCurrentInstance().
+                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia","la fecha de evaluacion termiono"));
+            }else{
+                this.mostrarContenido = true;
+                // bien
+            }
+        }else{
+            this.mostrarContenido = false;
+                FacesContext.getCurrentInstance().
+                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia","aun no se activa la evaluacion"));
+        }       
     }
 }

@@ -14,7 +14,7 @@
                         <p:ajax event="dialogReturn" listener="#{mbvAsignatura.closeDialog}" update="frmListaAsignaturas" />
                     </p:commandButton>
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
-                    <p:dataTable id="tablaListaAsiganturas" var="item" value="#{mbvAsignatura.asignaturas}" paginator="true" rows="10" selection="#{mbvAsignatura.asignatura}" selectionMode="single" lazy="true" rowKey="#{item.asignaturaId}" >
+                    <p:dataTable id="tablaListaAsiganturas" var="item" value="#{mbvAsignatura.asignaturas}" tableStyle="width:auto" reflow="true" paginator="true" rows="10" selection="#{mbvAsignatura.asignatura}" selectionMode="single"  rowKey="#{item.asignaturaId}" >
                         <p:ajax event="rowSelect" update=":frmListaAsignaturas:panelDetalleAsignatura" oncomplete="PF('dialogoDetalleAsignatura').show()"/>
                         <f:facet name="header">
                             Lista de Asignaturas
@@ -40,11 +40,9 @@
                             </p:commandButton>
                         </p:column>
                     </p:dataTable>
-                    <p:dialog header="Detalle de Asignatura" widgetVar="dialogoDetalleAsignatura" modal="true"  appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
+                    <p:dialog header="Detalle de Asignatura" responsive="true" widgetVar="dialogoDetalleAsignatura" modal="true"  appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
                         <p:outputPanel id="panelDetalleAsignatura">
                             <p:panelGrid columns="2">
-                                <p:outputLabel value="Id"/>
-                                <h:outputText value="#{mbvAsignatura.asignatura.asignaturaId}"/>
                                 <p:outputLabel value="Nombre"/>
                                 <h:outputText value="#{mbvAsignatura.asignatura.nombre}"/>
                                 <p:outputLabel value="Descripcion"/>
@@ -55,7 +53,12 @@
                                 <h:outputText value="#{mbvAsignatura.asignatura.configuracionId.nombre}"/>
                             </p:panelGrid>
                         </p:outputPanel>
-                    </p:dialog>                   
+                    </p:dialog>  
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" oncomplete="PF('statusDialog').hide()" />
+ 
+                    <p:dialog widgetVar="statusDialog" appendTo="@(body)" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage library="imagenes" name="load1.gif"/>
+                    </p:dialog>
                 </h:form>
                 
                 <p:confirmDialog header="Eliminar Asignatura" widgetVar="removeasignatura" appendTo="@(body)" resizable="false" id="removeDlg"
@@ -72,7 +75,7 @@
                     </h:form>
                 </p:confirmDialog>
                 
-                <p:dialog header="Datos asignatura" widgetVar="dialogoEditarAsignatura" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
+                <p:dialog header="Datos asignatura" responsive="true" widgetVar="dialogoEditarAsignatura" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
                     <h:form id="frmEditarAsignatura">
                         <p:outputPanel id="panelEditarAsignatura" >
                              <h:panelGrid columns="3">

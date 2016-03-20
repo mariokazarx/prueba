@@ -11,83 +11,91 @@
         <ui:composition template="./../plantilla.xhtml">
             <ui:define name="content">
                 <h:form id="frmMateriasCiclos">
-                    <p:outputLabel for="sltCursos" value="Curso:" />
-                    <p:selectOneMenu id="sltCursos" value="#{mbvNotas.cursoSelected.cursoId}">
-                        <p:ajax listener="#{mbvNotas.cargarAsignaturas()}" update="frmMateriasCiclos"/>
-                        <f:selectItem itemLabel="Seleccione."/>
-                        <f:selectItems value="#{mbvNotas.cursos}" var="curso" itemLabel="#{curso.nombre}" itemValue="#{curso.cursoId}"/>
-                    </p:selectOneMenu>
-                    <p:outputLabel for="sltAsignaturas" value="Asignaturas:" />
-                    <p:selectOneMenu id="sltAsignaturas" value="#{mbvNotas.asignaturaSelected.asignaturaId}">
-                        <p:ajax listener="#{mbvNotas.cargarContenido()}" update="frmMateriasCiclos"/>
-                        <f:selectItem itemLabel="Seleccione."/>
-                        <f:selectItems value="#{mbvNotas.asignaturas}" var="asignatura" itemLabel="#{asignatura.nombre}" itemValue="#{asignatura.asignaturaId}"/>
-                    </p:selectOneMenu>
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
+                    <f:metadata>
+                        <f:event type="preRenderView" listener="#{mbvNotas.initRender}" />
+                    </f:metadata>
                     
-                    <br />
-                        <p:commandButton value="Crear Logro" icon="ui-icon-pencil" actionListener="#{mbvNotas.newLogro}" rendered="#{mbvNotas.contenidoLogros}"/>
+                    <h:panelGroup id="panelNotas" rendered="#{mbvNotas.mostrarContenido}">
+                        <p:outputLabel for="sltCursos" value="Curso:" />
+                        <p:selectOneMenu id="sltCursos" value="#{mbvNotas.cursoSelected.cursoId}">
+                            <p:ajax listener="#{mbvNotas.cargarAsignaturas()}" update="frmMateriasCiclos"/>
+                            <f:selectItem itemLabel="Seleccione."/>
+                            <f:selectItems value="#{mbvNotas.cursos}" var="curso" itemLabel="#{curso.nombre}" itemValue="#{curso.cursoId}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel for="sltAsignaturas" value="Asignaturas:" />
+                        <p:selectOneMenu id="sltAsignaturas" value="#{mbvNotas.asignaturaSelected.asignaturaId}">
+                            <p:ajax listener="#{mbvNotas.cargarContenido()}" update="frmMateriasCiclos"/>
+                            <f:selectItem itemLabel="Seleccione."/>
+                            <f:selectItems value="#{mbvNotas.asignaturas}" var="asignatura" itemLabel="#{asignatura.nombre}" itemValue="#{asignatura.asignaturaId}"/>
+                        </p:selectOneMenu>
 
-                    <p:dataTable id="tableLogros" var="logro" value="#{mbvNotas.logros}" sortBy="#{logro.porcentaje}" rendered="#{mbvNotas.contenidoLogros}">
-                        <p:column headerText="Titulo" sortBy="#{logro.titulo}">
-                            <h:outputText value="#{logro.titulo}" />
-                        </p:column>
-                        <p:column headerText="Descripcion" sortBy="#{logro.descripcion}">
-                            <h:outputText value="#{logro.descripcion}" />
-                        </p:column>
-                        <p:column headerText="Porcentaje" sortBy="#{logro.porcentaje}" style="width: auto ">
-                            <h:outputText value="#{logro.porcentaje}" />
-                        </p:column>
-                        <p:column>
-                            <p:commandButton value="Eliminar"  icon="ui-icon-close" actionListener="#{mbvNotas.eliminarLogro(logro)}" ajax="true" update=":frmMateriasCiclos"/>
-                        </p:column>
-                        <p:column>
-                            <p:commandButton value="Editar"  icon="ui-icon-pencil" actionListener="#{mbvNotas.cargarActualizar(logro)}" ajax="true" update=":frmMateriasCiclos"/>
-                        </p:column>
-                    </p:dataTable>
-                    <p:remoteCommand name="onCellEdit" update="tablanotas" />
-                    
-                    <p:outputPanel id="testContainer" rendered="#{mbvNotas.contenidoNotas}">
-                        <p:dataTable tableStyle="width:auto" editable="true" id="tablanotas" var="estudiante" value="#{mbvNotas.estudiantesN}" widgetVar="tablaEstudiantes" >                    
-                            <p:ajax event="rowEdit" listener="#{mbvNotas.onRowEdit}" oncomplete="onCellEdit()" />
-                            <p:column headerText="Nombres Y Apellidos" sortBy="#{estudiante.nombre}">
-                                <h:outputText value="#{estudiante.apellido} #{estudiante.nombre}" />
+                        <br />
+                            <p:commandButton value="Crear Logro" icon="ui-icon-pencil" actionListener="#{mbvNotas.newLogro}" rendered="#{mbvNotas.contenidoLogros}"/>
+
+                        <p:dataTable id="tableLogros" var="logro" tableStyle="width:auto" reflow="true" value="#{mbvNotas.logros}" sortBy="#{logro.porcentaje}" rendered="#{mbvNotas.contenidoLogros}">
+                            <p:column headerText="Titulo" sortBy="#{logro.titulo}">
+                                <h:outputText value="#{logro.titulo}" />
                             </p:column>
-                            <c:forEach items="#{mbvNotas.columns}" var="column" varStatus="loop">
-                                <p:column headerText="#{column.property}">
-                                    <f:facet name="header">
-                                        <h:outputText value="#{column.header}" />
-                                    </f:facet>
-                                    <p:cellEditor>
-                                        <f:facet name="output"><h:outputText value="#{estudiante.notasLogros[column.property]}" /></f:facet>
-                                        <f:facet name="input"><p:inputMask id="modelInput_#{loop.index}" maxlength="2" mask="9.9" value="#{estudiante.notasLogros[column.property]}" style="width:98%"/></f:facet>
-                                        <ui:param name="idLogro#{estudiante.estudianteId}_#{loop.index}" value="#{column.property}"/> 
-                                    </p:cellEditor>
-                                </p:column>
-                            </c:forEach>
-                            <p:column headerText="Nota" id="columnNota">
-                                <h:outputText value="#{estudiante.nota}" />
+                            <p:column headerText="Descripcion" sortBy="#{logro.descripcion}">
+                                <h:outputText value="#{logro.descripcion}" />
                             </p:column>
-                            <p:column style="width:32px">
-                                <p:rowEditor />
-                            </p:column>
-                            <p:column headerText="Observaciones" style="width:auto">
-                                <p:commandButton value="ver" icon="ui-icon-search" actionListener="#{mbvNotas.cargarObservacion(estudiante.id)}"/>
+                            <p:column headerText="Porcentaje" sortBy="#{logro.porcentaje}" style="width: auto ">
+                                <h:outputText value="#{logro.porcentaje}" />
                             </p:column>
                             <p:column>
-                                <p:commandButton value="editar" icon="ui-icon-pencil" actionListener="#{mbvNotas.insertarObservacion(estudiante.id)}"/>
+                                <p:commandButton value="Eliminar"  icon="ui-icon-close" actionListener="#{mbvNotas.eliminarLogro(logro)}" ajax="true" update=":frmMateriasCiclos"/>
                             </p:column>
-                            
+                            <p:column>
+                                <p:commandButton value="Editar"  icon="ui-icon-pencil" actionListener="#{mbvNotas.cargarActualizar(logro)}" ajax="true" update=":frmMateriasCiclos"/>
+                            </p:column>
                         </p:dataTable>
-                    </p:outputPanel>
-                    
-                    <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
- 
+                        <p:remoteCommand name="onCellEdit" update="tablanotas" />
+
+                        <p:outputPanel id="testContainer" rendered="#{mbvNotas.contenidoNotas}">
+                            <p:dataTable tableStyle="width:auto" reflow="true" editable="true" id="tablanotas" var="estudiante" value="#{mbvNotas.estudiantesN}" widgetVar="tablaEstudiantes" >                    
+                                <p:ajax event="rowEdit" listener="#{mbvNotas.onRowEdit}" oncomplete="onCellEdit()" />
+                                <p:column headerText="Nombres Y Apellidos" sortBy="#{estudiante.nombre}">
+                                    <h:outputText value="#{estudiante.apellido} #{estudiante.nombre}" />
+                                </p:column>
+                                <c:forEach items="#{mbvNotas.columns}" var="column" varStatus="loop">
+                                    <p:column headerText="#{column.property}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{column.header}" />
+                                        </f:facet>
+                                        <p:cellEditor>
+                                            <f:facet name="output"><h:outputText value="#{estudiante.notasLogros[column.property]}" /></f:facet>
+                                            <f:facet name="input"><p:inputMask id="modelInput_#{loop.index}" maxlength="2" mask="9.9" value="#{estudiante.notasLogros[column.property]}" style="width:98%"/></f:facet>
+                                            <ui:param name="idLogro#{estudiante.estudianteId}_#{loop.index}" value="#{column.property}"/> 
+                                        </p:cellEditor>
+                                    </p:column>
+                                </c:forEach>
+                                <p:column headerText="Nota" id="columnNota">
+                                    <h:outputText value="#{estudiante.nota}" />
+                                </p:column>
+                                <p:column style="width:32px">
+                                    <p:rowEditor />
+                                </p:column>
+                                <p:column headerText="Observaciones" style="width:auto">
+                                    <p:commandButton value="ver" icon="ui-icon-search" actionListener="#{mbvNotas.cargarObservacion(estudiante.id)}"/>
+                                </p:column>
+                                <p:column>
+                                    <p:commandButton value="editar" icon="ui-icon-pencil" actionListener="#{mbvNotas.insertarObservacion(estudiante.id)}"/>
+                                </p:column>
+
+                            </p:dataTable>
+                        </p:outputPanel>
+
+                       
+
+                        <p:commandButton id="Confirmar" actionListener="#{mbvNotas.pruebafinal}" value="Confirmar" style="margin-top:5px" />
+                        <h:commandButton value="PDF" actionListener="#{mbvNotas.pdf}"/>
+                     </h:panelGroup>
+                     <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+
                     <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
                         <p:graphicImage library="imagenes" name="load1.gif"/>
                     </p:dialog>
-                    
-                    <p:commandButton id="Confirmar" actionListener="#{mbvNotas.pruebafinal}" value="Confirmar" style="margin-top:5px" />
-                    <h:commandButton value="PDF" actionListener="#{mbvNotas.pdf}"/>
                 </h:form>
                 <p:dialog header="Nuevo Logro" widgetVar="dialogoCrearLogro" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
                     <h:form id="frmCrearLogro">

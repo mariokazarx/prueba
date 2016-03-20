@@ -12,11 +12,11 @@
 
             <ui:define name="content">
                 <h:form id="frmListaEscala">
-                    <p:commandButton value="Nueva Criterio de Evaluacion" icon="ui-icon-document" actionListener="#{mbvcriterioevaluacion.newCriterioEval}">
+                    <p:commandButton value="Nuevo criterio de evaluacion" icon="ui-icon-document" actionListener="#{mbvcriterioevaluacion.newCriterioEval}">
                         <p:ajax event="dialogReturn" listener="#{mbvcriterioevaluacion.closeDialog}" update="frmListaEscala" />
                     </p:commandButton>
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
-                    <p:dataTable id="tablaListaEscala" var="item" value="#{mbvcriterioevaluacion.criterioseval}" paginator="true" rows="10" selection="#{mbvcriterioevaluacion.criterioeval}" selectionMode="single" rowKey="#{item.criterioevaluacionId}" >
+                    <p:dataTable id="tablaListaEscala" var="item" value="#{mbvcriterioevaluacion.criterioseval}" tableStyle="width:auto" reflow="true" paginator="true" rows="10" selection="#{mbvcriterioevaluacion.criterioeval}" selectionMode="single" rowKey="#{item.criterioevaluacionId}" >
                         <p:ajax event="rowSelect" update=":frmListaEscala:panelDetalleEscala" oncomplete="PF('dialogoDetalleEscala').show()"/>
                         <f:facet name="header">
                             Criterios de valiacion
@@ -43,11 +43,9 @@
                         </p:column>
                     </p:dataTable>
 
-                    <p:dialog header="Detalle de Escala" widgetVar="dialogoDetalleEscala" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
+                    <p:dialog header="Detalle de Escala" responsive="true" widgetVar="dialogoDetalleEscala" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
                         <p:outputPanel id="panelDetalleEscala">
                             <p:panelGrid columns="2">
-                                <p:outputLabel value="Id"/>
-                                <h:outputText value="#{mbvcriterioevaluacion.criterioeval.criterioevaluacionId}"/>
                                 <p:outputLabel value="Nombre"/>
                                 <h:outputText value="#{mbvcriterioevaluacion.criterioeval.nombre}"/>
                                 <p:outputLabel value="Descripcion"/>
@@ -58,12 +56,18 @@
                                 <h:outputText value="#{mbvcriterioevaluacion.criterioeval.minaprob}"/>
                             </p:panelGrid>
                         </p:outputPanel>
-                    </p:dialog>                   
+                    </p:dialog>  
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" oncomplete="PF('statusDialog').hide()" />
+ 
+                    <p:dialog widgetVar="statusDialog" appendTo="@(body)" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage library="imagenes" name="load1.gif"/>
+                    </p:dialog>
+                    
                 </h:form>
                 
                 
-                <p:confirmDialog header="Eliminar Criterio Evaluacion" widgetVar="removecriterio" appendTo="@(body)" resizable="false" id="removeDlg"
-                                 showEffect="fade" hideEffect="explode" modal="true" message="Esta Seguro que desea eliminar este criterio?">
+                <p:confirmDialog header="Eliminar Criterio Evaluacion" widgetVar="removecriterio" responsive="true" appendTo="@(body)" resizable="false" id="removeDlg"
+                                 showEffect="clip" hideEffect="clip" modal="true" message="Esta Seguro que desea eliminar este criterio?">
                     <h:form id="frmRemoveCriterio">
                         <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
 
@@ -74,9 +78,9 @@
                             <p:commandButton id="cancelButton" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('removecriterio').hide();" value="Cancelar"/>
                         </h:panelGrid>
                     </h:form>
-                </p:confirmDialog>
+                </p:confirmDialog>>
 
-                <p:dialog header="Datos del criterio" widgetVar="dialogoEditarEscala" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
+                <p:dialog header="Datos del criterio" responsive="true" widgetVar="dialogoEditarEscala" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
                     <h:form id="frmEditarEscala">
                         <p:outputPanel id="panelEditarEscala" >
                             <h:panelGrid columns="3">
@@ -102,14 +106,14 @@
                         </p:outputPanel>
                     </h:form>
                 </p:dialog>
-                <p:confirmDialog header="Advertencia" widgetVar="enUso" appendTo="@(body)" resizable="false" id="digEnUso"
-                                 showEffect="fade" hideEffect="explode" modal="true" message="Escala en uso usted no se puede editar">
+                <p:confirmDialog header="Advertencia" widgetVar="enUso" responsive="true" appendTo="@(body)" resizable="false" id="digEnUso"
+                                 showEffect="clip" hideEffect="clip" modal="true" message="Escala en uso usted no se puede editar">
                     <h:form id="frmNoiniciado">
                         <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
                             <p:commandButton id="cancelButton" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('enUso').hide();" value="OK"/>
                         </h:panelGrid>
                     </h:form>
-                </p:confirmDialog>
+                </p:confirmDialog>>
             </ui:define>
 
         </ui:composition>

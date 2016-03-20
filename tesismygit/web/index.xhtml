@@ -48,7 +48,7 @@
                     <p:commandButton value="Ingresar" ajax="true" update="frmLogin" actionListener="#{mbsLogin.confirmar}"/>
              </div>
                 
-                <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                <p:ajaxStatus onstart="PF('statusDialog').show()" oncomplete="PF('statusDialog').hide()" />
  
                 <p:dialog widgetVar="statusDialog" appendTo="@(body)" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
                     <p:graphicImage library="imagenes" name="load1.gif"/>

@@ -14,7 +14,7 @@
                         <p:ajax event="dialogReturn" listener="#{mbvProfesor.closeDialog}" update="frmListaProfesor" />
                     </p:commandButton>
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
-                    <p:dataTable id="tablaListaProfesor" reflow="true" var="item" value="#{mbvProfesor.profesores}" paginator="true" rows="10" selection="#{mbvProfesor.profesor}" selectionMode="single" lazy="true" rowKey="#{item.profesorId}" >
+                    <p:dataTable id="tablaListaProfesor" tableStyle="width:auto" reflow="true" var="item" value="#{mbvProfesor.profesores}" paginator="true" rows="10" selection="#{mbvProfesor.profesor}" selectionMode="single" lazy="true" rowKey="#{item.profesorId}" >
                         <p:ajax event="rowSelect" update=":frmListaProfesor:panelDetalleProfesor" oncomplete="PF('dialogoDetalleProfesor').show()"/>
                         <f:facet name="header">
                             Lista de Profesores
@@ -45,7 +45,7 @@
                         </p:column>
                     </p:dataTable>
 
-                    <p:dialog header="Detalle Profesor" widgetVar="dialogoDetalleProfesor" modal="true"  appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
+                    <p:dialog header="Detalle Profesor" widgetVar="dialogoDetalleProfesor" modal="true" responsive="true" appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
                         <p:outputPanel id="panelDetalleProfesor">
                             <p:panelGrid columns="2">
                                 <f:facet name="header">
@@ -56,7 +56,12 @@
 
                             </p:panelGrid>
                         </p:outputPanel>
-                    </p:dialog>                   
+                    </p:dialog>    
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" oncomplete="PF('statusDialog').hide()" />
+ 
+                    <p:dialog widgetVar="statusDialog" appendTo="@(body)" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage library="imagenes" name="load1.gif"/>
+                    </p:dialog>
                 </h:form>        
                 <p:dialog header="Datos Profesor" responsive="true" widgetVar="dialogoEditarProfesor" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
                     <h:form id="frmEditarProfesor">

@@ -219,6 +219,12 @@ public class mbvPeriodo implements Serializable {
                 this.estadosAlectivos = this.estadoAlectivoEjb.findAll();
             }*/
             //this.areas = this.confuguracionselected.getAreaList();
+            if(this.estadoSelected.getEstadoPeriodoId()==3){
+                this.mostrarFecha = true;
+            }
+            else{
+                this.mostrarFecha = false;
+            }
             RequestContext.getCurrentInstance().update("frmEditarPeriodo:panelEditarPeriodo");
             RequestContext.getCurrentInstance().execute("PF('dialogoEditarPeriodo').show()");
         } catch (Exception e) {
@@ -259,81 +265,99 @@ public class mbvPeriodo implements Serializable {
         }
     }
     public void actualizar(){
-        //verificar que la fecha este entre la actual y un mes mas
-        //verificsr que no alla otro peroodo en evalucacion activo
-        //3
-        estadoSelected = estadoPeriodoEjb.find(estadoSelected.getEstadoPeriodoId());
-        Anlectivo aEscolar = anlectivoEjb.find(anlectivoselected.getAnlectivoId());
-        if(estadoSelected.getEstadoPeriodoId()==3){
-            // falta revisar si se han evaluado todo
-            //falta revisar si hay contenidos en advertencia
-            //periodo a evaluar
-            //comprobamos si no hay uno en evaluacion
-            //verificar que no alla contenidos con advertencias
-            //verificar que las asignaturas del ciclo sean iguales a la asigacion
-            if(!contenidoEjb.tieneAdvertencias(periodo)){
-                List<Curso> cursosAux = cursoEjb.getCursosByAño(periodo.getAnlectivoId());
-                for(Curso cur : cursosAux){
-                    if(asignaturaCicloEjb.countAsignaturasCiclo(cur.getCicloId())!=contenidoEjb.countAsignaturasCursoPerido(cur, periodo)){
-                        System.out.println("Falta completar la asignacion academica del curso"+cur.getNombre());
-                        FacesContext.getCurrentInstance().
-                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia","Falta completar la asignacion academica del curso"+cur.getNombre()));
-                        return;
-                    }
-                }
-                if(!periodoEjb.enUso(aEscolar)){ 
-                    Calendar cal = Calendar.getInstance();
-                    cal.add(Calendar.MONTH, +1);
-                    Date auxMax = cal.getTime();
-                    Date auxMin = new Date();
-                    if(periodo.getFechacierre().after(auxMin) && periodo.getFechacierre().before(auxMax)){
-                        System.out.println("Funciona Fecha Periodo");
-                        periodo.setEstadoPeriodoId(estadoSelected);
-                        Estadocontenidotematico estadoAux = estadoContenidoEjb.find(2);
-                        if(contenidoEjb.updateIniciarPeriodo(periodo,estadoAux)){
-                            periodoEjb.edit(periodo);
-                        }else{
-                            System.out.println("ERROR AL INICIAR EVALUACION NO CAMBIO ESTADO");
+        try {
+            //verificar que la fecha este entre la actual y un mes mas
+            //verificsr que no alla otro peroodo en evalucacion activo
+            //3
+            estadoSelected = estadoPeriodoEjb.find(estadoSelected.getEstadoPeriodoId());
+            Anlectivo aEscolar = anlectivoEjb.find(anlectivoselected.getAnlectivoId());
+            if(estadoSelected.getEstadoPeriodoId()==3){
+                // falta revisar si se han evaluado todo
+                //falta revisar si hay contenidos en advertencia
+                //periodo a evaluar
+                //comprobamos si no hay uno en evaluacion
+                //verificar que no alla contenidos con advertencias
+                //verificar que las asignaturas del ciclo sean iguales a la asigacion
+
+                if(!contenidoEjb.tieneAdvertencias(periodo)){
+                    List<Curso> cursosAux = cursoEjb.getCursosByAño(periodo.getAnlectivoId());
+                    for(Curso cur : cursosAux){
+                        if(asignaturaCicloEjb.countAsignaturasCiclo(cur.getCicloId())!=contenidoEjb.countAsignaturasCursoPerido(cur, periodo)){
+                            System.out.println("Falta completar la asignacion academica del curso"+cur.getNombre());
+                            FacesContext.getCurrentInstance().
+                                addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia","Falta completar la asignacion academica del curso"+cur.getNombre()));
+                            return;
                         }
                     }
+                    if(!periodoEjb.enUso(aEscolar) || this.periodo.getEstadoPeriodoId().getEstadoPeriodoId() == this.estadoSelected.getEstadoPeriodoId()){ 
+                        Calendar cal = Calendar.getInstance();
+                        cal.add(Calendar.MONTH, +1);
+                        Date auxMax = cal.getTime();
+                        Date auxMin = new Date();
+                        if(periodo.getFechacierre().after(auxMin) && periodo.getFechacierre().before(auxMax)){
+                            System.out.println("Funciona Fecha Periodo");
+                            periodo.setEstadoPeriodoId(estadoSelected);
+                            periodoEjb.edit(periodo);
+                            /*Estadocontenidotematico estadoAux = estadoContenidoEjb.find(2);
+                            if(contenidoEjb.updateIniciarPeriodo(periodo,estadoAux)){
+                                periodoEjb.edit(periodo);
+                            }else{
+                                System.out.println("ERROR AL INICIAR EVALUACION NO CAMBIO ESTADO");
+                            }*/
+                        }
+                    }else{
+                        System.out.println("ESTA EN USO"+estadoSelected.getEstadoPeriodoId()+"  aa"+this.periodo.getEstadoPeriodoId().getEstadoPeriodoId());
+                    }            
                 }else{
-                    System.out.println("ESTA EN USO");
-                }            
-            }else{
-                System.out.println("TIENE ADVERTECIA");
+                    System.out.println("TIENE ADVERTECIA");
+                }
+
+
             }
-            
-        }
-        if(estadoSelected.getEstadoPeriodoId()==2){
-            //terminado
-            //falta revisar si hay contenidos en advertencia
-            //verificar que almenos tenga notas
-            //verificar que no alla contenidos con advertencias
-            if(!contenidoEjb.tieneAdvertencias(periodo)){
-                if(logroNotaEjb.tieneNotas(periodo)){
-                    System.out.println("Tiene NOTAS");
-                    periodo.setEstadoPeriodoId(estadoSelected);
-                    Estadocontenidotematico estadoAux = estadoContenidoEjb.find(4);
-                    if(contenidoEjb.updateIniciarPeriodo(periodo,estadoAux)){
-                        periodoEjb.edit(periodo);
+            if(estadoSelected.getEstadoPeriodoId()==2){
+                //terminado
+                //falta revisar si hay contenidos en advertencia
+                //verificar que almenos tenga notas
+                //verificar que no alla contenidos con advertencias
+                if(!contenidoEjb.tienePendientes(periodo)){
+                    if(!contenidoEjb.tieneAdvertencias(periodo)){
+                        if(logroNotaEjb.tieneNotas(periodo)){
+                            System.out.println("Tiene NOTAS");
+                            periodo.setEstadoPeriodoId(estadoSelected);
+                            Estadocontenidotematico estadoAux = estadoContenidoEjb.find(4);
+                            if(contenidoEjb.updateIniciarPeriodo(periodo,estadoAux)){
+                                periodoEjb.edit(periodo);
+                            }
+                            else{
+                                System.out.println("ERROR AL INICIAR EVALUACION NO CAMBIO ESTADO");
+                            }
+                        }
+                        else{
+                            System.out.println("NO TIENE NOTAS");
+                        }
                     }
                     else{
-                        System.out.println("ERROR AL INICIAR EVALUACION NO CAMBIO ESTADO");
+                        System.out.println("TIENE ADVERTECIA");
                     }
-                }
-                else{
-                    System.out.println("NO TIENE NOTAS");
+                }else{
+                    System.out.println("TIENE PENDIENTES");
                 }
             }
-            else{
-                System.out.println("TIENE ADVERTECIA");
+            if(estadoSelected.getEstadoPeriodoId()==1){
+                periodo.setEstadoPeriodoId(estadoSelected);
+                periodoEjb.edit(periodo);
             }
+            FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Periodo editado,con exito", ""));
+            RequestContext.getCurrentInstance().execute("PF('dialogoEditarPeriodo').hide()");
+            //inicio();
+            this.periodos = this.periodoEjb.getPeriodosByAnio(anlectivoselected);
+
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Escala editada Satisfactoriamente", ""));
         }
-        if(estadoSelected.getEstadoPeriodoId()==1){
-            periodo.setEstadoPeriodoId(estadoSelected);
-            periodoEjb.edit(periodo);
-        }
-        
+           
         
     }
     public void insertar() throws IllegalStateException, SecurityException, SystemException{

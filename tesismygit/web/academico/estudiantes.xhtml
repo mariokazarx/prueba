@@ -14,15 +14,12 @@
                         <p:ajax event="dialogReturn" listener="#{mbvEstudiante.closeDialog}" update="frmListaEstudiantes" />
                     </p:commandButton>
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
-                    <p:dataTable id="tablaListaEstudiante" var="estudiante" value="#{mbvEstudiante.estudiantes}" reflow="true" paginator="true" rows="10" selection="#{mbvEstudiante.estudiante}" selectionMode="single" lazy="true" rowKey="#{estudiante.estudianteId}" >
+                    <p:dataTable id="tablaListaEstudiante" tableStyle="width:auto" var="estudiante" value="#{mbvEstudiante.estudiantes}" reflow="true" paginator="true" rows="10" selection="#{mbvEstudiante.estudiante}" selectionMode="single" lazy="true" rowKey="#{estudiante.estudianteId}" >
                         <p:ajax event="rowSelect" update=":frmListaEstudiantes:panelDetalleEstudiante" oncomplete="PF('dialogoDetalleEstudiante').show()"/>
                         <f:facet name="header">
                             Lista de Estudiantes
                         </f:facet>
-                        <p:column headerText="Tipo Identificacion" filterBy="tidentificacion">
-                            <h:outputText value="#{estudiante.tipoIdentifcacion}"/>
-                        </p:column>
-                        <p:column headerText="Cedula" filterBy="cedula">
+                        <p:column headerText="No identificacion" filterBy="cedula">
                             <h:outputText value="#{estudiante.identificiacion}"/>
                         </p:column>
                         <p:column headerText="Nombres" filterBy="nombres">
@@ -31,13 +28,7 @@
                         <p:column headerText="Apellidos" filterBy="apellidos">
                             <h:outputText value="#{estudiante.apellido}"/>
                         </p:column>
-                        <p:column headerText="Direccion" filterBy="direccion">
-                            <h:outputText value="#{estudiante.direccion}"/>
-                        </p:column>
-                        <p:column headerText="Telefono" filterBy="telefono">
-                            <h:outputText value="#{estudiante.telefono}"/>
-                        </p:column>
-                        <p:column headerText="Ciclo" filterBy="ciclo">
+                        <p:column headerText="Ciclo" filterBy="ciclo" >
                             <h:outputText value="#{estudiante.ultimoaprobado}"/>
                         </p:column>
                         <p:column headerText="Matricula" >
@@ -57,15 +48,18 @@
                         </p:column>
                     </p:dataTable>
 
-                    <p:dialog header="Detalle Estudiante" widgetVar="dialogoDetalleEstudiante" modal="true"  appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
+                    <p:dialog header="Detalle Estudiante" widgetVar="dialogoDetalleEstudiante" modal="true" responsive="true" appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
                         <p:outputPanel id="panelDetalleEstudiante">
                             <p:panelGrid columns="2">
                                 <f:facet name="header">
-                                    <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/fotosprofesores/#{mbvEstudiante.estudiante.foto}" width="70" height="70" cache="false" alt="Sin definir" style="border-radius: 4px;box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7)"/>
+                                    <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/fotosestudiantes/#{mbvEstudiante.estudiante.foto}" width="70" height="70" cache="false" alt="Sin definir" style="border-radius: 4px;box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7)"/>
                                 </f:facet>
-                                <p:outputLabel value="Cedula"/>
+                                <p:outputLabel value="Tipo identificacion"/>
+                                <h:outputText value="#{mbvEstudiante.estudiante.tipoIdentifcacion}"/>
+                                <p:outputLabel value="No identificacion"/>
                                 <h:outputText value="#{mbvEstudiante.estudiante.identificiacion}"/>
-
+                                <p:outputLabel value="Nombres"/>
+                                <h:outputText value="#{mbvEstudiante.estudiante.nombre}"/>
                             </p:panelGrid>
                         </p:outputPanel>
                     </p:dialog>                   

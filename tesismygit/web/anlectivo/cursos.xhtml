@@ -16,7 +16,7 @@
                         <p:ajax event="dialogReturn" listener="#{mbvCurso.closeDialog}" update="frmListaCursos" />
                     </p:commandButton>
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
-                    <p:dataTable id="tablaListaCurso" var="curso" value="#{mbvCurso.cursos}" paginator="true" rows="10" selection="#{mbvCurso.curso}" selectionMode="single" lazy="true" rowKey="#{curso.cicloId}" >
+                    <p:dataTable id="tablaListaCurso" var="curso" value="#{mbvCurso.cursos}" paginator="true" rows="10" tableStyle="width:auto" reflow="true" selection="#{mbvCurso.curso}" selectionMode="single" lazy="true" rowKey="#{curso.cicloId}" >
                         <p:ajax event="rowSelect" update=":frmListaCursos:panelDetalleCurso" oncomplete="PF('dialogoDetalleCurso').show()"/>
                         <f:facet name="header">
                             CUrsos
@@ -43,11 +43,9 @@
                         </p:column>
                     </p:dataTable>
 
-                    <p:dialog header="Detalle del Curso" widgetVar="dialogoDetalleCurso" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
+                    <p:dialog header="Detalle del Curso" responsive="true" widgetVar="dialogoDetalleCurso" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
                         <p:outputPanel id="panelDetalleCurso">
                             <p:panelGrid columns="2">
-                                <p:outputLabel value="Id"/>
-                                <h:outputText value="#{mbvCurso.curso.cursoId}"/>
                                 <p:outputLabel value="Nombre"/>
                                 <h:outputText value="#{mbvCurso.curso.nombre}"/>
                                 <p:outputLabel value="Curso"/>
@@ -58,7 +56,12 @@
                                 <h:outputText value="#{mbvCurso.curso.numeroestudiantes}"/>
                             </p:panelGrid>
                         </p:outputPanel>
-                    </p:dialog>                   
+                    </p:dialog>  
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" oncomplete="PF('statusDialog').hide()" />
+ 
+                    <p:dialog widgetVar="statusDialog" appendTo="@(body)" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage library="imagenes" name="load1.gif"/>
+                    </p:dialog>
                 </h:form>
                 
                 <p:confirmDialog header="Eliminar Curso" widgetVar="removecurso" appendTo="@(body)" resizable="false" id="removeDlg"
@@ -75,7 +78,7 @@
                     </h:form>
                 </p:confirmDialog>
                 
-                <p:dialog header="Datos Del Curso" widgetVar="dialogoEditarCurso" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
+                <p:dialog header="Datos Del Curso" responsive="true" widgetVar="dialogoEditarCurso" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
                     <h:form id="frmEditarCurso">
                         <p:outputPanel id="panelEditarCurso" >
                              <h:panelGrid columns="3">

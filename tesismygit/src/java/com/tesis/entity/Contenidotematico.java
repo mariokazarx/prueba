@@ -35,6 +35,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Contenidotematico.countByCursoPeriodo", query = "SELECT COUNT(c) FROM Contenidotematico c WHERE c.cursoId = :curso AND c.periodoId = :periodo"),
     @NamedQuery(name = "Contenidotematico.findByCursoPeriodo", query = "SELECT c FROM Contenidotematico c WHERE c.cursoId = :curso AND c.periodoId = :periodo"),
     @NamedQuery(name = "Contenidotematico.countAdvertenciaPeriodo", query = "SELECT COUNT(c) FROM Contenidotematico c WHERE c.estado.estadocontenidotematicoId = 5 AND c.periodoId = :periodo"),
+    @NamedQuery(name = "Contenidotematico.countPendientesPeriodo", query = "SELECT COUNT(c) FROM Contenidotematico c WHERE c.estado.estadocontenidotematicoId = 1 AND c.periodoId = :periodo"),
     @NamedQuery(name = "Contenidotematico.updateIniciarPeriodo", query = "UPDATE Contenidotematico c SET c.estado = :estado WHERE c.periodoId = :periodo"),
     @NamedQuery(name = "Contenidotematico.updateTerminarAño", query = "UPDATE Contenidotematico c SET c.estado = :estado WHERE c.cursoId.anlectivoId = :anlectivo"),
     @NamedQuery(name = "Contenidotematico.updateRetirarProfesor", query = "UPDATE Contenidotematico c SET c.estado = :estado WHERE c.periodoId = :periodo and c.profesorId = :profesor"),
