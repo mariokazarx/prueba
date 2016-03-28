@@ -1,21 +1,26 @@
 @font-face {
-  font-family: fuenteDila;
-  src: url("#{resource['fuentes/DancingScript-Bold.ttf']}");
+    font-family: fuenteDila;
+    src: url("#{resource['fuentes/DancingScript-Bold.ttf']}");
 }
-
+@font-face {
+    font-family: amiri;
+    src: url("#{resource['fuentes/Amiri-BoldSlanted.ttf']}");
+}
 .top{
     display: flex;
     min-height: 100px;
     width: 100%;
     background-color: white;
     padding: 5px;
-    align-items: flex-start
+    align-items: flex-start;
+    background: linear-gradient(to bottom, rgba(102, 183, 230, 0.45), rgb(241, 241, 241));
 }
 .content{
     display: flex;
     flex-direction: row;
     min-height: 400px;
-    background-image: url("#{resource['imagenes/fondoi.png']}");
+    justify-content: center;
+    background-image: url("#{resource['imagenes/fondoi4.png']}");
     width: 100%;
 }
 .content-left{
@@ -32,8 +37,9 @@
     display: flex;
     min-height: 150px;
     width: 100%;
-    background-color: #c2dfef;
+    background-color: gray;
     padding: 5px;
+    border-top: 5px solid blue;
 }
 .contenedor-top1{
     background-size: cover;
@@ -57,13 +63,119 @@
     text-align: center;
     font-size: 35px;
     margin-top: 72px;
-    font-family: fuenteDila;
+    font-family: fuentedila;
     font-style: italic;
     color: dimgray;
     font-weight: bold;
     margin-top: auto
 }
+.nombre-sf-plantilla{
+    text-align: center;
+    font-size: 35px;
+    margin-top: 72px;
+    font-family: fuentedila;
+    font-style: italic;
+    color: dimgray;
+    font-weight: bold;
+    margin-top: auto
+}
+.div-foto-menup{
+    width: 150px;
+    height: 170px;
+    margin: auto;
+    background-image: url("#{resource['imagenes/dila1.png']}");
+    background-repeat: no-repeat;
+}
+.saludo{
+    text-align: center;
+    font-size: 75px;
+    margin-top: 40px;
+    margin-left: 5%;
+    font-family: fuentedila;
+    font-style: italic;
+    color: #000;
+    font-weight: bold;
+    display: block;
+    width: 100%;
+}
+.saludo-nombre{
+    text-align: center;
+    font-size: 30px;
+    margin-top: 48px;
+    margin-left: 5%;
+    font-family: fuentedila;
+    font-style: italic;
+    color: #000;
+    font-weight: bold;
+    display: block;
+    width: 100%;
+}
+.footer-span-titulos{
+    width: 100%;
+    text-align: center;
+    color: white;
+    font-size: 16px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-family: imari;
+    font-weight: bold;
+}
+.footer-span{
+    width: 100%;
+    text-align: center;
+    color: white;
+    font-size: 14px;
+    margin-top: 3px;
+    margin-bottom: 4px;
+    font-family: imari;
+}
+.footer-div-30{
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: imari;
+}
+.footer-div-40{
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: imari;
+    border-left: 2px solid rgba(243, 242, 242, 0.5);
+    border-right: 2px solid rgba(243, 242, 242, 0.5);
+}
+
 @media screen and (max-width: 680px){
+    .contenedor-top1{
+        background-image: url("#{resource['imagenes/escudo2.png']}");
+        background-size: cover;
+        width: 30%;
+        display: none;
+    }
+    .nombre-colegio-plantilla{
+        text-align: center;
+        font-size: 30px;
+        margin-top: 72px;
+        font-family: amiri;
+        font-style: italic;
+        color: dimgray;
+        font-weight: bold;
+        margin-top: auto
+    }
+    .contenedor-top2{
+
+        width: 100%;
+        display: block;
+    }
+    .contenedor-top3{
+        background-image: url("#{resource['imagenes/escudou.png']}");
+        background-size: cover;
+        width: 30%;
+        display: none;
+    }
+}
+@media screen and (max-device-width: 680px){
     .contenedor-top1{
         background-image: url("#{resource['imagenes/escudo2.png']}");
         background-size: cover;
@@ -92,7 +204,6 @@
         display: none;
     }
 }
-
 .titulos-top2{
     width: 100%;
     text-align: center;
