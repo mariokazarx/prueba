@@ -5,6 +5,7 @@
 package com.tesis.managedbeans;
 
 import com.tesis.entity.Profesor;
+import com.tesis.entity.Usuario;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -20,6 +21,7 @@ import javax.faces.context.FacesContext;
 public class mbvPrueba implements Serializable {
 
     private Profesor prof;
+    private Usuario usuario;
     private String nombre;
     private boolean login;
 
@@ -27,6 +29,14 @@ public class mbvPrueba implements Serializable {
      * Creates a new instance of mbvPrueba
      */
     public mbvPrueba() {
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public Profesor getProf() {
@@ -60,7 +70,13 @@ public class mbvPrueba implements Serializable {
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
              prof = mbslogin.getProfesor();
              login = mbslogin.isLogin();
-            System.out.println(mbslogin.getProfesor().getNombre());
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+         try {
+            mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
+             usuario = mbslogin.getUsuario();
+             login = mbslogin.isLogin();
         } catch (Exception e) {
             System.out.println(e.toString());
         }
