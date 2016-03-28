@@ -20,7 +20,7 @@
             .ui-layout-north .ui-layout-unit-content {
                 overflow:visible !important;
             }
-       
+
             body {
                 background-color: #409FBA;
             }
@@ -40,11 +40,13 @@
             <p:dialog header="Sesion caducada" widgetVar="idleDialog" 
                       modal="true" closable="false" fixedCenter="true" width="400" visible="false">
                 <h:outputText value="volver a la aplicacion" /><br/>
-                <p:commandButton onclick="window.location='#{facesContext.externalContext.requestContextPath}/faces/index.xhtml';" id="confirmBackToLogin" value="volver"/>
+                <p:commandButton onclick="window.location = '#{facesContext.externalContext.requestContextPath}/faces/index.xhtml';" id="confirmBackToLogin" value="volver"/>
             </p:dialog>
         </h:form>
         <p:layout fullPage="true">
             <p:layoutUnit position="west" size="20%"  header="Menu Principal" resizable="true" collapsible="true" id="left1">
+                <div class="div-foto-menup">
+                </div>
                 <ui:insert name="left"><br></br>
                     <center>
                         <h:form>
@@ -56,20 +58,20 @@
             </p:layoutUnit>
             <p:layoutUnit position="center" id="content1">
                 <div id="topPrueba" class="top">
-                     <div class="contenedor-top1"> 
-                          <p:graphicImage library="imagenes" name="Escudo2.png" height="125" width="125"/>
-                     </div>
+                    <div class="contenedor-top1"> 
+                        <p:graphicImage library="imagenes" name="Escudo2.png" height="125" width="125"/>
+                    </div>
                     <div class="contenedor-top2">
                         <div class="titulos-top2">
-                        <span class="nombre-colegio-plantilla">Centro Educativo Antonio Ricaurte</span>
+                            <span class="nombre-colegio-plantilla">Centro Educativo Antonio Ricaurte</span>
                         </div>
                         <div class="titulos-top2"> 
-                        <span class="nombre-colegio-plantilla">Nombre Software</span>
+                            <span class="nombre-sf-plantilla">SAMY</span>
                         </div>
                     </div>
-                     <div class="contenedor-top3">
-                         <p:graphicImage library="imagenes" name="escudou.png" height="125" width="170"/>
-                     </div>
+                    <div class="contenedor-top3">
+                        <p:graphicImage library="imagenes" name="escudou.png" height="125" width="170"/>
+                    </div>
                 </div>
                 <h:form>
                     <p:menubar rendered="#{mbsLogin.loginUsuario}">  
@@ -109,10 +111,42 @@
                     </p:menubar>
                 </h:form>
                 <div class="content">
-                    <ui:insert name="content">Content #{mbvPrueba.prof.nombre} login #{mbvPrueba.login} #{mbsLogin.profesor.apellido} TIME #{session.maxInactiveInterval * 1000}</ui:insert>
+                    <ui:insert name="content">
+                        <div>  
+
+                            <div>
+                                <span class="saludo">Bienvenido</span>
+                            </div>
+
+                            <div>
+                                <span class="saludo-nombre">#{mbvPrueba.usuario.nombres} #{mbvPrueba.usuario.apellidos}</span>
+                            </div>
+
+                        </div>    
+                    </ui:insert>
+
                 </div>
                 <div id="bottomPrueba" class="buttom">
-                    <ui:insert name="bottom">Bottom</ui:insert>
+                    <div class="footer-div-30"> 
+                        <span class="footer-span-titulos">CONTACTENOS</span>
+                        <span class="footer-span">E-mail:   mericifuentes@gmail.com</span>
+                        <span class="footer-span">Telefono: 3218879432</span>
+                    </div>
+
+                    <div class="footer-div-40" >
+                        <span class="footer-span-titulos">DESARROLLADO POR:</span>
+                        <span class="footer-span">Mario Fernando Jurado </span>
+                            <span class="footer-span">  E-mail: mariojurado@hotmail.es</span>
+                            <span class="footer-span">Yenny Alejandra Solarte </span>
+                            <span class="footer-span">E-mail: yalejandrasc@gmail.es</span>
+                    </div>
+
+                    <div class="footer-div-30">
+                        <span class="footer-span-titulos">NUESTRO COLEGIO</span>
+                        <div>
+                            <p:gmap center="41.381542, 2.122893" zoom="15" type="HYBRID" style="width:100%" />
+                        </div>
+                    </div>
                 </div>
             </p:layoutUnit>                        
         </p:layout>
