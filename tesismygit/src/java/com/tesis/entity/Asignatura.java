@@ -37,7 +37,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Asignatura.findByAsignaturaId", query = "SELECT a FROM Asignatura a WHERE a.asignaturaId = :asignaturaId"),
     @NamedQuery(name = "Asignatura.findByNombre", query = "SELECT a FROM Asignatura a WHERE a.nombre = :nombre"),
     @NamedQuery(name = "Asignatura.findByCiclo", query = "SELECT a FROM Asignatura a JOIN a.asignaturacicloList ac WHERE ac.cicloId = :ciclo"),
-    //@NamedQuery(name = "Asignatura.findByCiclo", query = "SELECT a FROM Asignatura JOIN Asignaturaciclo ac ON a.asignaturaId=ac.asignaturaId WHERE ac.cicloId = :ciclo"),
+    @NamedQuery(name = "Asignatura.findByConfiguracion", query = "SELECT a FROM Asignatura a WHERE a.configuracionId = :configuracion"),
     @NamedQuery(name = "Asignatura.findByConf", query = "SELECT a FROM Asignatura a WHERE a.configuracionId = :configuracion EXCEPT SELECT a FROM Asignatura a JOIN a.asignaturacicloList ac WHERE ac.cicloId = :ciclo"),
     @NamedQuery(name = "Asignatura.removeById", query = "DELETE FROM Asignatura a WHERE a.asignaturaId = :asignaturaId"),
     @NamedQuery(name = "Asignatura.findByDescripcion", query = "SELECT a FROM Asignatura a WHERE a.descripcion = :descripcion")})

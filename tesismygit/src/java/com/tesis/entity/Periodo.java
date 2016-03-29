@@ -36,6 +36,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Periodo.findAll", query = "SELECT p FROM Periodo p"),
+    @NamedQuery(name = "Periodo.findMax", query = "SELECT MAX(p.numero) FROM Periodo p WHERE p.anlectivoId = :anlectivoId"),
     @NamedQuery(name = "Periodo.findPeriodoEvaluar", query = "SELECT p FROM Periodo p WHERE p.anlectivoId = :anlectivo and p.estadoPeriodoId.estadoPeriodoId = 3"),
     @NamedQuery(name = "Periodo.findFirstPeriodoAño", query = "SELECT p FROM Periodo p WHERE p.anlectivoId = :anlectivo"),
     @NamedQuery(name = "Periodo.removeById", query = "DELETE FROM Periodo p WHERE p.periodoId = :periodoId"),
@@ -45,7 +46,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Periodo.findPeriodosTerminados", query = "SELECT p FROM Periodo p WHERE p.anlectivoId = :anlectivo AND p.estadoPeriodoId.estadoPeriodoId = 2"),
     @NamedQuery(name = "Periodo.findByPeriodoId", query = "SELECT p FROM Periodo p WHERE p.periodoId = :periodoId"),
     @NamedQuery(name = "Periodo.findByNumero", query = "SELECT p FROM Periodo p WHERE p.numero = :numero"),
-    @NamedQuery(name = "Periodo.findByAnio", query = "SELECT p FROM Periodo p WHERE p.anlectivoId = :anlectivoId"),
+    @NamedQuery(name = "Periodo.findByAnio", query = "SELECT p FROM Periodo p WHERE p.anlectivoId = :anlectivoId ORDER BY p.numero"),
     @NamedQuery(name = "Periodo.findActivoByAnio", query = "SELECT p FROM Periodo p WHERE p.anlectivoId = :anlectivoId and p.estadoPeriodoId.estadoPeriodoId != 2"),
     @NamedQuery(name = "Periodo.findByUso", query = "SELECT COUNT(p) FROM Periodo p WHERE p.numero = :numero"),
     @NamedQuery(name = "Periodo.findMinByAnio", query = "SELECT p FROM Periodo p WHERE p.numero =(SELECT MIN(p1.numero) from Periodo p1 WHERE p1.anlectivoId = :anlectivoId) and p.anlectivoId = :anlectivoId"),

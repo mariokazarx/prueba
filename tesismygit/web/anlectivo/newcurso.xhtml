@@ -6,7 +6,7 @@
       xmlns:f="http://java.sun.com/jsf/core">
     <h:head>
         <title>Nuevo Curso</title>
-                <style type="text/css">
+        <style type="text/css">
             .ui-widget {
                 font-size: 90%;
             }
@@ -14,35 +14,37 @@
     </h:head>
     <h:body>
         <h:form id="frmCurso">
-            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
-            <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
-            <h:panelGrid columns="3">
-                <p:outputLabel for="txtNombre" value="Nombre del curso: "/>
-                <p:inputText id="txtNombre" value="#{mbvCurso.curso.nombre}">
-                    <f:validator validatorId="validatorVacio"/>
-                </p:inputText>
-                <p:message for="txtNombre"/>
-                <p:outputLabel for="txtMinEst" value="Cantidad de Estudiantes:" />
-                <p:inputText id="txtMinEst" value="#{mbvCurso.curso.numeroestudiantes}"/>
-                <p:message for="txtMinEst"/>
-                
-                <p:outputLabel for="sltConfiguracion" value="Año Lectivo:" />
-                <p:selectOneMenu id="sltConfiguracion" value="#{mbvCurso.anlectivoSelected.anlectivoId}" required="true" requiredMessage="seleccione un año escolar">
-                    <p:ajax listener="#{mbvCurso.cargarCiclo()}" update="sltCiclos"/>
-                    <f:selectItem itemLabel="Seleccione."/>
-                    <f:selectItems value="#{mbvCurso.anlectivos}" var="anlectivo" itemLabel="#{anlectivo.anio}" itemValue="#{anlectivo.anlectivoId}"/>
-                </p:selectOneMenu>
-                <p:message for="sltConfiguracion"/>
-                <p:outputLabel for="sltCiclos" value="Ciclo:" />
-                <p:selectOneMenu id="sltCiclos" value="#{mbvCurso.cicloselected.cicloId}" required="true" requiredMessage="seleccione un ciclo">
-                    <f:selectItem itemLabel="Seleccione."/>
-                    <f:selectItems value="#{mbvCurso.ciclosSelected}" var="ciclo" itemLabel="#{ciclo.numero}" itemValue="#{ciclo.cicloId}"/>
-                </p:selectOneMenu>
-                <p:message for="sltCiclos"/>
-                
-                <h:panelGroup></h:panelGroup>
-                <p:commandButton value="Registrar Curso" actionListener="#{mbvCurso.insertar}" ajax="true" update="frmCurso" />
-            </h:panelGrid> 
+            <h:panelGroup rendered="#{mbvCurso.crear}">
+                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
+                <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
+                <h:panelGrid columns="3">
+                    <p:outputLabel for="txtNombre" value="Nombre del curso: "/>
+                    <p:inputText id="txtNombre" value="#{mbvCurso.curso.nombre}">
+                        <f:validator validatorId="validatorVacio"/>
+                    </p:inputText>
+                    <p:message for="txtNombre"/>
+                    <p:outputLabel for="txtMinEst" value="Cantidad de Estudiantes:" />
+                    <p:inputText id="txtMinEst" value="#{mbvCurso.curso.numeroestudiantes}"/>
+                    <p:message for="txtMinEst"/>
+
+                    <p:outputLabel for="sltConfiguracion" value="Año Lectivo:" />
+                    <p:selectOneMenu id="sltConfiguracion" value="#{mbvCurso.anlectivoSelected.anlectivoId}" required="true" requiredMessage="seleccione un año escolar">
+                        <p:ajax listener="#{mbvCurso.cargarCiclo()}" update="sltCiclos"/>
+                        <f:selectItem itemLabel="Seleccione."/>
+                        <f:selectItems value="#{mbvCurso.anlectivos}" var="anlectivo" itemLabel="#{anlectivo.anio}" itemValue="#{anlectivo.anlectivoId}"/>
+                    </p:selectOneMenu>
+                    <p:message for="sltConfiguracion"/>
+                    <p:outputLabel for="sltCiclos" value="Ciclo:" />
+                    <p:selectOneMenu id="sltCiclos" value="#{mbvCurso.cicloselected.cicloId}" required="true" requiredMessage="seleccione un ciclo">
+                        <f:selectItem itemLabel="Seleccione."/>
+                        <f:selectItems value="#{mbvCurso.ciclosSelected}" var="ciclo" itemLabel="#{ciclo.numero}" itemValue="#{ciclo.cicloId}"/>
+                    </p:selectOneMenu>
+                    <p:message for="sltCiclos"/>
+
+                    <h:panelGroup></h:panelGroup>
+                    <p:commandButton value="Registrar Curso" actionListener="#{mbvCurso.insertar}" ajax="true" update="frmCurso" />
+                </h:panelGrid> 
+            </h:panelGroup>
         </h:form>
     </h:body>
 </html>

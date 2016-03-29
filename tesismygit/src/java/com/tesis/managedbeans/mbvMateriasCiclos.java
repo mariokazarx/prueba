@@ -9,10 +9,13 @@ import com.tesis.beans.AsignaturaFacade;
 import com.tesis.beans.AsignaturacicloFacade;
 import com.tesis.beans.CicloFacade;
 import com.tesis.beans.ConfiguracionFacade;
+import com.tesis.beans.UsuarioRoleFacade;
 import com.tesis.entity.Asignatura;
 import com.tesis.entity.Asignaturaciclo;
 import com.tesis.entity.Ciclo;
 import com.tesis.entity.Configuracion;
+import com.tesis.entity.Usuario;
+import com.tesis.entity.UsuarioRole;
 import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -42,6 +45,14 @@ public class mbvMateriasCiclos implements Serializable{
     private Asignatura asg;
     private boolean banAsig;
     private Ciclo cicloTabla;
+    private boolean mostrarContenido;
+    private boolean mostrarEditar;
+    private boolean login;
+    private boolean consultar;
+    private boolean editar;
+    private boolean crear;
+    private boolean eliminar;
+    private Usuario usr;
     @EJB
     private ConfiguracionFacade configuracionEJB;
     @EJB
@@ -52,8 +63,34 @@ public class mbvMateriasCiclos implements Serializable{
     private AsignaturacicloFacade asigCicloaEJB;
     @EJB
     private AnlectivoFacade anlectivoEJB;
+    @EJB
+    private UsuarioRoleFacade usrRoleEjb;
     
     public mbvMateriasCiclos() {
+    }
+
+    public boolean isConsultar() {
+        return consultar;
+    }
+
+    public boolean isEditar() {
+        return editar;
+    }
+
+    public boolean isMostrarContenido() {
+        return mostrarContenido;
+    }
+
+    public void setMostrarContenido(boolean mostrarContenido) {
+        this.mostrarContenido = mostrarContenido;
+    }
+
+    public boolean isMostrarEditar() {
+        return mostrarEditar;
+    }
+
+    public void setMostrarEditar(boolean mostrarEditar) {
+        this.mostrarEditar = mostrarEditar;
     }
 
     public Ciclo getCicloTabla() {
@@ -87,16 +124,6 @@ public class mbvMateriasCiclos implements Serializable{
     public void setAsg(Asignatura asg) {
         this.asg = asg;
     }
-
-    public AsignaturacicloFacade getAsigCicloaEJB() {
-        return asigCicloaEJB;
-    }
-
-    public void setAsigCicloaEJB(AsignaturacicloFacade asigCicloaEJB) {
-        this.asigCicloaEJB = asigCicloaEJB;
-    }
-    
-    
     
     public boolean isBanAsig() {
         return banAsig;
@@ -122,16 +149,7 @@ public class mbvMateriasCiclos implements Serializable{
     public void setCoso(DualListModel<Asignatura> coso) {
         this.coso = coso;
     }
-    
-    
-    public AsignaturaFacade getAsignaturaEJB() {
-        return asignaturaEJB;
-    }
-
-    public void setAsignaturaEJB(AsignaturaFacade asignaturaEJB) {
-        this.asignaturaEJB = asignaturaEJB;
-    }
-    
+  
     public Configuracion getConfiguracionSelected() {
         return configuracionSelected;
     }
@@ -164,21 +182,6 @@ public class mbvMateriasCiclos implements Serializable{
         this.ciclosSlected = ciclosSlected;
     }
 
-    public ConfiguracionFacade getConfiguracionEJB() {
-        return configuracionEJB;
-    }
-
-    public void setConfiguracionEJB(ConfiguracionFacade configuracionEJB) {
-        this.configuracionEJB = configuracionEJB;
-    }
-
-    public CicloFacade getCicloEJB() {
-        return cicloEJB;
-    }
-
-    public void setCicloEJB(CicloFacade cicloEJB) {
-        this.cicloEJB = cicloEJB;
-    }
     @PostConstruct
     public void inicio(){
         this.configuracionSelected = new Configuracion();
@@ -188,59 +191,147 @@ public class mbvMateriasCiclos implements Serializable{
         /*this.asignturasdisponibles = this.asignaturaEJB.findAll();
         this.coso = new DualListModel<Asignatura>(asignturasdisponibles,asignturasdisponibles);*/
         this.banAsig = false;
+        this.mostrarContenido = false;
+        this.mostrarEditar = false;
+        this.consultar=false;
+        this.editar=false;
+        this.eliminar=false;
+        this.crear=false;
+        try {
+            mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
+             usr = mbslogin.getUsuario();
+             this.login = mbslogin.isLogin();
+            System.out.println("usuario"+usr.getNombres()+"Login"+login);
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            this.login = false;
+        }
+        if(this.usr!=null){
+            for(UsuarioRole usrRol:usrRoleEjb.getByUser(usr)){
+                if(usrRol.getRoleId().getRecursoId().getRecursoId()==8){
+                    if(usrRol.getRoleId().getAgregar()){
+                        this.crear=true;
+                    }
+                    if(usrRol.getRoleId().getConsultar()){
+                        this.consultar=true;
+                    }
+                    if(usrRol.getRoleId().getEditar()){
+                        this.editar=true;
+                    }
+                    if(usrRol.getRoleId().getEliminar()){
+                        this.eliminar=true;
+                    }
+                }
+            }
+        }
+        if(this.usr.getTipoUsuarioId().getTipoUsuarioId()==4){
+            this.consultar=true;
+            this.editar=true;
+            this.eliminar=true;
+            this.crear=true;
+        }
     }
     public void cargarCiclo(){
         try {
-            //System.out.println(configuracionSelected.getConfiguracionId());
-            this.ciclosSlected = cicloEJB.getByConfiguracion(configuracionSelected);
-            System.out.println(this.ciclosSlected.isEmpty());
-            if(this.ciclosSlected.isEmpty()==true){
-                this.banAsig=false;
-            }
-            Configuracion auxcfg = configuracionEJB.find(configuracionSelected.getConfiguracionId());
-            if(anlectivoEJB.configuracionEnUso(auxcfg)){
-                //en uso
+            if(configuracionSelected.getConfiguracionId()!=null){
+                this.mostrarContenido=false;
+                this.mostrarEditar=false;
+                //System.out.println(configuracionSelected.getConfiguracionId());
+                this.ciclosSlected = cicloEJB.getByConfiguracion(configuracionSelected);
+                System.out.println(this.ciclosSlected.isEmpty());
+                if(this.ciclosSlected.isEmpty()==true){
+                    this.banAsig=false;
+                }
+                Configuracion auxcfg = configuracionEJB.find(configuracionSelected.getConfiguracionId());
+                if(anlectivoEJB.configuracionEnUso(auxcfg)){
+                    //en uso
+                }else{
+                    //no en uso
+                }
             }else{
-                //no en uso
+                this.cicloselected = new Ciclo();
+                this.mostrarContenido=false;
+                this.mostrarEditar=false;
+                this.ciclosSlected.clear();
             }
         } catch (Exception e) {
             this.banAsig=false;
+            this.mostrarContenido=false;
+            this.mostrarEditar=false;
         }    
     }
     public void cargarAsignaturas(){
         try {
-            System.out.println(cicloselected.getCicloId());
-            cicloTabla = cicloEJB.find(cicloselected.getCicloId());
-            this.banAsig = true;
-            this.configuraciones = this.configuracionEJB.findAll();
-            this.asignturasdisponibles = this.asignaturaEJB.findByConfiguracion(configuracionSelected, cicloselected);
-            this.asignturasSelecionadas = this.asignaturaEJB.findByCiclo(cicloselected);
-            this.coso = new DualListModel<Asignatura>(asignturasdisponibles,asignturasSelecionadas);
+            if(cicloselected.getCicloId()!=null){
+                this.configuracionSelected = this.configuracionEJB.find(configuracionSelected.getConfiguracionId());
+                if(anlectivoEJB.configuracionEnUso(configuracionSelected)){
+                    this.mostrarContenido = true;
+                    this.mostrarEditar = false;
+                    FacesContext.getCurrentInstance().
+                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Configuracion esta en uso"));
+                }else{
+                    this.mostrarEditar = true;
+                    this.mostrarContenido = true;
+                    if(!this.editar){
+                        FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                    }
+                }
+                System.out.println(cicloselected.getCicloId());
+                cicloTabla = cicloEJB.find(cicloselected.getCicloId());
+                this.banAsig = true;
+                this.configuraciones = this.configuracionEJB.findAll();
+                this.asignturasdisponibles = this.asignaturaEJB.findByConfiguracion(configuracionSelected, cicloselected);
+                this.asignturasSelecionadas = this.asignaturaEJB.findByCiclo(cicloselected);
+                this.coso = new DualListModel<Asignatura>(asignturasdisponibles,asignturasSelecionadas);
+            }else{
+                this.mostrarContenido=false;
+                this.mostrarEditar=false;
+            }
         } catch (Exception e) {
             System.err.println("mm"+e.getMessage());
             this.banAsig=false;
+            this.mostrarContenido=false;
+            this.mostrarEditar=false;
         }
         
     }
     public void onTransfer(TransferEvent event) {
         try {
-            System.out.println("mmm"+event.isAdd()+event.isRemove()+event.getItems());
-            //isremove de izq a derecha isadd de derecha a izq
-            for(Object item : event.getItems()) {
-                //builder.append(((Theme) item).getName()).append("<br />");
-                System.out.println(item.toString());
-                if(event.isRemove()){
-                    asg = asignaturaEJB.find(Integer.parseInt(item.toString())); 
-                    System.out.println("mierda"+asg.getNombre());
-                    asigCicloaEJB.removeByAsignatura(asg);
+            if(!login){
+                System.out.println("Usuario NO logeado");
+                FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                return;
+            }
+            if(this.editar){
+                System.out.println("mmm"+event.isAdd()+event.isRemove()+event.getItems());
+                //isremove de izq a derecha isadd de derecha a izq
+                for(Object item : event.getItems()) {
+                    //builder.append(((Theme) item).getName()).append("<br />");
+                    System.out.println(item.toString());
+                    if(event.isRemove()){
+                        asg = asignaturaEJB.find(Integer.parseInt(item.toString())); 
+                        System.out.println("mierda"+asg.getNombre());
+                        asigCicloaEJB.removeByAsignatura(asg);
+                        FacesContext.getCurrentInstance().
+                                addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Asignatura removida"));
+                    }
+                    if(event.isAdd()){
+                        asg = asignaturaEJB.find(Integer.parseInt(item.toString())); 
+                        System.out.println("mierda"+asg.getNombre());
+                        asigCiclo.setAsignaturaId(asg);
+                        asigCiclo.setCicloId(cicloselected);
+                        asigCicloaEJB.create(asigCiclo);
+                        FacesContext.getCurrentInstance().
+                                addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Asignatura agregada"));
+                    }
                 }
-                if(event.isAdd()){
-                    asg = asignaturaEJB.find(Integer.parseInt(item.toString())); 
-                    System.out.println("mierda"+asg.getNombre());
-                    asigCiclo.setAsignaturaId(asg);
-                    asigCiclo.setCicloId(cicloselected);
-                    asigCicloaEJB.create(asigCiclo);
-                }
+                this.asignturasSelecionadas = this.asignaturaEJB.findByCiclo(cicloselected);
+            }
+            else{
+                FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
             }
         } catch (Exception e) {
             System.out.println(",,2"+e.getMessage());
@@ -249,4 +340,10 @@ public class mbvMateriasCiclos implements Serializable{
          
         
     } 
+    public void initRender(){
+        if(!this.consultar){
+            FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para manejar criterios de evaluacion"));
+        }
+    }
 }

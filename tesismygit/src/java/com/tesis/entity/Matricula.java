@@ -29,6 +29,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Matricula.findAll", query = "SELECT m FROM Matricula m"),
     @NamedQuery(name = "Matricula.findEstudianteTerminadas", query = "SELECT m FROM Matricula m where m.estudianteId = :estudiante AND m.estadoMatriculaId.estadoMatriculaId = 4 ORDER BY m.cursoId.anlectivoId.anio"),
+    @NamedQuery(name = "Matricula.findEstudianteAño", query = "SELECT m FROM Matricula m where m.estudianteId = :estudiante AND m.estadoMatriculaId.estadoMatriculaId = 4 AND m.cursoId.anlectivoId = :anlectivo"),
     @NamedQuery(name = "Matricula.findMatAño", query = "SELECT m FROM Matricula m WHERE m.cursoId.anlectivoId = :anlectivoId AND (m.estadoMatriculaId.estadoMatriculaId != 2 or m.estadoMatriculaId.estadoMatriculaId != 3)"),
     @NamedQuery(name = "Matricula.findMatriculaActiva", query = "SELECT m FROM Matricula m WHERE m.estudianteId = :estudiante AND m.estadoMatriculaId.estadoMatriculaId = 1"),
     @NamedQuery(name = "Matricula.findMatriculaSuspendida", query = "SELECT m FROM Matricula m WHERE m.estudianteId = :estudiante AND m.estadoMatriculaId.estadoMatriculaId = 3 AND m.cursoId.anlectivoId = :anlectivo"),

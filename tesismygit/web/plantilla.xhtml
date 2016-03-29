@@ -1,6 +1,7 @@
 <?xml version='1.0' encoding='iso-8859-1' ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
+<html lang="es" 
+    xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -8,6 +9,7 @@
     <h:head >
         <meta content='text/html; charset=iso-8859-1' http-equiv="Content-Type"/>
         <h:outputStylesheet name="css/cssPlantilla.css"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link href="./../resources/css/default.css" rel="stylesheet" type="text/css" />
         <link href="./../resources/css/cssLayout.css" rel="stylesheet" type="text/css" />
         <link href="./../resources/css/style.css" rel="stylesheet" type="text/css" />
@@ -23,6 +25,9 @@
 
             body {
                 background-color: #409FBA;
+            }
+            .ui-layout-pane { 
+                border: 0; 
             }
         </style>
     </h:head>
@@ -44,13 +49,13 @@
             </p:dialog>
         </h:form>
         <p:layout fullPage="true">
-            <p:layoutUnit position="west" size="20%"  header="Menu Principal" resizable="true" collapsible="true" id="left1">
+            <p:layoutUnit position="west" collapsed="true"  header="Menu Principal" resizable="true" collapsible="true" id="left1">
                 <div class="div-foto-menup">
                 </div>
                 <ui:insert name="left"><br></br>
                     <center>
                         <h:form>
-                            <p:panelMenu style="width:300px" id="menuPpal" model="#{mbvMenu.model}">
+                            <p:panelMenu  id="menuPpal" model="#{mbvMenu.model}">
                             </p:panelMenu>
                         </h:form>
                     </center>
@@ -100,10 +105,12 @@
                             <p:menuitem value="Rectificar nota" outcome="/profesores/rectificarNotas.xhtml" />
                         </p:submenu>
                         <p:submenu label="Configuracion" icon="ui-icon-gear"> 
-                            <p:menuitem value="Editar Perfil" outcome="/anlectivo/anlectivos.xhtml" />
+                            <p:menuitem value="Usuarios" url="../sistema/usuarios.xhtml" />
                             <p:separator />  
-                            <p:menuitem value="Seguridad Perfil" url="../Usuarios/Seguridad.xhtml"/>  
+                            <p:menuitem value="Editar Perfil" outcome="/anlectivo/anlectivos.xhtml" />
+                            <p:menuitem value="Seguridad Perfil" url="../anlectivo/anlectivos.xhtml"/>  
                         </p:submenu>
+
                         <p:menuitem value="Cerrar Sesion" actionListener="#{mbsLogin.cerrarSession}"/>  
                     </p:menubar>
                     <p:menubar id="menuProfesor" rendered="#{mbsLogin.loginProfesor}">  
@@ -143,10 +150,7 @@
 
                     <div class="footer-div-30">
                         <span class="footer-span-titulos">NUESTRO COLEGIO</span>
-                        <div>
-                            <p:gmap center="41.381542, 2.122893" zoom="15" type="HYBRID" style="width:100%" />
-                        </div>
-                    </div>
+                                            </div>
                 </div>
             </p:layoutUnit>                        
         </p:layout>

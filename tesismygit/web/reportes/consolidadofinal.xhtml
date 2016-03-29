@@ -18,9 +18,13 @@
         <ui:composition template="./../plantilla.xhtml">
             <ui:define name="content">
                 <h:form id="frmReporteFinal">
-                        <p:outputPanel id="panelReporteMatriculas" rendered="true">
-                            <p:commandButton id="btnReporte" value="Confirmar" ajax="false" icon="icon-report" actionListener="#{mbvConsolidadoFinal.imprimir}" style="margin-top:5px" />
-                        </p:outputPanel>                      
+                    <p:outputPanel id="panelReporteMatriculas" rendered="true">
+                        <p:commandButton id="btnReporte" value="Confirmar" ajax="false" icon="icon-report" actionListener="#{mbvConsolidadoFinal.imprimir}" style="margin-top:5px" />
+                    </p:outputPanel>
+
+                    <p:dialog widgetVar="statusDialog" appendTo="@(body)" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage library="imagenes" name="load1.gif"/>
+                    </p:dialog>
                 </h:form>        
             </ui:define>
         </ui:composition>

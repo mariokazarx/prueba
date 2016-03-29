@@ -12,6 +12,7 @@ import com.tesis.beans.CursoFacade;
 import com.tesis.beans.EstadocontenidotematicoFacade;
 import com.tesis.beans.PeriodoFacade;
 import com.tesis.beans.ProfesorFacade;
+import com.tesis.beans.UsuarioRoleFacade;
 import com.tesis.entity.Anlectivo;
 import com.tesis.entity.Asignatura;
 import com.tesis.entity.Asignaturaciclo;
@@ -21,6 +22,8 @@ import com.tesis.entity.Curso;
 import com.tesis.entity.Estadocontenidotematico;
 import com.tesis.entity.Periodo;
 import com.tesis.entity.Profesor;
+import com.tesis.entity.Usuario;
+import com.tesis.entity.UsuarioRole;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,8 +65,16 @@ public class mbvCargaAcademica implements Serializable {
     private boolean mostrarSeleccion;
     private boolean mostrarCursos;
     private Contenidotematico contenido;
+    private List<Contenidotematico> contenidosProfesor;
     private String mensaje;
     private Periodo periodoSelected;
+    private Anlectivo aEscolarP;
+    private boolean login;
+    private boolean consultar;
+    private boolean editar;
+    private boolean crear;
+    private boolean eliminar;
+    private Usuario usr;
     @EJB
     private ProfesorFacade profesorEjb;
     @EJB
@@ -80,10 +91,24 @@ public class mbvCargaAcademica implements Serializable {
     private ContenidotematicoFacade contenidoEjb;
     @EJB
     private EstadocontenidotematicoFacade estadocontenidoEjb;
+    @EJB
+    private UsuarioRoleFacade usrRoleEjb;
     @Resource
     UserTransaction tx;
 
     public mbvCargaAcademica() {
+    }
+
+    public boolean isConsultar() {
+        return consultar;
+    }
+
+    public boolean isEditar() {
+        return editar;
+    }
+
+    public List<Contenidotematico> getContenidosProfesor() {
+        return contenidosProfesor;
     }
 
     public boolean isMostrarSeleccion() {
@@ -206,9 +231,10 @@ public class mbvCargaAcademica implements Serializable {
     public void setCursos(List<Curso> cursos) {
         this.cursos = cursos;
     }
-  
+
     @PostConstruct
     public void inicioPagina() {
+        this.contenidosProfesor = new ArrayList<Contenidotematico>();
         this.contenidoError = false;
         this.banderaAsig = false;
         this.banderaSearch = false;
@@ -216,17 +242,56 @@ public class mbvCargaAcademica implements Serializable {
         this.mensaje = "";
         this.cursos = new ArrayList<Curso>();
         this.periodos = new ArrayList<Periodo>();
+        this.aEscolarP = new Anlectivo();
         this.periodoSelected = new Periodo();
         Profesor aux = (Profesor) FacesContext.getCurrentInstance()
                 .getExternalContext()
                 .getFlash()
                 .get("param1");
-        cargarDatos(aux);
         profesores = this.profesorEjb.findAll();
         //this.cursos = this.cursoEjb.findAll();
         this.cursoSelected = new Curso();
         this.contenido = new Contenidotematico();
         asSelecteds = new ArrayList<Asignatura>();
+        this.consultar = false;
+        this.editar = false;
+        this.eliminar = false;
+        this.crear = false;
+        try {
+            mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
+            usr = mbslogin.getUsuario();
+            this.login = mbslogin.isLogin();
+            System.out.println("usuario" + usr.getNombres() + "Login" + login);
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            this.login = false;
+        }
+        if (this.usr != null) {
+            for (UsuarioRole usrRol : usrRoleEjb.getByUser(usr)) {
+                if (usrRol.getRoleId().getRecursoId().getRecursoId() == 4) {
+                    if (usrRol.getRoleId().getAgregar()) {
+                        this.crear = true;
+                    }
+                    if (usrRol.getRoleId().getConsultar()) {
+                        this.consultar = true;
+                    }
+                    if (usrRol.getRoleId().getEditar()) {
+                        this.editar = true;
+                    }
+                    if (usrRol.getRoleId().getEliminar()) {
+                        this.eliminar = true;
+                    }
+                }
+            }
+        }
+        if (this.usr.getTipoUsuarioId().getTipoUsuarioId() == 4) {
+            this.consultar = true;
+            this.editar = true;
+            this.eliminar = true;
+            this.crear = true;
+        }
+        cargarDatos(aux);
+        
     }
 
     public List<Profesor> completeProfesor(String query) {
@@ -247,13 +312,13 @@ public class mbvCargaAcademica implements Serializable {
     public void prueba() {
         try {
             if (this.profesor != null) {
-                System.out.println("aaaaww"+this.profesor.getNombre());
+                System.out.println("aaaaww" + this.profesor.getNombre());
                 //cursoSelected = cursoEjb.find(1);
                 this.cargarDatos(profesor);
             } else {
                 this.banderaSearch = false;
                 FacesContext.getCurrentInstance().
-                                addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Advertencia", "Profesor no encontrado"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Advertencia", "Profesor no encontrado"));
             }
 
         } catch (Exception e) {
@@ -269,7 +334,7 @@ public class mbvCargaAcademica implements Serializable {
             if (cursoSelected.getCursoId() == null) {
                 this.banderaAsig = false;
             } else {
-                if(isPeriodo){
+                if (isPeriodo) {
                     this.banderaAsig = true;
                     asignturasdisponibles = new ArrayList<Asignatura>();
                     asignturasSelecionadas = new ArrayList<Asignatura>();
@@ -280,20 +345,20 @@ public class mbvCargaAcademica implements Serializable {
                     System.out.println("FUNCIONO:::::" + an);
                     Periodo per = periodoEjb.getPeriodoMinByAnio(an);
                     System.out.println("FUNCIONO********oo" + per);
-                    asignaturasprofes = asignaturaCicloEjb.asignaturasDisponiblesPeriodo(profesor, cursoSelected,periodoSelected);
+                    asignaturasprofes = asignaturaCicloEjb.asignaturasDisponiblesPeriodo(profesor, cursoSelected, periodoSelected);
                     for (Asignaturaciclo asc : asignaturasprofes) {
                         Asignatura as = asignaturaEjb.find(asc.getAsignaturaId().getAsignaturaId());
                         asignturasdisponibles.add(as);
                     }
                     asignaturasprofes = asignaturaCicloEjb.asignaturasProfesorPeriodo(profesor, cursoSelected, periodoSelected);
-                    System.out.println("JJKJKJ"+profesor+"   "+cursoSelected+"    "+per);
+                    System.out.println("JJKJKJ" + profesor + "   " + cursoSelected + "    " + per);
                     for (Asignaturaciclo asc : asignaturasprofes) {
-                        System.out.println("asignatura entro "+asc);
+                        System.out.println("asignatura entro " + asc);
                         Asignatura as = asignaturaEjb.find(asc.getAsignaturaId().getAsignaturaId());
                         asignturasSelecionadas.add(as);
                     }
                     this.pickList = new DualListModel<Asignatura>(asignturasdisponibles, asignturasSelecionadas);
-                }else{
+                } else {
                     this.banderaAsig = true;
                     asignturasdisponibles = new ArrayList<Asignatura>();
                     asignturasSelecionadas = new ArrayList<Asignatura>();
@@ -310,9 +375,9 @@ public class mbvCargaAcademica implements Serializable {
                         asignturasdisponibles.add(as);
                     }
                     asignaturasprofes = asignaturaCicloEjb.asignaturasProfesor(profesor, cursoSelected, per);
-                    System.out.println("JJKJKJ"+profesor+"   "+cursoSelected+"    "+per);
+                    System.out.println("JJKJKJ" + profesor + "   " + cursoSelected + "    " + per);
                     for (Asignaturaciclo asc : asignaturasprofes) {
-                        System.out.println("asignatura entro "+asc);
+                        System.out.println("asignatura entro " + asc);
                         Asignatura as = asignaturaEjb.find(asc.getAsignaturaId().getAsignaturaId());
                         asignturasSelecionadas.add(as);
                     }
@@ -338,14 +403,14 @@ public class mbvCargaAcademica implements Serializable {
                     asSelecteds.remove(asg);
                     asignturasSelecionadas.remove(asg);
                     asignturasdisponibles.add(asg);
-                    System.out.println("FUNCIONO********" + asignturasdisponibles+"ESTE MEJOR"+asignturasSelecionadas+"NHNH "+asg);
+                    System.out.println("FUNCIONO********" + asignturasdisponibles + "ESTE MEJOR" + asignturasSelecionadas + "NHNH " + asg);
                 }
                 if (event.isAdd()) {
                     Asignatura asg = asignaturaEjb.find(Integer.parseInt(item.toString()));
                     asSelecteds.add(asg);
                     asignturasSelecionadas.add(asg);
                     asignturasdisponibles.remove(asg);
-                    System.out.println("FUNCIONO********" + asignturasdisponibles+"ESTE MEJOR"+asignturasSelecionadas+"MJMJM "+asg);
+                    System.out.println("FUNCIONO********" + asignturasdisponibles + "ESTE MEJOR" + asignturasSelecionadas + "MJMJM " + asg);
                 }
             }
         } catch (Exception e) {
@@ -358,88 +423,107 @@ public class mbvCargaAcademica implements Serializable {
 
     public void cargarMaterias() throws IllegalStateException, SecurityException, SystemException {
         try {
-            tx.begin();
-            if(isPeriodo){
-                System.out.println("ES por periodo"+asignturasdisponibles.size()+" seleccionadas "+asignturasSelecionadas.size());
-                cursoSelected = cursoEjb.find(cursoSelected.getCursoId());
-                for (int i = 0; i < asignturasdisponibles.size(); i++) {
-                    Asignaturaciclo asg = asignaturaCicloEjb.asignaturasCiclo(cursoSelected.getCicloId(), asignturasdisponibles.get(i));
-                    Contenidotematico conAux = contenidoEjb.getContenidoByAll(profesor, cursoSelected, asg, periodoSelected);
-                    System.out.println("asignatura ciclo "+conAux);
-                    // advertencia
-                    Estadocontenidotematico estAux = estadocontenidoEjb.find(5);
-                    conAux.setEstado(estAux);
-                    contenidoEjb.edit(conAux);
-                }
-                for (int i = 0; i < asignturasSelecionadas.size(); i++) {
-                    Asignaturaciclo asg = asignaturaCicloEjb.asignaturasCiclo(cursoSelected.getCicloId(), asignturasSelecionadas.get(i));
-                    System.out.println("asignatura ciclo AUX "+asg);
-                    Contenidotematico conAux = contenidoEjb.getContenidoByCambio(cursoSelected, asg, periodoSelected);
-                    System.out.println("asignatura ciclo "+conAux);
-                    // advertencia
-                    Estadocontenidotematico estAux;
-                    if(periodoSelected.getEstadoPeriodoId().getEstadoPeriodoId()==1){
-                        estAux = estadocontenidoEjb.find(1);
+            if (!login) {
+                System.out.println("Usuario NO logeado");
+                FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                return;
+            }
+            if (this.editar) {
+                tx.begin();
+                if (isPeriodo) {
+                    System.out.println("ES por periodo" + asignturasdisponibles.size() + " seleccionadas " + asignturasSelecionadas.size());
+                    cursoSelected = cursoEjb.find(cursoSelected.getCursoId());
+                    for (int i = 0; i < asignturasdisponibles.size(); i++) {
+                        Asignaturaciclo asg = asignaturaCicloEjb.asignaturasCiclo(cursoSelected.getCicloId(), asignturasdisponibles.get(i));
+                        Contenidotematico conAux = contenidoEjb.getContenidoByAll(profesor, cursoSelected, asg, periodoSelected);
+                        System.out.println("asignatura ciclo " + conAux);
+                        // advertencia
+                        Estadocontenidotematico estAux = estadocontenidoEjb.find(5);
+                        conAux.setEstado(estAux);
+                        contenidoEjb.edit(conAux);
                     }
-                    else{
-                        estAux = estadocontenidoEjb.find(2);
+                    for (int i = 0; i < asignturasSelecionadas.size(); i++) {
+                        Asignaturaciclo asg = asignaturaCicloEjb.asignaturasCiclo(cursoSelected.getCicloId(), asignturasSelecionadas.get(i));
+                        System.out.println("asignatura ciclo AUX " + asg);
+                        Contenidotematico conAux = contenidoEjb.getContenidoByCambio(cursoSelected, asg, periodoSelected);
+                        System.out.println("asignatura ciclo " + conAux);
+                        // advertencia
+                        Estadocontenidotematico estAux;
+                        if (periodoSelected.getEstadoPeriodoId().getEstadoPeriodoId() == 1) {
+                            estAux = estadocontenidoEjb.find(1);
+                        } else {
+                            estAux = estadocontenidoEjb.find(2);
+                        }
+                        conAux.setProfesorId(profesor);;
+                        conAux.setEstado(estAux);
+                        contenidoEjb.edit(conAux);
                     }
-                    conAux.setProfesorId(profesor);;
-                    conAux.setEstado(estAux);
-                    contenidoEjb.edit(conAux);
+                    //return;
+                } else {
+                    System.out.println("DELETE****" + contenidoEjb.removeByProfesorCurso(profesor, cursoSelected));
+                    cursoSelected = cursoEjb.find(cursoSelected.getCursoId());
+                    Anlectivo an = anlectivoEjb.find(cursoSelected.getAnlectivoId().getAnlectivoId());
+                    //Configuracion cf = anlectivoEjb.getConfiguracionCurso(cursoSelected);
+                    List<Periodo> periodos = periodoEjb.getPeriodosByAnio(an);
+                    Estadocontenidotematico est = estadocontenidoEjb.find(1);
+                    System.out.println("FUNCIONO********" + asSelecteds + "ESTE MEJOR" + asignturasSelecionadas);
+                    Curso cur = cursoEjb.find(cursoSelected.getCursoId());
+                    for (int i = 0; i < asignturasSelecionadas.size(); i++) {
+                        Asignaturaciclo asg = asignaturaCicloEjb.asignaturasCiclo(cur.getCicloId(), asignturasSelecionadas.get(i));
+                        for (Periodo aux : periodos) {
+                            Contenidotematico con = new Contenidotematico();
+                            con.setCursoId(cursoSelected);
+                            con.setPeriodoId(aux);
+                            con.setProfesorId(profesor);
+                            con.setAsignaturacicloId(asg);
+                            con.setEstado(est);
+                            contenidoEjb.create(con);
+                        }
+                    }
                 }
-                //return;
+                tx.commit();
+                FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Asignacion academica", "Exitosa"));
+                cargarPickList();
+                this.contenidosProfesor = contenidoEjb.getByProfesorAño(profesor, aEscolarP);
             }
             else{
-                System.out.println("DELETE****" + contenidoEjb.removeByProfesorCurso(profesor, cursoSelected));
-                cursoSelected = cursoEjb.find(cursoSelected.getCursoId());
-                Anlectivo an = anlectivoEjb.find(cursoSelected.getAnlectivoId().getAnlectivoId());
-                //Configuracion cf = anlectivoEjb.getConfiguracionCurso(cursoSelected);
-                List<Periodo> periodos = periodoEjb.getPeriodosByAnio(an);
-                Estadocontenidotematico est = estadocontenidoEjb.find(1);
-                System.out.println("FUNCIONO********" + asSelecteds+"ESTE MEJOR"+asignturasSelecionadas);
-                Curso cur = cursoEjb.find(cursoSelected.getCursoId());
-                for (int i = 0; i < asignturasSelecionadas.size(); i++) {
-                    Asignaturaciclo asg = asignaturaCicloEjb.asignaturasCiclo(cur.getCicloId(), asignturasSelecionadas.get(i));
-                    for (Periodo aux : periodos) {
-                        Contenidotematico con = new Contenidotematico();
-                        con.setCursoId(cursoSelected);
-                        con.setPeriodoId(aux);
-                        con.setProfesorId(profesor);
-                        con.setAsignaturacicloId(asg);
-                        con.setEstado(est);
-                        contenidoEjb.create(con);
-                    }
-                }
+                FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
             }
-            tx.commit();
-            FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Asignacion academica", "Exitosa"));
-            cargarPickList();
         } catch (Exception e) {
             tx.rollback();
             System.out.println("ERROR" + e.toString());
         }
     }
-    public void mensajeAdvertencia(){
+
+    public void mensajeAdvertencia() {
         System.out.println("mensjaeee");
-        
+
         FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Asignacion academica", "Exitosa"));
+                addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Asignacion academica", "Exitosa"));
         //inicioPagina();
     }
-    private void cargarDatos(Profesor aux){
+
+    private void cargarDatos(Profesor aux) {
         if (aux != null) {
+            if(!this.editar){
+                FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+            }
             this.profesor = aux;
             System.out.println("QQQQQ1" + this.profesor + "EEE1" + profesor.getNombre());
-            if(profesor.getEstadoProfesorId().getEstadoProfesorId()==1){
+            if (profesor.getEstadoProfesorId().getEstadoProfesorId() == 1) {
                 //profesor activo
                 Anlectivo anescolar = new Anlectivo();
                 Anlectivo auxEscolar = anlectivoEjb.getIniciado();
-                if(auxEscolar!=null){
-                    System.out.println("ENTRO 1"); 
+                if (auxEscolar != null) {
+                    aEscolarP = auxEscolar;
+                    this.contenidosProfesor = contenidoEjb.getByProfesorAño(profesor, auxEscolar);
+                    System.out.println("ENTRO 1" + this.contenidosProfesor);
                     //hay año iniciado
-                    if(auxEscolar.getCursoList().isEmpty()){
+                    if (auxEscolar.getCursoList().isEmpty()) {
                         //no hay cursos activos
                         System.out.println("ENTRO 2");
                         this.banderaSearch = true;
@@ -447,7 +531,7 @@ public class mbvCargaAcademica implements Serializable {
                         this.mostrarCursos = false;
                         FacesContext.getCurrentInstance().
                                 addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "aun no hay cursos para realizar la asignacion academica"));
-                    }else{
+                    } else {
                         System.out.println("ENTRO 3");
                         this.cursos = auxEscolar.getCursoList();
                         this.banderaAsig = false;
@@ -458,80 +542,85 @@ public class mbvCargaAcademica implements Serializable {
                         this.cursoSelected = new Curso();
                     }
                     /*List<Anlectivo> auxAnlectivos;
-                    auxAnlectivos = anlectivoEjb.findAll();
-                    for(Anlectivo auxan : auxAnlectivos){
-                        if(auxan.getEstadoAniolectivoId().getEstadoAniolectivoId()==2){
-                            anescolar = anlectivoEjb.find(auxan.getAnlectivoId());
-                            break;
-                        }
-                    }
-                    if(anescolar!=null){
-                        //si hay año escolar
-                        if(anescolar.getCursoList().isEmpty()){
-                            // no hay cursos para ese año
-                            System.out.println("NO HAY CURSOS");
-                        }
-                        for(Curso cur:anescolar.getCursoList()){
-                            System.out.println(cur);
-                        }
-                    }*/
+                     auxAnlectivos = anlectivoEjb.findAll();
+                     for(Anlectivo auxan : auxAnlectivos){
+                     if(auxan.getEstadoAniolectivoId().getEstadoAniolectivoId()==2){
+                     anescolar = anlectivoEjb.find(auxan.getAnlectivoId());
+                     break;
+                     }
+                     }
+                     if(anescolar!=null){
+                     //si hay año escolar
+                     if(anescolar.getCursoList().isEmpty()){
+                     // no hay cursos para ese año
+                     System.out.println("NO HAY CURSOS");
+                     }
+                     for(Curso cur:anescolar.getCursoList()){
+                     System.out.println(cur);
+                     }
+                     }*/
                 }
             }
-            
+
             //profesor debe estar activo 
             //alño esdcolar iniciado 
             // al menos un curso para ese año
             //prueba();
-        }
-        else{
+        } else {
             System.out.println("ENTRO 65");
             this.profesor = new Profesor();
             this.mostrarSeleccion = false;
             /*FacesContext.getCurrentInstance().
-                                addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Advertencia", "Profesor no encontrado"));*/
+             addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Advertencia", "Profesor no encontrado"));*/
         }
-        
+
     }
-    public void activarByPeriodo(){
-        if(isPeriodo){
+
+    public void activarByPeriodo() {
+        if (isPeriodo) {
             //esta habilitado ppor periodo
             System.out.println("ACTIVO PERIODO");
             this.mostrarCursos = false;
             this.banderaAsig = false;
             this.periodos = periodoEjb.getPeriodosByAnio(anlectivoEjb.getIniciado());
-            System.out.println("PERIODOS "+this.periodos);
-        }else{
+            System.out.println("PERIODOS " + this.periodos);
+        } else {
             this.cursoSelected = new Curso();
-            this.mostrarCursos=true;
+            this.mostrarCursos = true;
             this.banderaAsig = false;
             System.out.println("DESACTIVO PERIODO");
             this.periodoSelected = new Periodo();
             this.periodos.clear();
         }
     }
-    public void cargarPeriodo(){
-        if(periodoSelected.getPeriodoId()!=null){
+
+    public void cargarPeriodo() {
+        if (periodoSelected.getPeriodoId() != null) {
             periodoSelected = periodoEjb.find(periodoSelected.getPeriodoId());
-            if(periodoSelected.getEstadoPeriodoId().getEstadoPeriodoId()!=2){
+            if (periodoSelected.getEstadoPeriodoId().getEstadoPeriodoId() != 2) {
                 mostrarCursos = true;
-            }else{
+            } else {
                 mostrarCursos = false;
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Este periodo ya termino"));
             }
-            
-            
-        }else{
+
+
+        } else {
             mostrarCursos = false;
         }
     }
-    public void initRender(){
+
+    public void initRender() {
         Anlectivo aEscolarAux = anlectivoEjb.getIniciado();
-        if(aEscolarAux==null){
+        if (aEscolarAux == null) {
             FacesContext.getCurrentInstance().
-                addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Aun no ha iniciado el año escolar"));
-        }else{
-            
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Aun no ha iniciado el año escolar"));
+        } else {
+            if (!this.consultar) {
+                FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para manejar criterios de evaluacion"));
+            }
         }
     }
 }

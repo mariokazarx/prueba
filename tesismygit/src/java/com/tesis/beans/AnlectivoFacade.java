@@ -47,7 +47,12 @@ public class AnlectivoFacade extends AbstractFacade<Anlectivo> {
             Query cq = em.createNamedQuery("Anlectivo.findConfiguracion");
             cq.setParameter("configuracionId", configuracion);
             if (cq.getSingleResult() != null) {
-                bandera = true;
+                Long count = (Long) cq.getSingleResult();
+                if(count != 0){
+                    return true;
+                }else{
+                    return false;
+                }
             } else {
                 bandera = false;
             }
@@ -76,6 +81,33 @@ public class AnlectivoFacade extends AbstractFacade<Anlectivo> {
             return false;
         }
         catch (Exception e) {
+            return false;
+        }
+    }
+    public boolean existeAño(int anio) {
+        try {
+            Query cq = em.createNamedQuery("Anlectivo.añoEnUso");
+            cq.setParameter("anio",anio);
+            System.out.println("ENTRA 1"+anio);
+            if(cq.getSingleResult()!=null){
+                Long count = (Long) cq.getSingleResult();
+                System.out.println("Entra resultado "+count);
+                if(count != 0){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+            else{
+                System.out.println("ENTRA 2");
+                return false;
+            }
+        } catch (PersistenceException e) {
+            System.out.println("ENTRA 3");
+            return false;
+        }
+        catch (Exception e) {
+            System.out.println("ENTRA 4");
             return false;
         }
     }

@@ -14,6 +14,7 @@
     </h:head>
     <h:body>
         <h:form id="frmescala">
+            <h:panelGroup rendered="#{mbvEscala.crear}">
             <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" rendered="#{mbvEscala.mensage}"/>
             <h:panelGrid columns="3">
                 <p:outputLabel for="txtNombre" value="Nombre: "/>
@@ -36,6 +37,7 @@
                 <h:panelGroup></h:panelGroup>
                 <p:commandButton value="Registrar Escala" actionListener="#{mbvEscala.insertar}" onclick="#{mbvEscala.setMensage(false)}" ajax="true" update="frmescala" />
             </h:panelGrid> 
+            </h:panelGroup>
         </h:form>
     </h:body>
 </html>

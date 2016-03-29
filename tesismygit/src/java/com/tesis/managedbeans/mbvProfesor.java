@@ -11,6 +11,7 @@ import com.tesis.beans.EstadocontenidotematicoFacade;
 import com.tesis.beans.PeriodoFacade;
 import com.tesis.beans.ProfesorFacade;
 import com.tesis.beans.TipoUsuarioFacade;
+import com.tesis.beans.UsuarioRoleFacade;
 import com.tesis.entity.EstadoProfesor;
 import com.tesis.entity.Profesor;
 import com.tesis.entity.TipoUsuario;
@@ -27,6 +28,8 @@ import com.tesis.clases.Encrypt;
 import com.tesis.entity.Anlectivo;
 import com.tesis.entity.Estadocontenidotematico;
 import com.tesis.entity.Periodo;
+import com.tesis.entity.Usuario;
+import com.tesis.entity.UsuarioRole;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,6 +50,14 @@ public class mbvProfesor implements Serializable {
     private List<EstadoProfesor> estadosProfesor;
     private EstadoProfesor estadoSelected;
     private boolean cambiarContraseña;
+    private String cedulaAnterior;
+    private String correoAnterior;
+    private boolean login;
+    private boolean consultar;
+    private boolean editar;
+    private boolean crear;
+    private boolean eliminar;
+    private Usuario usr;
     @EJB
     private ProfesorFacade profesorEjb;
     @EJB
@@ -60,10 +71,20 @@ public class mbvProfesor implements Serializable {
     @EJB
     private PeriodoFacade periodoEjb;
     @EJB
-    private EstadocontenidotematicoFacade estadocontenidoEjb;   
+    private EstadocontenidotematicoFacade estadocontenidoEjb;  
+    @EJB
+    private UsuarioRoleFacade usrRoleEjb;
     @Resource 
     UserTransaction tx;
     public mbvProfesor() {
+    }
+
+    public boolean isConsultar() {
+        return consultar;
+    }
+
+    public boolean isCrear() {
+        return crear;
     }
 
     public EstadoProfesor getEstadoSelected() {
@@ -137,25 +158,85 @@ public class mbvProfesor implements Serializable {
        this.cambiarContraseña = false;
        this.estadosProfesor = estadoEjb.findAll();
        this.profesores = this.profesorEjb.findAll();
+       this.consultar=false;
+        this.editar=false;
+        this.eliminar=false;
+        this.crear=false;
+        try {
+            mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
+             usr = mbslogin.getUsuario();
+             this.login = mbslogin.isLogin();
+            System.out.println("usuario"+usr.getNombres()+"Login"+login);
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            this.login = false;
+        }
+        if(this.usr!=null){
+            for(UsuarioRole usrRol:usrRoleEjb.getByUser(usr)){
+                if(usrRol.getRoleId().getRecursoId().getRecursoId()==10){
+                    if(usrRol.getRoleId().getAgregar()){
+                        this.crear=true;
+                    }
+                    if(usrRol.getRoleId().getConsultar()){
+                        this.consultar=true;
+                    }
+                    if(usrRol.getRoleId().getEditar()){
+                        this.editar=true;
+                    }
+                    if(usrRol.getRoleId().getEliminar()){
+                        this.eliminar=true;
+                    }
+                }
+            }
+        }
+        if(this.usr.getTipoUsuarioId().getTipoUsuarioId()==4){
+            this.consultar=true;
+            this.editar=true;
+            this.eliminar=true;
+            this.crear=true;
+        }
     }
     public void insertar(){
         try {
-            if(this.profesor.getContraseña().equals(this.txtRepiteContrasenia)){
-                //tx.begin();
-                EstadoProfesor estado = estadoEjb.find(1);
-                TipoUsuario tusu = tusuEjb.find(2);
-                this.profesor.setEstadoProfesorId(estado);
-                this.profesor.setTipoUsuarioId(tusu);
-                this.profesor.setFoto("default.jpg");
-                this.profesor.setContraseña(Encrypt.sha512(this.profesor.getContraseña()));
-                this.profesorEjb.create(profesor);
+            if(!login){
+                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                           addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Criterio Evaluacion creado Satisfactoriamente", ""));
-                //tx.rollback();    
-                inicioPagina();
-            }else{
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error fatal:", "Las contraseñas no coinciden"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
                 return;
+            }
+            if(this.crear){
+                if(this.profesor.getContraseña().equals(this.txtRepiteContrasenia)){
+                    if(profesorEjb.existeCedula(this.profesor.getCedula())){
+                        FacesContext.getCurrentInstance().
+                            addMessage("frmProfesor:txtCedula", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Cedula en uso"));
+                        return;
+                    }
+                    if(profesorEjb.existeCorreo(this.profesor.getCorreo())){
+                        FacesContext.getCurrentInstance().
+                            addMessage("frmProfesor:txtCorreo", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Correo en uso"));
+                        return;
+                    }
+                    //tx.begin();
+                    EstadoProfesor estado = estadoEjb.find(1);
+                    TipoUsuario tusu = tusuEjb.find(2);
+                    this.profesor.setEstadoProfesorId(estado);
+                    this.profesor.setTipoUsuarioId(tusu);
+                    this.profesor.setFoto("default.jpg");
+                    this.profesor.setContraseña(Encrypt.sha512(this.profesor.getContraseña()));
+                    this.profesorEjb.create(profesor);
+                    FacesContext.getCurrentInstance().
+                               addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Criterio Evaluacion creado Satisfactoriamente", ""));
+                    //tx.rollback();   
+                    inicioPagina();
+                }else{
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error fatal:", "Las contraseñas no coinciden"));
+                    return;
+                }
+            }
+            else{
+                System.out.print("error permiso denegado");
+                FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
             }
             
         } catch (Exception ex) {
@@ -164,15 +245,28 @@ public class mbvProfesor implements Serializable {
         
     }
     public void newProfesor(){
-        Map<String,Object> options = new HashMap<String, Object>();
-        options.put("contentHeight", 440);
-        options.put("height", 460);
-        options.put("width",700);
-        options.put("modal", true);
-        options.put("draggable", true);
-        options.put("resizable", true);
-        options.put("responsive", true);
-        RequestContext.getCurrentInstance().openDialog("newprofesor",options,null);
+        if(!login){
+            System.out.println("Usuario NO logeado");
+            FacesContext.getCurrentInstance().
+                   addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+            return;
+        }
+        if(this.crear){
+            Map<String,Object> options = new HashMap<String, Object>();
+            options.put("contentHeight", 490);
+            options.put("contentWidth", 720);
+            options.put("height", 500);
+            options.put("width",730);
+            options.put("modal", true);
+            options.put("draggable", true);
+            options.put("resizable", true);
+            options.put("responsive", true);
+            RequestContext.getCurrentInstance().openDialog("newprofesor",options,null);
+        }
+        else{
+            FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+        }
     }
     public String cargarMaterias(Profesor profesor){
          FacesContext.getCurrentInstance()
@@ -184,11 +278,25 @@ public class mbvProfesor implements Serializable {
      }
     public void cargarProfesor(int profesorid){
         try {
-            this.profesor = profesorEjb.find(profesorid);
-            this.estadoSelected = estadoEjb.find(this.profesor.getEstadoProfesorId().getEstadoProfesorId());
-            this.txtRepiteContrasenia = this.profesor.getContraseña();
-            RequestContext.getCurrentInstance().update("frmEditarProfesor:panelEditarProfesor");
-            RequestContext.getCurrentInstance().execute("PF('dialogoEditarProfesor').show()");
+            if(!login){
+                System.out.println("Usuario NO logeado");
+                FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                return;
+            }
+            if(this.editar){
+                this.profesor = profesorEjb.find(profesorid);
+                this.estadoSelected = estadoEjb.find(this.profesor.getEstadoProfesorId().getEstadoProfesorId());
+                this.txtRepiteContrasenia = this.profesor.getContraseña();
+                this.correoAnterior = this.profesor.getCorreo();
+                this.cedulaAnterior = this.profesor.getCedula();
+                RequestContext.getCurrentInstance().update("frmEditarProfesor:panelEditarProfesor");
+                RequestContext.getCurrentInstance().execute("PF('dialogoEditarProfesor').show()");
+            }
+            else{
+                FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+            }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
@@ -203,38 +311,69 @@ public class mbvProfesor implements Serializable {
     }
     public void actualizar(){
         try{
-            tx.begin();
-            if(cambiarContraseña){
-                this.profesor.setContraseña(Encrypt.sha512(this.profesor.getContraseña()));
+            if(!login){
+                System.out.println("Usuario NO logeado");
+                FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                return;
             }
-            this.estadoSelected = this.estadoEjb.find(estadoSelected.getEstadoProfesorId());
-            if(estadoSelected.getEstadoProfesorId()==2){
-                Anlectivo anlectivoAux = aEscolarEjb.getIniciado();
-                if(anlectivoAux.getAnlectivoId()!=null){
-                    //hay iniciado
-                    List<Periodo> peridosAux = periodoEjb.getPeriodosByAnioActivo(anlectivoAux);
-                    Estadocontenidotematico estAux = estadocontenidoEjb.find(5);
-                    for(Periodo periodoAux: peridosAux){
-                        if(!contenidoEjb.updateRetirarProfesor(periodoAux, estAux, profesor)){
-                            tx.rollback();
-                            return;
+            if(this.editar){
+                tx.begin();
+                if(profesorEjb.existeCedula(this.profesor.getCedula()) && !this.profesor.getCedula().equals(this.cedulaAnterior)){
+                    FacesContext.getCurrentInstance().
+                        addMessage("frmEditarProfesor:txtCedula", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Cedula en uso"));
+                    tx.rollback();
+                    return;
+                }
+                if(profesorEjb.existeCorreo(this.profesor.getCorreo()) && !this.profesor.getCorreo().equals(this.correoAnterior)){
+                    FacesContext.getCurrentInstance().
+                        addMessage("frmEditarProfesor:txtCorreo", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Correo en uso"));
+                    tx.rollback();
+                    return;
+                }
+                if(cambiarContraseña){
+                    this.profesor.setContraseña(Encrypt.sha512(this.profesor.getContraseña()));
+                }
+                this.estadoSelected = this.estadoEjb.find(estadoSelected.getEstadoProfesorId());
+                if(estadoSelected.getEstadoProfesorId()==2){
+                    Anlectivo anlectivoAux = aEscolarEjb.getIniciado();
+                    if(anlectivoAux.getAnlectivoId()!=null){
+                        //hay iniciado
+                        List<Periodo> peridosAux = periodoEjb.getPeriodosByAnioActivo(anlectivoAux);
+                        Estadocontenidotematico estAux = estadocontenidoEjb.find(5);
+                        for(Periodo periodoAux: peridosAux){
+                            if(!contenidoEjb.updateRetirarProfesor(periodoAux, estAux, profesor)){
+                                tx.rollback();
+                                return;
+                            }
                         }
                     }
+                    //comprobar si hay un año activo
+                    //revisar si tiene asignacion academica
+                    //poner en advertencia todos los contenidos de periodos no terminados de ese profesor y de ese año 
                 }
-                //comprobar si hay un año activo
-                //revisar si tiene asignacion academica
-                //poner en advertencia todos los contenidos de periodos no terminados de ese profesor y de ese año 
+                profesor.setEstadoProfesorId(estadoSelected);
+                profesorEjb.edit(profesor);
+                FacesContext.getCurrentInstance().
+                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Escala creada Satisfactoriamente", ""));
+                RequestContext.getCurrentInstance().execute("PF('dialogoEditarProfesor').hide()");
+                inicioPagina();
+                tx.commit();
             }
-            profesor.setEstadoProfesorId(estadoSelected);
-            profesorEjb.edit(profesor);
-            FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Escala creada Satisfactoriamente", ""));
-            RequestContext.getCurrentInstance().execute("PF('dialogoEditarProfesor').hide()");
-            inicioPagina();
-            tx.commit();
+            else{
+                System.out.print("error permiso denegado");
+                FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+            }
         }catch(Exception e){
             FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+        }
+    }
+    public void initRender(){
+        if(!this.consultar){
+            FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para manejar criterios de evaluacion"));
         }
     }
 }

@@ -6,7 +6,7 @@
       xmlns:f="http://java.sun.com/jsf/core">
     <h:head>
         <title>Nuevo Criterio de Evaluacion</title>
-                <style type="text/css">
+        <style type="text/css">
             .ui-widget {
                 font-size: 90%;
             }
@@ -14,27 +14,29 @@
     </h:head>
     <h:body>
         <h:form id="frmcriterioeval">
-            <h:panelGrid columns="3">
-                <p:outputLabel for="txtNombre" value="Nombre: " />
-                <p:inputText id="txtNombre" value="#{mbvcriterioevaluacion.criterioeval.nombre}" validator="#{mbvcriterioevaluacion.validateNombreUnique}">
-                    <f:validator validatorId="validatorVacio"/>
-                </p:inputText>
-                <p:message for="txtNombre"/>
-                <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
-                <p:inputTextarea id="txtDescripcion" value="#{mbvcriterioevaluacion.criterioeval.descripcion}" autoResize="false" rows="5"/>
-                <p:message for="txtDescripcion"/>
-                <p:outputLabel for="stlCriterio" value="Criterio de aprobacion:" />
-                <p:selectOneMenu id="stlCriterio" value="#{mbvcriterioevaluacion.fcriterioselected.formacriterioevaluacionId}">
-                    <f:selectItem itemLabel="Seleccione."/>
-                    <f:selectItems value="#{mbvcriterioevaluacion.fcriterios}" var="fcriterio" itemLabel="#{fcriterio.nombre}" itemValue="#{fcriterio.formacriterioevaluacionId}"/>
-                </p:selectOneMenu>
-                <p:message for="stlCriterio"/>
-                <p:outputLabel for="txtMin" value="Minimo para aprobar:" />
-                <p:inputText id="txtMin" value="#{mbvcriterioevaluacion.criterioeval.minaprob}" />
-                <p:message for="txtMin"/>
-                <h:panelGroup></h:panelGroup>
-                <p:commandButton value="Registrar" actionListener="#{mbvcriterioevaluacion.insertar}" ajax="true" update="frmcriterioeval" />
-            </h:panelGrid> 
+            <h:panelGroup rendered="#{mbvcriterioevaluacion.crear}">
+                <h:panelGrid columns="3">
+                    <p:outputLabel for="txtNombre" value="Nombre: " />
+                    <p:inputText id="txtNombre" value="#{mbvcriterioevaluacion.criterioeval.nombre}" validator="#{mbvcriterioevaluacion.validateNombreUnique}">
+                        <f:validator validatorId="validatorVacio"/>
+                    </p:inputText>
+                    <p:message for="txtNombre"/>
+                    <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
+                    <p:inputTextarea id="txtDescripcion" value="#{mbvcriterioevaluacion.criterioeval.descripcion}" autoResize="false" rows="5"/>
+                    <p:message for="txtDescripcion"/>
+                    <p:outputLabel for="stlCriterio" value="Criterio de aprobacion:" />
+                    <p:selectOneMenu id="stlCriterio" value="#{mbvcriterioevaluacion.fcriterioselected.formacriterioevaluacionId}">
+                        <f:selectItem itemLabel="Seleccione."/>
+                        <f:selectItems value="#{mbvcriterioevaluacion.fcriterios}" var="fcriterio" itemLabel="#{fcriterio.nombre}" itemValue="#{fcriterio.formacriterioevaluacionId}"/>
+                    </p:selectOneMenu>
+                    <p:message for="stlCriterio"/>
+                    <p:outputLabel for="txtMin" value="Minimo para aprobar:" />
+                    <p:inputText id="txtMin" value="#{mbvcriterioevaluacion.criterioeval.minaprob}" />
+                    <p:message for="txtMin"/>
+                    <h:panelGroup></h:panelGroup>
+                    <p:commandButton value="Registrar" actionListener="#{mbvcriterioevaluacion.insertar}" ajax="true" update="frmcriterioeval" />
+                </h:panelGrid> 
+            </h:panelGroup>
         </h:form>
     </h:body>
 </html>

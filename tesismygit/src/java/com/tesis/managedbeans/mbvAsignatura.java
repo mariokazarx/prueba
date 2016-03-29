@@ -41,6 +41,10 @@ public class mbvAsignatura implements Serializable{
      */
     private Usuario usr;
     private boolean login;
+    private boolean consultar;
+    private boolean editar;
+    private boolean crear;
+    private boolean eliminar;
     private Asignatura asignatura;
     private List<Asignatura> asignaturas;
     private List<Area> areas;
@@ -60,6 +64,14 @@ public class mbvAsignatura implements Serializable{
     private ConfiguracionFacade configuracionEjb;
 
     public mbvAsignatura() {
+    }
+
+    public boolean isConsultar() {
+        return consultar;
+    }
+
+    public boolean isCrear() {
+        return crear;
     }
     
     public Asignatura getAsignatura() {
@@ -138,15 +150,43 @@ public class mbvAsignatura implements Serializable{
     
     @PostConstruct
     public void inicioPagina(){
+        this.consultar=false;
+        this.editar=false;
+        this.eliminar=false;
+        this.crear=false;
         try {
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
              usr = mbslogin.getUsuario();
-             login = mbslogin.isLogin();
+             this.login = mbslogin.isLogin();
             System.out.println("usuario"+usr.getNombres()+"Login"+login);
         } catch (Exception e) {
             System.out.println(e.toString());
-            login=false;
-        }       
+            this.login = false;
+        }
+        if(this.usr!=null){
+            for(UsuarioRole usrRol:usrRoleEjb.getByUser(usr)){
+                if(usrRol.getRoleId().getRecursoId().getRecursoId()==3){
+                    if(usrRol.getRoleId().getAgregar()){
+                        this.crear=true;
+                    }
+                    if(usrRol.getRoleId().getConsultar()){
+                        this.consultar=true;
+                    }
+                    if(usrRol.getRoleId().getEditar()){
+                        this.editar=true;
+                    }
+                    if(usrRol.getRoleId().getEliminar()){
+                        this.eliminar=true;
+                    }
+                }
+            }
+        }
+        if(this.usr.getTipoUsuarioId().getTipoUsuarioId()==4){
+            this.consultar=true;
+            this.editar=true;
+            this.eliminar=true;
+            this.crear=true;
+        }      
         this.asignatura=new Asignatura();
         this.asignaturas=  this.asignaturaEjb.findAll();
         //this.areas = this.areaEjb.findAll();
@@ -164,25 +204,21 @@ public class mbvAsignatura implements Serializable{
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
                 return;
             }
-            boolean permiso=false;
-            //6 recurso escalas
-            if(this.usr!=null){
-                for(UsuarioRole usrRol:usrRoleEjb.getByUser(usr)){
-                    if(usrRol.getRoleId().getRecursoId().getRecursoId()==3){
-                        if(usrRol.getRoleId().getAgregar()){
-                            permiso=true;
-                        }
-                    }
-                }
-            }
-            if(this.usr.getTipoUsuarioId().getTipoUsuarioId()==4){
-                permiso=true;
-            }
-            if(permiso){
+            if(this.crear){
                 if(anlectivoEjb.configuracionEnUso(confuguracionselected)){
                     FacesContext.getCurrentInstance().
                             addMessage("frmCrearrAsignatura:stlConfiguracion", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Esta configuracion esta en uso"));
                     return;
+                }
+                this.confuguracionselected = configuracionEjb.find(confuguracionselected.getConfiguracionId());
+                for(Asignatura auxasig:asignaturaEjb.findByConfiguracionNew(confuguracionselected)){
+                    System.out.print(auxasig.getNombre()+"la otra"+ asignatura.getNombre());
+                    if(asignatura.getNombre().trim().equals(auxasig.getNombre().trim())){//&& area.getAreaId()!= auxarea.getAreaId()
+                        System.out.println("IGUALLLL");
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Advertencia ", "Nombre en uso para esta configuracion"); 
+                        FacesContext.getCurrentInstance().addMessage("frmCrearrAsignatura:txtNombre", message);
+                        return;
+                    }
                 }
                 asignatura.setAreaId(areaselected);
                 asignatura.setConfiguracionId(confuguracionselected);
@@ -216,20 +252,24 @@ public class mbvAsignatura implements Serializable{
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
                 return;
             }
-            boolean permiso=false;
-            //6 recurso escalas
-            if(this.usr!=null){
-                for(UsuarioRole usrRol:usrRoleEjb.getByUser(usr)){
-                    if(usrRol.getRoleId().getRecursoId().getRecursoId()==3){
-                        if(usrRol.getRoleId().getEditar()){
-                            permiso=true;
-                        }
-                    }
-                }
-            }
-            if(permiso){
+            if(this.editar){
                 this.areaselected = this.areaEjb.find(areaselected.getAreaId());
                 this.confuguracionselected = this.configuracionEjb.find(confuguracionselected.getConfiguracionId());
+                if(anlectivoEjb.configuracionEnUso(confuguracionselected)){
+                    FacesContext.getCurrentInstance().
+                            addMessage("frmEditarAsignatura:stlConfiguracion", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Esta configuracion esta en uso"));
+                    return;
+                }
+                this.confuguracionselected = configuracionEjb.find(confuguracionselected.getConfiguracionId());
+                for(Asignatura auxasig:asignaturaEjb.findByConfiguracionNew(confuguracionselected)){
+                    System.out.print(auxasig.getNombre()+"la otra"+ asignatura.getNombre());
+                    if(asignatura.getNombre().trim().equals(auxasig.getNombre().trim()) && asignatura.getAsignaturaId()!= auxasig.getAsignaturaId()){
+                        System.out.println("IGUALLLL");
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Advertencia ", "Nombre en uso para esta configuracion"); 
+                        FacesContext.getCurrentInstance().addMessage("frmEditarAsignatura:txtNombre", message);
+                        return;
+                    }
+                }
                 asignatura.setAreaId(areaselected);
                 asignatura.setConfiguracionId(confuguracionselected);
                 asignaturaEjb.edit(asignatura);
@@ -254,17 +294,29 @@ public class mbvAsignatura implements Serializable{
     }
     public void cargarAsignatura(int asignaturaid){
         try {
-            this.asignatura =  this.asignaturaEjb.find(asignaturaid);
-            Configuracion auxcfg = configuracionEjb.find(this.asignatura.getConfiguracionId().getConfiguracionId());
-            if(!anlectivoEjb.configuracionEnUso(auxcfg)){
-                this.areaselected = this.areaEjb.find(asignatura.getAreaId().getAreaId());
-                this.confuguracionselected = this.configuracionEjb.find(asignatura.getConfiguracionId().getConfiguracionId());
-                this.areas = this.confuguracionselected.getAreaList();
-                RequestContext.getCurrentInstance().update("frmEditarAsignatura:panelEditarAsignatura");
-                RequestContext.getCurrentInstance().execute("PF('dialogoEditarAsignatura').show()");
+            if(!login){
+                System.out.println("Usuario NO logeado");
+                FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                return;
+            }
+            if(this.editar){
+                this.asignatura =  this.asignaturaEjb.find(asignaturaid);
+                Configuracion auxcfg = configuracionEjb.find(this.asignatura.getConfiguracionId().getConfiguracionId());
+                if(!anlectivoEjb.configuracionEnUso(auxcfg)){
+                    this.areaselected = this.areaEjb.find(asignatura.getAreaId().getAreaId());
+                    this.confuguracionselected = this.configuracionEjb.find(asignatura.getConfiguracionId().getConfiguracionId());
+                    this.areas = this.confuguracionselected.getAreaList();
+                    RequestContext.getCurrentInstance().update("frmEditarAsignatura:panelEditarAsignatura");
+                    RequestContext.getCurrentInstance().execute("PF('dialogoEditarAsignatura').show()");
+                }
+                else{
+                    RequestContext.getCurrentInstance().execute("PF('enUso').show()");
+                }
             }
             else{
-                RequestContext.getCurrentInstance().execute("PF('enUso').show()");
+                FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
@@ -272,15 +324,27 @@ public class mbvAsignatura implements Serializable{
         }
     }
     public void newAsignatura(){
-        Map<String,Object> options = new HashMap<String, Object>();
-        /*options.put("contentHeight", 340);
-        options.put("height", 400);
-        options.put("width",700);*/
-        options.put("modal", true);
-        //options.put("showEffect", "clip");
-        options.put("draggable", true);
-        options.put("resizable", true);
-        RequestContext.getCurrentInstance().openDialog("newasignatura",options,null);
+        if(!login){
+            System.out.println("Usuario NO logeado");
+            FacesContext.getCurrentInstance().
+                   addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+            return;
+        }
+        if(this.crear){
+            Map<String,Object> options = new HashMap<String, Object>();
+            /*options.put("contentHeight", 340);
+            options.put("height", 400);
+            options.put("width",700);*/
+            options.put("modal", true);
+            //options.put("showEffect", "clip");
+            options.put("draggable", true);
+            options.put("resizable", true);
+            RequestContext.getCurrentInstance().openDialog("newasignatura",options,null);
+        }
+        else{
+            FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+        }
     }
      public void eliminarAsignatura(Asignatura asignatura) {
         try {
@@ -290,18 +354,7 @@ public class mbvAsignatura implements Serializable{
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
                 return;
             }
-            boolean permiso=false;
-            //6 recurso escalas
-            if(this.usr!=null){
-                for(UsuarioRole usrRol:usrRoleEjb.getByUser(usr)){
-                    if(usrRol.getRoleId().getRecursoId().getRecursoId()==3){
-                        if(usrRol.getRoleId().getEliminar()){
-                            permiso=true;
-                        }
-                    }
-                }
-            }
-            if(permiso){
+            if(this.eliminar){
                 //this.escala = this.escalaEjb.find(escalaid);
                //System.out.println("ELIMINAR CRITERIO :"+criterioeval);
                 if(asignaturaEjb.removeById(asignatura)==true){
@@ -324,6 +377,12 @@ public class mbvAsignatura implements Serializable{
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+        }
+    }
+     public void initRender(){
+        if(!this.consultar){
+            FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para manejar criterios de evaluacion"));
         }
     }
 }

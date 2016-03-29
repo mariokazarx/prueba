@@ -10,58 +10,63 @@
         <ui:composition template="./../plantilla.xhtml">
             <ui:define name="content">
                 <h:form id="frmanlectios">
-                    <p:commandButton value="Nuevo año lectivo" icon="ui-icon-document" actionListener="#{mbvAlectivo.newAnlectivo}">
-                        <p:ajax event="dialogReturn" listener="#{mbvAlectivo.closeDialog}" update="frmanlectios" />
-                    </p:commandButton>
+                    <f:metadata>
+                        <f:event type="preRenderView" listener="#{mbvAlectivo.initRender}" />
+                    </f:metadata>
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
-                    <p:dataTable id="tablaListaAlectivos" var="item" value="#{mbvAlectivo.anlectivos}" tableStyle="width:auto" reflow="true" paginator="true" rows="10" selection="#{mbvAlectivo.anlectivo}" selectionMode="single" lazy="true" rowKey="#{item.anlectivoId}" >
-                        <p:ajax event="rowSelect" update=":frmanlectios:panelDetalleAlectivo" oncomplete="PF('dialogoDetalleAlectivo').show()"/>
-                        <f:facet name="header">
-                           Listado Años Escolares
-                        </f:facet>
-                        <p:column headerText="Año" filterBy="Año">
-                            <h:outputText value="#{item.anio}"/>
-                        </p:column>
-                        <p:column headerText="Descripcion" filterBy="descripcion">
-                            <h:outputText value="#{item.descripcion}"/>
-                        </p:column>
-                        <p:column headerText="Configuracion" filterBy="max">
-                            <h:outputText value="#{item.configuracionId.nombre}"/>
-                        </p:column>
-                        <p:column headerText="Estado" filterBy="max">
-                            <h:outputText value="#{item.estadoAniolectivoId.estado}"/>
-                        </p:column>
-                        <p:column headerText="No Periodos" filterBy="min">
-                            <h:outputText value="#{item.noPeriodos}"/>
-                        </p:column>
-                        <p:column>
-                            <p:commandButton value="Editar" icon="ui-icon-pencil" actionListener="#{mbvAlectivo.cargarAnlectivo(item.anlectivoId)}"/>
-                        </p:column>
-                        <p:column rendered="true">
-                            <p:commandButton value="Eliminar" update=":frmRemoveAnlectivo:display" oncomplete="PF('removeanlectivo').show();" icon="ui-icon-search" title="View">
-                                <f:setPropertyActionListener value="#{item}" target="#{mbvAlectivo.anlectivo}" />
-                            </p:commandButton>
-                        </p:column>
-                    </p:dataTable>
+                    <h:panelGroup rendered="#{mbvAlectivo.consultar}">
+                        <p:commandButton value="Nuevo año lectivo" ajax="true" update="frmanlectios" icon="ui-icon-document" actionListener="#{mbvAlectivo.newAnlectivo}">
+                            <p:ajax event="dialogReturn" listener="#{mbvAlectivo.closeDialog}" update="frmanlectios" />
+                        </p:commandButton>
+                        <p:dataTable id="tablaListaAlectivos" var="item" value="#{mbvAlectivo.anlectivos}" tableStyle="width:auto" reflow="true" paginator="true" rows="10" selection="#{mbvAlectivo.anlectivo}" selectionMode="single" lazy="true" rowKey="#{item.anlectivoId}" >
+                            <p:ajax event="rowSelect" update=":frmanlectios:panelDetalleAlectivo" oncomplete="PF('dialogoDetalleAlectivo').show()"/>
+                            <f:facet name="header">
+                                Listado Años Escolares
+                            </f:facet>
+                            <p:column headerText="Año" filterBy="Año">
+                                <h:outputText value="#{item.anio}"/>
+                            </p:column>
+                            <p:column headerText="Descripcion" filterBy="descripcion">
+                                <h:outputText value="#{item.descripcion}"/>
+                            </p:column>
+                            <p:column headerText="Configuracion" filterBy="max">
+                                <h:outputText value="#{item.configuracionId.nombre}"/>
+                            </p:column>
+                            <p:column headerText="Estado" filterBy="max">
+                                <h:outputText value="#{item.estadoAniolectivoId.estado}"/>
+                            </p:column>
+                            <p:column headerText="No Periodos" filterBy="min">
+                                <h:outputText value="#{item.noPeriodos}"/>
+                            </p:column>
+                            <p:column>
+                                <p:commandButton value="Editar" ajax="true" update="frmanlectios" icon="ui-icon-pencil" actionListener="#{mbvAlectivo.cargarAnlectivo(item.anlectivoId)}"/>
+                            </p:column>
+                            <p:column rendered="true">
+                                <p:commandButton value="Eliminar" update=":frmRemoveAnlectivo:display" oncomplete="PF('removeanlectivo').show();" icon="ui-icon-search" title="View">
+                                    <f:setPropertyActionListener value="#{item}" target="#{mbvAlectivo.anlectivo}" />
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
 
-                    <p:dialog header="Detalle Año Lectivo" widgetVar="dialogoDetalleAlectivo" responsive="true" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
-                        <p:outputPanel id="panelDetalleAlectivo">
-                            <p:panelGrid columns="2">
-                                <p:outputLabel value="Id"/>
-                                <h:outputText value="#{mbvAlectivo.anlectivo.anlectivoId}"/>
-                                <p:outputLabel value="Año"/>
-                                <h:outputText value="#{mbvAlectivo.anlectivo.anio}"/>
-                                <p:outputLabel value="Descripcion"/>
-                                <h:outputText value="#{mbvAlectivo.anlectivo.descripcion}"/>
-                                <p:outputLabel value="Configuracion"/>
-                                <h:outputText value="#{mbvcriterioevaluacion.criterioeval.formacriterioevaluacionId.nombre}"/>
-                                <p:outputLabel value="Minimo para aprobar"/>
-                                <h:outputText value="#{mbvcriterioevaluacion.criterioeval.minaprob}"/>
-                            </p:panelGrid>
-                        </p:outputPanel>
-                    </p:dialog>  
+                        <p:dialog header="Detalle Año Lectivo" widgetVar="dialogoDetalleAlectivo" responsive="true" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
+                            <p:outputPanel id="panelDetalleAlectivo">
+                                <p:panelGrid columns="2">
+                                    <p:outputLabel value="Id"/>
+                                    <h:outputText value="#{mbvAlectivo.anlectivo.anlectivoId}"/>
+                                    <p:outputLabel value="Año"/>
+                                    <h:outputText value="#{mbvAlectivo.anlectivo.anio}"/>
+                                    <p:outputLabel value="Descripcion"/>
+                                    <h:outputText value="#{mbvAlectivo.anlectivo.descripcion}"/>
+                                    <p:outputLabel value="Configuracion"/>
+                                    <h:outputText value="#{mbvcriterioevaluacion.criterioeval.formacriterioevaluacionId.nombre}"/>
+                                    <p:outputLabel value="Minimo para aprobar"/>
+                                    <h:outputText value="#{mbvcriterioevaluacion.criterioeval.minaprob}"/>
+                                </p:panelGrid>
+                            </p:outputPanel>
+                        </p:dialog>  
+                    </h:panelGroup>
                     <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
- 
+
                     <p:dialog widgetVar="statusDialog" appendTo="@(body)" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
                         <p:graphicImage library="imagenes" name="load1.gif"/>
                     </p:dialog>
@@ -80,52 +85,52 @@
                         </h:panelGrid>
                     </h:form>
                 </p:confirmDialog>
-                
+
                 <p:dialog header="Datos año escolar" widgetVar="dialogoEditarAlectivo" responsive="true" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
                     <h:form id="frmEditarAlectivo">
                         <p:outputPanel id="panelEditarAlectivo" >
                             <h:panelGrid columns="3">
                                 <p:outputLabel for="selectaño" value="Año: "/>
-                                <p:selectOneMenu id="selectaño" value="#{mbvAlectivo.año}" style="width:125px" rendered="#{mbvAlectivo.mostrarEditar}">
+                                <p:selectOneMenu id="selectaño" required="true" value="#{mbvAlectivo.año}" style="width:125px" rendered="#{mbvAlectivo.mostrarEditar}">
                                     <p:ajax event="change" update="@this" />
                                     <f:selectItem itemLabel="Seleccione." itemValue="" />
                                     <f:selectItems value="#{mbvAlectivo.años}" />
                                 </p:selectOneMenu>
                                 <p:message for="selectaño" rendered="#{mbvAlectivo.mostrarEditar}"/>
-                                
+
                                 <p:outputLabel id="txtaño" value="#{mbvAlectivo.anlectivo.anio}" rendered="#{mbvAlectivo.mostrarLabel}"/>
                                 <h:panelGroup rendered="#{mbvAlectivo.mostrarLabel}"></h:panelGroup>
 
                                 <p:outputLabel for="selectconf" value="Configuracion: " />
-                                <p:selectOneMenu id="selectconf" value="#{mbvAlectivo.configuracionselected.configuracionId}" rendered="#{mbvAlectivo.mostrarEditar}">
+                                <p:selectOneMenu id="selectconf" required="true" value="#{mbvAlectivo.configuracionselected.configuracionId}" rendered="#{mbvAlectivo.mostrarEditar}">
                                     <p:ajax listener="#{mbvAlectivo.cargarCopia}" update="frmEditarAlectivo"/>
                                     <f:selectItem itemLabel="Seleccione."/>
                                     <f:selectItems value="#{mbvAlectivo.configuraciones}" var="conf" itemLabel="#{conf.nombre}" itemValue="#{conf.configuracionId}"/>
                                 </p:selectOneMenu>
                                 <p:message for="selectconf" rendered="#{mbvAlectivo.mostrarEditar}"/>
-                                
+
                                 <p:outputLabel id="txtconf" value="#{mbvAlectivo.anlectivo.configuracionId.nombre}" rendered="#{mbvAlectivo.mostrarLabel}"/>
                                 <h:panelGroup rendered="#{mbvAlectivo.mostrarLabel}"></h:panelGroup>
-                                
+
                                 <p:outputLabel for="selectestado" value="Estado: " />
                                 <p:selectOneMenu id="selectestado" value="#{mbvAlectivo.estadoAlectivoselected.estadoAniolectivoId}">
                                     <f:selectItems value="#{mbvAlectivo.estadosAlectivos}" var="estado" itemLabel="#{estado.estado}" itemValue="#{estado.estadoAniolectivoId}"/>
                                 </p:selectOneMenu>
                                 <p:message for="selectestado"/>
-                                
+
                                 <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
                                 <p:inputTextarea id="txtDescripcion" value="#{mbvAlectivo.anlectivo.descripcion}" autoResize="false" rows="5" />
                                 <p:message for="txtDescripcion"/>
-                                
+
                                 <p:outputLabel for="txtNoPeriodos" value="Numero de periodos: "  />
                                 <p:inputText id="txtNoPeriodos" value="#{mbvAlectivo.anlectivo.noPeriodos}" rendered="#{mbvAlectivo.mostrarEditar}"/>
                                 <p:message for="txtNoPeriodos" rendered="#{mbvAlectivo.mostrarEditar}"/>
-                                
+
                                 <p:outputLabel id="txtperiodos" value="#{mbvAlectivo.anlectivo.noPeriodos}" rendered="#{mbvAlectivo.mostrarLabel}"/>
                                 <h:panelGroup rendered="#{mbvAlectivo.mostrarLabel}"></h:panelGroup>
-                                
+
                                 <h:panelGroup></h:panelGroup>
-                                <p:commandButton value="Editar año" actionListener="#{mbvAlectivo.actualizar}" ajax="true" update=":frmanlectios" />
+                                <p:commandButton value="Editar año" actionListener="#{mbvAlectivo.actualizar}" ajax="true" update=":frmanlectios frmEditarAlectivo" />
                             </h:panelGrid> 
                         </p:outputPanel>
                     </h:form>

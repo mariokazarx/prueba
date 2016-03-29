@@ -8,6 +8,7 @@ import com.tesis.entity.Profesor;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
 /**
@@ -39,6 +40,58 @@ public class ProfesorFacade extends AbstractFacade<Profesor> {
             }
         } catch (Exception e) {
             return null;
+        }
+    }
+    public boolean existeCedula(String cedula) {
+        try {
+            Query cq = em.createNamedQuery("Profesor.countCedula");
+            cq.setParameter("cedula",cedula);
+            if(cq.getSingleResult()!=null){
+                Long count = (Long) cq.getSingleResult();
+                System.out.println("Entra resultado "+count);
+                if(count != 0){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+            else{
+                System.out.println("ENTRA 2");
+                return false;
+            }
+        } catch (PersistenceException e) {
+            System.out.println("ENTRA 3");
+            return false;
+        }
+        catch (Exception e) {
+            System.out.println("ENTRA 4");
+            return false;
+        }
+    }
+    public boolean existeCorreo(String correo) {
+        try {
+            Query cq = em.createNamedQuery("Profesor.countCorreo");
+            cq.setParameter("correo",correo);
+            if(cq.getSingleResult()!=null){
+                Long count = (Long) cq.getSingleResult();
+                System.out.println("Entra resultado "+count);
+                if(count != 0){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+            else{
+                System.out.println("ENTRA 2");
+                return false;
+            }
+        } catch (PersistenceException e) {
+            System.out.println("ENTRA 3");
+            return false;
+        }
+        catch (Exception e) {
+            System.out.println("ENTRA 4");
+            return false;
         }
     }
 }

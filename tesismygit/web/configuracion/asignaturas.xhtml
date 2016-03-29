@@ -10,57 +10,62 @@
         <ui:composition template="./../plantilla.xhtml">
             <ui:define name="content">
                 <h:form id="frmListaAsignaturas">
-                    <p:commandButton value="Nueva Asignatura" icon="ui-icon-document" actionListener="#{mbvAsignatura.newAsignatura}">
-                        <p:ajax event="dialogReturn" listener="#{mbvAsignatura.closeDialog}" update="frmListaAsignaturas" />
-                    </p:commandButton>
+                    <f:metadata>
+                        <f:event type="preRenderView" listener="#{mbvcriterioevaluacion.initRender}" />
+                    </f:metadata>
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
-                    <p:dataTable id="tablaListaAsiganturas" var="item" value="#{mbvAsignatura.asignaturas}" tableStyle="width:auto" reflow="true" paginator="true" rows="10" selection="#{mbvAsignatura.asignatura}" selectionMode="single"  rowKey="#{item.asignaturaId}" >
-                        <p:ajax event="rowSelect" update=":frmListaAsignaturas:panelDetalleAsignatura" oncomplete="PF('dialogoDetalleAsignatura').show()"/>
-                        <f:facet name="header">
-                            Lista de Asignaturas
-                        </f:facet>
-                        <p:column headerText="Nombre" filterBy="#{item.nombre}" filterMatchMode="contains" sortBy="#{item.nombre}">
-                            <h:outputText value="#{item.nombre}"/>
-                        </p:column>
-                        <p:column headerText="Descripcion" filterBy="descripcion">
-                            <h:outputText value="#{item.descripcion}"/>
-                        </p:column>
-                        <p:column headerText="Area" filterBy="max" >
-                            <h:outputText value="#{item.areaId.nombre}"/>
-                        </p:column>
-                        <p:column headerText="Configuracion" filterBy="max">
-                            <h:outputText value="#{item.configuracionId.nombre}"/>
-                        </p:column>
-                        <p:column>
-                            <p:commandButton value="Editar" icon="ui-icon-pencil" actionListener="#{mbvAsignatura.cargarAsignatura(item.asignaturaId)}"/>
-                        </p:column>
-                        <p:column rendered="true">
-                            <p:commandButton value="Eliminar" update=":frmRemoveAsignatura:display" oncomplete="PF('removeasignatura').show();" icon="ui-icon-search" title="View">
-                                <f:setPropertyActionListener value="#{item}" target="#{mbvAsignatura.asignatura}" />
-                            </p:commandButton>
-                        </p:column>
-                    </p:dataTable>
-                    <p:dialog header="Detalle de Asignatura" responsive="true" widgetVar="dialogoDetalleAsignatura" modal="true"  appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
-                        <p:outputPanel id="panelDetalleAsignatura">
-                            <p:panelGrid columns="2">
-                                <p:outputLabel value="Nombre"/>
-                                <h:outputText value="#{mbvAsignatura.asignatura.nombre}"/>
-                                <p:outputLabel value="Descripcion"/>
-                                <h:outputText value="#{mbvAsignatura.asignatura.descripcion}"/>
-                                <p:outputLabel value="Area"/>
-                                <h:outputText value="#{mbvAsignatura.asignatura.areaId.nombre}"/>
-                                <p:outputLabel value="Configuracion"/>
-                                <h:outputText value="#{mbvAsignatura.asignatura.configuracionId.nombre}"/>
-                            </p:panelGrid>
-                        </p:outputPanel>
-                    </p:dialog>  
+                    <h:panelGroup rendered="#{mbvcriterioevaluacion.consultar}">
+                        <p:commandButton value="Nueva Asignatura" ajax="true" update="frmListaAsignaturas" icon="ui-icon-document" actionListener="#{mbvAsignatura.newAsignatura}">
+                            <p:ajax event="dialogReturn" listener="#{mbvAsignatura.closeDialog}" update="frmListaAsignaturas" />
+                        </p:commandButton>
+                        <p:dataTable id="tablaListaAsiganturas" var="item" value="#{mbvAsignatura.asignaturas}" tableStyle="width:auto" reflow="true" paginator="true" rows="10" selection="#{mbvAsignatura.asignatura}" selectionMode="single"  rowKey="#{item.asignaturaId}" >
+                            <p:ajax event="rowSelect" update=":frmListaAsignaturas:panelDetalleAsignatura" oncomplete="PF('dialogoDetalleAsignatura').show()"/>
+                            <f:facet name="header">
+                                Lista de Asignaturas
+                            </f:facet>
+                            <p:column headerText="Nombre" filterBy="#{item.nombre}" filterMatchMode="contains" sortBy="#{item.nombre}">
+                                <h:outputText value="#{item.nombre}"/>
+                            </p:column>
+                            <p:column headerText="Descripcion" filterBy="descripcion">
+                                <h:outputText value="#{item.descripcion}"/>
+                            </p:column>
+                            <p:column headerText="Area" filterBy="max" >
+                                <h:outputText value="#{item.areaId.nombre}"/>
+                            </p:column>
+                            <p:column headerText="Configuracion" filterBy="max">
+                                <h:outputText value="#{item.configuracionId.nombre}"/>
+                            </p:column>
+                            <p:column>
+                                <p:commandButton value="Editar" ajax="true" update="frmListaAsignaturas" icon="ui-icon-pencil" actionListener="#{mbvAsignatura.cargarAsignatura(item.asignaturaId)}"/>
+                            </p:column>
+                            <p:column rendered="true">
+                                <p:commandButton value="Eliminar" update=":frmRemoveAsignatura:display" oncomplete="PF('removeasignatura').show();" icon="ui-icon-search" title="View">
+                                    <f:setPropertyActionListener value="#{item}" target="#{mbvAsignatura.asignatura}" />
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                        <p:dialog header="Detalle de Asignatura" responsive="true" widgetVar="dialogoDetalleAsignatura" modal="true"  appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
+                            <p:outputPanel id="panelDetalleAsignatura">
+                                <p:panelGrid columns="2">
+                                    <p:outputLabel value="Nombre"/>
+                                    <h:outputText value="#{mbvAsignatura.asignatura.nombre}"/>
+                                    <p:outputLabel value="Descripcion"/>
+                                    <h:outputText value="#{mbvAsignatura.asignatura.descripcion}"/>
+                                    <p:outputLabel value="Area"/>
+                                    <h:outputText value="#{mbvAsignatura.asignatura.areaId.nombre}"/>
+                                    <p:outputLabel value="Configuracion"/>
+                                    <h:outputText value="#{mbvAsignatura.asignatura.configuracionId.nombre}"/>
+                                </p:panelGrid>
+                            </p:outputPanel>
+                        </p:dialog>  
+                    </h:panelGroup>
                     <p:ajaxStatus onstart="PF('statusDialog').show()" oncomplete="PF('statusDialog').hide()" />
- 
+
                     <p:dialog widgetVar="statusDialog" appendTo="@(body)" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
                         <p:graphicImage library="imagenes" name="load1.gif"/>
                     </p:dialog>
                 </h:form>
-                
+
                 <p:confirmDialog header="Eliminar Asignatura" widgetVar="removeasignatura" appendTo="@(body)" resizable="false" id="removeDlg"
                                  showEffect="fade" hideEffect="explode" modal="true" message="Esta Seguro que desea eliminar esta asignatura?">
                     <h:form id="frmRemoveAsignatura">
@@ -74,11 +79,11 @@
                         </h:panelGrid>
                     </h:form>
                 </p:confirmDialog>
-                
+
                 <p:dialog header="Datos asignatura" responsive="true" widgetVar="dialogoEditarAsignatura" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
                     <h:form id="frmEditarAsignatura">
                         <p:outputPanel id="panelEditarAsignatura" >
-                             <h:panelGrid columns="3">
+                            <h:panelGrid columns="3">
                                 <p:outputLabel for="txtNombre" value="Nombre: " />
                                 <p:inputText id="txtNombre" value="#{mbvAsignatura.asignatura.nombre}" />
                                 <p:message for="txtNombre"/>
@@ -97,7 +102,7 @@
                                 </p:selectOneMenu>
                                 <p:message for="stlArea"/>
                                 <h:panelGroup></h:panelGroup>
-                                <p:commandButton value="Editar" actionListener="#{mbvAsignatura.actualizar}" ajax="true" update=":frmListaAsignaturas" />
+                                <p:commandButton value="Editar" actionListener="#{mbvAsignatura.actualizar}" ajax="true" update=":frmListaAsignaturas frmEditarAsignatura" />
                             </h:panelGrid> 
                         </p:outputPanel>
                     </h:form>

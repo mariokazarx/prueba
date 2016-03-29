@@ -12,11 +12,14 @@ import com.tesis.beans.CursoFacade;
 import com.tesis.beans.EstadocontenidotematicoFacade;
 import com.tesis.beans.PeriodoFacade;
 import com.tesis.beans.ProfesorFacade;
+import com.tesis.beans.UsuarioRoleFacade;
 import com.tesis.entity.Anlectivo;
 import com.tesis.entity.Contenidotematico;
 import com.tesis.entity.Estadocontenidotematico;
 import com.tesis.entity.Periodo;
 import com.tesis.entity.Profesor;
+import com.tesis.entity.Usuario;
+import com.tesis.entity.UsuarioRole;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +54,12 @@ public class mbvRectificar implements Serializable {
     private Contenidotematico contenidoSelected;
     private Anlectivo anlectivoselected;
     private List<Anlectivo> anlectivos;
+    private boolean login;
+    private boolean consultar;
+    private boolean editar;
+    private boolean crear;
+    private boolean eliminar;
+    private Usuario usr;
     @EJB
     private ProfesorFacade profesorEjb;
     @EJB
@@ -69,10 +78,20 @@ public class mbvRectificar implements Serializable {
     private EstadocontenidotematicoFacade estadoContenidoEjb;
     @EJB
     private EstadocontenidotematicoFacade estadocontenidoEjb;
+    @EJB
+    private UsuarioRoleFacade usrRoleEjb;
     @Resource
     UserTransaction tx;
 
     public mbvRectificar() {
+    }
+
+    public boolean isConsultar() {
+        return consultar;
+    }
+
+    public boolean isEditar() {
+        return editar;
     }
 
     public Anlectivo getAnlectivoselected() {
@@ -147,10 +166,6 @@ public class mbvRectificar implements Serializable {
         this.contenidoSelected = contenidoSelected;
     }
     
-    
-    
-    
-    
     public boolean isBanderaSearch() {
         return banderaSearch;
     }
@@ -189,6 +204,43 @@ public class mbvRectificar implements Serializable {
     @PostConstruct
     public void inicioPagina() {
         //this.aEscolar = anlectivoEjb.getIniciado();
+        this.consultar=false;
+        this.editar=false;
+        this.eliminar=false;
+        this.crear=false;
+        try {
+            mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
+             usr = mbslogin.getUsuario();
+             this.login = mbslogin.isLogin();
+            System.out.println("usuario"+usr.getNombres()+"Login"+login);
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            this.login = false;
+        }
+        if(this.usr!=null){
+            for(UsuarioRole usrRol:usrRoleEjb.getByUser(usr)){
+                if(usrRol.getRoleId().getRecursoId().getRecursoId()==16){
+                    if(usrRol.getRoleId().getAgregar()){
+                        this.crear=true;
+                    }
+                    if(usrRol.getRoleId().getConsultar()){
+                        this.consultar=true;
+                    }
+                    if(usrRol.getRoleId().getEditar()){
+                        this.editar=true;
+                    }
+                    if(usrRol.getRoleId().getEliminar()){
+                        this.eliminar=true;
+                    }
+                }
+            }
+        }
+        if(this.usr.getTipoUsuarioId().getTipoUsuarioId()==4){
+            this.consultar=true;
+            this.editar=true;
+            this.eliminar=true;
+            this.crear=true;
+        }
         this.contenidosRectificados = new ArrayList<Contenidotematico>();
         this.contenidosRectificar = new ArrayList<Contenidotematico>();
         this.periodosSelecteds = new ArrayList<Periodo>();
@@ -217,7 +269,7 @@ public class mbvRectificar implements Serializable {
             periodoSelected = periodoEjb.find(periodoSelected.getPeriodoId());
             if(periodoSelected.getEstadoPeriodoId().getEstadoPeriodoId()==2){
                 contenidosRectificar = contenidoEjb.getRectificar(periodoSelected, profesor);
-                contenidosRectificados = contenidoEjb.getRectificados(periodoSelected, profesor);
+                //contenidosRectificados = contenidoEjb.getRectificados(periodoSelected, profesor);
             }else{
                 System.out.println("ENTRO MENSAJE");
                 this.contenidoSelected = new Contenidotematico();
@@ -244,15 +296,54 @@ public class mbvRectificar implements Serializable {
     }
     
     public void rectificarMateria(){
-        if(contenidoSelected.getContenidotematicoId()!=null){
-            contenidoSelected = contenidoEjb.find(contenidoSelected.getContenidotematicoId());
-            Estadocontenidotematico estadoAux = estadoContenidoEjb.find(3);
-            contenidoSelected.setEstado(estadoAux);
-            contenidoEjb.edit(contenidoSelected);
+        try {
+            if(!login){
+                System.out.println("Usuario NO logeado");
+                FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                return;
+            }
+            if(this.editar){
+                if(contenidoSelected.getContenidotematicoId()!=null){
+                    contenidoSelected = contenidoEjb.find(contenidoSelected.getContenidotematicoId());
+                    Estadocontenidotematico estadoAux = estadoContenidoEjb.find(3);
+                    contenidoSelected.setEstado(estadoAux);
+                    contenidoEjb.edit(contenidoSelected);
+                    contenidosRectificados = contenidoEjb.getRectificadosTodos(profesor);
+                    FacesContext.getCurrentInstance().
+                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "ahora puede rectificar notas de esta asignatura"));
+                }
+            }
+            else{
+                FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+            }
+        } catch (Exception e) {
         }
     }
     public void terminarRectificar(Contenidotematico contenicoAux){
-        
+        try {
+            if(!login){
+                System.out.println("Usuario NO logeado");
+                FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                return;
+            }
+            if(this.editar){
+                contenicoAux = contenidoEjb.find(contenicoAux.getContenidotematicoId());
+                Estadocontenidotematico estadoAux = estadoContenidoEjb.find(4);
+                contenicoAux.setEstado(estadoAux);
+                contenidoEjb.edit(contenicoAux);
+                contenidosRectificados = contenidoEjb.getRectificadosTodos(profesor);
+                FacesContext.getCurrentInstance().
+                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Rectificacion terminada"));
+            }
+            else{
+                FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+            }
+        } catch (Exception e) {
+        }
     }
     
     
@@ -301,6 +392,7 @@ public class mbvRectificar implements Serializable {
             this.profesor = aux;
             System.out.println("QQQQQ1" + this.profesor + "EEE1" + profesor.getNombre());
             if(profesor.getEstadoProfesorId().getEstadoProfesorId()==1){
+                contenidosRectificados = contenidoEjb.getRectificadosTodos(profesor);
                 //profesor activo
                 System.out.println("entro 1");
                 anlectivos = anlectivoEjb.getAñosEnUso();

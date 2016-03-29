@@ -7,8 +7,11 @@ package com.tesis.managedbeans;
 import com.tesis.beans.AnlectivoFacade;
 import com.tesis.beans.CriterioevaluacionFacade;
 import com.tesis.beans.FormacriterioevaluacionFacade;
+import com.tesis.beans.UsuarioRoleFacade;
 import com.tesis.entity.Criterioevaluacion;
 import com.tesis.entity.Formacriterioevaluacion;
+import com.tesis.entity.Usuario;
+import com.tesis.entity.UsuarioRole;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
@@ -39,14 +42,30 @@ public class mbvcriterioevaluacion implements Serializable {
     private List<Formacriterioevaluacion> fcriterios;
     private Formacriterioevaluacion fcriterioselected;
     private String nomoriginal;
+    private boolean login;
+    private boolean consultar;
+    private boolean editar;
+    private boolean crear;
+    private boolean eliminar;
+    private Usuario usr;
     @EJB
     private CriterioevaluacionFacade criterioevalEjb;
     @EJB
     private FormacriterioevaluacionFacade fcriterioejb;
     @EJB
     private AnlectivoFacade anlectivoEjb;
-
+    @EJB
+    private UsuarioRoleFacade usrRoleEjb;
+    
     public mbvcriterioevaluacion() {
+    }
+
+    public boolean isConsultar() {
+        return consultar;
+    }
+
+    public boolean isCrear() {
+        return crear;
     }
 
     public List<Formacriterioevaluacion> getFcriterios() {
@@ -104,6 +123,43 @@ public class mbvcriterioevaluacion implements Serializable {
         this.criterioseval = this.criterioevalEjb.findAll();
         this.fcriterios = this.fcriterioejb.findAll();
         this.fcriterioselected = new Formacriterioevaluacion();
+        this.consultar=false;
+        this.editar=false;
+        this.eliminar=false;
+        this.crear=false;
+        try {
+            mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
+             usr = mbslogin.getUsuario();
+             this.login = mbslogin.isLogin();
+            System.out.println("usuario"+usr.getNombres()+"Login"+login);
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            this.login = false;
+        }
+        if(this.usr!=null){
+            for(UsuarioRole usrRol:usrRoleEjb.getByUser(usr)){
+                if(usrRol.getRoleId().getRecursoId().getRecursoId()==11){
+                    if(usrRol.getRoleId().getAgregar()){
+                        this.crear=true;
+                    }
+                    if(usrRol.getRoleId().getConsultar()){
+                        this.consultar=true;
+                    }
+                    if(usrRol.getRoleId().getEditar()){
+                        this.editar=true;
+                    }
+                    if(usrRol.getRoleId().getEliminar()){
+                        this.eliminar=true;
+                    }
+                }
+            }
+        }
+        if(this.usr.getTipoUsuarioId().getTipoUsuarioId()==4){
+            this.consultar=true;
+            this.editar=true;
+            this.eliminar=true;
+            this.crear=true;
+        }
         //this.criterioeval.setFormacriterioevaluacionId(fcriterioselected);
         //this.dialogEdit=false;
     }
@@ -126,12 +182,25 @@ public class mbvcriterioevaluacion implements Serializable {
 
     public void insertar() {
         try {
-            criterioeval.setFormacriterioevaluacionId(fcriterioselected);
-            RequestContext.getCurrentInstance().closeDialog(this);
-            criterioevalEjb.create(criterioeval);
-            FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Criterio Evaluacion creado Satisfactoriamente", ""));
-            inicioPagina();
+            if(!login){
+                System.out.println("Usuario NO logeado");
+                FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                return;
+            }
+            if(this.crear){
+                criterioeval.setFormacriterioevaluacionId(fcriterioselected);
+                RequestContext.getCurrentInstance().closeDialog(this);
+                criterioevalEjb.create(criterioeval);
+                FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Criterio Evaluacion editado Satisfactoriamente", ""));
+                inicioPagina();
+            }
+            else{
+                System.out.print("error permiso denegado");
+                FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+            }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
@@ -146,13 +215,26 @@ public class mbvcriterioevaluacion implements Serializable {
 
     public void actualizar() {
         try {
-            this.fcriterioselected = this.fcriterioejb.find(fcriterioselected.getFormacriterioevaluacionId());
-            criterioeval.setFormacriterioevaluacionId(fcriterioselected);
-            criterioevalEjb.edit(criterioeval);
-            FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Criterio de Evaluacion creado Satisfactoriamente", ""));
-            RequestContext.getCurrentInstance().execute("PF('dialogoEditarEscala').hide()");
-            inicioPagina();
+            if(!login){
+                System.out.println("Usuario NO logeado");
+                FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                return;
+            }
+            if(this.editar){
+                this.fcriterioselected = this.fcriterioejb.find(fcriterioselected.getFormacriterioevaluacionId());
+                criterioeval.setFormacriterioevaluacionId(fcriterioselected);
+                criterioevalEjb.edit(criterioeval);
+                FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Criterio de Evaluacion creado Satisfactoriamente", ""));
+                RequestContext.getCurrentInstance().execute("PF('dialogoEditarEscala').hide()");
+                inicioPagina();
+            }
+            else{
+                System.out.print("error permiso denegado");
+                FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+            }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
@@ -161,14 +243,26 @@ public class mbvcriterioevaluacion implements Serializable {
 
     public void cargarCriterioseval(int criterioevalid) {
         try {
-            this.criterioeval = this.criterioevalEjb.find(criterioevalid);
-            if(!anlectivoEjb.criterioEnUso(criterioeval)){
-                this.fcriterioselected = this.fcriterioejb.find(criterioeval.getFormacriterioevaluacionId().getFormacriterioevaluacionId());
-                this.nomoriginal = criterioeval.getNombre();
-                RequestContext.getCurrentInstance().update("frmEditarEscala:panelEditarEscala");
-                RequestContext.getCurrentInstance().execute("PF('dialogoEditarEscala').show()");
-            }else{
-                RequestContext.getCurrentInstance().execute("PF('enUso').show()"); 
+            if(!login){
+                System.out.println("Usuario NO logeado");
+                FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                return;
+            }
+            if(this.editar){
+                this.criterioeval = this.criterioevalEjb.find(criterioevalid);
+                if(!anlectivoEjb.criterioEnUso(criterioeval)){
+                    this.fcriterioselected = this.fcriterioejb.find(criterioeval.getFormacriterioevaluacionId().getFormacriterioevaluacionId());
+                    this.nomoriginal = criterioeval.getNombre();
+                    RequestContext.getCurrentInstance().update("frmEditarEscala:panelEditarEscala");
+                    RequestContext.getCurrentInstance().execute("PF('dialogoEditarEscala').show()");
+                }else{
+                    RequestContext.getCurrentInstance().execute("PF('enUso').show()"); 
+                }
+            }
+            else{
+                FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
@@ -177,34 +271,65 @@ public class mbvcriterioevaluacion implements Serializable {
     }
 
     public void newCriterioEval() {
-        Map<String, Object> options = new HashMap<String, Object>();
-        /*options.put("contentHeight", 340);
-         options.put("height", 400);
-         options.put("width",700);*/
-        options.put("modal", true);
-        options.put("draggable", true);
-        options.put("resizable", true);
-        RequestContext.getCurrentInstance().openDialog("newcriterioeval", options, null);
+        if(!login){
+            System.out.println("Usuario NO logeado");
+            FacesContext.getCurrentInstance().
+                   addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+            return;
+        }
+        if(this.crear){
+            Map<String, Object> options = new HashMap<String, Object>();
+            /*options.put("contentHeight", 340);
+             options.put("height", 400);
+             options.put("width",700);*/
+            options.put("modal", true);
+            options.put("draggable", true);
+            options.put("resizable", true);
+            RequestContext.getCurrentInstance().openDialog("newcriterioeval", options, null);
+        }
+        else{
+            FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+        }
     }
     
     public void eliminarCriterio(Criterioevaluacion criterioeval) {
         try {
-            //this.escala = this.escalaEjb.find(escalaid);
-            System.out.println("ELIMINAR CRITERIO :"+criterioeval);
-            if(criterioevalEjb.removeById(criterioeval)==true){
-                //inicioPagina();
-                //RequestContext.getCurrentInstance().update("frmEditarEscala"); 
+            if(!login){
+                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Criterio de Evaluacion","eliminada"));
-            }else{
-                //RequestContext.getCurrentInstance().update("frmEditarEscala:mensajeGeneral");
-                FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Criterio de Evaluacion","esta criterio esta en uso"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                return;
             }
-            inicioPagina();
+            if(this.eliminar){
+                //this.escala = this.escalaEjb.find(escalaid);
+                System.out.println("ELIMINAR CRITERIO :"+criterioeval);
+                if(criterioevalEjb.removeById(criterioeval)==true){
+                    //inicioPagina();
+                    //RequestContext.getCurrentInstance().update("frmEditarEscala"); 
+                    FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Criterio de Evaluacion","eliminada"));
+                }else{
+                    //RequestContext.getCurrentInstance().update("frmEditarEscala:mensajeGeneral");
+                    FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Criterio de Evaluacion","esta criterio esta en uso"));
+                }
+                inicioPagina();
+            }
+            else{
+                System.out.print("error permiso denegado");
+                FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+            }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+        }
+    }
+    public void initRender(){
+        if(!this.consultar){
+            FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para manejar criterios de evaluacion"));
         }
     }
 }

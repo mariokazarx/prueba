@@ -136,6 +136,32 @@ public class EstudianteFacade extends AbstractFacade<Estudiante> {
         }
         
     }
+    public boolean existeIdentificacion(String identificacion) {
+        try {
+            Query cq = em.createNamedQuery("Estudiante.countCedula");
+            cq.setParameter("identificacion",identificacion);
+            if(cq.getSingleResult()!=null){
+                Long count = (Long) cq.getSingleResult();
+                System.out.println("Entra resultado "+count);
+                if(count != 0){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+            else{
+                System.out.println("ENTRA 2");
+                return false;
+            }
+        } catch (PersistenceException e) {
+            System.out.println("ENTRA 3");
+            return false;
+        }
+        catch (Exception e) {
+            System.out.println("ENTRA 4");
+            return false;
+        }
+    }
     private static void printResult(Object result) {
     if (result == null) {
       System.out.print("NULL");

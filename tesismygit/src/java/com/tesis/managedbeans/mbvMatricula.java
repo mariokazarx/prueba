@@ -11,6 +11,7 @@ import com.tesis.beans.CursoFacade;
 import com.tesis.beans.EstadoMatriculaFacade;
 import com.tesis.beans.EstudianteFacade;
 import com.tesis.beans.MatriculaFacade;
+import com.tesis.beans.UsuarioRoleFacade;
 import com.tesis.entity.Anlectivo;
 import com.tesis.entity.Aprobacion;
 import com.tesis.entity.Ciclo;
@@ -18,6 +19,8 @@ import com.tesis.entity.Curso;
 import com.tesis.entity.EstadoMatricula;
 import com.tesis.entity.Estudiante;
 import com.tesis.entity.Matricula;
+import com.tesis.entity.Usuario;
+import com.tesis.entity.UsuarioRole;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +58,12 @@ public class mbvMatricula implements Serializable {
     private String txtmensaje;
     private boolean contenidoSuspender;
     private boolean contenidoActivar;
+    private boolean login;
+    private boolean consultar;
+    private boolean editar;
+    private boolean crear;
+    private boolean eliminar;
+    private Usuario usr;
     @EJB
     private CicloFacade cicloEjb;
     @EJB
@@ -69,8 +78,18 @@ public class mbvMatricula implements Serializable {
     private AnlectivoFacade aEscolarEjb;
     @EJB
     private CursoFacade CursoEjb;
+    @EJB
+    private UsuarioRoleFacade usrRoleEjb;
     
     public mbvMatricula() {
+    }
+
+    public boolean isConsultar() {
+        return consultar;
+    }
+
+    public boolean isEditar() {
+        return editar;
     }
 
     public boolean isContenidoActivar() {
@@ -229,8 +248,46 @@ public class mbvMatricula implements Serializable {
                 .getExternalContext()
                 .getFlash()
                 .get("param1");
-        cargarDatos(aux);
+        
         estudiantes= estudianteEJb.findAll();
+        this.consultar=false;
+        this.editar=false;
+        this.eliminar=false;
+        this.crear=false;
+        try {
+            mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
+             usr = mbslogin.getUsuario();
+             this.login = mbslogin.isLogin();
+            System.out.println("usuario"+usr.getNombres()+"Login"+login);
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            this.login = false;
+        }
+        if(this.usr!=null){
+            for(UsuarioRole usrRol:usrRoleEjb.getByUser(usr)){
+                if(usrRol.getRoleId().getRecursoId().getRecursoId()==9){
+                    if(usrRol.getRoleId().getAgregar()){
+                        this.crear=true;
+                    }
+                    if(usrRol.getRoleId().getConsultar()){
+                        this.consultar=true;
+                    }
+                    if(usrRol.getRoleId().getEditar()){
+                        this.editar=true;
+                    }
+                    if(usrRol.getRoleId().getEliminar()){
+                        this.eliminar=true;
+                    }
+                }
+            }
+        }
+        if(this.usr.getTipoUsuarioId().getTipoUsuarioId()==4){
+            this.consultar=true;
+            this.editar=true;
+            this.eliminar=true;
+            this.crear=true;
+        }
+        cargarDatos(aux);
     }
 
     public void cargarCursos() {
@@ -263,6 +320,10 @@ public class mbvMatricula implements Serializable {
     }
     private void cargarDatos(Estudiante aux){
         if (aux != null) {
+            if(!this.editar){
+                FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+            }
             this.mostrarPrincipal = true;
             this.estudiante = estudianteEJb.find(aux.getEstudianteId());
             System.out.println("QQQQQ1" + this.estudiante + "EEE1" + estudiante.getNombre()+"estado"+estudiante.getEstadoEstudianteId());
@@ -422,25 +483,37 @@ public class mbvMatricula implements Serializable {
     }
     public void matricularEstudiante() {
         try {
-            System.out.println("curso");
-            if (cursoSelected != null) {
-                cursoSelected = CursoEjb.find(cursoSelected.getCursoId());
-                EstadoMatricula esmatricula = new EstadoMatricula();
-                esmatricula = estadomatriculaEjB.find(1);
-                Aprobacion aprobacion = new Aprobacion();
-                aprobacion = aprobacionEjb.find(1);
-                this.matricula.setAprobacionId(aprobacion);
-                this.matricula.setCursoId(cursoSelected);
-                this.matricula.setEstadoMatriculaId(esmatricula);
-                this.matricula.setEstudianteId(estudiante);
-                matriculaEjb.create(matricula);
-                this.contenidoMatricular = false;
-                this.contenidoCambiar = true;
-                this.contenidoCancelar = true;
+            if(!login){
+                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Matricula exitosa", "Estudiante matriulado al Ciclo "+cursoSelected.getCicloId().getNumero()+ " Curso "+cursoSelected.getNombre()));
-                
-                //inicio();
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                return;
+            }
+            if(this.editar){
+                System.out.println("curso");
+                if (cursoSelected != null) {
+                    cursoSelected = CursoEjb.find(cursoSelected.getCursoId());
+                    EstadoMatricula esmatricula = new EstadoMatricula();
+                    esmatricula = estadomatriculaEjB.find(1);
+                    Aprobacion aprobacion = new Aprobacion();
+                    aprobacion = aprobacionEjb.find(1);
+                    this.matricula.setAprobacionId(aprobacion);
+                    this.matricula.setCursoId(cursoSelected);
+                    this.matricula.setEstadoMatriculaId(esmatricula);
+                    this.matricula.setEstudianteId(estudiante);
+                    matriculaEjb.create(matricula);
+                    this.contenidoMatricular = false;
+                    this.contenidoCambiar = true;
+                    this.contenidoCancelar = true;
+                    FacesContext.getCurrentInstance().
+                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Matricula exitosa", "Estudiante matriulado al Ciclo "+cursoSelected.getCicloId().getNumero()+ " Curso "+cursoSelected.getNombre()));
+
+                    //inicio();
+                }
+            }
+            else{
+                FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
             }
         } catch (Exception e) {
             System.out.println("ooooOOOO"+e.toString());
@@ -449,17 +522,41 @@ public class mbvMatricula implements Serializable {
 
     }
     public void cancelarMatricula(){
-        EstadoMatricula esmatricula = new EstadoMatricula();
-        esmatricula = estadomatriculaEjB.find(2);
-        this.matricula.setEstadoMatriculaId(esmatricula);
-        matriculaEjb.edit(matricula);
-        contenidoMatricular=true;
-        contenidoCancelar=false;
+        if(!login){
+            System.out.println("Usuario NO logeado");
+            FacesContext.getCurrentInstance().
+                   addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+            return;
+        }
+        if(this.editar){
+            EstadoMatricula esmatricula = new EstadoMatricula();
+            esmatricula = estadomatriculaEjB.find(2);
+            this.matricula.setEstadoMatriculaId(esmatricula);
+            matriculaEjb.edit(matricula);
+            contenidoMatricular=true;
+            contenidoCancelar=false;
+        }
+        else{
+            FacesContext.getCurrentInstance().
+                   addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+        }
     }
     public void cambiarMatricularEstudiante(){
-        if(cursoSelected!=null){
-            this.matricula.setCursoId(cursoSelected);
-            matriculaEjb.edit(matricula);
+        if(!login){
+            System.out.println("Usuario NO logeado");
+            FacesContext.getCurrentInstance().
+                   addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+            return;
+        }
+        if(this.editar){
+            if(cursoSelected!=null){
+                this.matricula.setCursoId(cursoSelected);
+                matriculaEjb.edit(matricula);
+            }
+        }
+        else{
+            FacesContext.getCurrentInstance().
+                   addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
         }
     }
     public void initRender(){
@@ -468,7 +565,10 @@ public class mbvMatricula implements Serializable {
             FacesContext.getCurrentInstance().
                 addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Aun no ha iniciado el año escolar"));
         }else{
-            
+            if(!this.consultar){
+                FacesContext.getCurrentInstance().
+                           addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para manejar criterios de evaluacion"));
+            }
         }
     }
     public String getMatricula(Estudiante estAux){
@@ -482,18 +582,30 @@ public class mbvMatricula implements Serializable {
     }
     public void suspenderMatricula(){
         try {
-            EstadoMatricula esmatricula = new EstadoMatricula();
-            esmatricula = estadomatriculaEjB.find(3);
-            this.matricula.setEstadoMatriculaId(esmatricula);
-            FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Matricula suspendida exitosamente", ""));
-            matriculaEjb.edit(matricula);
-            contenidoMatricular=false;
-            contenidoCancelar=false;
-            contenidoCambiar = false;
-            contenidoActivar = true;
-            contenidoSuspender = false;
-            this.matriculaEjb.edit(matricula);
+            if(!login){
+                System.out.println("Usuario NO logeado");
+                FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                return;
+            }
+            if(this.editar){
+                EstadoMatricula esmatricula = new EstadoMatricula();
+                esmatricula = estadomatriculaEjB.find(3);
+                this.matricula.setEstadoMatriculaId(esmatricula);
+                FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Matricula suspendida exitosamente", ""));
+                matriculaEjb.edit(matricula);
+                contenidoMatricular=false;
+                contenidoCancelar=false;
+                contenidoCambiar = false;
+                contenidoActivar = true;
+                contenidoSuspender = false;
+                this.matriculaEjb.edit(matricula);
+            }
+            else{
+                FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+            }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Error", "error inesperado"));
@@ -503,18 +615,30 @@ public class mbvMatricula implements Serializable {
     }
     public void activarMatricula(){
         try {
-            EstadoMatricula esmatricula = new EstadoMatricula();
-            esmatricula = estadomatriculaEjB.find(1);
-            this.matricula.setEstadoMatriculaId(esmatricula);
-            matriculaEjb.edit(matricula);
-            contenidoMatricular=false;
-            contenidoCancelar=true;
-            contenidoCambiar = false;
-            contenidoActivar = false;
-            contenidoSuspender = true;
-            this.matriculaEjb.edit(matricula);
-            FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Matricula activada exitosamente", ""));
+            if(!login){
+                System.out.println("Usuario NO logeado");
+                FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                return;
+            }
+            if(this.editar){
+                EstadoMatricula esmatricula = new EstadoMatricula();
+                esmatricula = estadomatriculaEjB.find(1);
+                this.matricula.setEstadoMatriculaId(esmatricula);
+                matriculaEjb.edit(matricula);
+                contenidoMatricular=false;
+                contenidoCancelar=true;
+                contenidoCambiar = false;
+                contenidoActivar = false;
+                contenidoSuspender = true;
+                this.matriculaEjb.edit(matricula);
+                FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Matricula activada exitosamente", ""));
+            }
+            else{
+                FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+            }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Error", "error inesperado"));

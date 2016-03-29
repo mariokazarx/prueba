@@ -67,6 +67,10 @@ public class mbvAlectivo implements Serializable {
     private Anlectivo anlectivo;
     private Usuario usr;
     private boolean login;
+    private boolean consultar;
+    private boolean editar;
+    private boolean crear;
+    private boolean eliminar;
     private Configuracion configuracionselected;
     private EstadoAniolectivo estadoAlectivoselected;
     private EstadoAniolectivo estadoAlectivoselectedAux;
@@ -125,6 +129,14 @@ public class mbvAlectivo implements Serializable {
     @Resource
     UserTransaction tx;
     public mbvAlectivo() {
+    }
+
+    public boolean isConsultar() {
+        return consultar;
+    }
+
+    public boolean isCrear() {
+        return crear;
     }
 
     public String getCopia() {
@@ -250,17 +262,42 @@ public class mbvAlectivo implements Serializable {
     @PostConstruct
     public void inicioPagina() {
         //this.año = 0;
+        this.consultar=false;
+        this.editar=false;
+        this.eliminar=false;
+        this.crear=false;
         try {
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
              usr = mbslogin.getUsuario();
-             login = mbslogin.isLogin();
+             this.login = mbslogin.isLogin();
             System.out.println("usuario"+usr.getNombres()+"Login"+login);
         } catch (Exception e) {
             System.out.println(e.toString());
-            login=false;
+            this.login = false;
         }
-        if(this.usr.getUsuarioId()==null){
-            login=false;
+        if(this.usr!=null){
+            for(UsuarioRole usrRol:usrRoleEjb.getByUser(usr)){
+                if(usrRol.getRoleId().getRecursoId().getRecursoId()==1){
+                    if(usrRol.getRoleId().getAgregar()){
+                        this.crear=true;
+                    }
+                    if(usrRol.getRoleId().getConsultar()){
+                        this.consultar=true;
+                    }
+                    if(usrRol.getRoleId().getEditar()){
+                        this.editar=true;
+                    }
+                    if(usrRol.getRoleId().getEliminar()){
+                        this.eliminar=true;
+                    }
+                }
+            }
+        }
+        if(this.usr.getTipoUsuarioId().getTipoUsuarioId()==4){
+            this.consultar=true;
+            this.editar=true;
+            this.eliminar=true;
+            this.crear=true;
         }
         this.estCopia = false;
         this.anlectivo = new Anlectivo();
@@ -284,27 +321,17 @@ public class mbvAlectivo implements Serializable {
         System.out.println("INSERTAR" + año + "---" + configuracionselected + ":::" + anlectivo.getDescripcion());
         try {
             if(!login){
-                this.mensage = true;
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
                 return;
             }
-            boolean permiso=false;
-            //6 recurso escalas
-            if(this.usr!=null){
-                for(UsuarioRole usrRol:usrRoleEjb.getByUser(usr)){
-                    if(usrRol.getRoleId().getRecursoId().getRecursoId()==1){
-                        if(usrRol.getRoleId().getAgregar()){
-                            permiso=true;
-                        }
-                    }
+            if(this.crear){
+                if(anlectivoEjb.existeAño(año)){
+                    FacesContext.getCurrentInstance().
+                        addMessage("frmAlectivo:selectaño", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "año en uso"));
+                    return;
                 }
-            }
-            if(this.usr.getTipoUsuarioId().getTipoUsuarioId()==4){
-                permiso=true;
-            }
-            if(permiso){
                 EstadoAniolectivo est = new EstadoAniolectivo();
                 est = estadoAlectivoEjb.find(1);
                 this.anlectivo.setEstadoAniolectivoId(est);
@@ -342,28 +369,20 @@ public class mbvAlectivo implements Serializable {
     public void actualizar() {
         try {
             if(!login){
-                this.mensage = true;
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
                 return;
             }
-            boolean permiso=false;
-            //6 recurso escalas
-            if(this.usr!=null){
-                for(UsuarioRole usrRol:usrRoleEjb.getByUser(usr)){
-                    if(usrRol.getRoleId().getRecursoId().getRecursoId()==1){
-                        if(usrRol.getRoleId().getEditar()){
-                            permiso=true;
-                        }
-                    }
-                }
-            }
-            if(this.usr.getTipoUsuarioId().getTipoUsuarioId()==4){
-                permiso=true;
-            }
-            if(permiso){
+            if(this.editar){
                 tx.begin();
+                if(anlectivoEjb.existeAño(año) && año != anlectivo.getAnio()){
+                    FacesContext.getCurrentInstance().
+                        addMessage("frmEditarAlectivo:selectaño", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "año en uso"));
+                    tx.rollback();
+                    return;
+                }
+                //revisar editar 
                 System.out.println("AUX"+this.estadoAlectivoselectedAux.getEstadoAniolectivoId()+"cambio"+this.estadoAlectivoselected.getEstadoAniolectivoId());
                 if(this.estadoAlectivoselected.getEstadoAniolectivoId() != this.estadoAlectivoselectedAux.getEstadoAniolectivoId()){
                     if(anlectivoEjb.existActivo() && estadoAlectivoselected.getEstadoAniolectivoId()==5){
@@ -381,7 +400,7 @@ public class mbvAlectivo implements Serializable {
                 this.estadoAlectivoselected = this.estadoAlectivoEjb.find(estadoAlectivoselected.getEstadoAniolectivoId());
                 this.anlectivo.setConfiguracionId(configuracionselected);
                 this.anlectivo.setEstadoAniolectivoId(estadoAlectivoselected);
-                
+                this.anlectivo.setAnio(año);
                 if(estadoAlectivoselected.getEstadoAniolectivoId()==3){
                     if(periodoEjb.getNumeroPeriodosAño(anlectivo)!=periodoEjb.getNumeroPeriodosTerminadosAño(anlectivo)){
                         FacesContext.getCurrentInstance().
@@ -500,45 +519,57 @@ public class mbvAlectivo implements Serializable {
 
     public void cargarAnlectivo(int anlectivoId) {
         try {
-            this.anlectivo = this.anlectivoEjb.find(anlectivoId);
-            this.año = this.anlectivo.getAnio();
-            this.configuracionselected = this.configuracionEjb.find(anlectivo.getConfiguracionId().getConfiguracionId());
-            this.estadoAlectivoselected = this.estadoAlectivoEjb.find(this.anlectivo.getEstadoAniolectivoId().getEstadoAniolectivoId());
-            this.estadoAlectivoselectedAux = this.estadoAlectivoEjb.find(this.anlectivo.getEstadoAniolectivoId().getEstadoAniolectivoId());
-            if(anlectivo.getTerminado()){
-                this.estadosAlectivos = this.estadoAlectivoEjb.getEstadosAnTerminado();
-                this.mostrarEditar = false;
-                this.mostrarLabel = true;
-            }else{
-                this.estadosAlectivos = this.estadoAlectivoEjb.findAll();
+            if(!login){
+                System.out.println("Usuario NO logeado");
+                FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                return;
             }
-            if(this.anlectivo.getEstadoAniolectivoId().getEstadoAniolectivoId()==1){
-                //inactivo
-                this.mostrarEditar = true;
-                this.mostrarLabel = false;
-                this.estadosAlectivos.clear();
-                EstadoAniolectivo estAux = estadoAlectivoEjb.find(1);
-                EstadoAniolectivo estAux2 = estadoAlectivoEjb.find(2);
-                EstadoAniolectivo estAux3 = estadoAlectivoEjb.find(4);
-                this.estadosAlectivos.add(estAux);
-                this.estadosAlectivos.add(estAux2);
-                this.estadosAlectivos.add(estAux3);
+            if(this.editar){
+                this.anlectivo = this.anlectivoEjb.find(anlectivoId);
+                this.año = this.anlectivo.getAnio();
+                this.configuracionselected = this.configuracionEjb.find(anlectivo.getConfiguracionId().getConfiguracionId());
+                this.estadoAlectivoselected = this.estadoAlectivoEjb.find(this.anlectivo.getEstadoAniolectivoId().getEstadoAniolectivoId());
+                this.estadoAlectivoselectedAux = this.estadoAlectivoEjb.find(this.anlectivo.getEstadoAniolectivoId().getEstadoAniolectivoId());
+                if(anlectivo.getTerminado()){
+                    this.estadosAlectivos = this.estadoAlectivoEjb.getEstadosAnTerminado();
+                    this.mostrarEditar = false;
+                    this.mostrarLabel = true;
+                }else{
+                    this.estadosAlectivos = this.estadoAlectivoEjb.findAll();
+                }
+                if(this.anlectivo.getEstadoAniolectivoId().getEstadoAniolectivoId()==1){
+                    //inactivo
+                    this.mostrarEditar = true;
+                    this.mostrarLabel = false;
+                    this.estadosAlectivos.clear();
+                    EstadoAniolectivo estAux = estadoAlectivoEjb.find(1);
+                    EstadoAniolectivo estAux2 = estadoAlectivoEjb.find(2);
+                    EstadoAniolectivo estAux3 = estadoAlectivoEjb.find(4);
+                    this.estadosAlectivos.add(estAux);
+                    this.estadosAlectivos.add(estAux2);
+                    this.estadosAlectivos.add(estAux3);
+                }
+                if(this.anlectivo.getEstadoAniolectivoId().getEstadoAniolectivoId()==2){
+                    //iniciado
+                    this.mostrarEditar = false;
+                    this.mostrarLabel = true;
+                    this.estadosAlectivos.clear();
+                    EstadoAniolectivo estAux = estadoAlectivoEjb.find(3);
+                    EstadoAniolectivo estAux2 = estadoAlectivoEjb.find(4);
+                    EstadoAniolectivo estAux3 = estadoAlectivoEjb.find(2);
+                    this.estadosAlectivos.add(estAux);
+                    this.estadosAlectivos.add(estAux2);
+                    this.estadosAlectivos.add(estAux3);
+                }
+                //this.areas = this.confuguracionselected.getAreaList();
+                RequestContext.getCurrentInstance().update("frmEditarAlectivo:panelEditarAlectivo");
+                RequestContext.getCurrentInstance().execute("PF('dialogoEditarAlectivo').show()");
             }
-            if(this.anlectivo.getEstadoAniolectivoId().getEstadoAniolectivoId()==2){
-                //iniciado
-                this.mostrarEditar = false;
-                this.mostrarLabel = true;
-                this.estadosAlectivos.clear();
-                EstadoAniolectivo estAux = estadoAlectivoEjb.find(3);
-                EstadoAniolectivo estAux2 = estadoAlectivoEjb.find(4);
-                EstadoAniolectivo estAux3 = estadoAlectivoEjb.find(2);
-                this.estadosAlectivos.add(estAux);
-                this.estadosAlectivos.add(estAux2);
-                this.estadosAlectivos.add(estAux3);
+            else{
+                FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
             }
-            //this.areas = this.confuguracionselected.getAreaList();
-            RequestContext.getCurrentInstance().update("frmEditarAlectivo:panelEditarAlectivo");
-            RequestContext.getCurrentInstance().execute("PF('dialogoEditarAlectivo').show()");
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
@@ -546,14 +577,26 @@ public class mbvAlectivo implements Serializable {
     }
 
     public void newAnlectivo() {
-        Map<String, Object> options = new HashMap<String, Object>();
-        /*options.put("contentHeight", 340);
-         options.put("height", 400);
-         options.put("width",700);*/
-        options.put("modal", true);
-        options.put("draggable", true);
-        options.put("resizable", true);
-        RequestContext.getCurrentInstance().openDialog("newAnlectivo", options, null);
+        if(!login){
+            System.out.println("Usuario NO logeado");
+            FacesContext.getCurrentInstance().
+                   addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+            return;
+        }
+        if(this.crear){
+            Map<String, Object> options = new HashMap<String, Object>();
+            /*options.put("contentHeight", 340);
+             options.put("height", 400);
+             options.put("width",700);*/
+            options.put("modal", true);
+            options.put("draggable", true);
+            options.put("resizable", true);
+            RequestContext.getCurrentInstance().openDialog("newAnlectivo", options, null);
+        }
+        else{
+            FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+        }
     }
 
     public void cargarCopia() {
@@ -568,27 +611,12 @@ public class mbvAlectivo implements Serializable {
     public void eliminarAnlectivo(Anlectivo anlectivo) {
         try {
             if(!login){
-                this.mensage = true;
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
                 return;
             }
-            boolean permiso=false;
-            //6 recurso escalas
-            if(this.usr!=null){
-                for(UsuarioRole usrRol:usrRoleEjb.getByUser(usr)){
-                    if(usrRol.getRoleId().getRecursoId().getRecursoId()==1){
-                        if(usrRol.getRoleId().getEliminar()){
-                            permiso=true;
-                        }
-                    }
-                }
-            }
-            if(this.usr.getTipoUsuarioId().getTipoUsuarioId()==4){
-                permiso=true;
-            }
-            if(permiso){
+            if(this.eliminar){
                 //this.escala = this.escalaEjb.find(escalaid);
                 //System.out.println("ELIMINAR CRITERIO :"+criterioeval);
                 if(anlectivoEjb.removeById(anlectivo)==true){
@@ -612,6 +640,12 @@ public class mbvAlectivo implements Serializable {
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+        }
+    }
+    public void initRender(){
+        if(!this.consultar){
+            FacesContext.getCurrentInstance().
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para manejar criterios de evaluacion"));
         }
     }
 }

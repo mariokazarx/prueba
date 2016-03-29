@@ -77,6 +77,25 @@ public class PeriodoFacade extends AbstractFacade<Periodo> {
             return null;
         }
     }
+    public Integer getMaxByAnio(Anlectivo anio) {
+        try {
+            Query cq = em.createNamedQuery("Periodo.findMax");
+            cq.setParameter("anlectivoId", anio);
+            if (cq.getResultList() != null) {
+                return (Integer) cq.getSingleResult();
+            } else {
+                return null;
+            }
+        } catch (PersistenceException e) {
+            System.out.println("llega b");
+            e.printStackTrace();
+            return null;
+        } catch (Exception e) {
+            System.out.println("llega c");
+            e.printStackTrace();
+            return null;
+        }
+    }
     public List<Periodo> getPeriodosByAnioActivo(Anlectivo anlectivoId) {
         try {
             Query cq = em.createNamedQuery("Periodo.findActivoByAnio");

@@ -12,60 +12,66 @@
 
             <ui:define name="content">
                 <h:form id="frmListaEscala">
-                    <p:commandButton value="Nuevo criterio de evaluacion" icon="ui-icon-document" actionListener="#{mbvcriterioevaluacion.newCriterioEval}">
-                        <p:ajax event="dialogReturn" listener="#{mbvcriterioevaluacion.closeDialog}" update="frmListaEscala" />
-                    </p:commandButton>
+                    <f:metadata>
+                        <f:event type="preRenderView" listener="#{mbvcriterioevaluacion.initRender}" />
+                    </f:metadata>
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
-                    <p:dataTable id="tablaListaEscala" var="item" value="#{mbvcriterioevaluacion.criterioseval}" tableStyle="width:auto" reflow="true" paginator="true" rows="10" selection="#{mbvcriterioevaluacion.criterioeval}" selectionMode="single" rowKey="#{item.criterioevaluacionId}" >
-                        <p:ajax event="rowSelect" update=":frmListaEscala:panelDetalleEscala" oncomplete="PF('dialogoDetalleEscala').show()"/>
-                        <f:facet name="header">
-                            Criterios de valiacion
-                        </f:facet>
-                        <p:column headerText="Nombre" filterBy="#{item.nombre}" filterMatchMode="contains" sortBy="#{item.nombre}">
-                            <h:outputText value="#{item.nombre}"/>
-                        </p:column>
-                        <p:column headerText="Descripcion" filterBy="descripcion">
-                            <h:outputText value="#{item.descripcion}"/>
-                        </p:column>
-                        <p:column headerText="Criterio de aprobacion" filterBy="max">
-                            <h:outputText value="#{item.formacriterioevaluacionId.nombre}"/>
-                        </p:column>
-                        <p:column headerText="Minimo para aprobar" filterBy="min">
-                            <h:outputText value="#{item.minaprob}"/>
-                        </p:column>
-                        <p:column>
-                            <p:commandButton value="Editar" icon="ui-icon-pencil" actionListener="#{mbvcriterioevaluacion.cargarCriterioseval(item.criterioevaluacionId)}"/>
-                        </p:column>
-                        <p:column rendered="true">
-                            <p:commandButton value="Eliminar" update=":frmRemoveCriterio:display" oncomplete="PF('removecriterio').show();" icon="ui-icon-search" title="View">
-                                <f:setPropertyActionListener value="#{item}" target="#{mbvcriterioevaluacion.criterioeval}" />
-                            </p:commandButton>
-                        </p:column>
-                    </p:dataTable>
+                    <h:panelGroup rendered="#{mbvcriterioevaluacion.consultar}">
+                        <p:commandButton value="Nuevo criterio de evaluacion" icon="ui-icon-document" ajax="true" update="frmListaEscala" actionListener="#{mbvcriterioevaluacion.newCriterioEval}">
+                            <p:ajax event="dialogReturn" listener="#{mbvcriterioevaluacion.closeDialog}" update="frmListaEscala" />
+                        </p:commandButton>
+                        
+                        <p:dataTable id="tablaListaEscala" var="item" value="#{mbvcriterioevaluacion.criterioseval}" tableStyle="width:auto" reflow="true" paginator="true" rows="10" selection="#{mbvcriterioevaluacion.criterioeval}" selectionMode="single" rowKey="#{item.criterioevaluacionId}" >
+                            <p:ajax event="rowSelect" update=":frmListaEscala:panelDetalleEscala" oncomplete="PF('dialogoDetalleEscala').show()"/>
+                            <f:facet name="header">
+                                Criterios de valiacion
+                            </f:facet>
+                            <p:column headerText="Nombre" filterBy="#{item.nombre}" filterMatchMode="contains" sortBy="#{item.nombre}">
+                                <h:outputText value="#{item.nombre}"/>
+                            </p:column>
+                            <p:column headerText="Descripcion" filterBy="descripcion">
+                                <h:outputText value="#{item.descripcion}"/>
+                            </p:column>
+                            <p:column headerText="Criterio de aprobacion" filterBy="max">
+                                <h:outputText value="#{item.formacriterioevaluacionId.nombre}"/>
+                            </p:column>
+                            <p:column headerText="Minimo para aprobar" filterBy="min">
+                                <h:outputText value="#{item.minaprob}"/>
+                            </p:column>
+                            <p:column>
+                                <p:commandButton value="Editar" icon="ui-icon-pencil" ajax="true" update="frmListaEscala" actionListener="#{mbvcriterioevaluacion.cargarCriterioseval(item.criterioevaluacionId)}"/>
+                            </p:column>
+                            <p:column rendered="true">
+                                <p:commandButton value="Eliminar" update=":frmRemoveCriterio:display" oncomplete="PF('removecriterio').show();" icon="ui-icon-search" title="View">
+                                    <f:setPropertyActionListener value="#{item}" target="#{mbvcriterioevaluacion.criterioeval}" />
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
 
-                    <p:dialog header="Detalle de Escala" responsive="true" widgetVar="dialogoDetalleEscala" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
-                        <p:outputPanel id="panelDetalleEscala">
-                            <p:panelGrid columns="2">
-                                <p:outputLabel value="Nombre"/>
-                                <h:outputText value="#{mbvcriterioevaluacion.criterioeval.nombre}"/>
-                                <p:outputLabel value="Descripcion"/>
-                                <h:outputText value="#{mbvcriterioevaluacion.criterioeval.descripcion}"/>
-                                <p:outputLabel value="Criterio de aprobacion"/>
-                                <h:outputText value="#{mbvcriterioevaluacion.criterioeval.formacriterioevaluacionId.nombre}"/>
-                                <p:outputLabel value="Minimo para aprobar"/>
-                                <h:outputText value="#{mbvcriterioevaluacion.criterioeval.minaprob}"/>
-                            </p:panelGrid>
-                        </p:outputPanel>
-                    </p:dialog>  
+                        <p:dialog header="Detalle de Escala" responsive="true" widgetVar="dialogoDetalleEscala" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
+                            <p:outputPanel id="panelDetalleEscala">
+                                <p:panelGrid columns="2">
+                                    <p:outputLabel value="Nombre"/>
+                                    <h:outputText value="#{mbvcriterioevaluacion.criterioeval.nombre}"/>
+                                    <p:outputLabel value="Descripcion"/>
+                                    <h:outputText value="#{mbvcriterioevaluacion.criterioeval.descripcion}"/>
+                                    <p:outputLabel value="Criterio de aprobacion"/>
+                                    <h:outputText value="#{mbvcriterioevaluacion.criterioeval.formacriterioevaluacionId.nombre}"/>
+                                    <p:outputLabel value="Minimo para aprobar"/>
+                                    <h:outputText value="#{mbvcriterioevaluacion.criterioeval.minaprob}"/>
+                                </p:panelGrid>
+                            </p:outputPanel>
+                        </p:dialog>  
+                    </h:panelGroup>
                     <p:ajaxStatus onstart="PF('statusDialog').show()" oncomplete="PF('statusDialog').hide()" />
- 
+
                     <p:dialog widgetVar="statusDialog" appendTo="@(body)" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
                         <p:graphicImage library="imagenes" name="load1.gif"/>
                     </p:dialog>
-                    
+
                 </h:form>
-                
-                
+
+
                 <p:confirmDialog header="Eliminar Criterio Evaluacion" widgetVar="removecriterio" responsive="true" appendTo="@(body)" resizable="false" id="removeDlg"
                                  showEffect="clip" hideEffect="clip" modal="true" message="Esta Seguro que desea eliminar este criterio?">
                     <h:form id="frmRemoveCriterio">

@@ -6,7 +6,7 @@
       xmlns:f="http://java.sun.com/jsf/core">
     <h:head>
         <title>Nuevo Periodo</title>
-                <style type="text/css">
+        <style type="text/css">
             .ui-widget {
                 font-size: 90%;
             }
@@ -14,28 +14,17 @@
     </h:head>
     <h:body>
         <h:form id="frmPerioso">
-            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
-            <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
-            <h:panelGrid columns="3">
-                <p:outputLabel for="txtNumero" value="Numero: " />
-                <p:inputMask id="txtNumero" maxlength="1" mask="9" value="#{mbvPeriodo.periodo.numero}"/>
-                <p:message for="txtNumero"/>
-
-                <p:outputLabel for="txtFechaCierre" value="FechaCierre:" />
-                <p:calendar id="txtFechaCierre" value="#{mbvPeriodo.periodo.fechacierre}" mindate="4/1/14" maxdate="7/1/14" />
-                <p:message for="txtFechaCierre"/>
-
-                <p:outputLabel for="selectEstado" value="Estado:" />
-                <p:selectOneMenu id="selectEstado" value="#{mbvPeriodo.estadoSelected.estadoPeriodoId}">
-                    <f:selectItems value="#{mbvPeriodo.estados}" var="estado" itemLabel="#{estado.nombre}" itemValue="#{estado.estadoPeriodoId}"/>
-                </p:selectOneMenu>
-                <p:message for="selectEstado"/>
-
-                <h:panelGroup></h:panelGroup>
-
-                <h:panelGroup></h:panelGroup>
-                <p:commandButton value="Registrar Periodo" actionListener="#{mbvPeriodo.insertar}" ajax="true" update="frmPerioso" />
-            </h:panelGrid> 
+            <h:panelGroup rendered="#{mbvPeriodo.crear}">
+                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
+                <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
+                <h:panelGrid columns="2">
+                    <p:outputLabel for="txtNumero" value="Numero: " />
+                    <p:outputLabel id="txtNumero" value="#{mbvPeriodo.periodo.numero}"/>
+                    
+                    <h:panelGroup></h:panelGroup>
+                    <p:commandButton value="Registrar Periodo" actionListener="#{mbvPeriodo.insertar}" ajax="true" update="frmPerioso" />
+                </h:panelGrid> 
+            </h:panelGroup>
         </h:form>
     </h:body>
 </html>

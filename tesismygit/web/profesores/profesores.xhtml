@@ -10,55 +10,60 @@
         <ui:composition template="./../plantilla.xhtml">
             <ui:define name="content">
                 <h:form id="frmListaProfesor">
-                    <p:commandButton value="Nuevo Profesor" icon="ui-icon-document" actionListener="#{mbvProfesor.newProfesor}">
-                        <p:ajax event="dialogReturn" listener="#{mbvProfesor.closeDialog}" update="frmListaProfesor" />
-                    </p:commandButton>
+                    <f:metadata>
+                        <f:event type="preRenderView" listener="#{mbvProfesor.initRender}" />
+                    </f:metadata>
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
-                    <p:dataTable id="tablaListaProfesor" tableStyle="width:auto" reflow="true" var="item" value="#{mbvProfesor.profesores}" paginator="true" rows="10" selection="#{mbvProfesor.profesor}" selectionMode="single" lazy="true" rowKey="#{item.profesorId}" >
-                        <p:ajax event="rowSelect" update=":frmListaProfesor:panelDetalleProfesor" oncomplete="PF('dialogoDetalleProfesor').show()"/>
-                        <f:facet name="header">
-                            Lista de Profesores
-                        </f:facet>
-                        <p:column headerText="Cedula" filterBy="cedula">
-                            <h:outputText value="#{item.cedula}"/>
-                        </p:column>
-                        <p:column headerText="Nombres" filterBy="nombres">
-                            <h:outputText value="#{item.nombre}"/>
-                        </p:column>
-                        <p:column headerText="Apellidos" filterBy="apellidos">
-                            <h:outputText value="#{item.apellido}"/>
-                        </p:column>
-                        <p:column headerText="Direccion" filterBy="direccion">
-                            <h:outputText value="#{item.direccion}"/>
-                        </p:column>
-                        <p:column headerText="Telefono" filterBy="telefono">
-                            <h:outputText value="#{item.telefono}"/>
-                        </p:column>
-                        <p:column headerText="Correo" filterBy="correo">
-                            <h:outputText value="#{item.correo}"/>
-                        </p:column>
-                        <p:column>
-                            <p:commandButton value="Editar" icon="ui-icon-pencil" actionListener="#{mbvProfesor.cargarProfesor(item.profesorId)}"/>
-                        </p:column>
-                        <p:column>
-                            <p:commandButton value="Materias" icon="ui-icon-pencil" action="#{mbvProfesor.cargarMaterias(item)}"/>
-                        </p:column>
-                    </p:dataTable>
+                    <h:panelGroup rendered="#{mbvProfesor.consultar}">
+                        <p:commandButton value="Nuevo Profesor" icon="ui-icon-document" ajax="true" update="frmListaProfesor" actionListener="#{mbvProfesor.newProfesor}">
+                            <p:ajax event="dialogReturn" listener="#{mbvProfesor.closeDialog}" update="frmListaProfesor" />
+                        </p:commandButton>
+                        <p:dataTable id="tablaListaProfesor" tableStyle="width:auto" reflow="true" var="item" value="#{mbvProfesor.profesores}" paginator="true" rows="10" selection="#{mbvProfesor.profesor}" selectionMode="single" lazy="true" rowKey="#{item.profesorId}" >
+                            <p:ajax event="rowSelect" update=":frmListaProfesor:panelDetalleProfesor" oncomplete="PF('dialogoDetalleProfesor').show()"/>
+                            <f:facet name="header">
+                                Lista de Profesores
+                            </f:facet>
+                            <p:column headerText="Cedula" filterBy="cedula">
+                                <h:outputText value="#{item.cedula}"/>
+                            </p:column>
+                            <p:column headerText="Nombres" filterBy="nombres">
+                                <h:outputText value="#{item.nombre}"/>
+                            </p:column>
+                            <p:column headerText="Apellidos" filterBy="apellidos">
+                                <h:outputText value="#{item.apellido}"/>
+                            </p:column>
+                            <p:column headerText="Dirección" filterBy="direccion">
+                                <h:outputText value="#{item.direccion}"/>
+                            </p:column>
+                            <p:column headerText="Teléfono" filterBy="telefono">
+                                <h:outputText value="#{item.telefono}"/>
+                            </p:column>
+                            <p:column headerText="Correo" filterBy="correo">
+                                <h:outputText value="#{item.correo}"/>
+                            </p:column>
+                            <p:column>
+                                <p:commandButton value="Editar" icon="ui-icon-pencil" ajax="true" update="frmListaProfesor" actionListener="#{mbvProfesor.cargarProfesor(item.profesorId)}"/>
+                            </p:column>
+                            <p:column>
+                                <p:commandButton value="Asignación académica" ajax="true" update="frmListaProfesor" icon="ui-icon-pencil" action="#{mbvProfesor.cargarMaterias(item)}"/>
+                            </p:column>
+                        </p:dataTable>
 
-                    <p:dialog header="Detalle Profesor" widgetVar="dialogoDetalleProfesor" modal="true" responsive="true" appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
-                        <p:outputPanel id="panelDetalleProfesor">
-                            <p:panelGrid columns="2">
-                                <f:facet name="header">
-                                    <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/fotosprofesores/#{mbvProfesor.profesor.foto}" width="70" height="70" cache="false" alt="Sin definir" style="border-radius: 4px;box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7)"/>
-                                </f:facet>
-                                <p:outputLabel value="Cedula"/>
-                                <h:outputText value="#{mbvProfesor.profesor.cedula}"/>
+                        <p:dialog header="Detalle Profesor" widgetVar="dialogoDetalleProfesor" modal="true" responsive="true" appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
+                            <p:outputPanel id="panelDetalleProfesor">
+                                <p:panelGrid columns="2">
+                                    <f:facet name="header">
+                                        <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/fotosprofesores/#{mbvProfesor.profesor.foto}" width="70" height="70" cache="false" alt="Sin definir" style="border-radius: 4px;box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7)"/>
+                                    </f:facet>
+                                    <p:outputLabel value="Cedula"/>
+                                    <h:outputText value="#{mbvProfesor.profesor.cedula}"/>
 
-                            </p:panelGrid>
-                        </p:outputPanel>
-                    </p:dialog>    
+                                </p:panelGrid>
+                            </p:outputPanel>
+                        </p:dialog>    
+                    </h:panelGroup>
                     <p:ajaxStatus onstart="PF('statusDialog').show()" oncomplete="PF('statusDialog').hide()" />
- 
+
                     <p:dialog widgetVar="statusDialog" appendTo="@(body)" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
                         <p:graphicImage library="imagenes" name="load1.gif"/>
                     </p:dialog>
@@ -68,38 +73,41 @@
                         <p:outputPanel id="panelEditarProfesor" >
                             <h:panelGrid columns="3">
                                 <p:outputLabel for="txtCedula" value="Cedula: " />
-                                <p:inputText id="txtCedula" value="#{mbvProfesor.profesor.cedula}" size="50" >
+                                <p:inputText id="txtCedula" type="number" value="#{mbvProfesor.profesor.cedula}" size="30" validatorMessage="Cedula invalida" >
                                     <f:validator validatorId="validatorVacio"/>
+                                    <f:validateLength minimum="5" maximum="20" /> 
+                                    <f:validateDoubleRange minimum="0"/>
                                 </p:inputText>
                                 <p:message for="txtCedula"/>
                                 <p:outputLabel for="txtNombre" value="Nombres: " />
-                                <p:inputText id="txtNombre" value="#{mbvProfesor.profesor.nombre}" size="50" >
+                                <p:inputText id="txtNombre" value="#{mbvProfesor.profesor.nombre}" size="30" >
                                     <f:validator validatorId="validatorVacio"/>
                                 </p:inputText>
                                 <p:message for="txtNombre"/>
                                 <p:outputLabel for="txtApellidos" value="Apellidos: " />
-                                <p:inputText id="txtApellidos" value="#{mbvProfesor.profesor.apellido}" size="50">
+                                <p:inputText id="txtApellidos" value="#{mbvProfesor.profesor.apellido}" size="30">
                                     <f:validator validatorId="validatorVacio"/>
                                 </p:inputText>
                                 <p:message for="txtApellidos"/>
                                 <p:outputLabel for="txtTelefono" value="Telefono: " />
-                                <p:inputText id="txtTelefono" value="#{mbvProfesor.profesor.telefono}" size="50" >
+                                <p:inputText id="txtTelefono" value="#{mbvProfesor.profesor.telefono}" size="30" >
                                     <f:validator validatorId="validatorVacio"/>
                                 </p:inputText>
                                 <p:message for="txtTelefono"/>
                                 <p:outputLabel for="txtDireccion" value="Direccion: " />
-                                <p:inputText id="txtDireccion" value="#{mbvProfesor.profesor.direccion}" size="50">
+                                <p:inputText id="txtDireccion" value="#{mbvProfesor.profesor.direccion}" size="30">
                                     <f:validator validatorId="validatorVacio"/>
                                 </p:inputText>
-                                <p:message for="txtCorreo"/>
+                                <p:message for="txtDireccion"/>
                                 <p:outputLabel for="txtTitulo" value="Titulo Profesional: " />
-                                <p:inputText id="txtTitulo" value="#{mbvProfesor.profesor.tituloProfesional}" size="50">
+                                <p:inputText id="txtTitulo" value="#{mbvProfesor.profesor.tituloProfesional}" size="30">
                                     <f:validator validatorId="validatorVacio"/>
                                 </p:inputText>
                                 <p:message for="txtTitulo"/>
                                 <p:outputLabel for="txtCorreo" value="Correo: " />
-                                <p:inputText id="txtCorreo" value="#{mbvProfesor.profesor.correo}" size="50">
+                                <p:inputText id="txtCorreo" value="#{mbvProfesor.profesor.correo}" size="30" validatorMessage="Correo invalido">
                                     <f:validator validatorId="validatorVacio"/>
+                                    <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
                                 </p:inputText>
                                 <p:message for="txtCorreo"/> 
                                 <p:outputLabel for="rdbSexo" value="Sexo:" />
@@ -108,32 +116,32 @@
                                     <f:selectItem itemLabel="Femenino" itemValue="F" />
                                 </p:selectOneRadio>
                                 <p:message for="rdbSexo"/>
-                                
+
                                 <p:outputLabel for="stlEstado" value="Estado: " />
                                 <p:selectOneMenu id="stlEstado" value="#{mbvProfesor.estadoSelected.estadoProfesorId}">
                                     <f:selectItems value="#{mbvProfesor.estadosProfesor}" var="estado" itemLabel="#{estado.nombre}" itemValue="#{estado.estadoProfesorId}"/>
                                 </p:selectOneMenu>
                                 <p:message for="stlEstado"/>
-                                
+
                                 <h:outputText value="Cambiar Contraseña: " />
                                 <p:inputSwitch value="#{mbvProfesor.cambiarContraseña}" onLabel="SI" offLabel="NO">
                                     <p:ajax listener="#{mbvProfesor.activarContraseña}" update="frmEditarProfesor" />
                                 </p:inputSwitch>
                                 <h:panelGroup></h:panelGroup>
-                                
+
                                 <p:outputLabel value="Contraseña" for="txtContrasenia" rendered="#{mbvProfesor.cambiarContraseña}"/>
-                                <p:password id="txtContrasenia" label="Contraseña: " rendered="#{mbvProfesor.cambiarContraseña}" match="txtContraseniaRepita" size="50" value="#{mbvProfesor.profesor.contraseña}">
+                                <p:password id="txtContrasenia" label="Contraseña: " rendered="#{mbvProfesor.cambiarContraseña}" match="txtContraseniaRepita" size="30" value="#{mbvProfesor.profesor.contraseña}">
                                     <f:validator validatorId="validatorVacio"/>
                                 </p:password>
                                 <p:message for="txtContrasenia" rendered="#{mbvProfesor.cambiarContraseña}"/>
                                 <p:outputLabel value="Repita contraseña" for="txtContraseniaRepita" rendered="#{mbvProfesor.cambiarContraseña}"/>
-                                <p:password id="txtContraseniaRepita" label="Repita contraseña: " size="50" value="#{mbvProfesor.txtRepiteContrasenia}" rendered="#{mbvProfesor.cambiarContraseña}"/>
+                                <p:password id="txtContraseniaRepita" label="Repita contraseña: " size="30" value="#{mbvProfesor.txtRepiteContrasenia}" rendered="#{mbvProfesor.cambiarContraseña}"/>
                                 <h:panelGroup rendered="#{mbvProfesor.cambiarContraseña}"></h:panelGroup>
 
-                                
+
                                 <h:panelGroup></h:panelGroup>
-                                
-                                <p:commandButton value="Registrar Profesor" actionListener="#{mbvProfesor.actualizar}" ajax="true" update=":frmListaProfesor" />
+
+                                <p:commandButton value="Registrar Profesor" actionListener="#{mbvProfesor.actualizar}" ajax="true" update=":frmListaProfesor frmEditarProfesor" />
                             </h:panelGrid>  
                         </p:outputPanel>
                     </h:form>

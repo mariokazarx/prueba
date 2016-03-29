@@ -10,45 +10,57 @@
         <ui:composition template="./../plantilla.xhtml">
             <ui:define name="content">
                 <h:form id="frmMateriasCiclos" styleClass="form-principal">
+                    <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
                     <h3>Asignaturas por ciclo</h3>
-                    <p:outputLabel for="sltConfiguracion" value="Configuracion" styleClass="form-titulos" />
-                    <p:selectOneMenu id="sltConfiguracion" value="#{mbvMateriasCiclos.configuracionSelected.configuracionId}" styleClass="form-select">
-                        <p:ajax listener="#{mbvMateriasCiclos.cargarCiclo()}" update="frmMateriasCiclos"/>
-                        <f:selectItem itemLabel="Seleccione."/>
-                        <f:selectItems value="#{mbvMateriasCiclos.configuraciones}" var="configuracion" itemLabel="#{configuracion.nombre}" itemValue="#{configuracion.configuracionId}"/>
-                    </p:selectOneMenu>
-                    <p:outputLabel for="sltCiclos" value="Ciclo" styleClass="form-titulos" />
-                    <p:selectOneMenu id="sltCiclos" value="#{mbvMateriasCiclos.cicloselected.cicloId}" styleClass="form-select">
-                        <p:ajax listener="#{mbvMateriasCiclos.cargarAsignaturas()}" update="frmMateriasCiclos"/>
-                        <f:selectItem itemLabel="Seleccione."/>
-                        <f:selectItems value="#{mbvMateriasCiclos.ciclosSlected}" var="ciclo" itemLabel="#{ciclo.numero}" itemValue="#{ciclo.cicloId}"/>
-                    </p:selectOneMenu>
-                    <h3>Asignaturas</h3>
-                    <p:pickList id="pickList" value="#{mbvMateriasCiclos.coso}" var="asignatura" itemLabel="#{asignatura.nombre}" itemValue="#{asignatura.asignaturaId}" rendered="#{mbvMateriasCiclos.banAsig}">
-                         <f:facet name="sourceCaption">Asiganturas</f:facet>
-                        <f:facet name="targetCaption">Ciclo</f:facet>
-                        <p:ajax event="transfer" listener="#{mbvMateriasCiclos.onTransfer}"  />
-                    </p:pickList>
-                    <p:commandButton id="Confirmar" value="Confirmar" update="frmMateriasCiclos" style="margin-top:5px" />
-                    <div>
-                        <span>
-                            Asignaturas para el ciclo #{mbvMateriasCiclos.cicloTabla.numero} 
-                        </span>
-                    </div>
-                    <p:dataTable id="tablaAsignadas" var="asignatura" rowIndexVar="index" value="#{mbvMateriasCiclos.asignturasSelecionadas}" tableStyle="width:auto">
-                        
-                        <p:column headerText="Numero">
-                            <h:outputText value="#{index+1}" />
-                        </p:column>
+                    <f:metadata>
+                        <f:event type="preRenderView" listener="#{mbvMateriasCiclos.initRender}" />
+                    </f:metadata>
+                    <h:panelGroup rendered="#{mbvMateriasCiclos.consultar}">
+                        <p:outputLabel for="sltConfiguracion" value="Configuracion" styleClass="form-titulos" />
+                        <p:selectOneMenu id="sltConfiguracion" value="#{mbvMateriasCiclos.configuracionSelected.configuracionId}" styleClass="form-select">
+                            <p:ajax listener="#{mbvMateriasCiclos.cargarCiclo()}" update="frmMateriasCiclos"/>
+                            <f:selectItem itemLabel="Seleccione."/>
+                            <f:selectItems value="#{mbvMateriasCiclos.configuraciones}" var="configuracion" itemLabel="#{configuracion.nombre}" itemValue="#{configuracion.configuracionId}"/>
+                        </p:selectOneMenu>
 
-                        <p:column headerText="Asignatura">
-                            <h:outputText value="#{asignatura.nombre}" />
-                        </p:column>
-                        <p:column headerText="Ciclo">
-                            <h:outputText value="#{mbvMateriasCiclos.cicloTabla.numero}" />
-                        </p:column>
+                        <p:outputLabel for="sltCiclos" value="Ciclo" styleClass="form-titulos" />
+                        <p:selectOneMenu id="sltCiclos" value="#{mbvMateriasCiclos.cicloselected.cicloId}" styleClass="form-select">
+                            <p:ajax listener="#{mbvMateriasCiclos.cargarAsignaturas()}" update="frmMateriasCiclos"/>
+                            <f:selectItem itemLabel="Seleccione."/>
+                            <f:selectItems value="#{mbvMateriasCiclos.ciclosSlected}" var="ciclo" itemLabel="#{ciclo.numero}" itemValue="#{ciclo.cicloId}"/>
+                        </p:selectOneMenu>
 
-                    </p:dataTable>
+                        <p:outputPanel rendered="#{mbvMateriasCiclos.mostrarContenido}">
+                            <p:outputPanel rendered="#{mbvMateriasCiclos.mostrarEditar==true and mbvMateriasCiclos.editar==true}">
+                                <h3>Asignaturas</h3>
+                                <p:pickList id="pickList" value="#{mbvMateriasCiclos.coso}" var="asignatura" itemLabel="#{asignatura.nombre}" itemValue="#{asignatura.asignaturaId}" rendered="#{mbvMateriasCiclos.banAsig}">
+                                    <f:facet name="sourceCaption">Asiganturas</f:facet>
+                                    <f:facet name="targetCaption">Ciclo</f:facet>
+                                    <p:ajax event="transfer" listener="#{mbvMateriasCiclos.onTransfer}" update="tablaAsignadas"/>
+                                </p:pickList>
+                            </p:outputPanel>
+                            <div>
+                                <span>
+                                    Asignaturas para el ciclo #{mbvMateriasCiclos.cicloTabla.numero} 
+                                </span>
+                            </div>
+                            <p:dataTable id="tablaAsignadas" var="asignatura" rowIndexVar="index" value="#{mbvMateriasCiclos.asignturasSelecionadas}" tableStyle="width:auto">
+
+                                <p:column headerText="Numero">
+                                    <h:outputText value="#{index+1}" />
+                                </p:column>
+
+                                <p:column headerText="Asignatura">
+                                    <h:outputText value="#{asignatura.nombre}" />
+                                </p:column>
+                                <p:column headerText="Ciclo">
+                                    <h:outputText value="#{mbvMateriasCiclos.cicloTabla.numero}" />
+                                </p:column>
+
+                            </p:dataTable>
+                        </p:outputPanel>
+                    </h:panelGroup>
                 </h:form>
             </ui:define>
         </ui:composition>

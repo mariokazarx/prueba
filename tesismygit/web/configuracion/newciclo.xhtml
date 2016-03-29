@@ -6,7 +6,7 @@
       xmlns:f="http://java.sun.com/jsf/core">
     <h:head>
         <title>Nuevo Ciclo</title>
-                <style type="text/css">
+        <style type="text/css">
             .ui-widget {
                 font-size: 90%;
             }
@@ -14,21 +14,23 @@
     </h:head>
     <h:body>
         <h:form id="frmCrearCiclo">
-            <h:panelGrid columns="3">
-                <p:outputLabel for="txtNumero" value="Numero: " />
-                <p:inputText id="txtNumero" value="#{mbvCiclo.ciclo.numero}" />
-                <p:message for="txtNumero"/>
-                <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
-                <p:inputTextarea id="txtDescripcion" value="#{mbvCiclo.ciclo.descripcion}" autoResize="false" rows="5" cols="22" />
-                <p:message for="txtDescripcion"/>
-                <p:outputLabel for="stlConfiguracion" value="Configuracion: " />
-                <p:selectOneMenu id="stlConfiguracion" value="#{mbvCiclo.confuguracionselected.configuracionId}" required="true" requiredMessage="Seleccione una configuracion">
-                    <f:selectItem itemLabel="Seleccione."/>
-                    <f:selectItems value="#{mbvCiclo.configuraciones}" var="configuracion" itemLabel="#{configuracion.nombre}" itemValue="#{configuracion.configuracionId}"/>
-                </p:selectOneMenu>
-                <p:message for="stlConfiguracion"/><h:panelGroup></h:panelGroup>
-                <p:commandButton value="Registrar Ciclo" actionListener="#{mbvCiclo.insertar}" ajax="true" update="frmCrearCiclo" />
-            </h:panelGrid>  
+            <h:panelGroup rendered="#{mbvcriterioevaluacion.crear}">
+                <h:panelGrid columns="3">
+                    <p:outputLabel for="txtNumero" value="Numero: " />
+                    <p:inputText id="txtNumero" value="#{mbvCiclo.ciclo.numero}" />
+                    <p:message for="txtNumero"/>
+                    <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
+                    <p:inputTextarea id="txtDescripcion" value="#{mbvCiclo.ciclo.descripcion}" autoResize="false" rows="5" cols="22" />
+                    <p:message for="txtDescripcion"/>
+                    <p:outputLabel for="stlConfiguracion" value="Configuracion: " />
+                    <p:selectOneMenu id="stlConfiguracion" value="#{mbvCiclo.confuguracionselected.configuracionId}" required="true" requiredMessage="Seleccione una configuracion">
+                        <f:selectItem itemLabel="Seleccione."/>
+                        <f:selectItems value="#{mbvCiclo.configuraciones}" var="configuracion" itemLabel="#{configuracion.nombre}" itemValue="#{configuracion.configuracionId}"/>
+                    </p:selectOneMenu>
+                    <p:message for="stlConfiguracion"/><h:panelGroup></h:panelGroup>
+                    <p:commandButton value="Registrar Ciclo" actionListener="#{mbvCiclo.insertar}" ajax="true" update="frmCrearCiclo" />
+                </h:panelGrid>  
+            </h:panelGroup>
         </h:form>
     </h:body>
 </html>

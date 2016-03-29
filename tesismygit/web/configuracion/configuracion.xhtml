@@ -10,78 +10,81 @@
         <ui:composition template="./../plantilla.xhtml">
             <ui:define name="content">
                 <h:form id="frmListaConf">
-                    <p:commandButton value="Nueva Configuracion" icon="ui-icon-document" actionListener="#{mbvConfiguracion.newConfig}">
-                        <p:ajax event="dialogReturn" listener="#{mbvConfiguracion.closeDialog}" update="frmListaConf" />
-                    </p:commandButton>
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
-                    <p:dataTable id="tablaListaConf" var="item" value="#{mbvConfiguracion.configuraciones}" tableStyle="width:auto" reflow="true" paginator="true" rows="10" selection="#{mbvConfiguracion.configuracion}" selectionMode="single" rowKey="#{item.configuracionId}" >
-                        <p:ajax event="rowSelect" update=":frmListaConf:panelDetalleConf" oncomplete="PF('dialogoDetalleConf').show()"/>
-                        <f:facet name="header">
-                            Lista de Configuraciones
-                        </f:facet>
-                        <p:column headerText="Nombre" filterBy="#{item.nombre}" filterMatchMode="contains">
-                            <h:outputText value="#{item.nombre}"/>
-                        </p:column>
-                        <p:column headerText="Descripcion" filterBy="descripcion">
-                            <h:outputText value="#{item.descripcion}"/>
-                        </p:column>
-                        <p:column headerText="Criterio Evaluacion" filterBy="minaprob">
-                            <h:outputText value="#{item.criterioevaluacionId.nombre}"/>
-                        </p:column>
-                        <p:column headerText="Escala de Evaluacion" filterBy="minaprob">
-                            <h:outputText value="#{item.escalaId.nombre}"/>
-                        </p:column>
-                        <p:column>
-                            <p:commandButton value="Editar" icon="ui-icon-pencil" actionListener="#{mbvConfiguracion.cargarConfiguracion(item.configuracionId)}"/>
-                        </p:column>
-                        <p:column rendered="true">
-                            <p:commandButton value="Eliminar" update=":frmRemoveConfiguracion:display" oncomplete="PF('removeconfiguracion').show();" icon="ui-icon-search" title="View">
-                                <f:setPropertyActionListener value="#{item}" target="#{mbvConfiguracion.configuracion}" />
-                            </p:commandButton>
-                        </p:column>
-                    </p:dataTable>
+                    <f:metadata>
+                        <f:event type="preRenderView" listener="#{mbvConfiguracion.initRender}" />
+                    </f:metadata>
+                    <h:panelGroup rendered="#{mbvConfiguracion.consultar}">
+                        <p:commandButton value="Nueva Configuracion" icon="ui-icon-document" ajax="true" update="frmListaConf" actionListener="#{mbvConfiguracion.newConfig}">
+                            <p:ajax event="dialogReturn" listener="#{mbvConfiguracion.closeDialog}" update="frmListaConf" />
+                        </p:commandButton>
+                        <p:dataTable id="tablaListaConf" var="item" value="#{mbvConfiguracion.configuraciones}" tableStyle="width:auto" reflow="true" paginator="true" rows="10" selection="#{mbvConfiguracion.configuracion}" selectionMode="single" rowKey="#{item.configuracionId}" >
+                            <p:ajax event="rowSelect" update=":frmListaConf:panelDetalleConf" oncomplete="PF('dialogoDetalleConf').show()"/>
+                            <f:facet name="header">
+                                Lista de Configuraciones
+                            </f:facet>
+                            <p:column headerText="Nombre" filterBy="#{item.nombre}" filterMatchMode="contains">
+                                <h:outputText value="#{item.nombre}"/>
+                            </p:column>
+                            <p:column headerText="Descripcion" filterBy="descripcion">
+                                <h:outputText value="#{item.descripcion}"/>
+                            </p:column>
+                            <p:column headerText="Criterio Evaluacion" filterBy="minaprob">
+                                <h:outputText value="#{item.criterioevaluacionId.nombre}"/>
+                            </p:column>
+                            <p:column headerText="Escala de Evaluacion" filterBy="minaprob">
+                                <h:outputText value="#{item.escalaId.nombre}"/>
+                            </p:column>
+                            <p:column>
+                                <p:commandButton value="Editar" icon="ui-icon-pencil" ajax="true" update="frmListaConf" actionListener="#{mbvConfiguracion.cargarConfiguracion(item.configuracionId)}"/>
+                            </p:column>
+                            <p:column rendered="true">
+                                <p:commandButton value="Eliminar" update=":frmRemoveConfiguracion:display" oncomplete="PF('removeconfiguracion').show();" icon="ui-icon-search" title="View">
+                                    <f:setPropertyActionListener value="#{item}" target="#{mbvConfiguracion.configuracion}" />
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
 
-                    <p:dialog header="Detalle de Configuracion" responsive="true" widgetVar="dialogoDetalleConf" modal="true"  appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
-                        <p:outputPanel id="panelDetalleConf">
-                            <p:panelGrid columns="1">
-                                <p:outputLabel value="configuracion escala"/>
-                            </p:panelGrid>
-                            <p:panelGrid columns="2">
-                                <p:outputLabel value="Nombre"/>
-                                <h:outputText value="#{mbvConfiguracion.escala.nombre}"/>
-                                <p:outputLabel value="Descripcion"/>
-                                <h:outputText value="#{mbvConfiguracion.escala.descripcion}"/>
-                                <p:outputLabel value="Nota minima"/>
-                                <h:outputText value="#{mbvConfiguracion.escala.min}"/>
-                                <p:outputLabel value="Nota Maxima"/>
-                                <h:outputText value="#{mbvConfiguracion.escala.max}"/>
-                                <p:outputLabel value="Nota minima aprobacion"/>
-                                <h:outputText value="#{mbvConfiguracion.escala.notaminimaaprob}"/>
-                            </p:panelGrid>
-                            <p:panelGrid columns="1">
-                                <p:outputLabel value="configuracion criterio evaluacion"/>
-                            </p:panelGrid>
-                            <p:panelGrid columns="2">    
-                                <p:outputLabel value="Id"/>
-                                <h:outputText value="#{mbvConfiguracion.criterioevaluacion.criterioevaluacionId}"/>
-                                <p:outputLabel value="Nombre"/>
-                                <h:outputText value="#{mbvConfiguracion.criterioevaluacion.nombre}"/>
-                                <p:outputLabel value="Descripcion"/>
-                                <h:outputText value="#{mbvConfiguracion.criterioevaluacion.descripcion}"/>
-                                <p:outputLabel value="Criterio de aprobacion"/>
-                                <h:outputText value="#{mbvConfiguracion.criterioevaluacion.formacriterioevaluacionId.nombre}"/>
-                                <p:outputLabel value="Minimo para aprobar"/>
-                                <h:outputText value="#{mbvConfiguracion.criterioevaluacion.minaprob}"/>
+                        <p:dialog header="Detalle de Configuracion" responsive="true" widgetVar="dialogoDetalleConf" modal="true"  appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
+                            <p:outputPanel id="panelDetalleConf">
+                                <p:panelGrid columns="1">
+                                    <p:outputLabel value="configuracion escala"/>
+                                </p:panelGrid>
+                                <p:panelGrid columns="2">
+                                    <p:outputLabel value="Nombre"/>
+                                    <h:outputText value="#{mbvConfiguracion.configuracion.escalaId.nombre}"/>
+                                    <p:outputLabel value="Descripcion"/>
+                                    <h:outputText value="#{mbvConfiguracion.configuracion.escalaId.descripcion}"/>
+                                    <p:outputLabel value="Nota minima"/>
+                                    <h:outputText value="#{mbvConfiguracion.configuracion.escalaId.min}"/>
+                                    <p:outputLabel value="Nota Maxima"/>
+                                    <h:outputText value="#{mbvConfiguracion.configuracion.escalaId.max}"/>
+                                    <p:outputLabel value="Nota minima aprobacion"/>
+                                    <h:outputText value="#{mbvConfiguracion.configuracion.escalaId.notaminimaaprob}"/>
+                                </p:panelGrid>
+                                <p:panelGrid columns="1">
+                                    <p:outputLabel value="configuracion criterio evaluacion"/>
+                                </p:panelGrid>
+                                <p:panelGrid columns="2">    
+                                    <p:outputLabel value="Nombre"/>
+                                    <h:outputText value="#{mbvConfiguracion.configuracion.criterioevaluacionId.nombre}"/>
+                                    <p:outputLabel value="Descripcion"/>
+                                    <h:outputText value="#{mbvConfiguracion.configuracion.criterioevaluacionId.descripcion}"/>
+                                    <p:outputLabel value="Criterio de aprobacion"/>
+                                    <h:outputText value="#{mbvConfiguracion.configuracion.criterioevaluacionId.formacriterioevaluacionId.nombre}"/>
+                                    <p:outputLabel value="Minimo para aprobar"/>
+                                    <h:outputText value="#{mbvConfiguracion.configuracion.criterioevaluacionId.minaprob}"/>
 
-                            </p:panelGrid>
-                        </p:outputPanel>
-                    </p:dialog>  
+                                </p:panelGrid>
+                            </p:outputPanel>
+                        </p:dialog>  
+                    </h:panelGroup>
                     <p:ajaxStatus onstart="PF('statusDialog').show()" oncomplete="PF('statusDialog').hide()" />
- 
+
                     <p:dialog widgetVar="statusDialog" appendTo="@(body)" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
                         <p:graphicImage library="imagenes" name="load1.gif"/>
                     </p:dialog>
-                    
+
                 </h:form>
 
                 <p:confirmDialog header="Eliminar Configuracion" widgetVar="removeconfiguracion" appendTo="@(body)" resizable="false" id="removeDlg"

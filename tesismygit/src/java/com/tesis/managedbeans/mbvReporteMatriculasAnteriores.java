@@ -11,11 +11,14 @@ import com.tesis.beans.CursoFacade;
 import com.tesis.beans.EstadoMatriculaFacade;
 import com.tesis.beans.EstudianteFacade;
 import com.tesis.beans.MatriculaFacade;
+import com.tesis.beans.UsuarioRoleFacade;
 import com.tesis.clases.MatriculaReporte;
 import com.tesis.entity.Anlectivo;
 import com.tesis.entity.Curso;
 import com.tesis.entity.Estudiante;
 import com.tesis.entity.Matricula;
+import com.tesis.entity.Usuario;
+import com.tesis.entity.UsuarioRole;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -41,19 +44,25 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
  */
 @ManagedBean
 @ViewScoped
-public class mbvReporteMatriculasAnteriores implements Serializable{
+public class mbvReporteMatriculasAnteriores implements Serializable {
 
     private List<Curso> cursos;
     private List<Curso> cursosReporte;
     private Curso cursoSelected;
     private List<MatriculaReporte> reporte;
-    private String todos="";
+    private String todos = "";
     private boolean mostrarPrincipal;
     private boolean mostrarBoton;
     private boolean mostrarCursos;
     private boolean mostrarSeleccion;
     private List<Anlectivo> anlectivos;
     private Anlectivo anlectivoSelected;
+    private boolean login;
+    private boolean consultar;
+    private boolean editar;
+    private boolean crear;
+    private boolean eliminar;
+    private Usuario usr;
     @EJB
     private CicloFacade cicloEjb;
     @EJB
@@ -68,11 +77,18 @@ public class mbvReporteMatriculasAnteriores implements Serializable{
     private EstudianteFacade estudianteEJb;
     @EJB
     private AnlectivoFacade aEscolarEjb;
+    @EJB
+    private UsuarioRoleFacade usrRoleEjb;
     private JasperPrint jasperPrint;
+
     /**
      * Creates a new instance of mbvReporteMatriculas
      */
     public mbvReporteMatriculasAnteriores() {
+    }
+
+    public boolean isConsultar() {
+        return consultar;
     }
 
     public boolean isMostrarSeleccion() {
@@ -146,9 +162,46 @@ public class mbvReporteMatriculasAnteriores implements Serializable{
     public void setCursoSelected(Curso cursoSelected) {
         this.cursoSelected = cursoSelected;
     }
-    
+
     @PostConstruct()
     public void inicio() {
+        this.consultar = false;
+        this.editar = false;
+        this.eliminar = false;
+        this.crear = false;
+        try {
+            mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
+            usr = mbslogin.getUsuario();
+            this.login = mbslogin.isLogin();
+            System.out.println("usuario" + usr.getNombres() + "Login" + login);
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            this.login = false;
+        }
+        if (this.usr != null) {
+            for (UsuarioRole usrRol : usrRoleEjb.getByUser(usr)) {
+                if (usrRol.getRoleId().getRecursoId().getRecursoId() == 18) {
+                    if (usrRol.getRoleId().getAgregar()) {
+                        this.crear = true;
+                    }
+                    if (usrRol.getRoleId().getConsultar()) {
+                        this.consultar = true;
+                    }
+                    if (usrRol.getRoleId().getEditar()) {
+                        this.editar = true;
+                    }
+                    if (usrRol.getRoleId().getEliminar()) {
+                        this.eliminar = true;
+                    }
+                }
+            }
+        }
+        if (this.usr.getTipoUsuarioId().getTipoUsuarioId() == 4) {
+            this.consultar = true;
+            this.editar = true;
+            this.eliminar = true;
+            this.crear = true;
+        }
         this.mostrarCursos = false;
         this.mostrarCursos = false;
         this.cursos = new ArrayList<Curso>();
@@ -159,47 +212,48 @@ public class mbvReporteMatriculasAnteriores implements Serializable{
         this.cursoSelected = new Curso();
         this.cursos.clear();
         this.anlectivos = aEscolarEjb.getTerminados();
-        if(!anlectivos.isEmpty()){
+        if (!anlectivos.isEmpty()) {
             this.mostrarPrincipal = true;
-        }else{
+        } else {
             this.mostrarPrincipal = false;
         }
         /*Anlectivo auxEscolar = aEscolarEjb.getIniciado();
-        if(auxEscolar!=null){
+         if(auxEscolar!=null){
             
-            //hay año iniciado
-            if(auxEscolar.getCursoList().isEmpty()){
-                //no hay cursos activos
-                this.mostrarPrincipal = false;
-            }else{
-                this.mostrarPrincipal = true;
-                this.cursos = auxEscolar.getCursoList();
-                this.cursosReporte = auxEscolar.getCursoList();
-            }
-        }else{
-            this.mostrarPrincipal = false;
-        }*/
+         //hay año iniciado
+         if(auxEscolar.getCursoList().isEmpty()){
+         //no hay cursos activos
+         this.mostrarPrincipal = false;
+         }else{
+         this.mostrarPrincipal = true;
+         this.cursos = auxEscolar.getCursoList();
+         this.cursosReporte = auxEscolar.getCursoList();
+         }
+         }else{
+         this.mostrarPrincipal = false;
+         }*/
     }
-    public void generar(){
+
+    public void generar() {
         try {
             anlectivoSelected = aEscolarEjb.find(anlectivoSelected.getAnlectivoId());
-            System.out.println("curso"+cursoSelected);
-            if (cursoSelected != null && this.todos.compareTo("curso")==0) {
+            System.out.println("curso" + cursoSelected);
+            if (cursoSelected != null && this.todos.compareTo("curso") == 0) {
                 this.cursosReporte.clear();
                 cursoSelected = cursoEjb.find(cursoSelected.getCursoId());
                 this.cursosReporte.add(cursoSelected);
             }
-            System.out.println("curso"+cursosReporte);
+            System.out.println("curso" + cursosReporte);
             reporte.clear();
-            for(Curso cur:this.cursosReporte){
+            for (Curso cur : this.cursosReporte) {
                 System.out.println("entro for curso");
                 List<Estudiante> est = new ArrayList<Estudiante>();
                 MatriculaReporte mtrReporte = new MatriculaReporte();
                 mtrReporte.setAño(anlectivoSelected.getAnio());
                 mtrReporte.setCurso(cur.getNombre());
                 mtrReporte.setNumero(cur.getCicloId().getNumero());
-                for(Matricula matriculasCurso : matriculaEjb.matriculasTerminadasCurso(cur)){
-                    System.out.println("entro for"); 
+                for (Matricula matriculasCurso : matriculaEjb.matriculasTerminadasCurso(cur)) {
+                    System.out.println("entro for");
                     est.add(matriculasCurso.getEstudianteId());
                 }
                 mtrReporte.setEstudiantes(est);
@@ -208,99 +262,117 @@ public class mbvReporteMatriculasAnteriores implements Serializable{
             init();
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("ooooOOOO"+e.toString());
+            System.out.println("ooooOOOO" + e.toString());
         }
     }
-    public void init() throws JRException{
+
+    public void init() throws JRException {
         System.out.println("entro init");
-        JRBeanCollectionDataSource beanCollectionDataSource=new JRBeanCollectionDataSource(reporte);
+        JRBeanCollectionDataSource beanCollectionDataSource = new JRBeanCollectionDataSource(reporte);
         String reportpath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/Cursos.jasper");
         /*Map<String, Object> parametros = new HashMap<String, Object>();
-        parametros.put("ciclo", "3");
-        parametros.put("año", "2016");
-        parametros.put("curso", "3-1"); */
-        jasperPrint=JasperFillManager.fillReport(reportpath, new HashMap<String, Object>(), beanCollectionDataSource);
+         parametros.put("ciclo", "3");
+         parametros.put("año", "2016");
+         parametros.put("curso", "3-1"); */
+        jasperPrint = JasperFillManager.fillReport(reportpath, new HashMap<String, Object>(), beanCollectionDataSource);
     }
-    public void pdf() throws JRException, IOException{
-        generar();
-        HttpServletResponse httpServletResponse=(HttpServletResponse)FacesContext.getCurrentInstance().getExternalContext().getResponse();  
-        httpServletResponse.addHeader("Content-disposition", "attachment; filename=report.pdf");  
-        ServletOutputStream servletOutputStream=httpServletResponse.getOutputStream();  
-        JasperExportManager.exportReportToPdfStream(jasperPrint, servletOutputStream);  
-        FacesContext.getCurrentInstance().responseComplete(); 
+
+    public void pdf() throws JRException, IOException {
+        if (!login) {
+            System.out.println("Usuario NO logeado");
+            FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+            return;
+        }
+        if (this.consultar) {
+            generar();
+            HttpServletResponse httpServletResponse = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+            httpServletResponse.addHeader("Content-disposition", "attachment; filename=report.pdf");
+            ServletOutputStream servletOutputStream = httpServletResponse.getOutputStream();
+            JasperExportManager.exportReportToPdfStream(jasperPrint, servletOutputStream);
+            FacesContext.getCurrentInstance().responseComplete();
+        }else {
+            System.out.print("error permiso denegado");
+            FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+        }
     }
-    public void cargarCurso(){
-        System.out.println("todos"+this.todos);
-        if(this.todos.compareTo("todos")==0){
+
+    public void cargarCurso() {
+        System.out.println("todos" + this.todos);
+        if (this.todos.compareTo("todos") == 0) {
             this.mostrarBoton = true;
             this.mostrarCursos = false;
             anlectivoSelected = aEscolarEjb.find(anlectivoSelected.getAnlectivoId());
-            if(!anlectivoSelected.getCursoList().isEmpty()){
+            if (!anlectivoSelected.getCursoList().isEmpty()) {
                 this.cursosReporte = cursoEjb.getCursosByAño(anlectivoSelected);
                 this.cursoSelected = new Curso();
-            }else{
-                
+            } else {
             }
         }
-        if(this.todos.compareTo("curso")==0){
-            if(!cursoEjb.getCursosByAño(anlectivoSelected).isEmpty()){
-                this.cursos = cursoEjb.getCursosByAño(anlectivoSelected);    
-            }else{
-                
+        if (this.todos.compareTo("curso") == 0) {
+            if (!cursoEjb.getCursosByAño(anlectivoSelected).isEmpty()) {
+                this.cursos = cursoEjb.getCursosByAño(anlectivoSelected);
+            } else {
             }
-            System.out.println("CURSOS "+this.cursos);
+            System.out.println("CURSOS " + this.cursos);
             this.mostrarCursos = true;
             this.mostrarBoton = false;
             this.cursoSelected = new Curso();
             this.cursosReporte.clear();
-            
+
         }
     }
-    public void initRender(){
-        if(!anlectivos.isEmpty()){
+
+    public void initRender() {
+        if (!anlectivos.isEmpty()) {
+            if (!this.consultar) {
+                FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para generar reportes"));
+            }
             this.mostrarPrincipal = true;
             /*if(aEscolarEjb.getIniciado().getCursoList().isEmpty()){
-                this.mostrarPrincipal = false;
-                FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Aun no ha han registrado cursos"));
-            }else{
-                this.mostrarPrincipal = true;
-            }*/
-        }
-        else{
+             this.mostrarPrincipal = false;
+             FacesContext.getCurrentInstance().
+             addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Aun no ha han registrado cursos"));
+             }else{
+             this.mostrarPrincipal = true;
+             }*/
+        } else {
             this.mostrarPrincipal = false;
             FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Aun no ha terminado ningun año escolar"));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Aun no ha terminado ningun año escolar"));
         }
     }
-    public void seleccionCurso(){
-        if(cursoSelected.getCursoId()!=null){
+
+    public void seleccionCurso() {
+        if (cursoSelected.getCursoId() != null) {
             this.mostrarBoton = true;
-        }else{
+        } else {
             this.mostrarBoton = false;
         }
     }
-    public void cargarAño(){
-        if(anlectivoSelected.getAnlectivoId()!=null){
+
+    public void cargarAño() {
+        if (anlectivoSelected.getAnlectivoId() != null) {
             this.mostrarSeleccion = true;
-            if(this.todos.compareTo("todos")==0){
+            if (this.todos.compareTo("todos") == 0) {
                 this.mostrarBoton = true;
                 this.mostrarCursos = false;
                 anlectivoSelected = aEscolarEjb.find(anlectivoSelected.getAnlectivoId());
-                if(!anlectivoSelected.getCursoList().isEmpty()){
+                if (!anlectivoSelected.getCursoList().isEmpty()) {
                     this.cursosReporte = cursoEjb.getCursosByAño(anlectivoSelected);
                     this.cursoSelected = new Curso();
-                }else{
-
+                } else {
                 }
             }
-            if(this.todos.compareTo("curso")==0){
+            if (this.todos.compareTo("curso") == 0) {
                 this.mostrarCursos = true;
                 this.mostrarBoton = false;
                 this.cursoSelected = new Curso();
                 this.cursosReporte.clear();
             }
-        }else{
+        } else {
             this.mostrarSeleccion = false;
             this.mostrarBoton = false;
             this.mostrarCursos = false;

@@ -10,62 +10,67 @@
         <ui:composition template="./../plantilla.xhtml">
             <ui:define name="content">
                 <h:form id="frmListaEscala">
-                    <p:outputPanel id="panelReporteMatriculas" styleClass="btn-new" >
-                        <p:commandButton rendered="true" value="Nueva Escala" icon="ui-icon-document" actionListener="#{mbvEscala.newEscala}">
-                            <p:ajax event="dialogReturn" listener="#{mbvEscala.closeDialog}" update="frmListaEscala" />
-                        </p:commandButton>
-                    </p:outputPanel>
+                    <f:metadata>
+                        <f:event type="preRenderView" listener="#{mbvEscala.initRender}" />
+                    </f:metadata>
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
-                    <p:remoteCommand name="onCellEdit" update="testContainer" />
-                    <p:outputPanel id="testContainer">
-                        <p:dataTable rendered="true" tableStyle="width:auto" id="tablaListaEscala" filteredValue="#{mbvEscala.escalasFiltradas}" reflow="true" var="item" value="#{mbvEscala.escalas}" paginator="true" rows="10" selection="#{mbvEscala.escala}" selectionMode="single" rowKey="#{item.escalaId}" >
-                            <p:ajax event="rowSelect" update=":frmListaEscala:panelDetalleEscala" oncomplete="PF('dialogoDetalleEscala').show()"/>
-                            <f:facet name="header">
-                                Lista de Escalas
-                            </f:facet>
-                            <p:column headerText="Nombre" filterBy="#{item.nombre}" filterMatchMode="contains">
-                                <h:outputText value="#{item.nombre}"/>
-                            </p:column>
-                            <p:column headerText="Descripcion" filterBy="descripcion">
-                                <h:outputText value="#{item.descripcion}"/>
-                            </p:column>
-                            <p:column headerText="Nota mínima" filterBy="min">
-                                <h:outputText value="#{item.min}"/>
-                            </p:column>
-                            <p:column headerText="Nota máxima" filterBy="max">
-                                <h:outputText value="#{item.max}"/>
-                            </p:column>
-                            <p:column headerText="Nota mínima aprobación" filterBy="minaprob">
-                                <h:outputText value="#{item.notaminimaaprob}"/>
-                            </p:column>
-                            <p:column rendered="true">
-                                <p:commandButton value="Editar" icon="ui-icon-pencil" actionListener="#{mbvEscala.cargarEscala(item.escalaId)}"/>
-                            </p:column>
-                            <p:column rendered="true">
-                                <p:commandButton value="Eliminar" update=":frmRemoveEscala:display" oncomplete="PF('studentDialog').show();" icon="ui-icon-search" title="View">
-                                    <f:setPropertyActionListener value="#{item}" target="#{mbvEscala.escala}" />
-                                </p:commandButton>
-                            </p:column>
-                        </p:dataTable>
-                    </p:outputPanel>
-
-                    <p:dialog header="Detalle de Escala" responsive="true" widgetVar="dialogoDetalleEscala" modal="true"  appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
-                        <p:outputPanel id="panelDetalleEscala">
-                            <p:panelGrid columns="2">
-                                <p:outputLabel value="Nombre"/>
-                                <h:outputText value="#{mbvEscala.escala.nombre}"/>
-                                <p:outputLabel value="Descripcion"/>
-                                <h:outputText value="#{mbvEscala.escala.descripcion}"/>
-                                <p:outputLabel value="Nota minima"/>
-                                <h:outputText value="#{mbvEscala.escala.min}"/>
-                                <p:outputLabel value="Nota Maxima"/>
-                                <h:outputText value="#{mbvEscala.escala.max}"/>
-                                <p:outputLabel value="Nota minima aprobacion"/>
-                                <h:outputText value="#{mbvEscala.escala.notaminimaaprob}"/>
-                            </p:panelGrid>
+                    <h:panelGroup rendered="#{mbvEscala.consultar}">
+                        <p:outputPanel id="panelReporteMatriculas" styleClass="btn-new" >
+                            <p:commandButton rendered="true" value="Nueva Escala" icon="ui-icon-document" ajax="true" update="frmListaEscala" actionListener="#{mbvEscala.newEscala}">
+                                <p:ajax event="dialogReturn" listener="#{mbvEscala.closeDialog}" update="frmListaEscala" />
+                            </p:commandButton>
                         </p:outputPanel>
-                    </p:dialog>
-                    
+                        
+                        <p:remoteCommand name="onCellEdit" update="testContainer" />
+                        <p:outputPanel id="testContainer">
+                            <p:dataTable rendered="true" tableStyle="width:auto" id="tablaListaEscala" filteredValue="#{mbvEscala.escalasFiltradas}" reflow="true" var="item" value="#{mbvEscala.escalas}" paginator="true" rows="10" selection="#{mbvEscala.escala}" selectionMode="single" rowKey="#{item.escalaId}" >
+                                <p:ajax event="rowSelect" update=":frmListaEscala:panelDetalleEscala" oncomplete="PF('dialogoDetalleEscala').show()"/>
+                                <f:facet name="header">
+                                    Lista de Escalas
+                                </f:facet>
+                                <p:column headerText="Nombre" filterBy="#{item.nombre}" filterMatchMode="contains">
+                                    <h:outputText value="#{item.nombre}"/>
+                                </p:column>
+                                <p:column headerText="Descripcion" filterBy="descripcion">
+                                    <h:outputText value="#{item.descripcion}"/>
+                                </p:column>
+                                <p:column headerText="Nota mínima" filterBy="min">
+                                    <h:outputText value="#{item.min}"/>
+                                </p:column>
+                                <p:column headerText="Nota máxima" filterBy="max">
+                                    <h:outputText value="#{item.max}"/>
+                                </p:column>
+                                <p:column headerText="Nota mínima aprobación" filterBy="minaprob">
+                                    <h:outputText value="#{item.notaminimaaprob}"/>
+                                </p:column>
+                                <p:column rendered="true">
+                                    <p:commandButton value="Editar" ajax="true" update="frmListaEscala" icon="ui-icon-pencil" actionListener="#{mbvEscala.cargarEscala(item.escalaId)}"/>
+                                </p:column>
+                                <p:column rendered="true">
+                                    <p:commandButton value="Eliminar" update=":frmRemoveEscala:display" oncomplete="PF('studentDialog').show();" icon="ui-icon-search" title="View">
+                                        <f:setPropertyActionListener value="#{item}" target="#{mbvEscala.escala}" />
+                                    </p:commandButton>
+                                </p:column>
+                            </p:dataTable>
+                        </p:outputPanel>
+
+                        <p:dialog header="Detalle de Escala" responsive="true" widgetVar="dialogoDetalleEscala" modal="true"  appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
+                            <p:outputPanel id="panelDetalleEscala">
+                                <p:panelGrid columns="2">
+                                    <p:outputLabel value="Nombre"/>
+                                    <h:outputText value="#{mbvEscala.escala.nombre}"/>
+                                    <p:outputLabel value="Descripcion"/>
+                                    <h:outputText value="#{mbvEscala.escala.descripcion}"/>
+                                    <p:outputLabel value="Nota minima"/>
+                                    <h:outputText value="#{mbvEscala.escala.min}"/>
+                                    <p:outputLabel value="Nota Maxima"/>
+                                    <h:outputText value="#{mbvEscala.escala.max}"/>
+                                    <p:outputLabel value="Nota minima aprobacion"/>
+                                    <h:outputText value="#{mbvEscala.escala.notaminimaaprob}"/>
+                                </p:panelGrid>
+                            </p:outputPanel>
+                        </p:dialog>
+                    </h:panelGroup>
                     <p:ajaxStatus onstart="PF('statusDialog').show()" oncomplete="PF('statusDialog').hide()" />
  
                     <p:dialog widgetVar="statusDialog" appendTo="@(body)" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
@@ -73,7 +78,7 @@
                     </p:dialog>
                     
                 </h:form>
-
+                
                 <p:confirmDialog header="Eliminar Escala" widgetVar="studentDialog" appendTo="@(body)" resizable="false" id="studentDlg"
                                  showEffect="clip" hideEffect="clip" modal="true" message="Esta Seguro que desea eliminar esta escala?">
                     <h:form id="frmRemoveEscala">
@@ -125,6 +130,7 @@
                         </h:panelGrid>
                     </h:form>
                 </p:confirmDialog>
+               
             </ui:define>
         </ui:composition>
 

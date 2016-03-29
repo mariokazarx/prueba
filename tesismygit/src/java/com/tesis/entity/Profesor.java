@@ -37,6 +37,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Profesor.findAll", query = "SELECT p FROM Profesor p"),
+    @NamedQuery(name = "Profesor.countCedula", query = "SELECT COUNT(p) FROM Profesor p WHERE p.cedula = :cedula"),
+    @NamedQuery(name = "Profesor.countCorreo", query = "SELECT COUNT(p) FROM Profesor p WHERE p.correo = :correo"),
     @NamedQuery(name = "Profesor.findByProfesorId", query = "SELECT p FROM Profesor p WHERE p.profesorId = :profesorId"),
     @NamedQuery(name = "Profesor.findByCedula", query = "SELECT p FROM Profesor p WHERE p.cedula = :cedula"),
     @NamedQuery(name = "Profesor.findByTelefono", query = "SELECT p FROM Profesor p WHERE p.telefono = :telefono"),

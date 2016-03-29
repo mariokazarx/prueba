@@ -10,7 +10,7 @@
     <body>
         <ui:composition template="./../plantilla.xhtml">
             <ui:define name="content">
-                <h:form id="frmMateriasCiclos">
+                <h:form id="frmMateriasCiclos" style="width: 100%">
                     <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
                     <f:metadata>
                         <f:event type="preRenderView" listener="#{mbvNotas.initRender}" />
@@ -55,6 +55,7 @@
                         <p:outputPanel id="testContainer" rendered="#{mbvNotas.contenidoNotas}">
                             <p:dataTable tableStyle="width:auto" reflow="true" editable="true" id="tablanotas" var="estudiante" value="#{mbvNotas.estudiantesN}" widgetVar="tablaEstudiantes" >                    
                                 <p:ajax event="rowEdit" listener="#{mbvNotas.onRowEdit}" oncomplete="onCellEdit()" />
+                                <p:ajax event="rowEditCancel" listener="#{mbvNotas.onRowEdit}" oncomplete="onCellEdit()" />
                                 <p:column headerText="Nombres Y Apellidos" sortBy="#{estudiante.nombre}">
                                     <h:outputText value="#{estudiante.apellido} #{estudiante.nombre}" />
                                 </p:column>
@@ -97,7 +98,7 @@
                         <p:graphicImage library="imagenes" name="load1.gif"/>
                     </p:dialog>
                 </h:form>
-                <p:dialog header="Nuevo Logro" widgetVar="dialogoCrearLogro" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
+                <p:dialog header="Nuevo Logro" responsive="true" widgetVar="dialogoCrearLogro" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
                     <h:form id="frmCrearLogro">
                         <p:outputPanel id="panelCrearLogro" >
                             <h:panelGrid columns="3">
@@ -118,7 +119,7 @@
                         </p:outputPanel>
                     </h:form>
                 </p:dialog>
-                <p:dialog header="Editar Logro" widgetVar="dialogoEditarLogro" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
+                <p:dialog header="Editar Logro" responsive="true" widgetVar="dialogoEditarLogro" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
                     <h:form id="frmEditarLogro">
                         <p:outputPanel id="panelEditarLogro" >
                             <h:panelGrid columns="3">
@@ -128,7 +129,7 @@
                                 </p:inputText>
                                 <p:message for="txtTitulo"/>
                                 <p:outputLabel for="txtPorcentaje" value="Porcentaje:" />
-                                <p:inputText id="txtPorcentaje" value="#{mbvNotas.logro.porcentaje}"/>
+                                <p:outputLabel id="txtPorcentaje" value="#{mbvNotas.logro.porcentaje}"/>
                                 <p:message for="txtPorcentaje"/>
                                 <p:outputLabel for="txtDescripcion" value="Descripcion: " />
                                 <p:inputTextarea id="txtDescripcion" value="#{mbvNotas.logro.descripcion}" rows="5" cols="22" />

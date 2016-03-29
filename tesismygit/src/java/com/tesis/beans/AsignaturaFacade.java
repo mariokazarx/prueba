@@ -46,6 +46,19 @@ public class AsignaturaFacade extends AbstractFacade<Asignatura> {
         //System.out.println("aa"+ciclo);
         //return null;
     }
+    public List<Asignatura> findByConfiguracionNew(Configuracion conf) {
+        try {
+            Query cq = em.createNamedQuery("Asignatura.findByConfiguracion");
+            cq.setParameter("configuracion",conf);
+            if(cq.getResultList()==null){
+                return null;
+            }else{
+                return cq.getResultList();
+            }
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     public boolean removeById(Asignatura asignatura) {
         try {

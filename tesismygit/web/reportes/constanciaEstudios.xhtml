@@ -17,37 +17,51 @@
     <h:body>
         <ui:composition template="./../plantilla.xhtml">
             <ui:define name="content">
-                <h:form id="frmReporteFinal">
-                    <h:panelGroup>
-                        <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
-                            <p:outputLabel for="txtBusqueda" value="No identificacion: " />
-                            <p:inputText id="txtNombre" value="#{mbvConstanciaEstudios.identificacion}"  size="13" />
-                            <p:commandButton id="txtBusqueda" value="Buscar" ajax="true" icon="icon-search" actionListener="#{mbvConstanciaEstudios.buscar}" update="frmReporteFinal" style="margin-top:5px" />
-                        </h:panelGrid>
+                <h:form id="frmReporteFinal" styleClass="form-principal" target="_blank">
+                    <h3>Constancia de estudios</h3>
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
+                    <f:metadata>
+                        <f:event type="preRenderView" listener="#{mbvConstanciaEstudios.initRender}" />
+                    </f:metadata>
+                    <h:panelGroup rendered="#{mbvConstanciaEstudios.consultar}">
+                        <div class="div-buscar-p">
+                            <div style="margin-right: 15px">
+                                 <p:outputLabel for="txtBusqueda" value="No identificacion: " />
+                            </div>
+                            <div>
+                                <p:inputText id="txtNombre" value="#{mbvConstanciaEstudios.identificacion}"  size="13" />
+                            </div>
+                            <div style="margin-left: 15px">
+                                <p:commandButton id="txtBusqueda" value="Buscar" ajax="true" actionListener="#{mbvConstanciaEstudios.buscar}" update="frmReporteFinal" />
+                            </div>
+                        </div>
+                        
+                        <h:panelGroup style="margin-top: 15px" rendered="#{mbvConstanciaEstudios.mostrarBusqueda}">
+                            <p:panelGrid columns="2" id="estudianteTable">
+                                <f:facet name="header">
+                                    <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/fotosestudiantes/#{mbvConstanciaEstudios.estudiante.foto}" width="240" height="240" cache="false" alt="Sin definir" style="border-radius: 4px;box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7)"/>
+                                </f:facet>
+
+                                <h:outputText value="Identificacion:" />
+                                <h:outputText value="#{mbvConstanciaEstudios.estudiante.identificiacion}" />
+
+
+                                <h:outputText value="Nombres:" />
+                                <h:outputText value="#{mbvConstanciaEstudios.estudiante.nombre}" />
+
+                                <h:outputText value="Apellidos:" />
+                                <h:outputText value="#{mbvConstanciaEstudios.estudiante.apellido}" />
+
+                                <h:outputText value="Ciclo:" />
+                                <h:outputText value="#{mbvConstanciaEstudios.estudiante.ultimoaprobado}" />
+                            </p:panelGrid>
+                        </h:panelGroup>
+                        <p:outputPanel id="panelReporteMatriculas" rendered="#{mbvConstanciaEstudios.mostrarGenerar}" style="margin-top: 15px;margin-bottom: 20px">
+                            <p:commandButton id="btnReporte" value="Generar constancia" ajax="false" icon="icon-report" actionListener="#{mbvConstanciaEstudios.imprimir}" style="margin-top:5px" />
+                        </p:outputPanel>    
+                            <p:commandButton value= "Download PDF" ajax="false" action= "#{mbvConstanciaEstudios.imprimirnue}" />
+                       
                     </h:panelGroup>
-                    <h:panelGroup>
-                        <p:panelGrid columns="2" id="estudianteTable">
-                            <f:facet name="header">
-                                <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/fotosprofesores/#{mbvConstanciaEstudios.estudiante.foto}" width="240" height="240" cache="false" alt="Sin definir" style="border-radius: 4px;box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7)"/>
-                            </f:facet>
-
-                            <h:outputText value="Identificacion:" />
-                            <h:outputText value="#{mbvConstanciaEstudios.estudiante.identificiacion}" />
-
-
-                            <h:outputText value="Nombres:" />
-                            <h:outputText value="#{mbvConstanciaEstudios.estudiante.nombre}" />
-
-                            <h:outputText value="Apellidos:" />
-                            <h:outputText value="#{mbvConstanciaEstudios.estudiante.apellido}" />
-
-                            <h:outputText value="Ciclo:" />
-                            <h:outputText value="#{mbvConstanciaEstudios.estudiante.ultimoaprobado}" />
-                        </p:panelGrid>
-                    </h:panelGroup>
-                        <p:outputPanel id="panelReporteMatriculas" rendered="true">
-                            <p:commandButton id="btnReporte" value="Confirmar" ajax="false" icon="icon-report" actionListener="#{mbvConstanciaEstudios.imprimir}" style="margin-top:5px" />
-                        </p:outputPanel>                      
                 </h:form>        
             </ui:define>
         </ui:composition>

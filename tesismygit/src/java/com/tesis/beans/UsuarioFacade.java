@@ -44,4 +44,56 @@ public class UsuarioFacade extends AbstractFacade<Usuario> {
             return null;
         }
     }
+    public boolean existeCedula(String identificacion) {
+        try {
+            Query cq = em.createNamedQuery("Usuario.countCedula");
+            cq.setParameter("identificacion",identificacion);
+            if(cq.getSingleResult()!=null){
+                Long count = (Long) cq.getSingleResult();
+                System.out.println("Entra resultado "+count);
+                if(count != 0){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+            else{
+                System.out.println("ENTRA 2");
+                return false;
+            }
+        } catch (PersistenceException e) {
+            System.out.println("ENTRA 3");
+            return false;
+        }
+        catch (Exception e) {
+            System.out.println("ENTRA 4");
+            return false;
+        }
+    }
+    public boolean existeCorreo(String correo) {
+        try {
+            Query cq = em.createNamedQuery("Usuario.countCorreo");
+            cq.setParameter("correo",correo);
+            if(cq.getSingleResult()!=null){
+                Long count = (Long) cq.getSingleResult();
+                System.out.println("Entra resultado "+count);
+                if(count != 0){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+            else{
+                System.out.println("ENTRA 2");
+                return false;
+            }
+        } catch (PersistenceException e) {
+            System.out.println("ENTRA 3");
+            return false;
+        }
+        catch (Exception e) {
+            System.out.println("ENTRA 4");
+            return false;
+        }
+    }
 }

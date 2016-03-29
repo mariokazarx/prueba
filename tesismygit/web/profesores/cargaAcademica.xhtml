@@ -16,125 +16,154 @@
                     <f:metadata>
                         <f:event type="preRenderView" listener="#{mbvCargaAcademica.initRender}" />
                     </f:metadata>
-                    <div class="div-buscar-p">
-                        <div style="margin-right: 15px">
-                            <p:outputLabel for="txtCedula" value="Cedula Profesor: "/>
-                        </div>
-                        <div>
-                            <p:autoComplete id="txtCedula" value="#{mbvCargaAcademica.profesor}" completeMethod="#{mbvCargaAcademica.completeProfesor}"
-                                            var="profesor" itemLabel="#{profesor.cedula}" itemValue="#{profesor}" converter="profesorConverter"  forceSelection="true">
-                                <p:column>
-                                    <h:outputText styleClass="ui-theme ui-theme-#{profesor.nombre}" />
-                                </p:column>
-
-                                <p:column>
-                                    <h:outputText value="#{profesor.cedula} #{profesor.nombre} #{profesor.apellido}" />
-                                </p:column>
-                            </p:autoComplete>
-                        </div>
-                        <div style="margin-left: 15px">
-                            <p:commandButton value="Buscar" actionListener="#{mbvCargaAcademica.prueba}" ajax="true" update="frmescala" />
-                        </div>
-                    </div>
-                    
-                    <h:panelGroup id="prueba" rendered="#{mbvCargaAcademica.banderaSearch}" style="width: 94%">
-                        <div class="div-tabla-p">
-                            <p:panelGrid columns="2" id="profesorTable">
-                                <f:facet name="header">
-                                    <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/fotosprofesores/#{mbvCargaAcademica.profesor.foto}" width="240" height="240" cache="false" alt="Sin definir" style="border-radius: 4px;box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7)"/>
-                                </f:facet>
-
-                                <h:outputText value="Cedula:" />
-                                <h:outputText value="#{mbvCargaAcademica.profesor.cedula}" />
-
-
-                                <h:outputText value="Nombres:" />
-                                <h:outputText value="#{mbvCargaAcademica.profesor.nombre}" />
-
-                                <h:outputText value="Apellidos:" />
-                                <h:outputText value="#{mbvCargaAcademica.profesor.apellido}" />
-
-                                <h:outputText value="Email:" />
-                                <h:outputText value="#{mbvCargaAcademica.profesor.correo}" />
-
-                                <h:outputText value="Titulo:" />
-                                <h:outputText value="#{mbvCargaAcademica.profesor.tituloProfesional}" />
-                            </p:panelGrid>
-                        </div>
-                       
-                        <div>
-                            <div style="margin-top: 10px">
-                                <h:outputText value="Asignacion por periodo: " rendered="#{mbvCargaAcademica.mostrarSeleccion}" styleClass="form-titulos"/>
+                    <h:panelGroup rendered="#{mbvCargaAcademica.consultar}">
+                        <div class="div-buscar-p">
+                            <div style="margin-right: 15px">
+                                <p:outputLabel for="txtCedula" value="Cedula Profesor: "/>
                             </div>
-                            <div style="margin-top: 10px">
-                                <p:inputSwitch value="#{mbvCargaAcademica.isPeriodo}" onLabel="SI" offLabel="NO" rendered="#{mbvCargaAcademica.mostrarSeleccion}">
-                                    <p:ajax listener="#{mbvCargaAcademica.activarByPeriodo}" update="frmescala" />
-                                </p:inputSwitch>
-                            </div>
-                        </div>
-                        
-                       
-                        
-                        <h:panelGroup rendered="#{mbvCargaAcademica.isPeriodo}">
                             <div>
-                                <div>
-                                    <p:outputLabel for="selectPeriodo" value="Periodos: " styleClass="form-titulos"/>
-                                </div>
-                                <div>
-                                    <p:selectOneMenu id="selectPeriodo" value="#{mbvCargaAcademica.periodoSelected.periodoId}" styleClass="form-select">
-                                        <p:ajax listener="#{mbvCargaAcademica.cargarPeriodo}" update="frmescala"/>
-                                        <f:selectItem itemLabel="Seleccione."/>
-                                        <f:selectItems value="#{mbvCargaAcademica.periodos}" var="periodo" itemLabel="#{periodo.numero}" itemValue="#{periodo.periodoId}"/>
-                                    </p:selectOneMenu>
-                                </div>
+                                <p:autoComplete id="txtCedula" value="#{mbvCargaAcademica.profesor}" completeMethod="#{mbvCargaAcademica.completeProfesor}"
+                                                var="profesor" itemLabel="#{profesor.cedula}" itemValue="#{profesor}" converter="profesorConverter"  forceSelection="true">
+                                    <p:column>
+                                        <h:outputText styleClass="ui-theme ui-theme-#{profesor.nombre}" />
+                                    </p:column>
+
+                                    <p:column>
+                                        <h:outputText value="#{profesor.cedula} #{profesor.nombre} #{profesor.apellido}" />
+                                    </p:column>
+                                </p:autoComplete>
                             </div>
+                            <div style="margin-left: 15px">
+                                <p:commandButton value="Buscar" actionListener="#{mbvCargaAcademica.prueba}" ajax="true" update="frmescala" />
+                            </div>
+                        </div>
+
+                        <h:panelGroup id="prueba" rendered="#{mbvCargaAcademica.banderaSearch}" style="width: 94%">
+                            <div class="div-tabla-p">
+                                <p:panelGrid columns="2" id="profesorTable">
+                                    <f:facet name="header">
+                                        <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/fotosprofesores/#{mbvCargaAcademica.profesor.foto}" width="240" height="240" cache="false" alt="Sin definir" style="border-radius: 4px;box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7)"/>
+                                    </f:facet>
+
+                                    <h:outputText value="Cedula:" />
+                                    <h:outputText value="#{mbvCargaAcademica.profesor.cedula}" />
+
+
+                                    <h:outputText value="Nombres:" />
+                                    <h:outputText value="#{mbvCargaAcademica.profesor.nombre}" />
+
+                                    <h:outputText value="Apellidos:" />
+                                    <h:outputText value="#{mbvCargaAcademica.profesor.apellido}" />
+
+                                    <h:outputText value="Email:" />
+                                    <h:outputText value="#{mbvCargaAcademica.profesor.correo}" />
+
+                                    <h:outputText value="Titulo:" />
+                                    <h:outputText value="#{mbvCargaAcademica.profesor.tituloProfesional}" />
+                                </p:panelGrid>
+                            </div>
+
+                            <div style="display: flex;width: 100%">
+                                <p:panel id="horizontal" header="Asignacion Profesor" toggleable="true" collapsed="true" toggleOrientation="horizontal">
+                                    <p:dataTable id="tableContenidoss" tableStyle="width:auto" reflow="true" emptyMessage="No hay asignaturas para este profesor" var="contenidos" rowIndexVar="index" value="#{mbvCargaAcademica.contenidosProfesor}">
+                                        <p:column headerText="Numero">
+                                            <h:outputText value="#{index+1}" />
+                                        </p:column>
+
+                                        <p:column headerText="Asignatura">
+                                            <h:outputText value="#{contenidos.asignaturacicloId.asignaturaId.nombre}" />
+                                        </p:column>
+
+                                        <p:column headerText="Curso">
+                                            <h:outputText value="#{contenidos.cursoId.nombre}" />
+                                        </p:column>
+
+                                        <p:column headerText="Ciclo">
+                                            <h:outputText value="#{contenidos.cursoId.cicloId.numero}" />
+                                        </p:column>
+                                        <p:column headerText="Periodo">
+                                            <h:outputText value="#{contenidos.periodoId.numero}" />
+                                        </p:column>
+
+                                    </p:dataTable>
+                                </p:panel>
+                            </div>
+
+                            <h:panelGroup rendered="#{mbvCargaAcademica.editar}">
+                                
+                                <div>
+                                    <div style="margin-top: 10px">
+                                        <h:outputText value="Asignacion por periodo: " rendered="#{mbvCargaAcademica.mostrarSeleccion}" styleClass="form-titulos"/>
+                                    </div>
+                                    <div style="margin-top: 10px">
+                                        <p:inputSwitch value="#{mbvCargaAcademica.isPeriodo}" onLabel="SI" offLabel="NO" rendered="#{mbvCargaAcademica.mostrarSeleccion}">
+                                            <p:ajax listener="#{mbvCargaAcademica.activarByPeriodo}" update="frmescala" />
+                                        </p:inputSwitch>
+                                    </div>
+                                </div>
+
+
+
+                                <h:panelGroup rendered="#{mbvCargaAcademica.isPeriodo}">
+                                    <div>
+                                        <div>
+                                            <p:outputLabel for="selectPeriodo" value="Periodos: " styleClass="form-titulos"/>
+                                        </div>
+                                        <div>
+                                            <p:selectOneMenu id="selectPeriodo" value="#{mbvCargaAcademica.periodoSelected.periodoId}" styleClass="form-select">
+                                                <p:ajax listener="#{mbvCargaAcademica.cargarPeriodo}" update="frmescala"/>
+                                                <f:selectItem itemLabel="Seleccione."/>
+                                                <f:selectItems value="#{mbvCargaAcademica.periodos}" var="periodo" itemLabel="#{periodo.numero}" itemValue="#{periodo.periodoId}"/>
+                                            </p:selectOneMenu>
+                                        </div>
+                                    </div>
+                                </h:panelGroup>
+
+                                <h:panelGroup rendered="#{mbvCargaAcademica.mostrarCursos}">
+                                    <div>
+                                        <div>
+                                            <p:outputLabel for="selectCourse" value="Curso: " styleClass="form-titulos" />
+                                        </div>
+                                        <div>
+                                            <p:selectOneMenu id="selectCourse" value="#{mbvCargaAcademica.cursoSelected.cursoId}" styleClass="form-select">
+                                                <p:ajax listener="#{mbvCargaAcademica.cargarPickList()}" update="frmescala"/>
+                                                <f:selectItem itemLabel="Seleccione."/>
+                                                <f:selectItems value="#{mbvCargaAcademica.cursos}" var="curso" itemLabel="ciclo #{curso.cicloId.numero} - #{curso.nombre} " itemValue="#{curso.cursoId}"/>
+                                            </p:selectOneMenu>
+                                        </div>
+                                    </div>                            
+                                </h:panelGroup>
+
+                                <div class="div-asignacion">
+                                    <div>
+                                        <p:outputLabel rendered="#{mbvCargaAcademica.banderaAsig}">
+                                            <h3>Asignacion</h3>
+                                        </p:outputLabel>
+                                    </div>
+                                    <div>
+                                        <p:pickList id="pickList" value="#{mbvCargaAcademica.pickList}" var="asignatura" itemLabel="#{asignatura.nombre}" itemValue="#{asignatura.asignaturaId}" rendered="#{mbvCargaAcademica.banderaAsig}">
+                                            <f:facet name="sourceCaption">Asiganturas</f:facet>
+                                            <f:facet name="targetCaption">Ciclo</f:facet>
+                                            <p:ajax event="transfer" listener="#{mbvCargaAcademica.onTransfer}"  />
+                                        </p:pickList>
+                                    </div>
+                                </div>
+
+
+                                <div style="text-align: center;margin-bottom: 20px">
+                                    <p:commandButton id="Confirmar" value="Confirmar"  style="margin-top:15px" rendered="#{mbvCargaAcademica.banderaAsig}" >
+                                        <p:ajax listener="#{mbvCargaAcademica.cargarMaterias}" update="frmescala"/>
+                                    </p:commandButton>
+
+                                </div>
+                            </h:panelGroup>
+
                         </h:panelGroup>
-                        
-                        <h:panelGroup rendered="#{mbvCargaAcademica.mostrarCursos}">
-                            <div>
-                                <div>
-                                    <p:outputLabel for="selectCourse" value="Curso: " styleClass="form-titulos" />
-                                </div>
-                                <div>
-                                    <p:selectOneMenu id="selectCourse" value="#{mbvCargaAcademica.cursoSelected.cursoId}" styleClass="form-select">
-                                        <p:ajax listener="#{mbvCargaAcademica.cargarPickList()}" update="frmescala"/>
-                                        <f:selectItem itemLabel="Seleccione."/>
-                                        <f:selectItems value="#{mbvCargaAcademica.cursos}" var="curso" itemLabel="ciclo #{curso.cicloId.numero} - #{curso.nombre} " itemValue="#{curso.cursoId}"/>
-                                    </p:selectOneMenu>
-                                </div>
-                            </div>                            
-                        </h:panelGroup>
 
-                        <div class="div-asignacion">
-                            <div>
-                                <p:outputLabel rendered="#{mbvCargaAcademica.banderaAsig}">
-                                    <h3>Asignacion</h3>
-                                </p:outputLabel>
-                            </div>
-                            <div>
-                                <p:pickList id="pickList" value="#{mbvCargaAcademica.pickList}" var="asignatura" itemLabel="#{asignatura.nombre}" itemValue="#{asignatura.asignaturaId}" rendered="#{mbvCargaAcademica.banderaAsig}">
-                                    <f:facet name="sourceCaption">Asiganturas</f:facet>
-                                    <f:facet name="targetCaption">Ciclo</f:facet>
-                                    <p:ajax event="transfer" listener="#{mbvCargaAcademica.onTransfer}"  />
-                                </p:pickList>
-                            </div>
-                        </div>
-                        
-                        
-                        <div style="text-align: center;margin-bottom: 20px">
-                            <p:commandButton id="Confirmar" value="Confirmar"  style="margin-top:15px" rendered="#{mbvCargaAcademica.banderaAsig}" >
-                                <p:ajax listener="#{mbvCargaAcademica.cargarMaterias}" update="frmescala"/>
-                            </p:commandButton>
-
-                        </div>
-                        
-                        
                     </h:panelGroup>
-                    
-                     
 
-                     <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
- 
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+
                     <p:dialog widgetVar="statusDialog" appendTo="@(body)" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
                         <p:graphicImage library="imagenes" name="load1.gif"/>
                     </p:dialog>

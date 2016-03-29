@@ -5,6 +5,7 @@
 package com.tesis.beans;
 
 import com.tesis.entity.Anlectivo;
+import com.tesis.entity.Asignatura;
 import com.tesis.entity.Asignaturaciclo;
 import com.tesis.entity.Ciclo;
 import com.tesis.entity.Contenidotematico;
@@ -49,6 +50,27 @@ public class ContenidotematicoFacade extends AbstractFacade<Contenidotematico> {
             cq.setParameter("cursoId",curso);
             cq.setParameter("asignaturacicloId",asinaturaciclo);
             cq.setParameter("periodoId",periodo);
+            if(cq.getSingleResult()!=null){
+                return (Contenidotematico) cq.getSingleResult();
+            }
+            else{
+                return null;
+            }
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+            return null;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public Contenidotematico getByReporte(Curso curso,Asignatura asinatura,Periodo periodo){
+        try {
+            Query cq = em.createNamedQuery("Contenidotematico.findByReporte");
+            cq.setParameter("curso",curso);
+            cq.setParameter("asignatura",asinatura);
+            cq.setParameter("periodo",periodo);
             if(cq.getSingleResult()!=null){
                 return (Contenidotematico) cq.getSingleResult();
             }
@@ -249,6 +271,27 @@ public class ContenidotematicoFacade extends AbstractFacade<Contenidotematico> {
         }
         
     }
+    public List<Contenidotematico> getByProfesorAño(Profesor profesor,Anlectivo anlectivo){
+        try {
+            Query cq = em.createNamedQuery("Contenidotematico.findByProfesorAño");
+            cq.setParameter("profesor", profesor);
+            cq.setParameter("anlectivo", anlectivo);
+            if(cq.getResultList()!=null){
+                return cq.getResultList();
+            }
+            else{
+                return null;
+            }
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+            return null;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        
+    }
     public List<Contenidotematico> getByPeriodoCurso(Periodo periodo,Curso curso){
         try {
             Query cq = em.createNamedQuery("Contenidotematico.findByCursoPeriodo");
@@ -336,6 +379,26 @@ public class ContenidotematicoFacade extends AbstractFacade<Contenidotematico> {
         try {
             Query cq = em.createNamedQuery("Contenidotematico.findRectificarPeriodoProfesor");
             cq.setParameter("periodo", periodo);
+            cq.setParameter("profesor", profesor);
+            if(cq.getResultList()!=null){
+                return cq.getResultList();
+            }
+            else{
+                return null;
+            }
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+            return null;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        
+    }
+    public List<Contenidotematico> getRectificadosTodos(Profesor profesor){
+        try {
+            Query cq = em.createNamedQuery("Contenidotematico.findRectificarTodosProfesor");
             cq.setParameter("profesor", profesor);
             if(cq.getResultList()!=null){
                 return cq.getResultList();

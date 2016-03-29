@@ -6,7 +6,7 @@
       xmlns:f="http://java.sun.com/jsf/core">
     <h:head>
         <title>Nuevo Año Escolar</title>
-                <style type="text/css">
+        <style type="text/css">
             .ui-widget {
                 font-size: 90%;
             }
@@ -14,43 +14,45 @@
     </h:head>
     <h:body>
         <h:form id="frmAlectivo">
-            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" rendered="#{mbvAlectivo.mensage}"/>
-            <h:panelGrid columns="3">
-                <p:outputLabel for="selectaño" value="Año: "/>
-                <p:selectOneMenu id="selectaño" value="#{mbvAlectivo.año}" style="width:125px">
-                    <p:ajax event="change" update="@this" />
-                    <f:selectItem itemLabel="Seleccione." itemValue="" />
-                    <f:selectItems value="#{mbvAlectivo.años}" />
-                </p:selectOneMenu>
-                <p:message for="selectaño"/>
-                
-                <p:outputLabel for="selectconf" value="Configuracion:" />
-                <p:selectOneMenu id="selectconf" value="#{mbvAlectivo.configuracionselected.configuracionId}">
-                    <p:ajax listener="#{mbvAlectivo.cargarCopia}" update=":frmAlectivo"/>
-                    <f:selectItem itemLabel="Seleccione."/>
-                    <f:selectItems value="#{mbvAlectivo.configuraciones}" var="conf" itemLabel="#{conf.nombre}" itemValue="#{conf.configuracionId}"/>
-                </p:selectOneMenu>
-                <p:message for="selectconf"/>
-                
-                <p:outputLabel for="selectcopia" value="Copiar año:" rendered="#{mbvAlectivo.estCopia}"/>
-                <p:selectOneMenu id="selectcopia" value="#{mbvAlectivo.copia}" style="width:125px" rendered="#{mbvAlectivo.estCopia}">
-                    <f:selectItem itemLabel="Seleccione." itemValue="" />
-                    <f:selectItem itemLabel="SI" itemValue="SI" />
-                    <f:selectItem itemLabel="NO" itemValue="NO" />    
-                </p:selectOneMenu>
-                <p:message for="selectcopia" rendered="#{mbvAlectivo.estCopia}"/>
-                
-                <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
-                <p:inputTextarea id="txtDescripcion" value="#{mbvAlectivo.anlectivo.descripcion}" autoResize="false" rows="5" />
-                <p:message for="txtDescripcion"/>
-                
-                <p:outputLabel for="txtNoPeriodos" value="Numero de periodos:  " />
-                <p:inputText id="txtNoPeriodos" value="#{mbvAlectivo.anlectivo.noPeriodos}" />
-                <p:message for="txtNoPeriodos"/>
-                
-                <h:panelGroup></h:panelGroup>
-                <p:commandButton value="Registrar" actionListener="#{mbvAlectivo.insertar}" ajax="true" update="frmAlectivo" />
-            </h:panelGrid> 
+            <h:panelGroup rendered="#{mbvAlectivo.crear}">
+                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" rendered="#{mbvAlectivo.mensage}"/>
+                <h:panelGrid columns="3">
+                    <p:outputLabel for="selectaño" value="Año: "/>
+                    <p:selectOneMenu id="selectaño" required="true" value="#{mbvAlectivo.año}" style="width:125px">
+                        <p:ajax event="change" update="@this" />
+                        <f:selectItem itemLabel="Seleccione." itemValue="" />
+                        <f:selectItems value="#{mbvAlectivo.años}" />
+                    </p:selectOneMenu>
+                    <p:message for="selectaño"/>
+
+                    <p:outputLabel for="selectconf" value="Configuracion:" />
+                    <p:selectOneMenu id="selectconf" required="true" value="#{mbvAlectivo.configuracionselected.configuracionId}">
+                        <p:ajax listener="#{mbvAlectivo.cargarCopia}" update=":frmAlectivo"/>
+                        <f:selectItem itemLabel="Seleccione."/>
+                        <f:selectItems value="#{mbvAlectivo.configuraciones}" var="conf" itemLabel="#{conf.nombre}" itemValue="#{conf.configuracionId}"/>
+                    </p:selectOneMenu>
+                    <p:message for="selectconf"/>
+
+                    <p:outputLabel for="selectcopia" value="Copiar año:" rendered="#{mbvAlectivo.estCopia}"/>
+                    <p:selectOneMenu id="selectcopia" value="#{mbvAlectivo.copia}" style="width:125px" rendered="#{mbvAlectivo.estCopia}">
+                        <f:selectItem itemLabel="Seleccione." itemValue="" />
+                        <f:selectItem itemLabel="SI" itemValue="SI" />
+                        <f:selectItem itemLabel="NO" itemValue="NO" />    
+                    </p:selectOneMenu>
+                    <p:message for="selectcopia" rendered="#{mbvAlectivo.estCopia}"/>
+
+                    <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
+                    <p:inputTextarea id="txtDescripcion" value="#{mbvAlectivo.anlectivo.descripcion}" autoResize="false" rows="5" />
+                    <p:message for="txtDescripcion"/>
+
+                    <p:outputLabel for="txtNoPeriodos" value="Numero de periodos:  " />
+                    <p:inputText id="txtNoPeriodos" value="#{mbvAlectivo.anlectivo.noPeriodos}" />
+                    <p:message for="txtNoPeriodos"/>
+
+                    <h:panelGroup></h:panelGroup>
+                    <p:commandButton value="Registrar" actionListener="#{mbvAlectivo.insertar}" ajax="true" update="frmAlectivo" />
+                </h:panelGrid> 
+            </h:panelGroup>
         </h:form>
     </h:body>
 </html>

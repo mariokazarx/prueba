@@ -37,6 +37,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Anlectivo.findAll", query = "SELECT a FROM Anlectivo a"),
+    @NamedQuery(name = "Anlectivo.añoEnUso", query = "SELECT COUNT(a) FROM Anlectivo a WHERE a.anio = :anio"),
     @NamedQuery(name = "Anlectivo.findAnlectivoUtil", query = "SELECT a FROM Anlectivo a WHERE a.estadoAniolectivoId.estadoAniolectivoId = 2 OR a.estadoAniolectivoId.estadoAniolectivoId = 5"),
     @NamedQuery(name = "Anlectivo.findAnlectivosfinalizados", query = "SELECT a FROM Anlectivo a WHERE a.estadoAniolectivoId.estadoAniolectivoId = 3 OR a.estadoAniolectivoId.estadoAniolectivoId = 5"),
     @NamedQuery(name = "Anlectivo.escalaEnUso", query = "SELECT COUNT(a) FROM Anlectivo a WHERE a.configuracionId.escalaId = :escala AND (a.estadoAniolectivoId.estadoAniolectivoId = 2 OR a.estadoAniolectivoId.estadoAniolectivoId = 3 OR a.estadoAniolectivoId.estadoAniolectivoId = 5)"),
@@ -54,7 +55,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Anlectivo.findIniciadoObj", query = "SELECT a FROM Anlectivo a WHERE a.estadoAniolectivoId.estadoAniolectivoId = 2"),
     @NamedQuery(name = "Anlectivo.findIniciadoNew", query = "SELECT COUNT(a) FROM Anlectivo a WHERE a.estadoAniolectivoId.estadoAniolectivoId = 2 and a.terminado = false"),
     @NamedQuery(name = "Anlectivo.findConfoguracionCurso", query = "SELECT a.configuracionId FROM Anlectivo a JOIN a.cursoList c WHERE c.cursoId = :cursoId"),
-    @NamedQuery(name = "Anlectivo.findConfiguracion", query = "SELECT a FROM Anlectivo a WHERE a.configuracionId = :configuracionId"),
+    @NamedQuery(name = "Anlectivo.findConfiguracion", query = "SELECT COUNT(a) FROM Anlectivo a WHERE a.configuracionId = :configuracionId"),
     @NamedQuery(name = "Anlectivo.findConfiguracionUso", query = "SELECT a FROM Anlectivo a WHERE a.configuracionId = :configuracionId and a.terminado = true"),
     @NamedQuery(name = "Anlectivo.removeById", query = "DELETE FROM Anlectivo a WHERE a.anlectivoId = :anlectivoId"),
     @NamedQuery(name = "Anlectivo.findByDescripcion", query = "SELECT a FROM Anlectivo a WHERE a.descripcion = :descripcion")})
