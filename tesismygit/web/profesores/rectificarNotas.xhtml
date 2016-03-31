@@ -92,7 +92,7 @@
                                     <f:selectItems value="#{mbvRectificar.anlectivos}" var="anio" itemLabel="#{anio.anio}" itemValue="#{anio.anlectivoId}"/>
                                 </p:selectOneMenu>
 
-                                <p:outputLabel for="selectPeriodo" value="Periodos: " styleClass="form-titulos"/>
+                                <p:outputLabel for="selectPeriodo" value="Periodo: " styleClass="form-titulos"/>
                                 <p:selectOneMenu id="selectPeriodo" value="#{mbvRectificar.periodoSelected.periodoId}" styleClass="form-select">
                                     <p:ajax listener="#{mbvRectificar.cargarContenido}" update="frmRectificar"/>
                                     <f:selectItem itemLabel="Seleccione."/>

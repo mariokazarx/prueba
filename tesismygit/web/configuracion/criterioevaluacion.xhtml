@@ -17,10 +17,11 @@
                     </f:metadata>
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
                     <h:panelGroup rendered="#{mbvcriterioevaluacion.consultar}">
-                        <p:commandButton value="Nuevo criterio de evaluacion" icon="ui-icon-document" ajax="true" update="frmListaEscala" actionListener="#{mbvcriterioevaluacion.newCriterioEval}">
-                            <p:ajax event="dialogReturn" listener="#{mbvcriterioevaluacion.closeDialog}" update="frmListaEscala" />
-                        </p:commandButton>
-                        
+                        <p:outputPanel styleClass="btn-new">
+                            <p:commandButton value="Nuevo criterio de evaluacion" icon="ui-icon-document" ajax="true" update="frmListaEscala" actionListener="#{mbvcriterioevaluacion.newCriterioEval}">
+                                <p:ajax event="dialogReturn" listener="#{mbvcriterioevaluacion.closeDialog}" update="frmListaEscala" />
+                            </p:commandButton>
+                        </p:outputPanel>
                         <p:dataTable id="tablaListaEscala" var="item" value="#{mbvcriterioevaluacion.criterioseval}" tableStyle="width:auto" reflow="true" paginator="true" rows="10" selection="#{mbvcriterioevaluacion.criterioeval}" selectionMode="single" rowKey="#{item.criterioevaluacionId}" >
                             <p:ajax event="rowSelect" update=":frmListaEscala:panelDetalleEscala" oncomplete="PF('dialogoDetalleEscala').show()"/>
                             <f:facet name="header">
@@ -84,7 +85,7 @@
                             <p:commandButton id="cancelButton" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('removecriterio').hide();" value="Cancelar"/>
                         </h:panelGrid>
                     </h:form>
-                </p:confirmDialog>>
+                </p:confirmDialog>
 
                 <p:dialog header="Datos del criterio" responsive="true" widgetVar="dialogoEditarEscala" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
                     <h:form id="frmEditarEscala">
@@ -119,7 +120,7 @@
                             <p:commandButton id="cancelButton" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('enUso').hide();" value="OK"/>
                         </h:panelGrid>
                     </h:form>
-                </p:confirmDialog>>
+                </p:confirmDialog>
             </ui:define>
 
         </ui:composition>

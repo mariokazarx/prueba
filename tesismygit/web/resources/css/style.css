@@ -69,8 +69,8 @@ table.cont-control td:last-child{
     margin-right: 20px;
 }
 .btn-new{
-    margin-top: 20px;
-    margin-bottom: 30px;
+    margin-top: 50px;
+    margin-bottom: 40px;
     text-align: right;
 }
 .div-form{
@@ -90,7 +90,7 @@ table.cont-control td:last-child{
     line-height: 40px;
 }
 .div-cont-matricula{
-    width: 50%;
+    width: 100%;
     margin: 10px auto;
 }
 .form-principal{

@@ -17,9 +17,11 @@
                     </f:metadata>
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
                     <h:panelGroup rendered="#{mbvCurso.consultar}">
-                        <p:commandButton value="Nuevo Curso" icon="ui-icon-document" ajax="true" update="frmListaCursos" actionListener="#{mbvCurso.newCurso}">
-                            <p:ajax event="dialogReturn" listener="#{mbvCurso.closeDialog}" update="frmListaCursos" />
-                        </p:commandButton>
+                        <p:outputPanel styleClass="btn-new">|
+                            <p:commandButton value="Nuevo Curso" icon="ui-icon-document" ajax="true" update="frmListaCursos" actionListener="#{mbvCurso.newCurso}">
+                                <p:ajax event="dialogReturn" listener="#{mbvCurso.closeDialog}" update="frmListaCursos" />
+                            </p:commandButton>
+                        </p:outputPanel>
                         <p:dataTable id="tablaListaCurso" var="curso" value="#{mbvCurso.cursos}" paginator="true" rows="10" tableStyle="width:auto" reflow="true" selection="#{mbvCurso.curso}" selectionMode="single" rowKey="#{curso.cursoId}" >
                             <p:ajax event="rowSelect" update=":frmListaCursos:panelDetalleCurso" oncomplete="PF('dialogoDetalleCurso').show()"/>
                             <f:facet name="header">

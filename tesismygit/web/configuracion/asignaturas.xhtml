@@ -15,9 +15,11 @@
                     </f:metadata>
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
                     <h:panelGroup rendered="#{mbvcriterioevaluacion.consultar}">
-                        <p:commandButton value="Nueva Asignatura" ajax="true" update="frmListaAsignaturas" icon="ui-icon-document" actionListener="#{mbvAsignatura.newAsignatura}">
-                            <p:ajax event="dialogReturn" listener="#{mbvAsignatura.closeDialog}" update="frmListaAsignaturas" />
-                        </p:commandButton>
+                        <p:outputPanel styleClass="btn-new">
+                            <p:commandButton value="Nueva Asignatura" ajax="true" update="frmListaAsignaturas" icon="ui-icon-document" actionListener="#{mbvAsignatura.newAsignatura}">
+                                <p:ajax event="dialogReturn" listener="#{mbvAsignatura.closeDialog}" update="frmListaAsignaturas" />
+                            </p:commandButton>
+                        </p:outputPanel>
                         <p:dataTable id="tablaListaAsiganturas" var="item" value="#{mbvAsignatura.asignaturas}" tableStyle="width:auto" reflow="true" paginator="true" rows="10" selection="#{mbvAsignatura.asignatura}" selectionMode="single"  rowKey="#{item.asignaturaId}" >
                             <p:ajax event="rowSelect" update=":frmListaAsignaturas:panelDetalleAsignatura" oncomplete="PF('dialogoDetalleAsignatura').show()"/>
                             <f:facet name="header">

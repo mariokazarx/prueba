@@ -15,9 +15,11 @@
                         <f:event type="preRenderView" listener="#{mbvEstudiante.initRender}" />
                     </f:metadata>
                     <h:panelGroup rendered="#{mbvEstudiante.consultar}">
-                        <p:commandButton value="Nuevo Estudiante" icon="ui-icon-document" ajax="true" update="frmListaEstudiantes" actionListener="#{mbvEstudiante.newEstudiante}">
-                            <p:ajax event="dialogReturn" listener="#{mbvEstudiante.closeDialog}" update="frmListaEstudiantes" />
-                        </p:commandButton>
+                        <p:outputPanel styleClass="btn-new">
+                            <p:commandButton value="Nuevo Estudiante" icon="ui-icon-document" ajax="true" update="frmListaEstudiantes" actionListener="#{mbvEstudiante.newEstudiante}">
+                                <p:ajax event="dialogReturn" listener="#{mbvEstudiante.closeDialog}" update="frmListaEstudiantes" />
+                            </p:commandButton>
+                        </p:outputPanel>
                         <p:dataTable id="tablaListaEstudiante" tableStyle="width:auto" var="estudiante" value="#{mbvEstudiante.estudiantes}" reflow="true" paginator="true" rows="10" selection="#{mbvEstudiante.estudiante}" selectionMode="single" lazy="true" rowKey="#{estudiante.estudianteId}" >
                             <p:ajax event="rowSelect" update=":frmListaEstudiantes:panelDetalleEstudiante" oncomplete="PF('dialogoDetalleEstudiante').show()"/>
                             <f:facet name="header">
@@ -108,7 +110,7 @@
 
                 <p:dialog header="Datos del Estudiante" widgetVar="dialogoEditarEstudiante" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
                     <h:form id="frmEditarEstudiante" enctype="multipart/form-data">
-                       <!-- <p:scrollPanel mode="native" style="height:400px">--> 
+                        <!-- <p:scrollPanel mode="native" style="height:400px">--> 
                         <p:outputPanel id="panelEditarEstudiante" >
                             <h:panelGrid columns="3">
                                 <p:outputLabel for="selectTipo" value="Tipo Identificacion: " />
@@ -213,7 +215,7 @@
                                 <p:commandButton value="Editar Estudiante" actionListener="#{mbvEstudiante.editar}" ajax="true"  update=":frmEditarEstudiante :frmListaEstudiantes" />
                             </h:panelGrid>  
                         </p:outputPanel>
-                          <!--  </p:scrollPanel>-->
+                        <!--  </p:scrollPanel>-->
                     </h:form>
                 </p:dialog>
             </ui:define>

@@ -15,9 +15,11 @@
                         <f:event type="preRenderView" listener="#{mbvConfiguracion.initRender}" />
                     </f:metadata>
                     <h:panelGroup rendered="#{mbvConfiguracion.consultar}">
-                        <p:commandButton value="Nueva Configuracion" icon="ui-icon-document" ajax="true" update="frmListaConf" actionListener="#{mbvConfiguracion.newConfig}">
-                            <p:ajax event="dialogReturn" listener="#{mbvConfiguracion.closeDialog}" update="frmListaConf" />
-                        </p:commandButton>
+                        <p:outputPanel styleClass="btn-new">
+                            <p:commandButton value="Nueva Configuracion" icon="ui-icon-document" ajax="true" update="frmListaConf" actionListener="#{mbvConfiguracion.newConfig}">
+                                <p:ajax event="dialogReturn" listener="#{mbvConfiguracion.closeDialog}" update="frmListaConf" />
+                            </p:commandButton>
+                        </p:outputPanel>
                         <p:dataTable id="tablaListaConf" var="item" value="#{mbvConfiguracion.configuraciones}" tableStyle="width:auto" reflow="true" paginator="true" rows="10" selection="#{mbvConfiguracion.configuracion}" selectionMode="single" rowKey="#{item.configuracionId}" >
                             <p:ajax event="rowSelect" update=":frmListaConf:panelDetalleConf" oncomplete="PF('dialogoDetalleConf').show()"/>
                             <f:facet name="header">

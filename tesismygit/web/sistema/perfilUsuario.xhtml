@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <body>
+        <ui:composition template="./../plantilla.xhtml">
+            <ui:define name="content">
+                <h:form id="frmPerfilUsuario">
+                    <p:outputPanel id="panelPerfilUsuario" >
+                        <h:panelGrid columns="3">
+                            <p:outputLabel for="txtNombre" value="Nombres: " />
+                            <p:inputText id="txtNombre" value="#{mbvUsuario.usuario.nombres}" size="25" >
+                                <f:validator validatorId="validatorVacio"/>
+                            </p:inputText>
+                            <p:message for="txtNombre"/>
+                            <p:outputLabel for="txtApellidos" value="Apellidos: " />
+                            <p:inputText id="txtApellidos" value="#{mbvUsuario.usuario.apellidos}" size="25">
+                                <f:validator validatorId="validatorVacio"/>
+                            </p:inputText>
+                            <p:message for="txtApellidos"/>
+                            <p:outputLabel for="txtTelefono" value="Telefono: " />
+                            <p:inputText id="txtTelefono" value="#{mbvUsuario.usuario.telefono}" size="25" >
+                                <f:validator validatorId="validatorVacio"/>
+                            </p:inputText>
+                            <p:message for="txtTelefono"/>
+                            <p:outputLabel for="txtDireccion" value="Direccion: " />
+                            <p:inputText id="txtDireccion" value="#{mbvUsuario.usuario.direccion}" size="25">
+                                <f:validator validatorId="validatorVacio"/>
+                            </p:inputText>
+                            <p:message for="txtDireccion"/>
+                            
+                            <h:outputText value="Cambiar Contraseña: " />
+                            <p:inputSwitch value="#{mbvUsuario.cambiarContraseña}" onLabel="SI" offLabel="NO">
+                                <p:ajax listener="#{mbvUsuario.activarContraseña}" update="frmEditarUsuario" />
+                            </p:inputSwitch>
+                            <h:panelGroup></h:panelGroup>
+
+                            <p:outputLabel value="Contraseña" for="txtContrasenia" rendered="#{mbvUsuario.cambiarContraseña}"/>
+                            <p:password id="txtContrasenia" label="Contraseña: " match="txtContraseniaRepita" size="25" value="#{mbvUsuario.usuario.contraseña}" rendered="#{mbvUsuario.cambiarContraseña}">
+                                <f:validator validatorId="validatorVacio"/>
+                            </p:password>
+                            <p:message for="txtContrasenia" rendered="#{mbvUsuario.cambiarContraseña}"/>
+
+                            <p:outputLabel value="Repita contraseña" for="txtContraseniaRepita" rendered="#{mbvUsuario.cambiarContraseña}"/>
+                            <p:password id="txtContraseniaRepita" label="Repita contraseña: " size="25" value="#{mbvUsuario.txtRepiteContrasenia}" rendered="#{mbvUsuario.cambiarContraseña}"/>
+                            <h:panelGroup rendered="#{mbvUsuario.cambiarContraseña}"></h:panelGroup>
+                            <h:panelGroup></h:panelGroup>
+                            <h:panelGroup></h:panelGroup>
+                            <p:commandButton value="Editar Usuario" actionListener="#{mbvUsuario.actualizar}" ajax="true" update=":frmListaUsuarios :frmEditarUsuario" />
+                        </h:panelGrid> 
+                        <p:dataTable var="rol" value="#{mbvUsuario.rolesRecursos}" id="tablaperfil" tableStyle="width:auto" emptyMessage="No se han asignado permisos aun">
+                            <p:column headerText="Recurso">
+                                <h:outputText value="#{rol.recursoId.nombre}" />
+                            </p:column>
+
+                            <p:column headerText="Consultar">
+                                <h:outputText value="#{rol.consultar}" />
+                            </p:column>
+
+                            <p:column headerText="Editar">
+                                <h:outputText value="#{rol.editar}" />
+                            </p:column>
+
+                            <p:column headerText="Adicionar">
+                                <h:outputText value="#{rol.recursoId.recursoId==16 || rol.recursoId.recursoId==17 ? 'No aplica' : rol.agregar}" />
+                            </p:column>
+
+                            <p:column headerText="Eliminar">
+                                <h:outputText value="#{rol.eliminar}" />
+                            </p:column>
+                        </p:dataTable>
+                    </p:outputPanel>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>
+

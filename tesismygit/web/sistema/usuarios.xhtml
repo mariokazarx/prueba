@@ -15,9 +15,11 @@
                     </f:metadata>
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
                     <h:panelGroup rendered="#{mbvUsuario.consultar}">
-                        <p:commandButton value="Nuevo Usuario" ajax="true" update="frmListaUsuarios" icon="ui-icon-document" actionListener="#{mbvUsuario.newUsuario}">
-                            <p:ajax event="dialogReturn" listener="#{mbvUsuario.closeDialog}" update="frmListaUsuarios" />
-                        </p:commandButton>
+                        <p:outputPanel styleClass="btn-new">
+                            <p:commandButton value="Nuevo Usuario" ajax="true" update="frmListaUsuarios" icon="ui-icon-document" actionListener="#{mbvUsuario.newUsuario}">
+                                <p:ajax event="dialogReturn" listener="#{mbvUsuario.closeDialog}" update="frmListaUsuarios" />
+                            </p:commandButton>
+                        </p:outputPanel>
                         <p:dataTable id="tablaListaUsuario" tableStyle="width:auto" reflow="true" var="item" value="#{mbvUsuario.usuarios}" paginator="true" rows="10" selection="#{mbvUsuario.usuario}" selectionMode="single" lazy="true" rowKey="#{item.usuarioId}" >
                             <p:ajax event="rowSelect" update=":frmListaUsuarios:panelDetalleUsuario" oncomplete="PF('dialogoDetalleUsuario').show()"/>
                             <f:facet name="header">
