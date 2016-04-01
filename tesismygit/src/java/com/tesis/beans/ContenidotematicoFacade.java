@@ -292,6 +292,27 @@ public class ContenidotematicoFacade extends AbstractFacade<Contenidotematico> {
         }
         
     }
+    public List<Contenidotematico> getByProfesorCurso(Profesor profesor,Curso curso){
+        try {
+            Query cq = em.createNamedQuery("Contenidotematico.findByProfesorCurso");
+            cq.setParameter("profesor", profesor);
+            cq.setParameter("curso", curso);
+            if(cq.getResultList()!=null){
+                return cq.getResultList();
+            }
+            else{
+                return null;
+            }
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+            return null;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        
+    }
     public List<Contenidotematico> getByPeriodoCurso(Periodo periodo,Curso curso){
         try {
             Query cq = em.createNamedQuery("Contenidotematico.findByCursoPeriodo");

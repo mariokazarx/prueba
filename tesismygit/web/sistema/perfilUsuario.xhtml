@@ -9,50 +9,62 @@
     <body>
         <ui:composition template="./../plantilla.xhtml">
             <ui:define name="content">
-                <h:form id="frmPerfilUsuario">
+                <h:form id="frmPerfilUsuario" styleClass="form-principal">
+                    <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
+                    <h3>Editar perfil</h3>
+                    <div class="div-perfil">
+                        <p:outputLabel for="txtNombre" value="Nombres: " />
+                        <p:inputText id="txtNombre" value="#{mbvPerfinUsuario.usuario.nombres}" size="25" >
+                            <f:validator validatorId="validatorVacio"/>
+                        </p:inputText>
+                        <p:message for="txtNombre"/>
+                    </div>
+                    <div class="div-perfil">
+                        <p:outputLabel for="txtApellidos" value="Apellidos: " />
+                        <p:inputText id="txtApellidos" value="#{mbvPerfinUsuario.usuario.apellidos}" size="25">
+                            <f:validator validatorId="validatorVacio"/>
+                        </p:inputText>
+                        <p:message for="txtApellidos"/>
+                    </div>
+                    <div class="div-perfil">
+                        <p:outputLabel for="txtTelefono" value="Telefono: " />
+                        <p:inputText id="txtTelefono" value="#{mbvPerfinUsuario.usuario.telefono}" size="25" >
+                            <f:validator validatorId="validatorVacio"/>
+                        </p:inputText>
+                        <p:message for="txtTelefono"/>
+                    </div>
+                    <div class="div-perfil">
+                        <p:outputLabel for="txtDireccion" value="Direccion: " />
+                        <p:inputText id="txtDireccion" value="#{mbvPerfinUsuario.usuario.direccion}" size="25">
+                            <f:validator validatorId="validatorVacio"/>
+                        </p:inputText>
+                        <p:message for="txtDireccion"/>
+                    </div>
+                    <div class="div-perfil">
+                        <p:outputLabel value="Cambiar Contraseña: " />
+                        <p:inputSwitch value="#{mbvPerfinUsuario.cambiarContraseña}" onLabel="SI" offLabel="NO">
+                            <p:ajax listener="#{mbvPerfinUsuario.activarContraseña}" update="frmPerfilUsuario" />
+                        </p:inputSwitch>
+                    </div>
+                    <div class="div-perfil">
+                        <p:outputLabel value="Contraseña: " for="txtContrasenia" rendered="#{mbvPerfinUsuario.cambiarContraseña}"/>
+                        <p:password id="txtContrasenia" label="Contraseña: " match="txtContraseniaRepita" validatorMessage="Las contraseñas no coinciden" size="25" value="#{mbvPerfinUsuario.usuario.contraseña}" rendered="#{mbvPerfinUsuario.cambiarContraseña}">
+                            <f:validator validatorId="validatorVacio"/>
+                        </p:password>
+                        <p:message for="txtContrasenia" rendered="#{mbvPerfinUsuario.cambiarContraseña}"/>
+                    </div>
+                    <div class="div-perfil">
+                        <p:outputLabel value="Repita contraseña: " for="txtContraseniaRepita" rendered="#{mbvPerfinUsuario.cambiarContraseña}"/>
+                        <p:password id="txtContraseniaRepita" label="Repita contraseña: " size="25" value="#{mbvPerfinUsuario.txtRepiteContrasenia}" rendered="#{mbvPerfinUsuario.cambiarContraseña}"/>
+                        <h:panelGroup rendered="#{mbvPerfinUsuario.cambiarContraseña}"></h:panelGroup>
+                    </div>
                     <p:outputPanel id="panelPerfilUsuario" >
-                        <h:panelGrid columns="3">
-                            <p:outputLabel for="txtNombre" value="Nombres: " />
-                            <p:inputText id="txtNombre" value="#{mbvUsuario.usuario.nombres}" size="25" >
-                                <f:validator validatorId="validatorVacio"/>
-                            </p:inputText>
-                            <p:message for="txtNombre"/>
-                            <p:outputLabel for="txtApellidos" value="Apellidos: " />
-                            <p:inputText id="txtApellidos" value="#{mbvUsuario.usuario.apellidos}" size="25">
-                                <f:validator validatorId="validatorVacio"/>
-                            </p:inputText>
-                            <p:message for="txtApellidos"/>
-                            <p:outputLabel for="txtTelefono" value="Telefono: " />
-                            <p:inputText id="txtTelefono" value="#{mbvUsuario.usuario.telefono}" size="25" >
-                                <f:validator validatorId="validatorVacio"/>
-                            </p:inputText>
-                            <p:message for="txtTelefono"/>
-                            <p:outputLabel for="txtDireccion" value="Direccion: " />
-                            <p:inputText id="txtDireccion" value="#{mbvUsuario.usuario.direccion}" size="25">
-                                <f:validator validatorId="validatorVacio"/>
-                            </p:inputText>
-                            <p:message for="txtDireccion"/>
-                            
-                            <h:outputText value="Cambiar Contraseña: " />
-                            <p:inputSwitch value="#{mbvUsuario.cambiarContraseña}" onLabel="SI" offLabel="NO">
-                                <p:ajax listener="#{mbvUsuario.activarContraseña}" update="frmEditarUsuario" />
-                            </p:inputSwitch>
-                            <h:panelGroup></h:panelGroup>
 
-                            <p:outputLabel value="Contraseña" for="txtContrasenia" rendered="#{mbvUsuario.cambiarContraseña}"/>
-                            <p:password id="txtContrasenia" label="Contraseña: " match="txtContraseniaRepita" size="25" value="#{mbvUsuario.usuario.contraseña}" rendered="#{mbvUsuario.cambiarContraseña}">
-                                <f:validator validatorId="validatorVacio"/>
-                            </p:password>
-                            <p:message for="txtContrasenia" rendered="#{mbvUsuario.cambiarContraseña}"/>
+                        <div style="margin-top: 15px;text-align: center">
 
-                            <p:outputLabel value="Repita contraseña" for="txtContraseniaRepita" rendered="#{mbvUsuario.cambiarContraseña}"/>
-                            <p:password id="txtContraseniaRepita" label="Repita contraseña: " size="25" value="#{mbvUsuario.txtRepiteContrasenia}" rendered="#{mbvUsuario.cambiarContraseña}"/>
-                            <h:panelGroup rendered="#{mbvUsuario.cambiarContraseña}"></h:panelGroup>
-                            <h:panelGroup></h:panelGroup>
-                            <h:panelGroup></h:panelGroup>
-                            <p:commandButton value="Editar Usuario" actionListener="#{mbvUsuario.actualizar}" ajax="true" update=":frmListaUsuarios :frmEditarUsuario" />
-                        </h:panelGrid> 
-                        <p:dataTable var="rol" value="#{mbvUsuario.rolesRecursos}" id="tablaperfil" tableStyle="width:auto" emptyMessage="No se han asignado permisos aun">
+                            <p:commandButton value="Actualizar informacion" actionListener="#{mbvPerfinUsuario.actualizar}" ajax="true" update="frmPerfilUsuario" />
+                        </div> 
+                        <p:dataTable var="rol" reflow="true" value="#{mbvPerfinUsuario.rolesRecursos}" id="tablaperfil" tableStyle="width:auto" emptyMessage="No se han asignado permisos aun">
                             <p:column headerText="Recurso">
                                 <h:outputText value="#{rol.recursoId.nombre}" />
                             </p:column>

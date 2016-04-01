@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='iso-8859-1' ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="es" 
-    xmlns="http://www.w3.org/1999/xhtml"
+      xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -49,15 +49,26 @@
             </p:dialog>
         </h:form>
         <p:layout fullPage="true">
-            <p:layoutUnit position="west" collapsed="true"  header="Menu Principal" resizable="true" collapsible="true" id="left1">
-                <div class="div-foto-menup">
-                </div>
-                <ui:insert name="left"><br></br>
+            <p:layoutUnit position="west" collapsed="true"  header="Menu Principal" resizable="true" collapsible="true" id="left1">                
+                <ui:insert name="left">
                     <center>
-                        <h:form>
+                        <h:form id="MenuLeft">
+                            <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
+                            <div style="margin-top: 15px;margin-bottom: 20px;">
+                                <h:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/fotosprofesores/#{mbvPrueba.prof.foto}"  width="150" height="150" cache="false" alt="Sin definir" style="border-radius: 4px;box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7)">
+                                    <p:ajax id="id3" event="click" listener="#{mbvPrueba.cambiarFotoProfesor()}" />
+                                </h:graphicImage>
+                            </div>
                             <p:panelMenu  id="menuPpal" model="#{mbvMenu.model}">
                             </p:panelMenu>
                         </h:form>
+                        <p:dialog header="Cambiar foto" responsive="true" widgetVar="dialogoSubirArchivos" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
+                            <h:form id="frmFotoProfesor" enctype="multipart/form-data">
+                                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+                                <p:fileUpload fileUploadListener="#{mbvPrueba.subirFotoProfesor}" multiple="true" fileLimit="1" mode="advanced" update="frmFotoProfesor :MenuLeft"  allowTypes="/(\.|\/)(png|jpg)$/" cancelLabel="Cancelar" uploadLabel="Cambiar foto" label="Seleccione foto">
+                                </p:fileUpload>   
+                            </h:form>
+                        </p:dialog>
                     </center>
                 </ui:insert>
             </p:layoutUnit>
@@ -113,7 +124,7 @@
 
                         <p:menuitem value="Cerrar Sesion" actionListener="#{mbsLogin.cerrarSession}"/>  
                     </p:menubar>
-                    <p:menubar id="menuProfesor" rendered="#{mbsLogin.loginProfesor}">  
+                    <p:menubar id="menuProfesor" rendered="#{mbsLogin.loginProfesor}" style="display: flex;justify-content: flex-end;">  
                         <p:menuitem value="Cerrar Sesion" actionListener="#{mbsLogin.cerrarSession}" />  
                     </p:menubar>
                 </h:form>
@@ -143,16 +154,16 @@
                     <div class="footer-div-40" >
                         <span class="footer-span-titulos">DESARROLLADO POR:</span>
                         <span class="footer-span">Mario Fernando Jurado </span>
-                            <span class="footer-span">  E-mail: mariojurado@hotmail.es</span>
-                            <span class="footer-span">Yenny Alejandra Solarte </span>
-                            <span class="footer-span">E-mail: yalejandrasc@gmail.es</span>
+                        <span class="footer-span">  E-mail: mariojurado@hotmail.es</span>
+                        <span class="footer-span">Yenny Alejandra Solarte </span>
+                        <span class="footer-span">E-mail: yalejandrasc@gmail.es</span>
                     </div>
 
                     <div class="footer-div-30">
                         <span class="footer-span-titulos">NUESTRO COLEGIO</span>
                         <span class="footer-span">  E-mail: cericaurte@hotmail.com</span>
                         <span class="footer-span">Celular: 3218300831</span>
-                        
+
                     </div>
                 </div>
             </p:layoutUnit>                        

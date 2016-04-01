@@ -37,7 +37,7 @@
     display: flex;
     min-height: 130px;
     width: 100%;
-    
+
     padding: 5px;
     border-top: 5px solid #BEBEC1;
     background: linear-gradient(to bottom, rgba(9, 89, 130, 0.45),rgb(241, 241, 241));
@@ -212,4 +212,30 @@
     text-align: center;
     margin-top: 5px;
 }
-
+@media screen and (max-width: 580px) {
+    .buttom{
+        display: flex;
+        min-height: 130px;
+        width: 100%;
+        flex-direction: column;
+        padding: 5px;
+        border-top: 5px solid #BEBEC1;
+        background: linear-gradient(to bottom, rgba(9, 89, 130, 0.45),rgb(241, 241, 241));
+    }
+    .footer-div-30{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-family: imari;
+    }
+    .footer-div-40{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-family: imari;
+        border-left: 2px solid rgba(243, 242, 242, 0.5);
+        border-right: 2px solid rgba(243, 242, 242, 0.5);
+    }
+}

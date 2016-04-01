@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <body>
+        <ui:composition template="./../plantilla.xhtml">
+            <ui:define name="content">
+                <h:form id="frmPerfilProfesor" styleClass="form-principal">
+                    <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
+                    <h3>Editar perfil</h3>
+                    <div class="div-perfil">
+                        <p:outputLabel for="txtNombre" value="Nombres: " />
+                        <p:inputText id="txtNombre" value="#{mbvPerfilProfesor.profesor.nombre}" size="30" >
+                            <f:validator validatorId="validatorVacio"/>
+                        </p:inputText>
+                        <p:message for="txtNombre"/>
+                    </div>
+                    <div class="div-perfil">
+                        <p:outputLabel for="txtApellidos" value="Apellidos: " />
+                        <p:inputText id="txtApellidos" value="#{mbvPerfilProfesor.profesor.apellido}" size="30">
+                            <f:validator validatorId="validatorVacio"/>
+                        </p:inputText>
+                        <p:message for="txtApellidos"/>
+                    </div>
+                    <div class="div-perfil">
+                        <p:outputLabel for="txtTelefono" value="Telefono: " />
+                        <p:inputText id="txtTelefono" value="#{mbvPerfilProfesor.profesor.telefono}" size="30" >
+                            <f:validator validatorId="validatorVacio"/>
+                        </p:inputText>
+                        <p:message for="txtTelefono"/>
+                    </div>
+                    <div class="div-perfil">
+                        <p:outputLabel for="txtDireccion" value="Direccion: " />
+                        <p:inputText id="txtDireccion" value="#{mbvPerfilProfesor.profesor.direccion}" size="30">
+                            <f:validator validatorId="validatorVacio"/>
+                        </p:inputText>
+                        <p:message for="txtDireccion"/>
+                    </div>
+                    <div class="div-perfil">
+                        <p:outputLabel value="Cambiar Contraseña: " />
+                        <p:inputSwitch value="#{mbvPerfilProfesor.cambiarContraseña}" onLabel="SI" offLabel="NO">
+                            <p:ajax listener="#{mbvPerfilProfesor.activarContraseña}" update="frmPerfilProfesor" />
+                        </p:inputSwitch>
+                    </div>
+                    <div class="div-perfil">
+                        <p:outputLabel value="Contraseña" for="txtContrasenia" rendered="#{mbvPerfilProfesor.cambiarContraseña}"/>
+                        <p:password id="txtContrasenia" label="Contraseña: " rendered="#{mbvPerfilProfesor.cambiarContraseña}" match="txtContraseniaRepita" validatorMessage="Las contraseñas no coinciden" size="30" value="#{mbvPerfilProfesor.profesor.contraseña}">
+                            <f:validator validatorId="validatorVacio"/>
+                        </p:password>
+                        <p:message for="txtContrasenia" rendered="#{mbvPerfilProfesor.cambiarContraseña}"/>
+                    </div>
+                    <div class="div-perfil">
+                        <p:outputLabel value="Repita contraseña" for="txtContraseniaRepita" rendered="#{mbvPerfilProfesor.cambiarContraseña}"/>
+                        <p:password id="txtContraseniaRepita" label="Repita contraseña: " size="30" value="#{mbvPerfilProfesor.txtRepiteContrasenia}" rendered="#{mbvPerfilProfesor.cambiarContraseña}"/>
+                    </div>
+                    <div style="margin-top: 15px;text-align: center">
+                        <p:commandButton value="Actualizar informacion" actionListener="#{mbvPerfilProfesor.actualizar}" ajax="true" update="frmPerfilProfesor" />
+                    </div> 
+                </h:form>
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>
