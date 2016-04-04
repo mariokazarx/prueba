@@ -15,20 +15,24 @@
                         <f:event type="preRenderView" listener="#{mbvPeriodo.initRender}" />
                     </f:metadata>
                     <h:panelGroup rendered="#{mbvPeriodo.consultar}">
-                        <p:outputLabel for="selectAnio" value="Año:" />
-                        <p:selectOneMenu id="selectAnio" value="#{mbvPeriodo.anlectivoselected.anlectivoId}">
-                            <p:ajax listener="#{mbvPeriodo.cargarAnio}" update="tablaListaPeriodos"/>
-                            <f:selectItem itemLabel="Seleccione."/>
-                            <f:selectItems value="#{mbvPeriodo.anlectivos}" var="anio" itemLabel="#{anio.anio}" itemValue="#{anio.anlectivoId}"/>
-                        </p:selectOneMenu>
-                        <br />
-                        <h:panelGroup></h:panelGroup>
+                        <p:outputPanel style="width: 100%;display: flex;flex-direction: column;align-items: center;">
+                            <div class="div-perfil">
+                                <p:outputLabel for="selectAnio" value="Año:" />
+                                <p:selectOneMenu id="selectAnio" value="#{mbvPeriodo.anlectivoselected.anlectivoId}">
+                                    <p:ajax listener="#{mbvPeriodo.cargarAnio}" update="tablaListaPeriodos"/>
+                                    <f:selectItem itemLabel="Seleccione."/>
+                                    <f:selectItems value="#{mbvPeriodo.anlectivos}" var="anio" itemLabel="#{anio.anio}" itemValue="#{anio.anlectivoId}"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </p:outputPanel>
 
-                        <h:panelGroup></h:panelGroup>
-                        <p:commandButton value="Nuevo Periodo" icon="ui-icon-document" ajax="true" update="frmPeriodos" actionListener="#{mbvPeriodo.newPeriodo()}">
-                            <p:ajax event="dialogReturn" listener="#{mbvPeriodo.closeDialog}" update="frmPeriodos" />
-                        </p:commandButton>
-                        <h:panelGroup></h:panelGroup>
+                        <p:outputPanel styleClass="btn-new" >
+                            <p:commandButton value="Nuevo Periodo" icon="ui-icon-document" ajax="true" update="frmPeriodos" actionListener="#{mbvPeriodo.newPeriodo()}">
+                                <p:ajax event="dialogReturn" listener="#{mbvPeriodo.closeDialog}" update="frmPeriodos" />
+                            </p:commandButton>
+                        </p:outputPanel>
+                        
+                        
                         <p:dataTable id="tablaListaPeriodos" tableStyle="width:auto" reflow="true" var="periodo" value="#{mbvPeriodo.periodos}" paginator="true" rows="10" selection="#{mbvPeriodo.periodo}" selectionMode="single" lazy="true" rowKey="#{periodo.periodoId}" >
                             <f:facet name="header">
                                 Periodos

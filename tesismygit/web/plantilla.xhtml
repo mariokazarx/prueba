@@ -92,9 +92,9 @@
                 <h:form>
                     <p:menubar rendered="#{mbsLogin.loginUsuario}">  
                         <p:submenu label="Parametros de configuracion" icon="ui-icon-gear"> 
-                            <p:menuitem value="Escalas" outcome="/configuracion/escalas.xhtml" />
-                            <p:menuitem value="Criterios Evaluacion" outcome="/configuracion/criterioevaluacion.xhtml" />
-                            <p:menuitem value="Configuracion general" outcome="/configuracion/configuracion.xhtml" />
+                            <p:menuitem value="Escalas" url="/faces/configuracion/escalas.xhtml" />
+                            <p:menuitem value="Criterios Evaluacion" url="/faces/configuracion/criterioevaluacion.xhtml" />
+                            <p:menuitem value="Configuracion general" url="/faces/configuracion/configuracion.xhtml" />
                         </p:submenu> 
                         <p:submenu label="Plan de estudios" icon="ui-icon-gear"> 
                             <p:menuitem value="Areas" outcome="/configuracion/areas.xhtml" />
@@ -109,14 +109,14 @@
                             <p:menuitem value="Periodos" outcome="/anlectivo/periodos.xhtml" />
                         </p:submenu>
                         <p:submenu label="Academico" icon="ui-icon-gear"> 
-                            <p:menuitem value="Estudiantes" outcome="/academico/estudiantes.xhtml" />
+                            <p:menuitem value="Estudiantes" url="/faces/academico/estudiantes.xhtml" />
                             <p:menuitem value="Matriculas" outcome="/academico/matriculas.xhtml" />
                             <p:menuitem value="Profesores" outcome="/profesores/profesores.xhtml" />
                             <p:menuitem value="Asignacion academica" outcome="/profesores/cargaAcademica.xhtml" />
                             <p:menuitem value="Rectificar nota" outcome="/profesores/rectificarNotas.xhtml" />
                         </p:submenu>
                         <p:submenu label="Configuracion" icon="ui-icon-gear"> 
-                            <p:menuitem value="Usuarios" url="../sistema/usuarios.xhtml" />
+                            <p:menuitem value="Usuarios" url="/faces/sistema/usuarios.xhtml" />
                             <p:separator />  
                             <p:menuitem value="Editar Perfil" outcome="/anlectivo/anlectivos.xhtml" />
                             <p:menuitem value="Seguridad Perfil" url="../anlectivo/anlectivos.xhtml"/>  

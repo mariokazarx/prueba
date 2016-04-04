@@ -43,7 +43,6 @@ import com.tesis.entity.Profesor;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
-import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
@@ -74,26 +73,22 @@ import org.omnifaces.util.Faces;
  */
 @ManagedBean
 @ViewScoped
-public class mbvReporteProfesor implements Serializable {
+public class mbvReporteNotasProfesor implements Serializable {
 
     private boolean login;
+    private Anlectivo aEscolar;
     private Profesor profesor;
-    private List<Anlectivo> anlectivos;
     private List<Periodo> periodos;
     private List<Curso> cursos;
     private List<Asignatura> asignaturas;
     private boolean mostrarPrincipal;
-    private boolean mostrarAños;
     private boolean mostrarPeriodos;
     private boolean mostrarCursos;
     private boolean mostrarAsignatura;
-    private Anlectivo anlectivoSelected;
     private Periodo periodoSelected;
     private Curso curso;
     private Asignatura asignaturaSelected;
     private Contenidotematico contenido;
-    private JasperPrint jasperPrint;
-    private List<ReporteNotasProfesor> reporte;
     @EJB
     private AnlectivoFacade anlectivoEjb;
     @EJB
@@ -113,7 +108,7 @@ public class mbvReporteProfesor implements Serializable {
     @EJB
     private LogronotaFacade logroNotaEjb;
 
-    public mbvReporteProfesor() {
+    public mbvReporteNotasProfesor() {
     }
 
     public boolean isMostrarAsignatura() {
@@ -164,14 +159,6 @@ public class mbvReporteProfesor implements Serializable {
         this.mostrarPeriodos = mostrarPeriodos;
     }
 
-    public List<Anlectivo> getAnlectivos() {
-        return anlectivos;
-    }
-
-    public void setAnlectivos(List<Anlectivo> anlectivos) {
-        this.anlectivos = anlectivos;
-    }
-
     public List<Periodo> getPeriodos() {
         return periodos;
     }
@@ -204,36 +191,17 @@ public class mbvReporteProfesor implements Serializable {
         this.mostrarPrincipal = mostrarPrincipal;
     }
 
-    public boolean isMostrarAños() {
-        return mostrarAños;
-    }
-
-    public void setMostrarAños(boolean mostrarAños) {
-        this.mostrarAños = mostrarAños;
-    }
-
-    public Anlectivo getAnlectivoSelected() {
-        return anlectivoSelected;
-    }
-
-    public void setAnlectivoSelected(Anlectivo anlectivoSelected) {
-        this.anlectivoSelected = anlectivoSelected;
-    }
-
     @PostConstruct
     public void inicioPagina() {
         this.profesor = new Profesor();
-        //aEscolar = new Anlectivo();
+        aEscolar = anlectivoEjb.getIniciado();
         this.login = false;
-        this.mostrarAños = false;
         this.mostrarPrincipal = false;
         this.mostrarAsignatura = false;
         this.mostrarCursos = false;
-        this.anlectivos = new ArrayList<Anlectivo>();
         this.asignaturas = new ArrayList<Asignatura>();
         this.cursos = new ArrayList<Curso>();
         this.periodos = new ArrayList<Periodo>();
-        this.anlectivoSelected = new Anlectivo();
         this.periodoSelected = new Periodo();
         this.curso = new Curso();
         this.asignaturaSelected = new Asignatura();
@@ -242,33 +210,30 @@ public class mbvReporteProfesor implements Serializable {
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
             profesor = mbslogin.getProfesor();
             login = mbslogin.isLogin();
-            this.login = true;
+
         } catch (Exception e) {
             System.out.println(e.toString());
+            this.login = false;
             //profesor = null;
         }
         //comprobarInicio();
     }
 
     public void comprobarInicio() {
-        this.anlectivos = this.anlectivoEjb.getTerminados();
-        if (!this.anlectivos.isEmpty()) {
-            this.mostrarPrincipal = true;
-            this.mostrarAños = true;
+        if (this.aEscolar != null) {
+            if (periodoEjb.getNumeroPeriodosTerminadosAño(aEscolar) > 0) {
+                this.mostrarPrincipal = true;
+                this.periodos = periodoEjb.getPeriodosByAnioTerminados(aEscolar);
+                this.mostrarPeriodos = true;
+            } else {
+                this.mostrarPrincipal = false;
+                FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Aun no ha Terminado ningun año escolar"));
+            }
         } else {
             this.mostrarPrincipal = false;
             FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Aun no ha terminado ningun año escolar"));
-        }
-    }
-
-    public void cargarAño() {
-        if (this.anlectivoSelected.getAnlectivoId() != null) {
-            this.anlectivoSelected = anlectivoEjb.find(this.anlectivoSelected.getAnlectivoId());
-            this.mostrarPeriodos = true;
-            this.periodos = periodoEjb.getPeriodosByAnio(anlectivoSelected);
-        } else {
-            this.mostrarPeriodos = false;
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Aun no ha iniciado el año escolar"));
         }
     }
 
@@ -310,64 +275,6 @@ public class mbvReporteProfesor implements Serializable {
             contenido = contenidoEjb.getContenidoByAll(profesor, curso, asg, periodoSelected);
         } else {
         }
-    }
-
-    public void generarReporte() {
-        try {
-            this.reporte = new ArrayList<ReporteNotasProfesor>();
-            ReporteNotasProfesor rpt = new ReporteNotasProfesor();
-            rpt.setProfesor(profesor);
-            rpt.setCurso(curso);
-            rpt.setAsignatura(asignaturaSelected);
-            rpt.setPeriodo(periodoSelected);
-            List<EstudianteNotas> estudiantesN = new ArrayList<EstudianteNotas>();
-            List<Estudiante> estudiantes = estudianteEjB.findByCurso(curso);
-            for (Estudiante est : estudiantes) {
-                EstudianteNotas estNota = new EstudianteNotas();
-                estNota.setId(est.getEstudianteId());
-                estNota.setNombre(est.getNombre());
-                estNota.setApellido(est.getApellido());
-                estNota.setNota(getNotaEst(est));
-                Map<Integer, Object> notasLog = new HashMap<Integer, Object>();
-                List<Logronota> logrosNotaAux = new ArrayList<Logronota>();
-                List<Logro> logrosaux = logroEjb.getContenidoByAll(contenido);
-                for (Logro aux : logrosaux) {
-                    logrosNotaAux.add(logroNotaEjb.getByLogroestudiante(est, aux));
-                    notasLog.put(aux.getLogroId(), getNotaEstudiante(est, aux.getLogroId()));
-                }
-                estNota.setLogros(logrosNotaAux);
-                estNota.setNotasLogros(notasLog);
-
-                estudiantesN.add(estNota);
-            }
-            rpt.setEstudiantes(estudiantesN);
-            reporte.add(rpt);
-            init();
-            curso.getCicloId().getNumero();
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("ooooOOOO" + e.toString());
-        }
-    }
-
-    public void init() throws JRException {
-        System.out.println("entro init");
-        JRBeanCollectionDataSource beanCollectionDataSource = new JRBeanCollectionDataSource(reporte);
-        String reportpath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/notasProfesor.jasper");
-        /*Map<String, Object> parametros = new HashMap<String, Object>();
-         parametros.put("ciclo", "3");
-         parametros.put("año", "2016");
-         parametros.put("curso", "3-1"); */
-        jasperPrint = JasperFillManager.fillReport(reportpath, new HashMap<String, Object>(), beanCollectionDataSource);
-    }
-
-    public void pdf() throws JRException, IOException {
-        generarReporte();
-        HttpServletResponse httpServletResponse = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
-        httpServletResponse.addHeader("Content-disposition", "attachment; filename=report.pdf");
-        ServletOutputStream servletOutputStream = httpServletResponse.getOutputStream();
-        JasperExportManager.exportReportToPdfStream(jasperPrint, servletOutputStream);
-        FacesContext.getCurrentInstance().responseComplete();
     }
 
     private BigDecimal getNotaEst(Estudiante es) {
@@ -422,7 +329,7 @@ public class mbvReporteProfesor implements Serializable {
             cell2.setBorder(Rectangle.NO_BORDER);
             table2.addCell(cell2);
             PdfPCell cell3 = new PdfPCell();
-            Paragraph par3 = new Paragraph(10, "Licencia de funcionamiento 366 de Abril 4 de 2001, Resolución 1861  Junio 30 de 2005 de  la Secretaría "
+            Paragraph par3 = new Paragraph(10,"Licencia de funcionamiento 366 de Abril 4 de 2001, Resolución 1861  Junio 30 de 2005 de  la Secretaría "
                     + "de Educación y Cultura Departamental  CODIGO SNP ICFES 114454 Código DANE 352612001093 ", FontFactory.getFont("arial", 9, Font.NORMAL));
             par3.setAlignment(Element.ALIGN_CENTER);
             cell3.addElement(par3);
@@ -513,6 +420,7 @@ public class mbvReporteProfesor implements Serializable {
             parNombre = new Paragraph(10, "C.C " + profesor.getCedula(), FontFactory.getFont("arial", 12, Font.NORMAL));
             parNombre.setAlignment(Element.ALIGN_CENTER);
             document.add(parNombre);
+
         } catch (Exception e) {
             System.out.println("ENTRO 3 ");
             System.out.println("Error " + e.getMessage());

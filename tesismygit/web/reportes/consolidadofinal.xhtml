@@ -17,9 +17,14 @@
     <h:body>
         <ui:composition template="./../plantilla.xhtml">
             <ui:define name="content">
-                <h:form id="frmReporteFinal">
-                    <p:outputPanel id="panelReporteMatriculas" rendered="true">
-                        <p:commandButton id="btnReporte" value="Confirmar" ajax="false" icon="icon-report" actionListener="#{mbvConsolidadoFinal.imprimir}" style="margin-top:5px" />
+                <h:form id="frmReporteFinal" styleClass="form-principal"  target="_blank">
+                    <h3>Consolidado final</h3>
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
+                    <f:metadata>
+                        <f:event type="preRenderView" listener="#{mbvConsolidadoFinal.initRender}" />
+                    </f:metadata> 
+                    <p:outputPanel id="panelReporteMatriculas" rendered="#{mbvConsolidadoFinal.mostrarBonton}">
+                        <p:commandButton id="btnReporte" value="Generar reporte" ajax="false" icon="icon-report" actionListener="#{mbvConsolidadoFinal.imprimir}" style="margin-top:5px" />
                     </p:outputPanel>
 
                     <p:dialog widgetVar="statusDialog" appendTo="@(body)" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">

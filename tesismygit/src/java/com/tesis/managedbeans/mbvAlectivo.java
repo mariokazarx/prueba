@@ -648,4 +648,9 @@ public class mbvAlectivo implements Serializable {
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para manejar criterios de evaluacion"));
         }
     }
+    public String numeroPeriodos(Anlectivo anlectivo){
+        String numero = "";
+        numero = periodoEjb.getNumeroPeriodosAño(anlectivo).toString();
+        return numero;
+    }
 }

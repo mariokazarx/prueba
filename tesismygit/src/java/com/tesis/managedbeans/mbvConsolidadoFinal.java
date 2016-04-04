@@ -62,6 +62,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -76,6 +77,8 @@ import javax.servlet.http.HttpServletResponse;
 @ViewScoped
 public class mbvConsolidadoFinal {
 
+    private boolean mostrarBonton;
+    private Anlectivo anlectivo;
     @EJB
     private AnlectivoFacade anlectivoEjb;
     @EJB
@@ -114,16 +117,21 @@ public class mbvConsolidadoFinal {
     public mbvConsolidadoFinal() {
     }
 
+    public boolean isMostrarBonton() {
+        return mostrarBonton;
+    }
+
     @PostConstruct()
     public void inicio() {
         System.out.println("Entro POSTCOSTRUCT");
+        this.mostrarBonton = false;
+        this.anlectivo = anlectivoEjb.getIniciado();
     }
 
     public void imprimir() {
         System.out.println("Entro 1");
         List<Matricula> matriculasAnio;
         List<Curso> cursos;
-        Anlectivo anlectivo = anlectivoEjb.find(1);
         Escala escala = escalaEjb.find(anlectivo.getConfiguracionId().getEscalaId().getEscalaId());
         Criterioevaluacion criterio = criterioEjb.find(anlectivo.getConfiguracionId().getCriterioevaluacionId().getCriterioevaluacionId());
         Document document = new Document(PageSize.LEGAL.rotate());
@@ -345,5 +353,21 @@ public class mbvConsolidadoFinal {
             nota = notaEst.getValor();
         }
         return nota.setScale(1, RoundingMode.HALF_EVEN);
+    }
+    public void initRender(){
+        if(anlectivo!=null){
+            if(periodoEjb.getNumeroPeriodosAño(anlectivo)==periodoEjb.getNumeroPeriodosTerminadosAño(anlectivo)){
+                this.mostrarBonton = true;
+            }else{
+                this.mostrarBonton = false;
+                FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Se debe terminar todos los periodos del año escolar"));
+            }
+        }
+        else{
+            this.mostrarBonton = false;
+            FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Aun no ha iniciado el año escolar"));
+        }
     }
 }

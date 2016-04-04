@@ -10,41 +10,47 @@
     <body>
         <ui:composition template="./../plantilla.xhtml">
             <ui:define name="content">
-                <h:form id="frmMateriasCiclos">
+                <h:form id="frmMateriasCiclos" target="_blank" style="width: 100%;display: flex;flex-direction: column;align-items: center;">
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
-                    <p:outputLabel for="selectAnio" value="Año: " />
-                    
-                    <p:selectOneMenu id="selectAnio" value="#{mbvRecuperacion.anlectivoselected.anlectivoId}">
-                        <p:ajax listener="#{mbvRecuperacion.cargarAnio}" update="frmMateriasCiclos"/>
-                        <f:selectItem itemLabel="Seleccione."/>
-                        <f:selectItems value="#{mbvRecuperacion.anlectivos}" var="anio" itemLabel="#{anio.anio}" itemValue="#{anio.anlectivoId}"/>
-                    </p:selectOneMenu>
-                    
+                    <p:outputPanel style="width: 100%;display: flex;flex-direction: column;align-items: center;">
+                        <div class="div-perfil">
+                            <p:outputLabel for="selectAnio" value="Año " />                 
+                            <p:selectOneMenu id="selectAnio" value="#{mbvRecuperacion.anlectivoselected.anlectivoId}">
+                                <p:ajax listener="#{mbvRecuperacion.cargarAnio}" update="frmMateriasCiclos"/>
+                                <f:selectItem itemLabel="Seleccione."/>
+                                <f:selectItems value="#{mbvRecuperacion.anlectivos}" var="anio" itemLabel="#{anio.anio}" itemValue="#{anio.anlectivoId}"/>
+                            </p:selectOneMenu>
+                        </div>
+                    </p:outputPanel>
                     <h:panelGroup rendered="#{mbvRecuperacion.contenidPrincipal}">
-                        <p:outputLabel for="sltCursos" value="Curso:" />
-                        <p:selectOneMenu id="sltCursos" value="#{mbvRecuperacion.cursoSelected.cursoId}">
-                            <p:ajax listener="#{mbvRecuperacion.cargarAsignaturas()}" update="frmMateriasCiclos"/>
-                            <f:selectItem itemLabel="Seleccione."/>
-                            <f:selectItems value="#{mbvRecuperacion.cursos}" var="curso" itemLabel="#{curso.nombre}" itemValue="#{curso.cursoId}"/>
-                        </p:selectOneMenu>
-                        <p:outputLabel for="sltAsignaturas" value="Asignaturas:" />
-                        <p:selectOneMenu id="sltAsignaturas" value="#{mbvRecuperacion.asignaturaSelected.asignaturaId}">
-                            <p:ajax listener="#{mbvRecuperacion.cargarContenido()}" update="frmMateriasCiclos"/>
-                            <f:selectItem itemLabel="Seleccione."/>
-                            <f:selectItems value="#{mbvRecuperacion.asignaturas}" var="asignatura" itemLabel="#{asignatura.nombre}" itemValue="#{asignatura.asignaturaId}"/>
-                        </p:selectOneMenu>
+                        <p:outputPanel style="width: 100%;display: flex;flex-direction: column;align-items: center;">
+                            <div class="div-perfil">
+                                <p:outputLabel for="sltCursos" value="Curso" />
+                                <p:selectOneMenu id="sltCursos" value="#{mbvRecuperacion.cursoSelected.cursoId}">
+                                    <p:ajax listener="#{mbvRecuperacion.cargarAsignaturas()}" update="frmMateriasCiclos"/>
+                                    <f:selectItem itemLabel="Seleccione."/>
+                                    <f:selectItems value="#{mbvRecuperacion.cursos}" var="curso" itemLabel="#{curso.nombre}" itemValue="#{curso.cursoId}"/>
+                                </p:selectOneMenu>
+                            </div>
+                            <div class="div-perfil">
+                                <p:outputLabel for="sltAsignaturas" value="Asignatura" />
+                                <p:selectOneMenu id="sltAsignaturas" value="#{mbvRecuperacion.asignaturaSelected.asignaturaId}">
+                                    <p:ajax listener="#{mbvRecuperacion.cargarContenido()}" update="frmMateriasCiclos"/>
+                                    <f:selectItem itemLabel="Seleccione."/>
+                                    <f:selectItems value="#{mbvRecuperacion.asignaturas}" var="asignatura" itemLabel="#{asignatura.nombre}" itemValue="#{asignatura.asignaturaId}"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </p:outputPanel>
 
-                        <br />
-                        
-                        <h:panelGroup rendered="#{mbvRecuperacion.mostrarRecuperacion}">
-                            <p:dataTable tableStyle="width:auto" id="tablanotasfinales" var="notafinal" value="#{mbvRecuperacion.notas}" widgetVar="tablaNotas" >                    
+                        <h:panelGroup rendered="#{mbvRecuperacion.mostrarRecuperacion}" style="margin-top: 15px;margin-bottom: 15px">
+                            <p:dataTable tableStyle="width:auto" reflow="true" id="tablanotasfinales" var="notafinal" value="#{mbvRecuperacion.notas}" widgetVar="tablaNotas" >                    
                                 <p:column headerText="Nombres Y Apellidos" sortBy="#{notafinal.estudianteId.apellido}">
                                     <h:outputText value="#{notafinal.estudianteId.apellido} #{notafinal.estudianteId.nombre}" />
                                 </p:column>
                                 <p:columns value="#{mbvRecuperacion.columns}" var="column" >
-                                        <f:facet name="header">
-                                            <h:outputText value="#{column.header}" />
-                                        </f:facet>
+                                    <f:facet name="header">
+                                        <h:outputText value="#{column.header}" />
+                                    </f:facet>
 
                                     <h:outputText value="#{mbvRecuperacion.getNotaPeriodo(notafinal.estudianteId,column.property)}" />
 
@@ -62,14 +68,14 @@
 
                             </p:dataTable>
                         </h:panelGroup>
-                        
+
                         <p:commandButton id="Confirmar" actionListener="#{mbvRecuperacion.pruebafinal}" value="Confirmar" style="margin-top:5px" />
                         <h:commandButton value="PDF" actionListener="#{mbvRecuperacion.imprimir}"/>
 
 
-                        
 
-                        
+
+
                     </h:panelGroup>
                     <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
 

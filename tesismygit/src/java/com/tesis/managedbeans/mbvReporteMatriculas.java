@@ -38,6 +38,7 @@ import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import org.omnifaces.util.Faces;
 import org.primefaces.context.RequestContext;
 
 /**
@@ -252,8 +253,10 @@ public class mbvReporteMatriculas implements Serializable {
             HttpServletResponse httpServletResponse = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
             httpServletResponse.addHeader("Content-disposition", "attachment; filename=report.pdf");
             ServletOutputStream servletOutputStream = httpServletResponse.getOutputStream();
-            JasperExportManager.exportReportToPdfStream(jasperPrint, servletOutputStream);
+            httpServletResponse.reset();
+            Faces.sendFile(JasperExportManager.exportReportToPdf(jasperPrint), "reporteMatricula.pdf", false);
             FacesContext.getCurrentInstance().responseComplete();
+            
         } else {
             System.out.print("error permiso denegado");
             FacesContext.getCurrentInstance().

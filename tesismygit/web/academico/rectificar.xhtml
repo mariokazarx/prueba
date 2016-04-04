@@ -10,48 +10,47 @@
     <body>
         <ui:composition template="./../plantilla.xhtml">
             <ui:define name="content">
-                <h:form id="frmRectificar">
+                <h:form id="frmRectificar" target="_blank" style="width: 100%">
                     <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
-                    
-                    <p:outputLabel for="selectAnio" value="Año: " />
-                    <p:selectOneMenu id="selectAnio" value="#{mbvRectificarNota.anlectivoselected.anlectivoId}">
-                        <p:ajax listener="#{mbvRectificarNota.cargarAnio}" update="frmRectificar"/>
-                        <f:selectItem itemLabel="Seleccione."/>
-                        <f:selectItems value="#{mbvRectificarNota.anlectivos}" var="anio" itemLabel="#{anio.anio}" itemValue="#{anio.anlectivoId}"/>
-                    </p:selectOneMenu>
-                    
+                    <p:outputPanel style="width: 100%;display: flex;flex-direction: column;align-items: center;">
+                        <div class="div-perfil">
+                            <p:outputLabel for="selectAnio" value="Año: " />
+                            <p:selectOneMenu id="selectAnio" value="#{mbvRectificarNota.anlectivoselected.anlectivoId}">
+                                <p:ajax listener="#{mbvRectificarNota.cargarAnio}" update="frmRectificar"/>
+                                <f:selectItem itemLabel="Seleccione."/>
+                                <f:selectItems value="#{mbvRectificarNota.anlectivos}" var="anio" itemLabel="#{anio.anio}" itemValue="#{anio.anlectivoId}"/>
+                            </p:selectOneMenu>
+                        </div>
+                    </p:outputPanel>
                     <h:panelGroup rendered="#{mbvRectificarNota.contenidoPrincipal}">
-                        <p:outputLabel for="selectContenido" value="Asignatura: " />
-                        <p:selectOneMenu id="selectContenido" value="#{mbvRectificarNota.contenidoSelected.contenidotematicoId}" rendered="true">
-                            <p:ajax listener="#{mbvRectificarNota.cargarContenido}" update="frmRectificar"/>
-                            <f:selectItem itemLabel="Seleccione."/>
-                            <f:selectItems value="#{mbvRectificarNota.contenidos}" var="contenido" itemLabel="#{contenido.asignaturacicloId.asignaturaId.nombre} - #{contenido.cursoId.nombre} - Periodo #{contenido.periodoId.numero}" itemValue="#{contenido.contenidotematicoId}"/>
-                        </p:selectOneMenu>
 
-                        <br />
-                        <p:commandButton value="Crear Logro" icon="ui-icon-pencil" actionListener="#{mbvRectificarNota.newLogro}" rendered="#{mbvRectificarNota.contenidoLogros}"/>
-
-                        <p:dataTable id="tableLogros" tableStyle="width:auto" var="logro" value="#{mbvRectificarNota.logros}" sortBy="#{logro.porcentaje}" rendered="#{mbvRectificarNota.contenidoLogros}">
-                            <p:column headerText="Id" sortBy="#{logro.logroId}">
-                                <h:outputText value="#{logro.logroId}" />
-                            </p:column>
-                            <p:column headerText="Titulo" sortBy="#{logro.titulo}">
-                                <h:outputText value="#{logro.titulo}" />
-                            </p:column>
-                            <p:column headerText="Descripcion" sortBy="#{logro.descripcion}">
-                                <h:outputText value="#{logro.descripcion}" />
-                            </p:column>
-                            <p:column headerText="Porcentaje" sortBy="#{logro.porcentaje}">
-                                <h:outputText value="#{logro.porcentaje}" />
-                            </p:column>
-                            <p:column>
-                                <p:commandButton value="Eliminar"  icon="ui-icon-close" actionListener="#{mbvRectificarNota.eliminarLogro(logro)}" ajax="true" update=":frmRectificar"/>
-                            </p:column>
-                        </p:dataTable>
+                        <p:outputPanel style="width: 100%;display: flex;flex-direction: column;align-items: center;">
+                            <div class="div-perfil">
+                                <p:outputLabel for="selectContenido" value="Asignatura: " />
+                                <p:selectOneMenu id="selectContenido" value="#{mbvRectificarNota.contenidoSelected.contenidotematicoId}" rendered="true">
+                                    <p:ajax listener="#{mbvRectificarNota.cargarContenido}" update="frmRectificar"/>
+                                    <f:selectItem itemLabel="Seleccione."/>
+                                    <f:selectItems value="#{mbvRectificarNota.contenidos}" var="contenido" itemLabel="#{contenido.asignaturacicloId.asignaturaId.nombre} - #{contenido.cursoId.nombre} - Periodo #{contenido.periodoId.numero}" itemValue="#{contenido.contenidotematicoId}"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </p:outputPanel>
+                        <p:outputPanel style="margin-top: 15px;display: flex;align-items: center;justify-content: center;">
+                            <p:dataTable id="tableLogros" tableStyle="width:auto" reflow="true" var="logro" value="#{mbvRectificarNota.logros}" sortBy="#{logro.porcentaje}" rendered="#{mbvRectificarNota.contenidoLogros}">
+                                <p:column headerText="Titulo" sortBy="#{logro.titulo}">
+                                    <h:outputText value="#{logro.titulo}" />
+                                </p:column>
+                                <p:column headerText="Descripcion" sortBy="#{logro.descripcion}">
+                                    <h:outputText value="#{logro.descripcion}" />
+                                </p:column>
+                                <p:column headerText="Porcentaje" sortBy="#{logro.porcentaje}">
+                                    <h:outputText value="#{logro.porcentaje}" />
+                                </p:column>
+                            </p:dataTable>
+                        </p:outputPanel>
                         <p:remoteCommand name="onCellEdit" update="tablanotas" />
 
-                        <p:outputPanel id="testContainer" rendered="#{mbvRectificarNota.contenidoNotas}">
-                            <p:dataTable tableStyle="width:auto" editable="true" id="tablanotas" var="estudiante" value="#{mbvRectificarNota.estudiantesN}" widgetVar="tablaEstudiantes" >                    
+                        <p:outputPanel id="testContainer" rendered="#{mbvRectificarNota.contenidoNotas}" style="margin-top: 15px;display: flex;align-items: center;justify-content: center;">
+                            <p:dataTable tableStyle="width:auto" reflow="true" editable="true" id="tablanotas" var="estudiante" value="#{mbvRectificarNota.estudiantesN}" widgetVar="tablaEstudiantes" >                    
                                 <p:ajax event="rowEdit" listener="#{mbvRectificarNota.onRowEdit}" oncomplete="onCellEdit()" />
                                 <p:column headerText="Nombres Y Apellidos" sortBy="#{estudiante.nombre}">
                                     <h:outputText value="#{estudiante.apellido} #{estudiante.nombre}" />
@@ -83,41 +82,20 @@
 
                             </p:dataTable>
                         </p:outputPanel>
-
-                        <p:commandButton id="Confirmar" value="Confirmar" ajax="false" actionListener="#{mbvRectificarNota.imprimir}" style="margin-top:5px" />
-                        <h:commandButton value="PDF" actionListener="#{mbvRectificarNota.pdf}"/>
-
+                        <div style="text-align: center;margin-bottom: 20px">
+                            <p:commandButton id="Confirmar" value="Generar reporte" ajax="false" actionListener="#{mbvRectificarNota.imprimir}" style="margin-top:5px" />
+                        </div>
                     </h:panelGroup>
-                    
+
                     <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
- 
+
                     <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
                         <p:graphicImage library="imagenes" name="load1.gif"/>
                     </p:dialog>
-                    
-                    
+
+
                 </h:form>
-                <p:dialog header="Nuevo Logro" widgetVar="dialogoCrearLogro" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
-                    <h:form id="frmCrearLogro">
-                        <p:outputPanel id="panelCrearLogro" >
-                            <h:panelGrid columns="3">
-                                <p:outputLabel for="txtTitulo" value="Titulo: "/>
-                                <p:inputText id="txtTitulo" value="#{mbvRectificarNota.logro.titulo}" validator="#{mbvEscala.validateNombreUnique}">
-                                    <f:validator validatorId="validatorVacio"/>
-                                </p:inputText>
-                                <p:message for="txtTitulo"/>
-                                <p:outputLabel for="txtPorcentaje" value="Porcentaje:" />
-                                <p:inputText id="txtPorcentaje" value="#{mbvRectificarNota.logro.porcentaje}"/>
-                                <p:message for="txtPorcentaje"/>
-                                <p:outputLabel for="txtDescripcion" value="Descripcion: " />
-                                <p:inputTextarea id="txtDescripcion" value="#{mbvRectificarNota.logro.descripcion}" rows="5" cols="22" />
-                                <p:message for="txtDescripcion"/>
-                                <h:panelGroup></h:panelGroup>
-                                <p:commandButton value="Registrar Logro" actionListener="#{mbvRectificarNota.insertarLogro}" ajax="true" update=":frmRectificar" />
-                            </h:panelGrid> 
-                        </p:outputPanel>
-                    </h:form>
-                </p:dialog>
+
                 <p:dialog header="Observaciones" widgetVar="dialogoObservaciones" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
                     <h:form id="frmObservaciones">
                         <p:outputPanel id="panelObservaciones" >

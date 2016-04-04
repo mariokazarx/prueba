@@ -17,7 +17,7 @@
     <h:body>
         <ui:composition template="./../plantilla.xhtml">
             <ui:define name="content">
-                <h:form id="frmReporteMatriculas" styleClass="form-principal">
+                <h:form id="frmReporteMatriculas" styleClass="form-principal" target="_blank">
                     <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
                     <h3>Reporte de matriculas</h3>
 
@@ -50,7 +50,7 @@
                                 </p:selectOneMenu>
                             </p:outputPanel>
                             <div style="text-align: center;margin-top: 15px">
-                                <p:commandButton id="btnMatricular" ajax="false" value="Confirmar" actionListener="#{mbvReporteMatriculas.pdf}" style="margin-top:5px" rendered="#{mbvReporteMatriculas.mostrarBoton}"/>
+                                <p:commandButton id="btnMatricular" ajax="false" value="Generar reporte" actionListener="#{mbvReporteMatriculas.pdf}" style="margin-top:5px" rendered="#{mbvReporteMatriculas.mostrarBoton}"/>
                             </div>
                         </p:outputPanel>      
                     </h:panelGroup>                                          

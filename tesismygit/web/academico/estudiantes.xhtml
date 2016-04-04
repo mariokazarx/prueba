@@ -35,7 +35,7 @@
                                 <h:outputText value="#{estudiante.apellido}"/>
                             </p:column>
                             <p:column headerText="Ciclo" filterBy="ciclo" >
-                                <h:outputText value="#{estudiante.ultimoaprobado}"/>
+                                <h:outputText value="#{estudiante.ultimoaprobado>5? 'GRADUADO' :estudiante.ultimoaprobado}"/>
                             </p:column>
                             <p:column headerText="Matricula" >
                                 <h:outputText value="#{mbvEstudiante.getMatricula(estudiante)}"/>
@@ -58,7 +58,7 @@
                             <p:outputPanel id="panelDetalleEstudiante">
                                 <p:panelGrid columns="2">
                                     <f:facet name="header">
-                                        <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/fotosestudiantes/#{mbvEstudiante.estudiante.foto}" width="70" height="70" cache="false" alt="Sin definir" style="border-radius: 4px;box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7)"/>
+                                        <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/fotosestudiantes/#{mbvEstudiante.estudiante.foto}" width="150" height="150" cache="false" alt="Sin definir" style="border-radius: 4px;box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7)"/>
                                     </f:facet>
                                     <p:outputLabel value="Tipo identificacion"/>
                                     <h:outputText value="#{mbvEstudiante.estudiante.tipoIdentifcacion}"/>
@@ -66,6 +66,35 @@
                                     <h:outputText value="#{mbvEstudiante.estudiante.identificiacion}"/>
                                     <p:outputLabel value="Nombres"/>
                                     <h:outputText value="#{mbvEstudiante.estudiante.nombre}"/>
+                                    <p:outputLabel value="Apellidos"/>
+                                    <h:outputText value="#{mbvEstudiante.estudiante.apellido}"/>
+                                    <p:outputLabel value="Ciclo"/>
+                                    <h:outputText value="#{mbvEstudiante.estudiante.ultimoaprobado>5? 'GRADUADO' :mbvEstudiante.estudiante.ultimoaprobado}"/>
+                                    <p:outputLabel value="Telefono"/>
+                                    <h:outputText value="#{mbvEstudiante.estudiante.telefono}"/>
+                                    <p:outputLabel value="Direccion"/>
+                                    <h:outputText value="#{mbvEstudiante.estudiante.direccion}"/>
+                                    <p:outputLabel value="Estrato"/>
+                                    <h:outputText value="#{mbvEstudiante.estudiante.estrato}"/>
+                                    <p:outputLabel value="Sisben"/>
+                                    <h:outputText value="#{mbvEstudiante.estudiante.sisben}"/>
+                                    <p:outputLabel value="Sexo"/>
+                                    <h:outputText value="#{mbvEstudiante.estudiante.sexo}"/>
+                                    <p:outputLabel value="Fecha de nacimiento"/>
+                                    <h:outputText value="#{mbvEstudiante.estudiante.fechaNacimiento}" >
+                                        <f:convertDateTime dateStyle="full"
+                                                           locale="es" pattern="EEEEEEEE dd, MMMMMMM, yyyy"
+                                                           timeStyle="long" type="both" />
+                                    </h:outputText>
+                                    <p:outputLabel value="Cabeza de familia"/>
+                                    <h:outputText value="#{mbvEstudiante.estudiante.cabezaFamilia}"/>
+                                    <p:outputLabel value="Resguardo indigena"/>
+                                    <h:outputText value="#{mbvEstudiante.estudiante.resguardo}"/>
+                                    <p:outputLabel value="Zona"/>
+                                    <h:outputText value="#{mbvEstudiante.estudiante.zona}"/>
+                                    <p:outputLabel value="Acudiente"/>
+                                    <h:outputText value="#{mbvEstudiante.estudiante.acudiente}"/>
+                                    
                                 </p:panelGrid>
                             </p:outputPanel>
                         </p:dialog>   
@@ -164,10 +193,11 @@
                                 </p:inputText>
                                 <p:message for="txtAcudiente"/>
                                 <p:outputLabel for="txtUltimo" value="Ciclo al que se va a matricular: " />
-                                <p:inputText id="txtUltimo" value="#{mbvEstudiante.estudiante.ultimoaprobado}" size="25">
+                                <p:inputText id="txtUltimo" value="#{mbvEstudiante.estudiante.ultimoaprobado}" size="25" rendered="#{mbvEstudiante.estudiante.ultimoaprobado>5?false:true}">
                                     <f:validator validatorId="validatorVacio"/>
                                     <f:validateLongRange minimum="3" maximum="5" /> 
                                 </p:inputText>
+                                <p:outputLabel value="GRADUADO" rendered="#{mbvEstudiante.estudiante.ultimoaprobado>5?true:false}"/>
                                 <p:message for="txtUltimo"/>
 
                                 <p:outputLabel for="selectZona" value="Zona:" />

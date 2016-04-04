@@ -53,6 +53,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -66,6 +68,7 @@ import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import org.omnifaces.util.Faces;
 
 /**
  *
@@ -370,7 +373,7 @@ public class mbvReporteConsolidadoPeriodo {
                     cell2.setBorder(Rectangle.NO_BORDER);
                     table2.addCell(cell2);
                     PdfPCell cell3 = new PdfPCell();
-                    Paragraph par3 = new Paragraph(10,"Licencia de funcionamiento 366 de Abril 4 de 2001, Resolución 1861  Junio 30 de 2005 de  la Secretaría "
+                    Paragraph par3 = new Paragraph(10, "Licencia de funcionamiento 366 de Abril 4 de 2001, Resolución 1861  Junio 30 de 2005 de  la Secretaría "
                             + "de Educación y Cultura Departamental  CODIGO SNP ICFES 114454 Código DANE 352612001093 ", FontFactory.getFont("arial", 9, Font.NORMAL));
                     par3.setAlignment(Element.ALIGN_CENTER);
                     cell3.addElement(par3);
@@ -435,22 +438,25 @@ public class mbvReporteConsolidadoPeriodo {
             FacesContext context = FacesContext.getCurrentInstance();
             Object response = context.getExternalContext().getResponse();
             if (response instanceof HttpServletResponse) {
-                System.out.println("ENTRO 4 ");
-                HttpServletResponse hsr = (HttpServletResponse) response;
-                hsr.setContentType("application/pdf");
-                hsr.setHeader("Content-disposition", "attachment; filename=report.pdf");
-                hsr.setContentLength(baos.size());
                 try {
-                    System.out.println("ENTRO 5 ");
-                    ServletOutputStream out = hsr.getOutputStream();
-                    baos.writeTo(out);
-                    out.flush();
+                    System.out.println("ENTRO 4 ");
+                    HttpServletResponse hsr = (HttpServletResponse) response;
+                    hsr.reset();
+                    Faces.sendFile(baos.toByteArray(), "ConsolidadoPeriodo.pdf", false);
+                    try {
+                        System.out.println("ENTRO 5 ");
+                        ServletOutputStream out = hsr.getOutputStream();
+                        baos.writeTo(out);
+                        out.flush();
+                    } catch (IOException ex) {
+                        System.out.println("ENTRO 6 ");
+                        System.out.println("Error:  " + ex.getMessage());
+                    }
+                    System.out.println("ENTRO 7 ");
+                    context.responseComplete();
                 } catch (IOException ex) {
-                    System.out.println("ENTRO 6 ");
-                    System.out.println("Error:  " + ex.getMessage());
+                    Logger.getLogger(mbvConstanciaEstudios.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                System.out.println("ENTRO 7 ");
-                context.responseComplete();
             }
         } else {
             System.out.print("error permiso denegado");

@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:head>
+        <title>Nueva Escala</title>
+        <style type="text/css">
+            .ui-widget {
+                font-size: 90%;
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <ui:composition template="./../plantilla.xhtml">
+            <ui:define name="content">
+                <h:form id="frmReporteMatriculas" styleClass="form-principal"  target="_blank">
+                    <h3>Reportes notas</h3>
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
+                    <f:metadata>
+                        <f:event type="preRenderView" listener="#{mbvReporteNotasProfesor.comprobarInicio}" />
+                    </f:metadata>
+                    <p:outputPanel rendered="#{mbvReporteNotasProfesor.mostrarPrincipal}" style="width: 90%">
+                        <h:panelGroup rendered="#{mbvReporteNotasProfesor.mostrarPeriodos}">
+                            <div style="margin-top: 15px">    
+                                <p:outputLabel for="selectPeriodo" value="Periodo" styleClass="form-titulos" />
+                            </div>
+                            <p:selectOneMenu id="selectPeriodo" value="#{mbvReporteNotasProfesor.periodoSelected.periodoId}" styleClass="form-select">
+                                <p:ajax listener="#{mbvReporteNotasProfesor.cargarPeriodo}" update="frmReporteMatriculas"/>
+                                <f:selectItem itemLabel="Seleccione."/>
+                                <f:selectItems value="#{mbvReporteNotasProfesor.periodos}" var="periodo" itemLabel="#{periodo.numero}" itemValue="#{periodo.periodoId}"/>
+                            </p:selectOneMenu>
+                        </h:panelGroup>
+                        <h:panelGroup rendered="#{mbvReporteNotasProfesor.mostrarCursos}">
+                            <div style="margin-top: 15px">    
+                                <p:outputLabel for="selectCurso" value="Curso" styleClass="form-titulos" />
+                            </div>
+                            <p:selectOneMenu id="selectCurso" value="#{mbvReporteNotasProfesor.curso.cursoId}" styleClass="form-select">
+                                <p:ajax listener="#{mbvReporteNotasProfesor.cargarCurso}" update="frmReporteMatriculas"/>
+                                <f:selectItem itemLabel="Seleccione."/>
+                                <f:selectItems value="#{mbvReporteNotasProfesor.cursos}" var="curso" itemLabel="#{curso.nombre}" itemValue="#{curso.cursoId}"/>
+                            </p:selectOneMenu>
+                        </h:panelGroup>
+                        <h:panelGroup rendered="#{mbvReporteNotasProfesor.mostrarAsignatura}">
+                            <div style="margin-top: 15px">    
+                                <p:outputLabel for="selectAsignatura" value="Asignatura" styleClass="form-titulos" />
+                            </div>
+                            <p:selectOneMenu id="selectAsignatura" value="#{mbvReporteNotasProfesor.asignaturaSelected.asignaturaId}" styleClass="form-select">
+                                <p:ajax listener="#{mbvReporteNotasProfesor.cargarAsignatura}" update="frmReporteMatriculas"/>
+                                <f:selectItem itemLabel="Seleccione."/>
+                                <f:selectItems value="#{mbvReporteNotasProfesor.asignaturas}" var="asignatura" itemLabel="#{asignatura.nombre}" itemValue="#{asignatura.asignaturaId}"/>
+                            </p:selectOneMenu>
+                        </h:panelGroup>
+                        <p:outputPanel id="panelReporteMatriculas" style="margin-top: 15px;text-align: center">
+                            <p:commandButton value="Generar reporte" ajax="false" actionListener="#{mbvReporteNotasProfesor.imprimir}"/> 
+                        </p:outputPanel>
+                    </p:outputPanel>
+
+                </h:form>        
+            </ui:define>
+        </ui:composition>
+
+    </h:body>
+</html>

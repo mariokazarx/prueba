@@ -194,6 +194,16 @@ public class mbvMenu implements Serializable{
             item3.setIcon("ui-icon-home");
             firstSubmenu.addElement(item3);
             
+            item3 = new DefaultMenuItem("Reportes");
+            item3.setUrl("/faces/profesores/reportesNotas.xhtml");
+            item3.setIcon("ui-icon-home");
+            firstSubmenu.addElement(item3);
+            
+            item3 = new DefaultMenuItem("Listado de estudiantes");
+            item3.setUrl("/faces/profesores/listaEstudiantes.xhtml");
+            item3.setIcon("ui-icon-home");
+            firstSubmenu.addElement(item3);
+            
             model.addElement(firstSubmenu);
 
             //Second submenu
@@ -205,16 +215,23 @@ public class mbvMenu implements Serializable{
             //item.setUpdate("messages");
             secondSubmenu.addElement(item);
 
-            item = new DefaultMenuItem("Delete");
-            item.setIcon("ui-icon-close");
-            item.setCommand("#{menuView.delete}");
-            item.setAjax(false);
-            secondSubmenu.addElement(item);
+            item3 = new DefaultMenuItem("Reportes");
+            item3.setUrl("/faces/profesores/reportes.xhtml");
+            item3.setIcon("ui-icon-home");
+            secondSubmenu.addElement(item3);
 
             item = new DefaultMenuItem("Redirect");
             item.setIcon("ui-icon-search");
             item.setCommand("#{menuView.redirect}");
             secondSubmenu.addElement(item);
+
+            model.addElement(secondSubmenu);
+            
+            secondSubmenu = new DefaultSubMenu("Perfil");
+            item3 = new DefaultMenuItem("Editar perfil");
+            item3.setUrl("/faces/profesores/perfilProfesor.xhtml");
+            item3.setIcon("ui-icon-home");
+            secondSubmenu.addElement(item3);
 
             model.addElement(secondSubmenu);
         }

@@ -10,28 +10,36 @@
     <body>
         <ui:composition template="./../plantilla.xhtml">
             <ui:define name="content">
-                <h:form id="frmMateriasCiclos" style="width: 100%">
+                <h:form id="frmMateriasCiclos"  target="_blank" style="width: 100%">
                     <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
                     <f:metadata>
                         <f:event type="preRenderView" listener="#{mbvNotas.initRender}" />
                     </f:metadata>
-                    
-                    <h:panelGroup id="panelNotas" rendered="#{mbvNotas.mostrarContenido}">
-                        <p:outputLabel for="sltCursos" value="Curso:" />
-                        <p:selectOneMenu id="sltCursos" value="#{mbvNotas.cursoSelected.cursoId}">
-                            <p:ajax listener="#{mbvNotas.cargarAsignaturas()}" update="frmMateriasCiclos"/>
-                            <f:selectItem itemLabel="Seleccione."/>
-                            <f:selectItems value="#{mbvNotas.cursos}" var="curso" itemLabel="#{curso.nombre}" itemValue="#{curso.cursoId}"/>
-                        </p:selectOneMenu>
-                        <p:outputLabel for="sltAsignaturas" value="Asignaturas:" />
-                        <p:selectOneMenu id="sltAsignaturas" value="#{mbvNotas.asignaturaSelected.asignaturaId}">
-                            <p:ajax listener="#{mbvNotas.cargarContenido()}" update="frmMateriasCiclos"/>
-                            <f:selectItem itemLabel="Seleccione."/>
-                            <f:selectItems value="#{mbvNotas.asignaturas}" var="asignatura" itemLabel="#{asignatura.nombre}" itemValue="#{asignatura.asignaturaId}"/>
-                        </p:selectOneMenu>
 
-                        <br />
-                            <p:commandButton value="Crear Logro" icon="ui-icon-pencil" actionListener="#{mbvNotas.newLogro}" rendered="#{mbvNotas.contenidoLogros}"/>
+                    <h:panelGroup id="panelNotas" rendered="#{mbvNotas.mostrarContenido}">
+
+                        <p:outputPanel style="width: 100%;display: flex;flex-direction: column;align-items: center;">
+                            <div class="div-perfil">
+                                <p:outputLabel for="sltCursos" value="Curso:" />
+                                <p:selectOneMenu id="sltCursos" value="#{mbvNotas.cursoSelected.cursoId}">
+                                    <p:ajax listener="#{mbvNotas.cargarAsignaturas()}" update="frmMateriasCiclos"/>
+                                    <f:selectItem itemLabel="Seleccione."/>
+                                    <f:selectItems value="#{mbvNotas.cursos}" var="curso" itemLabel="#{curso.nombre}" itemValue="#{curso.cursoId}"/>
+                                </p:selectOneMenu>
+                            </div>
+                            <div class="div-perfil">
+                                <p:outputLabel for="sltAsignaturas" value="Asignaturas:" />
+                                <p:selectOneMenu id="sltAsignaturas" value="#{mbvNotas.asignaturaSelected.asignaturaId}">
+                                    <p:ajax listener="#{mbvNotas.cargarContenido()}" update="frmMateriasCiclos"/>
+                                    <f:selectItem itemLabel="Seleccione."/>
+                                    <f:selectItems value="#{mbvNotas.asignaturas}" var="asignatura" itemLabel="#{asignatura.nombre}" itemValue="#{asignatura.asignaturaId}"/>
+                                </p:selectOneMenu>
+                            </div>
+
+                            <p:commandButton value="Crear Logro" icon="ui-icon-pencil" actionListener="#{mbvNotas.newLogro}" rendered="#{mbvNotas.contenidoLogros}" style="margin-top: 15px;margin-bottom: 15px"/>
+                        </p:outputPanel>
+
+
 
                         <p:dataTable id="tableLogros" var="logro" tableStyle="width:auto" reflow="true" value="#{mbvNotas.logros}" sortBy="#{logro.porcentaje}" rendered="#{mbvNotas.contenidoLogros}">
                             <p:column headerText="Titulo" sortBy="#{logro.titulo}">
@@ -52,7 +60,7 @@
                         </p:dataTable>
                         <p:remoteCommand name="onCellEdit" update="tablanotas" />
 
-                        <p:outputPanel id="testContainer" rendered="#{mbvNotas.contenidoNotas}">
+                        <p:outputPanel id="testContainer" rendered="#{mbvNotas.contenidoNotas}" style="margin-top: 15px;display: flex;align-items: center;justify-content: center;">
                             <p:dataTable tableStyle="width:auto" reflow="true" editable="true" id="tablanotas" var="estudiante" value="#{mbvNotas.estudiantesN}" widgetVar="tablaEstudiantes" >                    
                                 <p:ajax event="rowEdit" listener="#{mbvNotas.onRowEdit}" oncomplete="onCellEdit()" />
                                 <p:ajax event="rowEditCancel" listener="#{mbvNotas.onRowEdit}" oncomplete="onCellEdit()" />
@@ -86,24 +94,23 @@
 
                             </p:dataTable>
                         </p:outputPanel>
+                        <div style="text-align: center;margin-bottom: 20px">
+                            <p:commandButton id="Confirmar" actionListener="#{mbvNotas.imprimir}" value="Generar reporte" ajax="false" style="margin-top:15px" rendered="#{mbvNotas.contenidoLogros}"/>
+                        </div>
+                    </h:panelGroup>
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" oncomplete="PF('statusDialog').hide()" />
 
-                       
-
-                        <p:commandButton id="Confirmar" actionListener="#{mbvNotas.pruebafinal}" value="Confirmar" style="margin-top:5px" />
-                        <h:commandButton value="PDF" actionListener="#{mbvNotas.pdf}"/>
-                     </h:panelGroup>
-                     <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
-
-                    <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                    <p:dialog widgetVar="statusDialog" appendTo="@(body)" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
                         <p:graphicImage library="imagenes" name="load1.gif"/>
                     </p:dialog>
+
                 </h:form>
                 <p:dialog header="Nuevo Logro" responsive="true" widgetVar="dialogoCrearLogro" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
                     <h:form id="frmCrearLogro">
                         <p:outputPanel id="panelCrearLogro" >
                             <h:panelGrid columns="3">
                                 <p:outputLabel for="txtTitulo" value="Titulo: "/>
-                                <p:inputText id="txtTitulo" value="#{mbvNotas.logro.titulo}" validator="#{mbvEscala.validateNombreUnique}">
+                                <p:inputText id="txtTitulo" value="#{mbvNotas.logro.titulo}" >
                                     <f:validator validatorId="validatorVacio"/>
                                 </p:inputText>
                                 <p:message for="txtTitulo"/>
@@ -124,12 +131,12 @@
                         <p:outputPanel id="panelEditarLogro" >
                             <h:panelGrid columns="3">
                                 <p:outputLabel for="txtTitulo" value="Titulo: "/>
-                                <p:inputText id="txtTitulo" value="#{mbvNotas.logro.titulo}" validator="#{mbvEscala.validateNombreUnique}">
+                                <p:inputText id="txtTitulo" value="#{mbvNotas.logro.titulo}" >
                                     <f:validator validatorId="validatorVacio"/>
                                 </p:inputText>
                                 <p:message for="txtTitulo"/>
                                 <p:outputLabel for="txtPorcentaje" value="Porcentaje:" />
-                                <p:outputLabel id="txtPorcentaje" value="#{mbvNotas.logro.porcentaje}"/>
+                                <p:inputText id="txtPorcentaje" value="#{mbvNotas.logro.porcentaje}"/>
                                 <p:message for="txtPorcentaje"/>
                                 <p:outputLabel for="txtDescripcion" value="Descripcion: " />
                                 <p:inputTextarea id="txtDescripcion" value="#{mbvNotas.logro.descripcion}" rows="5" cols="22" />

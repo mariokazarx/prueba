@@ -38,7 +38,7 @@
                                 <h:outputText value="#{item.estadoAniolectivoId.estado}"/>
                             </p:column>
                             <p:column headerText="No Periodos" filterBy="min">
-                                <h:outputText value="#{item.noPeriodos}"/>
+                                <h:outputText value="#{mbvAlectivo.numeroPeriodos(item)}"/>
                             </p:column>
                             <p:column>
                                 <p:commandButton value="Editar" ajax="true" update="frmanlectios" icon="ui-icon-pencil" actionListener="#{mbvAlectivo.cargarAnlectivo(item.anlectivoId)}"/>
@@ -53,16 +53,17 @@
                         <p:dialog header="Detalle Año Lectivo" widgetVar="dialogoDetalleAlectivo" responsive="true" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
                             <p:outputPanel id="panelDetalleAlectivo">
                                 <p:panelGrid columns="2">
-                                    <p:outputLabel value="Id"/>
-                                    <h:outputText value="#{mbvAlectivo.anlectivo.anlectivoId}"/>
                                     <p:outputLabel value="Año"/>
                                     <h:outputText value="#{mbvAlectivo.anlectivo.anio}"/>
                                     <p:outputLabel value="Descripcion"/>
                                     <h:outputText value="#{mbvAlectivo.anlectivo.descripcion}"/>
                                     <p:outputLabel value="Configuracion"/>
-                                    <h:outputText value="#{mbvcriterioevaluacion.criterioeval.formacriterioevaluacionId.nombre}"/>
-                                    <p:outputLabel value="Minimo para aprobar"/>
-                                    <h:outputText value="#{mbvcriterioevaluacion.criterioeval.minaprob}"/>
+                                    <h:outputText value="#{mbvAlectivo.anlectivo.configuracionId.nombre}"/>
+                                    <p:outputLabel value="Estado"/>
+                                    <h:outputText value="#{mbvAlectivo.anlectivo.estadoAniolectivoId.estado}"/>
+                                    <p:outputLabel value="Numero de periodos"/>
+                                    <h:outputText value="#{mbvAlectivo.numeroPeriodos(mbvAlectivo.anlectivo)}"/>
+                                    
                                 </p:panelGrid>
                             </p:outputPanel>
                         </p:dialog>  

@@ -55,11 +55,25 @@
                             <p:outputPanel id="panelDetalleProfesor">
                                 <p:panelGrid columns="2">
                                     <f:facet name="header">
-                                        <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/fotosprofesores/#{mbvProfesor.profesor.foto}" width="70" height="70" cache="false" alt="Sin definir" style="border-radius: 4px;box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7)"/>
+                                        <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/fotosprofesores/#{mbvProfesor.profesor.foto}" width="150" height="150" cache="false" alt="Sin definir" style="border-radius: 4px;box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7)"/>
                                     </f:facet>
                                     <p:outputLabel value="Cedula"/>
                                     <h:outputText value="#{mbvProfesor.profesor.cedula}"/>
-
+                                    <p:outputLabel value="Nombres"/>
+                                    <h:outputText value="#{mbvProfesor.profesor.nombre}"/>
+                                    <p:outputLabel value="Apellidos"/>
+                                    <h:outputText value="#{mbvProfesor.profesor.apellido}"/>
+                                    <p:outputLabel value="Correo"/>
+                                    <h:outputText value="#{mbvProfesor.profesor.correo}"/>
+                                    <p:outputLabel value="Telefono"/>
+                                    <h:outputText value="#{mbvProfesor.profesor.telefono}"/>
+                                    <p:outputLabel value="Direccion"/>
+                                    <h:outputText value="#{mbvProfesor.profesor.direccion}"/>
+                                    <p:outputLabel value="Titulo"/>
+                                    <h:outputText value="#{mbvProfesor.profesor.tituloProfesional}"/>
+                                    <p:outputLabel value="Sexo"/>
+                                    <h:outputText value="#{mbvProfesor.profesor.sexo}"/>
+                                    
                                 </p:panelGrid>
                             </p:outputPanel>
                         </p:dialog>    

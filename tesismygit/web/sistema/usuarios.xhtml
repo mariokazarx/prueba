@@ -56,12 +56,20 @@
                         <p:dialog header="Detalle Profesor" responsive="true" widgetVar="dialogoDetalleUsuario" modal="true"  appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
                             <p:outputPanel id="panelDetalleUsuario">
                                 <p:panelGrid columns="2">
-                                    <f:facet name="header">
-                                        <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/fotosusuarios/#{mbvUsuario.usuario.foto}" width="70" height="70" cache="false" alt="Sin definir" style="border-radius: 4px;box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7)"/>
-                                    </f:facet>
                                     <p:outputLabel value="Cedula"/>
                                     <h:outputText value="#{mbvUsuario.usuario.identificacion}"/>
-
+                                    <p:outputLabel value="Nombres"/>
+                                    <h:outputText value="#{mbvUsuario.usuario.nombres}"/>
+                                    <p:outputLabel value="Apellidos"/>
+                                    <h:outputText value="#{mbvUsuario.usuario.apellidos}"/>
+                                    <p:outputLabel value="Correo"/>
+                                    <h:outputText value="#{mbvUsuario.usuario.correo}"/>
+                                    <p:outputLabel value="Telefono"/>
+                                    <h:outputText value="#{mbvUsuario.usuario.telefono}"/>
+                                    <p:outputLabel value="Direccion"/>
+                                    <h:outputText value="#{mbvUsuario.usuario.direccion}"/>
+                                    <p:outputLabel value="Cargo"/>
+                                    <h:outputText value="#{mbvUsuario.usuario.cargo}"/>
                                 </p:panelGrid>
                             </p:outputPanel>
                         </p:dialog>   
@@ -145,7 +153,7 @@
                                 <h:panelGroup rendered="#{mbvUsuario.cambiarContraseña}"></h:panelGroup>
                                 <p:outputLabel for="selectRecurso" value="Recursos:" />
                                 <p:selectOneMenu id="selectRecurso" value="#{mbvUsuario.recursoSelected.recursoId}">
-                                    <f:selectItem itemLabel="Seleccione." />
+                                    <f:selectItem itemLabel="Seleccione." itemValue="-1" />
                                     <p:ajax listener="#{mbvUsuario.cargarPermiso()}" update="chkPermisos"/>
                                     <f:selectItems value="#{mbvUsuario.recursos}" var="recurso" itemLabel="#{recurso.nombre}" itemValue="#{recurso.recursoId}"/>
                                 </p:selectOneMenu>

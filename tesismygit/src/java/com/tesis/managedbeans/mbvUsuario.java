@@ -170,42 +170,42 @@ public class mbvUsuario implements Serializable {
 
     @PostConstruct
     public void inicioPagina() {
-        this.consultar=false;
-        this.editar=false;
-        this.eliminar=false;
-        this.crear=false;
+        this.consultar = false;
+        this.editar = false;
+        this.eliminar = false;
+        this.crear = false;
         try {
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
-             usr = mbslogin.getUsuario();
-             this.login = mbslogin.isLogin();
-            System.out.println("usuario"+usr.getNombres()+"Login"+login);
+            usr = mbslogin.getUsuario();
+            this.login = mbslogin.isLogin();
+            System.out.println("usuario" + usr.getNombres() + "Login" + login);
         } catch (Exception e) {
             System.out.println(e.toString());
             this.login = false;
         }
-        if(this.usr!=null){
-            for(UsuarioRole usrRol:usrRoleEjb.getByUser(usr)){
-                if(usrRol.getRoleId().getRecursoId().getRecursoId()==12){
-                    if(usrRol.getRoleId().getAgregar()){
-                        this.crear=true;
+        if (this.usr != null) {
+            for (UsuarioRole usrRol : usrRoleEjb.getByUser(usr)) {
+                if (usrRol.getRoleId().getRecursoId().getRecursoId() == 12) {
+                    if (usrRol.getRoleId().getAgregar()) {
+                        this.crear = true;
                     }
-                    if(usrRol.getRoleId().getConsultar()){
-                        this.consultar=true;
+                    if (usrRol.getRoleId().getConsultar()) {
+                        this.consultar = true;
                     }
-                    if(usrRol.getRoleId().getEditar()){
-                        this.editar=true;
+                    if (usrRol.getRoleId().getEditar()) {
+                        this.editar = true;
                     }
-                    if(usrRol.getRoleId().getEliminar()){
-                        this.eliminar=true;
+                    if (usrRol.getRoleId().getEliminar()) {
+                        this.eliminar = true;
                     }
                 }
             }
         }
-        if(this.usr.getTipoUsuarioId().getTipoUsuarioId()==4){
-            this.consultar=true;
-            this.editar=true;
-            this.eliminar=true;
-            this.crear=true;
+        if (this.usr.getTipoUsuarioId().getTipoUsuarioId() == 4) {
+            this.consultar = true;
+            this.editar = true;
+            this.eliminar = true;
+            this.crear = true;
         }
         this.mostrarConsultar = false;
         this.mostrarEditar = false;
@@ -222,13 +222,13 @@ public class mbvUsuario implements Serializable {
 
     public void actualizar() {
         try {
-            if(!login){
+            if (!login) {
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
                 return;
             }
-            if(this.editar){
+            if (this.editar) {
                 tx.begin();
                 if (usuarioEjb.existeCedula(this.usuario.getIdentificacion()) && !this.usuario.getIdentificacion().equals(this.cedulaAnterior)) {
                     FacesContext.getCurrentInstance().
@@ -300,14 +300,13 @@ public class mbvUsuario implements Serializable {
                     inicioPagina();
                 } else {
                     tx.rollback();
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error fatal:", "Las contraseñas no coinciden"));
+                    FacesContext.getCurrentInstance().addMessage("frmEditarUsuario:selectRecurso", new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error fatal:", "Debe almenos seleccionar un recurso"));
                     return;
                 }
-            }
-            else{
+            } else {
                 System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
             }
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error fatal:", "Por favor contacte con su administrador " + ex.getMessage()));
@@ -334,13 +333,13 @@ public class mbvUsuario implements Serializable {
 
     public void insertar() {
         try {
-            if(!login){
+            if (!login) {
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
                 return;
             }
-            if(this.crear){
+            if (this.crear) {
                 tx.begin();
                 if (this.usuario.getContraseña().equals(this.txtRepiteContrasenia)) {
                     if (usuarioEjb.existeCedula(this.usuario.getIdentificacion())) {
@@ -376,8 +375,9 @@ public class mbvUsuario implements Serializable {
                         RequestContext.getCurrentInstance().closeDialog(this);
                         inicioPagina();
                     } else {
+                        System.out.println("El usuario debe tener al menos un role");
                         tx.rollback();
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error fatal:", "Las contraseñas no coinciden"));
+                        FacesContext.getCurrentInstance().addMessage("frmUsuario:selectRecurso", new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error fatal:", "Debe asignar almenos un recurso"));
                         return;
                     }
 
@@ -386,11 +386,10 @@ public class mbvUsuario implements Serializable {
                     tx.rollback();
                     return;
                 }
-            }
-            else{
+            } else {
                 System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
             }
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error fatal:", "Por favor contacte con su administrador " + ex.getMessage()));
@@ -399,13 +398,13 @@ public class mbvUsuario implements Serializable {
     }
 
     public void newUsuario() {
-        if(!login){
+        if (!login) {
             System.out.println("Usuario NO logeado");
             FacesContext.getCurrentInstance().
-                   addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
             return;
         }
-        if(this.crear){
+        if (this.crear) {
             Map<String, Object> options = new HashMap<String, Object>();
             options.put("contentHeight", 600);
             options.put("contentWidth", 800);
@@ -415,10 +414,9 @@ public class mbvUsuario implements Serializable {
             options.put("draggable", true);
             options.put("resizable", true);
             RequestContext.getCurrentInstance().openDialog("newusuario", options, null);
-        }
-        else{
+        } else {
             FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
         }
     }
 
@@ -469,49 +467,57 @@ public class mbvUsuario implements Serializable {
     public void cargarPermiso() {
         System.out.println("Recurso selected" + recursoSelected.getRecursoId());
         if (recursoSelected.getRecursoId() != null) {
-            if (recursoSelected.getRecursoId() == 16 || recursoSelected.getRecursoId() == 8 || recursoSelected.getRecursoId() == 9 || recursoSelected.getRecursoId() == 4) {
-                this.mostrarConsultar = true;
-                this.mostrarEditar = true;
-                this.mostrarEliminar = false;
-                this.mostrarCrear = false;
-            } else {
-                this.mostrarConsultar = true;
-                this.mostrarEditar = true;
-                this.mostrarEliminar = true;
-                this.mostrarCrear = true;
-            }
-            if (rolesRecursos.size() > 0) {
-                boolean encontro = false;
-                System.out.println("ROLES" + rolesRecursos.size());
-                for (Role aux : rolesRecursos) {
-                    System.out.println("RECURSO SELECTED" + recursoSelected + " AUX " + aux.getRecursoId());
-                    if (aux.getRecursoId().equals(recursoSelected)) {
-                        System.out.println("ENTRO 1");
-                        roleActual = aux;
-                        encontro = true;
-                        return;
-                    }
+            if (recursoSelected.getRecursoId() > 0 || recursoSelected.getRecursoId()<19) {
+                if (recursoSelected.getRecursoId() == 16 || recursoSelected.getRecursoId() == 8 || recursoSelected.getRecursoId() == 9 || recursoSelected.getRecursoId() == 4) {
+                    this.mostrarConsultar = true;
+                    this.mostrarEditar = true;
+                    this.mostrarEliminar = false;
+                    this.mostrarCrear = false;
+                } else {
+                    this.mostrarConsultar = true;
+                    this.mostrarEditar = true;
+                    this.mostrarEliminar = true;
+                    this.mostrarCrear = true;
                 }
-                if (!encontro) {
-                    System.out.println("ENTRO 2");
+                if (rolesRecursos.size() > 0) {
+                    boolean encontro = false;
+                    System.out.println("ROLES" + rolesRecursos.size());
+                    for (Role aux : rolesRecursos) {
+                        System.out.println("RECURSO SELECTED" + recursoSelected + " AUX " + aux.getRecursoId());
+                        if (aux.getRecursoId().equals(recursoSelected)) {
+                            System.out.println("ENTRO 1");
+                            roleActual = aux;
+                            encontro = true;
+                            return;
+                        }
+                    }
+                    if (!encontro) {
+                        System.out.println("ENTRO 2");
+                        roleActual = new Role();
+                    }
+                } else {
+                    System.out.println("ENTRO 3");
                     roleActual = new Role();
                 }
             } else {
-                System.out.println("ENTRO 3");
-                roleActual = new Role();
+                System.out.println("FUNCIONA -1");
+                this.mostrarConsultar = false;
+                this.mostrarEditar = false;
+                this.mostrarEliminar = false;
+                this.mostrarCrear = false;
             }
         }
     }
 
     public void cargarUsuario(int usuarioId) {
         try {
-            if(!login){
+            if (!login) {
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
                 return;
             }
-            if(this.editar){
+            if (this.editar) {
                 this.usuario = this.usuarioEjb.find(usuarioId);
                 this.rolesRecursos.clear();
                 //if(!usuario.getUsuarioRoleList().isEmpty()){
@@ -527,10 +533,9 @@ public class mbvUsuario implements Serializable {
                 this.correoAnetrior = this.usuario.getCorreo();
                 RequestContext.getCurrentInstance().update("frmEditarUsuario:panelEditarUsuario");
                 RequestContext.getCurrentInstance().execute("PF('dialogoEditarUsuario').show()");
-            }
-            else{
+            } else {
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
@@ -557,10 +562,11 @@ public class mbvUsuario implements Serializable {
         } else {
         }
     }
-    public void initRender(){
-        if(!this.consultar){
+
+    public void initRender() {
+        if (!this.consultar) {
             FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para manejar criterios de evaluacion"));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para manejar criterios de evaluacion"));
         }
     }
 }

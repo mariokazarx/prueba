@@ -54,29 +54,14 @@
                                 </p:panelGrid>
                                 <p:panelGrid columns="2">
                                     <p:outputLabel value="Nombre"/>
+                                    <h:outputText value="#{mbvConfiguracion.configuracion.nombre}"/>
+                                    <p:outputLabel value="Descripcion"/>
+                                    <h:outputText value="#{mbvConfiguracion.configuracion.descripcion}"/>
+                                    <p:outputLabel value="Escala evaluativa"/>
                                     <h:outputText value="#{mbvConfiguracion.configuracion.escalaId.nombre}"/>
-                                    <p:outputLabel value="Descripcion"/>
-                                    <h:outputText value="#{mbvConfiguracion.configuracion.escalaId.descripcion}"/>
-                                    <p:outputLabel value="Nota minima"/>
-                                    <h:outputText value="#{mbvConfiguracion.configuracion.escalaId.min}"/>
-                                    <p:outputLabel value="Nota Maxima"/>
-                                    <h:outputText value="#{mbvConfiguracion.configuracion.escalaId.max}"/>
-                                    <p:outputLabel value="Nota minima aprobacion"/>
-                                    <h:outputText value="#{mbvConfiguracion.configuracion.escalaId.notaminimaaprob}"/>
-                                </p:panelGrid>
-                                <p:panelGrid columns="1">
-                                    <p:outputLabel value="configuracion criterio evaluacion"/>
-                                </p:panelGrid>
-                                <p:panelGrid columns="2">    
-                                    <p:outputLabel value="Nombre"/>
+                                    <p:outputLabel value="Criterio de evaluacion"/>
                                     <h:outputText value="#{mbvConfiguracion.configuracion.criterioevaluacionId.nombre}"/>
-                                    <p:outputLabel value="Descripcion"/>
-                                    <h:outputText value="#{mbvConfiguracion.configuracion.criterioevaluacionId.descripcion}"/>
-                                    <p:outputLabel value="Criterio de aprobacion"/>
-                                    <h:outputText value="#{mbvConfiguracion.configuracion.criterioevaluacionId.formacriterioevaluacionId.nombre}"/>
-                                    <p:outputLabel value="Minimo para aprobar"/>
-                                    <h:outputText value="#{mbvConfiguracion.configuracion.criterioevaluacionId.minaprob}"/>
-
+                                    
                                 </p:panelGrid>
                             </p:outputPanel>
                         </p:dialog>  

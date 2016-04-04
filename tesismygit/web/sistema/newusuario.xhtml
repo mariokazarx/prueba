@@ -64,7 +64,7 @@
                     <h:panelGroup></h:panelGroup>
                     <p:outputLabel for="selectRecurso" value="Recursos:"/>
                     <p:selectOneMenu id="selectRecurso" value="#{mbvUsuario.recursoSelected.recursoId}">
-                        <f:selectItem itemLabel="Seleccione."/>
+                        <f:selectItem itemLabel="Seleccione." itemValue="-1"/>
                         <p:ajax listener="#{mbvUsuario.cargarPermiso()}" update="chkPermisos"/>
                         <f:selectItems value="#{mbvUsuario.recursos}" var="recurso" itemLabel="#{recurso.nombre}" itemValue="#{recurso.recursoId}"/>
                     </p:selectOneMenu>

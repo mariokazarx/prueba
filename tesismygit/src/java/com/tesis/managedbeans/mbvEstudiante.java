@@ -91,7 +91,7 @@ public class mbvEstudiante implements Serializable {
     private MatriculaFacade matriculaEjb;
     @EJB
     private UsuarioRoleFacade usrRoleEjb;
-    
+
     public mbvEstudiante() {
     }
 
@@ -200,59 +200,59 @@ public class mbvEstudiante implements Serializable {
         this.foto = new DefaultUploadedFile();
         ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
         this.ruta = (String) servletContext.getRealPath("/");
-        this.consultar=false;
-        this.editar=false;
-        this.eliminar=false;
-        this.crear=false;
+        this.consultar = false;
+        this.editar = false;
+        this.eliminar = false;
+        this.crear = false;
         try {
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
-             usr = mbslogin.getUsuario();
-             this.login = mbslogin.isLogin();
-            System.out.println("usuario"+usr.getNombres()+"Login"+login);
+            usr = mbslogin.getUsuario();
+            this.login = mbslogin.isLogin();
+            System.out.println("usuario" + usr.getNombres() + "Login" + login);
         } catch (Exception e) {
             System.out.println(e.toString());
             this.login = false;
         }
-        if(this.usr!=null){
-            for(UsuarioRole usrRol:usrRoleEjb.getByUser(usr)){
-                if(usrRol.getRoleId().getRecursoId().getRecursoId()==7){
-                    if(usrRol.getRoleId().getAgregar()){
-                        this.crear=true;
+        if (this.usr != null) {
+            for (UsuarioRole usrRol : usrRoleEjb.getByUser(usr)) {
+                if (usrRol.getRoleId().getRecursoId().getRecursoId() == 7) {
+                    if (usrRol.getRoleId().getAgregar()) {
+                        this.crear = true;
                     }
-                    if(usrRol.getRoleId().getConsultar()){
-                        this.consultar=true;
+                    if (usrRol.getRoleId().getConsultar()) {
+                        this.consultar = true;
                     }
-                    if(usrRol.getRoleId().getEditar()){
-                        this.editar=true;
+                    if (usrRol.getRoleId().getEditar()) {
+                        this.editar = true;
                     }
-                    if(usrRol.getRoleId().getEliminar()){
-                        this.eliminar=true;
+                    if (usrRol.getRoleId().getEliminar()) {
+                        this.eliminar = true;
                     }
                 }
             }
         }
-        if(this.usr.getTipoUsuarioId().getTipoUsuarioId()==4){
-            this.consultar=true;
-            this.editar=true;
-            this.eliminar=true;
-            this.crear=true;
+        if (this.usr.getTipoUsuarioId().getTipoUsuarioId() == 4) {
+            this.consultar = true;
+            this.editar = true;
+            this.eliminar = true;
+            this.crear = true;
         }
     }
 
     public void insertar() {
         try {
-            if(!login){
+            if (!login) {
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
                 return;
             }
-            if(this.crear){
-                if(estudianteEjb.existeIdentificacion(this.estudiante.getIdentificiacion())){
+            if (this.crear) {
+                if (estudianteEjb.existeIdentificacion(this.estudiante.getIdentificiacion())) {
                     //RequestContext.getCurrentInstance().closeDialog(null);
                     FacesContext.getCurrentInstance().
-                        addMessage("frmProfesor:txtIdentificacion", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Identificacion en uso"));
-                    return ;
+                            addMessage("frmProfesor:txtIdentificacion", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Identificacion en uso"));
+                    return;
                 }
                 EstadoEstudiante estado = estadoEjb.find(1);
                 TipoUsuario tusu = tusuEjb.find(1);
@@ -270,11 +270,11 @@ public class mbvEstudiante implements Serializable {
                     } else {
                         if (!this.foto.getFileName().endsWith(".png") || !this.foto.getFileName().endsWith(".jpg")) {
                             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error:", "El archivo debe ser con extensión \".png\" o \".jpg\" "));
-                            return ;
+                            return;
                         }
                         if (this.foto.getSize() > 20971520) {
                             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error:", "El archivo no puede ser más de 20mb"));
-                            return ;
+                            return;
                         }
                         String nombreArchivo = "/";
                         nombreArchivo += this.estudiante.getIdentificiacion();
@@ -306,10 +306,10 @@ public class mbvEstudiante implements Serializable {
                     FacesContext.getCurrentInstance().
                             addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Criterio Evaluacion creado Satisfactoriamente", ""));
                     /*FacesContext.getCurrentInstance()
-                            .getExternalContext()
-                            .getFlash()
-                            .put("param1", this.estudiante);
-                    */
+                     .getExternalContext()
+                     .getFlash()
+                     .put("param1", this.estudiante);
+                     */
                     RequestContext.getCurrentInstance().closeDialog(this.estudiante);
                     inicioPagina();
                     //ExternalContext context = FacesContext.getCurrentInstance().getExternalContext(); 
@@ -320,11 +320,10 @@ public class mbvEstudiante implements Serializable {
                 } catch (Exception ex) {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error fatal:", "Por favor contacte con su administrador " + ex.getMessage()));
                 }
-            }
-            else{
+            } else {
                 System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
             }
 
         } catch (Exception e) {
@@ -368,7 +367,7 @@ public class mbvEstudiante implements Serializable {
             nombreArchivo += "_" + año + "_" + mes + "_" + dia + "_" + hora + "_" + minuto + "_" + segundo + "_" + milseg;
             Random nrd = new Random();
             nombreArchivo += nrd.nextInt() + event.getFile().getFileName().substring(event.getFile().getFileName().lastIndexOf("."));
-            System.out.println(" NMBRE :"+nombreArchivo);
+            System.out.println(" NMBRE :" + nombreArchivo);
             ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
             String carpetaAvatar = (String) servletContext.getRealPath("/avatar");
 
@@ -405,24 +404,23 @@ public class mbvEstudiante implements Serializable {
         OutputStream outputStream = null;
         ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
         String carpetaEstudiantes = (String) servletContext.getRealPath("/fotosestudiantes");
-        File file = new File(carpetaEstudiantes+estudiante.getFoto());
+        File file = new File(carpetaEstudiantes + estudiante.getFoto());
         //file.delete();
-            
-        try {            
-            System.out.println("ENTRA 2"+ event.getFile().getFileName());
-            if (event.getFile().getSize() <= 0) {
 
+        try {
+            System.out.println("ENTRA 2" + event.getFile().getFileName());
+            if (event.getFile().getSize() <= 0) {
             } else {
                 System.out.println("ENTRA 4" + event.getFile().getFileName().endsWith(".jpg"));
                 boolean ban = false;
                 if (event.getFile().getFileName().endsWith(".jpg") == true) {
                     ban = true;
                 }
-                if (event.getFile().getFileName().endsWith(".png") == true){
+                if (event.getFile().getFileName().endsWith(".png") == true) {
                     ban = true;
                 }
-                if (ban==false){
-                    System.out.println("ENTRA 5"+event.getFile().getFileName());
+                if (ban == false) {
+                    System.out.println("ENTRA 5" + event.getFile().getFileName());
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error:", "El archivo debe ser con extensión \".png\" o \".jpg\" "));
                     //inicioPagina();  
                     return;
@@ -460,16 +458,16 @@ public class mbvEstudiante implements Serializable {
                     System.out.println("ENTRA 8");
                     estudianteEjb.edit(estudiante);
                     FacesContext.getCurrentInstance().
-                                addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Foto actualizada exitosamente", ""));
+                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Foto actualizada exitosamente", ""));
                     //RequestContext.getCurrentInstance().execute("PF('dialogoEditarEstudiante').hide()");
                     //inicioPagina();
                 } else {
                     System.out.println("Delete operation is failed.");
                 }
-            }           
+            }
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error fatal:", "Por favor contacte con su administrador " + ex.getMessage()));
-        }finally {
+        } finally {
             if (inputStream != null) {
                 System.out.println("ENTRA 10");
                 inputStream.close();
@@ -480,7 +478,7 @@ public class mbvEstudiante implements Serializable {
                 outputStream.close();
             }
         }
-        
+
     }
     private DefaultStreamedContent download;
 
@@ -593,16 +591,16 @@ public class mbvEstudiante implements Serializable {
     }
 
     public void newEstudiante() {
-        if(!login){
+        if (!login) {
             System.out.println("Usuario NO logeado");
             FacesContext.getCurrentInstance().
-                   addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
             return;
         }
-        if(this.crear){
+        if (this.crear) {
             Map<String, Object> options = new HashMap<String, Object>();
             /*options.put("contentHeight", 650);
-            options.put("height", 660);*/
+             options.put("height", 660);*/
             options.put("contentWidth", 890);
             options.put("width", 900);
             options.put("modal", true);
@@ -610,31 +608,29 @@ public class mbvEstudiante implements Serializable {
             options.put("draggable", true);
             options.put("resizable", true);
             RequestContext.getCurrentInstance().openDialog("newestudiante", options, null);
-        }
-        else{
+        } else {
             FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
         }
     }
 
     public void cargarEstudiante(int estudianteid) {
         try {
-            if(!login){
+            if (!login) {
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
                 return;
             }
-            if(this.editar){
+            if (this.editar) {
                 this.estudiante = estudianteEjb.find(estudianteid);
                 this.identificacionAnterior = this.estudiante.getIdentificiacion();
                 this.estadoSelected = estadoEjb.find(estudiante.getEstadoEstudianteId().getEstadoEstudianteId());
                 RequestContext.getCurrentInstance().update("frmEditarEstudiante:panelEditarEstudiante");
                 RequestContext.getCurrentInstance().execute("PF('dialogoEditarEstudiante').show()");
-            }
-            else{
+            } else {
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
@@ -644,26 +640,26 @@ public class mbvEstudiante implements Serializable {
 
     public void subirArchivos(int estudianteid) {
         try {
-            if(!login){
+            if (!login) {
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
                 return;
             }
-            if(this.editar){
+            if (this.editar) {
                 this.estudiante = estudianteEjb.find(estudianteid);
                 //RequestContext.getCurrentInstance().update("frmArchivos:panelEditarEstudiante");
                 RequestContext.getCurrentInstance().execute("PF('dialogoSubirArchivos').show()");
-            }
-            else{
+            } else {
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
         }
     }
+
     public void examinarArchivos(int estudianteid) {
         try {
             this.estudiante = estudianteEjb.find(estudianteid);
@@ -675,26 +671,32 @@ public class mbvEstudiante implements Serializable {
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
         }
     }
-    public String getMatricula(Estudiante estAux){
+
+    public String getMatricula(Estudiante estAux) {
         Matricula auxMatricula = matriculaEjb.getActivaByEstudiante(estAux);
-        if(auxMatricula!=null){
+        if (auxMatricula != null) {
             return "MATRICULADO";
-        }else{
-            return "PENDIENTE";
+        } else {
+            if (estAux.getUltimoaprobado() > 5) {
+                return "GRADUADO";
+            } else {
+                return "PENDIENTE";
+            }
         }
     }
-    public void editar(){
+
+    public void editar() {
         try {
-            if(!login){
+            if (!login) {
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
                 return;
             }
-            if(this.editar){
-                if(estudianteEjb.existeIdentificacion(this.estudiante.getIdentificiacion()) && !this.estudiante.getIdentificiacion().equals(identificacionAnterior)){
+            if (this.editar) {
+                if (estudianteEjb.existeIdentificacion(this.estudiante.getIdentificiacion()) && !this.estudiante.getIdentificiacion().equals(identificacionAnterior)) {
                     FacesContext.getCurrentInstance().
-                        addMessage("frmEditarEstudiante:txtIdentificacion", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Identificacion en uso"));
+                            addMessage("frmEditarEstudiante:txtIdentificacion", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Identificacion en uso"));
                     return;
                 }
                 System.out.println("ENTRA 8");
@@ -702,50 +704,52 @@ public class mbvEstudiante implements Serializable {
                 estudiante.setEstadoEstudianteId(estadoSelected);
                 estudianteEjb.edit(estudiante);
                 FacesContext.getCurrentInstance().
-                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Estudiante editado exitosamente", ""));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Estudiante editado exitosamente", ""));
                 RequestContext.getCurrentInstance().execute("PF('dialogoEditarEstudiante').hide()");
-                inicioPagina();       
-            }
-            else{
+                inicioPagina();
+            } else {
                 System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
         }
     }
-    public void redirect(){
+
+    public void redirect() {
         RequestContext.getCurrentInstance().closeDialog("hola");
-        System.out.println("Entra 1");   
+        System.out.println("Entra 1");
         /* System.out.println("Entra 1");
-            final ExternalContext context = FacesContext.getCurrentInstance().getExternalContext(); 
-            FacesContext ctx = FacesContext.getCurrentInstance();        
-            ExternalContext extContext = ctx.getExternalContext();
-            String url = extContext.encodeActionURL(ctx.getApplication().getViewHandler().getActionURL(ctx, "/tesismygit/faces/academico/matriculas.xhtml"));
-            System.out.println("Entra 2");
-           */
-           
+         final ExternalContext context = FacesContext.getCurrentInstance().getExternalContext(); 
+         FacesContext ctx = FacesContext.getCurrentInstance();        
+         ExternalContext extContext = ctx.getExternalContext();
+         String url = extContext.encodeActionURL(ctx.getApplication().getViewHandler().getActionURL(ctx, "/tesismygit/faces/academico/matriculas.xhtml"));
+         System.out.println("Entra 2");
+         */
+
     }
-    public void closeDialog(SelectEvent event){
+
+    public void closeDialog(SelectEvent event) {
         Estudiante estRe = (Estudiante) event.getObject();
         FacesContext.getCurrentInstance()
                 .getExternalContext()
                 .getFlash()
                 .put("param1", estRe);
-        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext(); 
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         try {
             context.redirect("/tesismygit/faces/academico/matriculas.xhtml");
-    //return "matriculas.xhtml?faces-redirect=true";
+            //return "matriculas.xhtml?faces-redirect=true";
         } catch (IOException ex) {
             Logger.getLogger(mbvEstudiante.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    public void initRender(){
-        if(!this.consultar){
+
+    public void initRender() {
+        if (!this.consultar) {
             FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para manejar criterios de evaluacion"));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para manejar criterios de evaluacion"));
         }
     }
 }
