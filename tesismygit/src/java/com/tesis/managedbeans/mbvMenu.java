@@ -149,7 +149,7 @@ public class mbvMenu implements Serializable{
             secondSubmenu.addElement(item8);
             
             DefaultMenuItem item9 = new DefaultMenuItem("Consolidado Cierre de año");
-            item9.setUrl("/faces/reportes/consolidadofinal.xhtml");
+            item9.setUrl("/faces/reportes/consolidadofinalAnterior.xhtml");
             item9.setIcon("ui-icon-document");
             secondSubmenu.addElement(item9);
             

@@ -42,8 +42,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Profesor.findByProfesorId", query = "SELECT p FROM Profesor p WHERE p.profesorId = :profesorId"),
     @NamedQuery(name = "Profesor.findByCedula", query = "SELECT p FROM Profesor p WHERE p.cedula = :cedula"),
     @NamedQuery(name = "Profesor.findByTelefono", query = "SELECT p FROM Profesor p WHERE p.telefono = :telefono"),
-    @NamedQuery(name = "Profesor.findByCorreo", query = "SELECT p FROM Profesor p WHERE p.correo = :correo"),
-    @NamedQuery(name = "Profesor.findByContrase\u00f1a", query = "SELECT p FROM Profesor p WHERE p.contrase\u00f1a = :contrase\u00f1a"),
+    @NamedQuery(name = "Profesor.findByCorreo", query = "SELECT p FROM Profesor p WHERE p.correo = :correo AND p.estadoProfesorId.estadoProfesorId = 1"),
+    @NamedQuery(name = "Profesor.findByContraseña", query = "SELECT p FROM Profesor p WHERE p.contraseña = :contraseña"),
     @NamedQuery(name = "Profesor.findBySexo", query = "SELECT p FROM Profesor p WHERE p.sexo = :sexo"),
     @NamedQuery(name = "Profesor.findByTituloProfesional", query = "SELECT p FROM Profesor p WHERE p.tituloProfesional = :tituloProfesional"),
     @NamedQuery(name = "Profesor.findByFoto", query = "SELECT p FROM Profesor p WHERE p.foto = :foto"),
@@ -73,7 +73,7 @@ public class Profesor implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 2147483647)
-    @Column(name = "contrase\u00f1a", nullable = false, length = 2147483647)
+    @Column(name = "contraseña", nullable = false, length = 2147483647)
     private String contraseña;
     @Basic(optional = false)
     @NotNull

@@ -24,17 +24,14 @@ import com.tesis.beans.ContenidotematicoFacade;
 import com.tesis.beans.CriterioevaluacionFacade;
 import com.tesis.beans.CursoFacade;
 import com.tesis.beans.EscalaFacade;
-import com.tesis.beans.EstadoAniolectivoFacade;
 import com.tesis.beans.EstadoEstudianteFacade;
 import com.tesis.beans.EstadoMatriculaFacade;
-import com.tesis.beans.EstadocontenidotematicoFacade;
 import com.tesis.beans.EstudianteFacade;
 import com.tesis.beans.FormacriterioevaluacionFacade;
 import com.tesis.beans.MatriculaFacade;
 import com.tesis.beans.NotafinalFacade;
 import com.tesis.beans.NotafinalrecuperacionFacade;
 import com.tesis.beans.PeriodoFacade;
-import com.tesis.beans.UsuarioRoleFacade;
 import com.tesis.clases.BackgroundF;
 import com.tesis.entity.Anlectivo;
 import com.tesis.entity.Asignatura;
@@ -44,8 +41,6 @@ import com.tesis.entity.Contenidotematico;
 import com.tesis.entity.Criterioevaluacion;
 import com.tesis.entity.Curso;
 import com.tesis.entity.Escala;
-import com.tesis.entity.EstadoEstudiante;
-import com.tesis.entity.EstadoMatricula;
 import com.tesis.entity.Estudiante;
 import com.tesis.entity.Matricula;
 import com.tesis.entity.Nota;
@@ -59,10 +54,7 @@ import java.math.RoundingMode;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -70,7 +62,6 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import org.omnifaces.util.Faces;
 
 /**
  *
@@ -78,9 +69,12 @@ import org.omnifaces.util.Faces;
  */
 @ManagedBean
 @ViewScoped
-public class mbvConsolidadoFinal {
+public class mbvConsolidadoFinalAnterior {
 
     private boolean mostrarBonton;
+    private boolean mostarAños;
+    private Anlectivo anlectivoSelected;
+    private List<Anlectivo> anlectivos;
     private Anlectivo anlectivo;
     @EJB
     private AnlectivoFacade anlectivoEjb;
@@ -117,7 +111,19 @@ public class mbvConsolidadoFinal {
     @EJB
     private CicloFacade cicloEjb;
 
-    public mbvConsolidadoFinal() {
+    public mbvConsolidadoFinalAnterior() {
+    }
+
+    public boolean isMostarAños() {
+        return mostarAños;
+    }
+
+    public List<Anlectivo> getAnlectivos() {
+        return anlectivos;
+    }
+
+    public Anlectivo getAnlectivoSelected() {
+        return anlectivoSelected;
     }
 
     public boolean isMostrarBonton() {
@@ -128,7 +134,8 @@ public class mbvConsolidadoFinal {
     public void inicio() {
         System.out.println("Entro POSTCOSTRUCT");
         this.mostrarBonton = false;
-        this.anlectivo = anlectivoEjb.getIniciado();
+        this.mostarAños = false;
+        this.anlectivos = anlectivoEjb.getTerminados();
     }
 
     public void imprimir() {
@@ -241,7 +248,7 @@ public class mbvConsolidadoFinal {
 
 
 
-                    matriculasAnio = matriculaEjb.matriculasCurso(cur);
+                    matriculasAnio = matriculaEjb.matriculasTerminadasCurso(cur);
                     for (Matricula maticula : matriculasAnio) {
                         Estudiante est = estdudianteEjb.find(maticula.getEstudianteId().getEstudianteId());
                         List<Asignatura> asignaturas = new ArrayList<Asignatura>();
@@ -319,7 +326,7 @@ public class mbvConsolidadoFinal {
                     document.newPage();
                 }
             } catch (Exception e) {
-
+                
                 System.out.println("ENTRO 3 ");
                 System.out.println("Error " + e.getMessage());
             }
@@ -327,25 +334,22 @@ public class mbvConsolidadoFinal {
             FacesContext context = FacesContext.getCurrentInstance();
             Object response = context.getExternalContext().getResponse();
             if (response instanceof HttpServletResponse) {
+                System.out.println("ENTRO 4 ");
+                HttpServletResponse hsr = (HttpServletResponse) response;
+                hsr.setContentType("application/pdf");
+                hsr.setHeader("Content-disposition", "attachment; filename=report.pdf");
+                hsr.setContentLength(baos.size());
                 try {
-                    System.out.println("ENTRO 4 ");
-                    HttpServletResponse hsr = (HttpServletResponse) response;
-                    hsr.reset();
-                    Faces.sendFile(baos.toByteArray(), "consolidadoFinal.pdf", false);
-                    try {
-                        System.out.println("ENTRO 5 ");
-                        ServletOutputStream out = hsr.getOutputStream();
-                        baos.writeTo(out);
-                        out.flush();
-                    } catch (IOException ex) {
-                        System.out.println("ENTRO 6 ");
-                        System.out.println("Error:  " + ex.getMessage());
-                    }
-                    System.out.println("ENTRO 7 ");
-                    context.responseComplete();
+                    System.out.println("ENTRO 5 ");
+                    ServletOutputStream out = hsr.getOutputStream();
+                    baos.writeTo(out);
+                    out.flush();
                 } catch (IOException ex) {
-                    Logger.getLogger(mbvConstanciaEstudios.class.getName()).log(Level.SEVERE, null, ex);
+                    System.out.println("ENTRO 6 ");
+                    System.out.println("Error:  " + ex.getMessage());
                 }
+                System.out.println("ENTRO 7 ");
+                context.responseComplete();
             }
         }
     }
@@ -360,20 +364,25 @@ public class mbvConsolidadoFinal {
         }
         return nota.setScale(1, RoundingMode.HALF_EVEN);
     }
-
-    public void initRender() {
-        if (anlectivo != null) {
-            if (periodoEjb.getNumeroPeriodosAño(anlectivo) == periodoEjb.getNumeroPeriodosTerminadosAño(anlectivo)) {
-                this.mostrarBonton = true;
-            } else {
-                this.mostrarBonton = false;
-                FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Se debe terminar todos los periodos del año escolar"));
-            }
-        } else {
+    public void initRender(){
+        if(!this.anlectivos.isEmpty()){
+            this.mostarAños = true;
+        }
+        else{
             this.mostrarBonton = false;
             FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Aun no ha iniciado el año escolar"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Aun no ha terminado un año escolar"));
+        }
+    }
+    public void cargarAño(){
+        if(anlectivoSelected.getAnlectivoId()!=null){
+            this.anlectivoSelected = anlectivoEjb.find(anlectivoSelected.getAnlectivoId());
+            this.anlectivo = anlectivoSelected;
+            this.mostrarBonton = true;
+        }
+        else{
+            this.mostrarBonton = false;
         }
     }
 }
+

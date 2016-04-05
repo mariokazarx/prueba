@@ -16,16 +16,16 @@
                     </f:metadata>
                     <h:panelGroup rendered="#{mbvEstudiante.consultar}">
                         <p:outputPanel styleClass="btn-new">
-                            <p:commandButton value="Nuevo Estudiante" icon="ui-icon-document" ajax="true" update="frmListaEstudiantes" actionListener="#{mbvEstudiante.newEstudiante}">
+                            <p:commandButton value="Nuevo estudiante" icon="ui-icon-document" ajax="true" update="frmListaEstudiantes" actionListener="#{mbvEstudiante.newEstudiante}">
                                 <p:ajax event="dialogReturn" listener="#{mbvEstudiante.closeDialog}" update="frmListaEstudiantes" />
                             </p:commandButton>
                         </p:outputPanel>
                         <p:dataTable id="tablaListaEstudiante" tableStyle="width:auto" var="estudiante" value="#{mbvEstudiante.estudiantes}" reflow="true" paginator="true" rows="10" selection="#{mbvEstudiante.estudiante}" selectionMode="single" lazy="true" rowKey="#{estudiante.estudianteId}" >
                             <p:ajax event="rowSelect" update=":frmListaEstudiantes:panelDetalleEstudiante" oncomplete="PF('dialogoDetalleEstudiante').show()"/>
                             <f:facet name="header">
-                                Lista de Estudiantes
+                                Lista de estudiantes
                             </f:facet>
-                            <p:column headerText="No identificacion" filterBy="cedula">
+                            <p:column headerText="No identificación" filterBy="cedula">
                                 <h:outputText value="#{estudiante.identificiacion}"/>
                             </p:column>
                             <p:column headerText="Nombres" filterBy="nombres">
@@ -60,9 +60,9 @@
                                     <f:facet name="header">
                                         <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/fotosestudiantes/#{mbvEstudiante.estudiante.foto}" width="150" height="150" cache="false" alt="Sin definir" style="border-radius: 4px;box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7)"/>
                                     </f:facet>
-                                    <p:outputLabel value="Tipo identificacion"/>
+                                    <p:outputLabel value="Tipo identificación"/>
                                     <h:outputText value="#{mbvEstudiante.estudiante.tipoIdentifcacion}"/>
-                                    <p:outputLabel value="No identificacion"/>
+                                    <p:outputLabel value="No identificación"/>
                                     <h:outputText value="#{mbvEstudiante.estudiante.identificiacion}"/>
                                     <p:outputLabel value="Nombres"/>
                                     <h:outputText value="#{mbvEstudiante.estudiante.nombre}"/>
@@ -70,9 +70,9 @@
                                     <h:outputText value="#{mbvEstudiante.estudiante.apellido}"/>
                                     <p:outputLabel value="Ciclo"/>
                                     <h:outputText value="#{mbvEstudiante.estudiante.ultimoaprobado>5? 'GRADUADO' :mbvEstudiante.estudiante.ultimoaprobado}"/>
-                                    <p:outputLabel value="Telefono"/>
+                                    <p:outputLabel value="Teléfono"/>
                                     <h:outputText value="#{mbvEstudiante.estudiante.telefono}"/>
-                                    <p:outputLabel value="Direccion"/>
+                                    <p:outputLabel value="Dirección"/>
                                     <h:outputText value="#{mbvEstudiante.estudiante.direccion}"/>
                                     <p:outputLabel value="Estrato"/>
                                     <h:outputText value="#{mbvEstudiante.estudiante.estrato}"/>
@@ -88,7 +88,7 @@
                                     </h:outputText>
                                     <p:outputLabel value="Cabeza de familia"/>
                                     <h:outputText value="#{mbvEstudiante.estudiante.cabezaFamilia}"/>
-                                    <p:outputLabel value="Resguardo indigena"/>
+                                    <p:outputLabel value="Resguardo indígena"/>
                                     <h:outputText value="#{mbvEstudiante.estudiante.resguardo}"/>
                                     <p:outputLabel value="Zona"/>
                                     <h:outputText value="#{mbvEstudiante.estudiante.zona}"/>
@@ -129,7 +129,7 @@
                                     <h:outputText value="#{documento.nombre}"/>
                                 </p:column>
                                 <p:column>
-                                    <h:commandLink value= "Ver Documento" action= "#{mbvEstudiante.downloadPDF(documento.rutaarchivo)}" target= "_blank" />
+                                    <h:commandLink value= "Ver documento" action= "#{mbvEstudiante.downloadPDF(documento.rutaarchivo)}" target= "_blank" />
                                 </p:column>
                             </p:dataTable>   
                         </p:outputPanel>
@@ -145,11 +145,11 @@
                                 <p:outputLabel for="selectTipo" value="Tipo Identificacion: " />
                                 <p:selectOneMenu id="selectTipo" value="#{mbvEstudiante.estudiante.tipoIdentifcacion}" style="width:125px">
                                     <f:selectItem itemLabel="Select One" itemValue="" />
-                                    <f:selectItem itemLabel="Cedula de ciudadania" itemValue="C.C" />
-                                    <f:selectItem itemLabel="Tarjeta de Identidad" itemValue="T.I" />
+                                    <f:selectItem itemLabel="Cedula de ciudadanía" itemValue="C.C" />
+                                    <f:selectItem itemLabel="Tarjeta de identidad" itemValue="T.I" />
                                 </p:selectOneMenu>
                                 <p:message for="selectTipo"/>
-                                <p:outputLabel for="txtIdentificacion" value="Numero Identificacion: " />
+                                <p:outputLabel for="txtIdentificacion" value="Número identificación: " />
                                 <p:inputText id="txtIdentificacion" value="#{mbvEstudiante.estudiante.identificiacion}" validatorMessage="identificacion invalida" size="25" >
                                     <f:validator validatorId="validatorVacio"/>
                                     <f:validateLength minimum="5" maximum="20" /> 
@@ -166,12 +166,12 @@
                                     <f:validator validatorId="validatorVacio"/>
                                 </p:inputText>
                                 <p:message for="txtApellidos"/>
-                                <p:outputLabel for="txtTelefono" value="Telefono: " />
+                                <p:outputLabel for="txtTelefono" value="Teléfono: " />
                                 <p:inputText id="txtTelefono" value="#{mbvEstudiante.estudiante.telefono}" size="25" >
                                     <f:validator validatorId="validatorVacio"/>
                                 </p:inputText>
                                 <p:message for="txtTelefono"/>
-                                <p:outputLabel for="txtDireccion" value="Direccion: " />
+                                <p:outputLabel for="txtDireccion" value="Dirección: " />
                                 <p:inputText id="txtDireccion" value="#{mbvEstudiante.estudiante.direccion}" size="25">
                                     <f:validator validatorId="validatorVacio"/>
                                 </p:inputText>
@@ -207,7 +207,7 @@
                                     <f:selectItem itemLabel="Urbano" itemValue="URBANO" />
                                 </p:selectOneMenu>
                                 <p:message for="selectZona"/>
-                                <p:outputLabel value="Fecha de Nacimiento" for="txtFechaNacimiento"/>
+                                <p:outputLabel value="Fecha de nacimiento" for="txtFechaNacimiento"/>
                                 <p:calendar id="txtFechaNacimiento" label="Fecha de nacimiento" showOn="button" title="Ejemplo: dd/mm/yyyy" value="#{mbvEstudiante.estudiante.fechaNacimiento}" pattern="dd/MM/yyyy" required="true" requiredMessage="Fecha de nacimiento es requerido"/>
                                 <p:message for="txtFechaNacimiento"/>
                                 <p:outputLabel for="rdbSexo" value="Sexo:" />
@@ -216,13 +216,13 @@
                                     <f:selectItem itemLabel="Femenino" itemValue="F" />
                                 </p:selectOneRadio>
                                 <p:message for="rdbSexo"/>
-                                <p:outputLabel for="rdbCabeza" value="Cabeza de Familia:" />
+                                <p:outputLabel for="rdbCabeza" value="Cabeza de familia:" />
                                 <p:selectOneRadio id="rdbCabeza" value="#{mbvEstudiante.estudiante.cabezaFamilia}" >
                                     <f:selectItem itemLabel="Si" itemValue="SI" />
                                     <f:selectItem itemLabel="No" itemValue="NO" />
                                 </p:selectOneRadio>
                                 <p:message for="rdbCabeza"/>
-                                <p:outputLabel for="rdbResguardo" value="Resguardo Indigena:" />
+                                <p:outputLabel for="rdbResguardo" value="Resguardo indígena:" />
                                 <p:selectOneRadio id="rdbResguardo" value="#{mbvEstudiante.estudiante.resguardo}" >
                                     <f:selectItem itemLabel="Si" itemValue="SI" />
                                     <f:selectItem itemLabel="No" itemValue="NO" />
@@ -242,7 +242,7 @@
                                 <p:message for="stlEstado"/>
 
                                 <h:panelGroup></h:panelGroup>
-                                <p:commandButton value="Editar Estudiante" actionListener="#{mbvEstudiante.editar}" ajax="true"  update=":frmEditarEstudiante :frmListaEstudiantes" />
+                                <p:commandButton value="Editar estudiante" actionListener="#{mbvEstudiante.editar}" ajax="true"  update=":frmEditarEstudiante :frmListaEstudiantes" />
                             </h:panelGrid>  
                         </p:outputPanel>
                         <!--  </p:scrollPanel>-->

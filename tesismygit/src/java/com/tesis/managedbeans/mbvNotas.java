@@ -424,7 +424,8 @@ public class mbvNotas implements Serializable {
         try {
             Integer suma = 0;
             if (this.logro.getPorcentaje() < 0 || this.logro.getPorcentaje() > 100) {
-                System.out.println("LOGRO FUERA DE RAMGO");
+                FacesContext.getCurrentInstance().
+                        addMessage("frmCrearLogro:txtPorcentaje", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "El porcentaje debe estar entre 1 y 100"));
                 return;
             }
             System.out.println("contenido" + contenido + "    " + contenido.getLogroList());//traer por sql
@@ -435,7 +436,8 @@ public class mbvNotas implements Serializable {
             suma += this.logro.getPorcentaje();
             System.out.println("SUMA FINAL" + suma);
             if (suma > 100) {
-                System.out.println("SE PASA DE 100");
+                FacesContext.getCurrentInstance().
+                        addMessage("frmCrearLogro:txtPorcentaje", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "La suma total de porcenatjes no debe ser superior a 100"));
                 return;
             }
             if (suma == 100) {
@@ -498,6 +500,8 @@ public class mbvNotas implements Serializable {
                 this.logros = logroEjb.getContenidoByAll(contenido);
             }
         } catch (Exception e) {
+            FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contacte con el administrador"));
             System.out.println("FALLO INGRESO LOGRO");
         }
 
@@ -710,6 +714,8 @@ public class mbvNotas implements Serializable {
             this.logros = logroEjb.getContenidoByAll(contenido);
         } catch (Exception e) {
             System.out.println("ERROR ELIMINAR LOGRO");
+            FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contactese con el administrador"));
         }
     }
 
@@ -731,26 +737,36 @@ public class mbvNotas implements Serializable {
     }
 
     public void insertarObservacion(Integer estId) {
-        Estudiante estAux = estudianteEjB.find(estId);
-        Nota notaEst = new Nota();
-        notaEst = estudianteEjB.findNotaEst(contenido, estAux);
-        System.out.println("insertar observacion" + estAux + "NOTA EST" + notaEst);
-        this.estActual = estAux;
-        this.notaEstudianteActual = notaEst;
-        this.observaciones = notaEst.getObservaciones();
         try {
+            Estudiante estAux = estudianteEjB.find(estId);
+            Nota notaEst = new Nota();
+            notaEst = estudianteEjB.findNotaEst(contenido, estAux);
+            System.out.println("insertar observacion" + estAux + "NOTA EST" + notaEst);
+            this.estActual = estAux;
+            this.notaEstudianteActual = notaEst;
+            this.observaciones = notaEst.getObservaciones();
+
             RequestContext.getCurrentInstance().update("frmCrearObservaciones:panelCrearObservaciones");
             RequestContext.getCurrentInstance().execute("PF('dialogoCrearObservaciones').show()");
+
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contactese con el administrador"));
         }
     }
 
     public void insertarObservacionDB() {
-        System.out.println("insertar observacionDB" + estActual + "NOTA ESTDB" + notaEstudianteActual + "OBSERVACION" + this.observaciones);
-        this.notaEstudianteActual.setObservaciones(observaciones);
-        this.notaEstEJB.edit(notaEstudianteActual);
+        try {
+            System.out.println("insertar observacionDB" + estActual + "NOTA ESTDB" + notaEstudianteActual + "OBSERVACION" + this.observaciones);
+            this.notaEstudianteActual.setObservaciones(observaciones);
+            this.notaEstEJB.edit(notaEstudianteActual);
+            RequestContext.getCurrentInstance().execute("PF('dialogoCrearObservaciones').hide()");
+            FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Observacion registrada con exito"));
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contactese con el administrador"));
+        }
     }
 
     public void onRowCancel(RowEditEvent event) {
@@ -781,6 +797,8 @@ public class mbvNotas implements Serializable {
                     System.out.println("FUNCIONOOOOO");
                     tx.rollback();
                     cargarContenido();
+                    FacesContext.getCurrentInstance().
+                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "La nota debe estar entre " + min + " y " + max));
                     return;
                 }
                 Integer logroId = key;
@@ -821,6 +839,8 @@ public class mbvNotas implements Serializable {
             //cargarEstudiantes();
             tx.rollback();
             cargarContenido();
+            FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contactese con el administrador"));
             //updateColumns();
         }
     }
@@ -898,6 +918,8 @@ public class mbvNotas implements Serializable {
             Integer suma = 0;
             if (this.logro.getPorcentaje() < 0 || this.logro.getPorcentaje() > 100) {
                 System.out.println("LOGRO FUERA DE RAMGO");
+                FacesContext.getCurrentInstance().
+                        addMessage("frmEditarLogro:txtPorcentaje", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "El porcentaje debe estar entre 1 y 100"));
                 return;
             }
             System.out.println("contenido" + contenido + "    " + contenido.getLogroList());//traer por sql
@@ -913,6 +935,8 @@ public class mbvNotas implements Serializable {
             System.out.println("SUMA FINAL" + suma);
             if (suma > 100) {
                 System.out.println("SE PASA DE 100");
+                FacesContext.getCurrentInstance().
+                        addMessage("frmEditarLogro:txtPorcentaje", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "La suma total de porcentajes no debe pasar de 100"));
                 return;
             }
             if (suma == 100) {
@@ -943,26 +967,34 @@ public class mbvNotas implements Serializable {
 
         } catch (Exception e) {
             System.out.println("FALLO INGRESO LOGRO");
+            FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contactese con el administrador"));
         }
     }
 
     public void initRender() {
-        this.periodo = periodoEjb.getPeriodEvaluar(anlectivo);
-        Date auxMin = new Date();
-        if (this.periodo != null) {
-            if (this.periodo.getEstadoPeriodoId().getEstadoPeriodoId() == 3 && periodo.getFechacierre().before(auxMin)) {
-                // se paso
+        if (!this.cursos.isEmpty()) {
+            this.periodo = periodoEjb.getPeriodEvaluar(anlectivo);
+            Date auxMin = new Date();
+            if (this.periodo != null) {
+                if (this.periodo.getEstadoPeriodoId().getEstadoPeriodoId() == 3 && periodo.getFechacierre().before(auxMin)) {
+                    // se paso
+                    this.mostrarContenido = false;
+                    FacesContext.getCurrentInstance().
+                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "la fecha de evaluacion termiono"));
+                } else {
+                    this.mostrarContenido = true;
+                    // bien
+                }
+            } else {
                 this.mostrarContenido = false;
                 FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "la fecha de evaluacion termiono"));
-            } else {
-                this.mostrarContenido = true;
-                // bien
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "aun no se activa la evaluacion"));
             }
         } else {
             this.mostrarContenido = false;
-            FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "aun no se activa la evaluacion"));
+                FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "no tiene asignaturas para evaluar"));
         }
     }
 
@@ -1002,10 +1034,10 @@ public class mbvNotas implements Serializable {
             table2.addCell(cell3);
             document.add(table2);
             // datos estudiante
-            Paragraph parDescrip = new Paragraph(10,"Reporte notas año escolar " + cursoSelected.getAnlectivoId().getAnio()
+            Paragraph parDescrip = new Paragraph(10, "Reporte notas año escolar " + cursoSelected.getAnlectivoId().getAnio()
                     + " " + cursoSelected.getNombre() + " ciclo " + cursoSelected.getCicloId().getNumero() + " periodo " + contenido.getPeriodoId().getNumero(), FontFactory.getFont("arial", 12, Font.NORMAL));
             document.add(parDescrip);
-            Paragraph parProf = new Paragraph(10,"Profesor: " + profesor.getApellido() + " " + profesor.getNombre(), FontFactory.getFont("arial", 12, Font.NORMAL));
+            Paragraph parProf = new Paragraph(10, "Profesor: " + profesor.getApellido() + " " + profesor.getNombre(), FontFactory.getFont("arial", 12, Font.NORMAL));
             document.add(parProf);
             document.add(new Paragraph("\n"));
 
