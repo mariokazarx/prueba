@@ -54,6 +54,8 @@ import java.math.RoundingMode;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -62,6 +64,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import org.omnifaces.util.Faces;
 
 /**
  *
@@ -136,6 +139,7 @@ public class mbvConsolidadoFinalAnterior {
         this.mostrarBonton = false;
         this.mostarAños = false;
         this.anlectivos = anlectivoEjb.getTerminados();
+        this.anlectivoSelected = new Anlectivo();
     }
 
     public void imprimir() {
@@ -186,6 +190,7 @@ public class mbvConsolidadoFinalAnterior {
                     Ciclo cicloaux = cicloEjb.find(cur.getCicloId().getCicloId());
                     List<Asignatura> asignaturasAux = new ArrayList<Asignatura>();
                     asignaturasAux = asignaturaEjb.findByCiclo(cicloaux);
+                    System.out.println("ULTIMO MMM" + anlectivoSelected + ";MMMMMKKJHJJ" + this.anlectivo);
                     int numPeriodos = Integer.parseInt(periodoEjb.getNumeroPeriodosAño(anlectivo).toString());
                     int totalP = asignaturasAux.size() * numPeriodos;
                     System.out.println("NUMERO PERIODOS" + numPeriodos + "TOTAL p" + totalP);
@@ -326,7 +331,7 @@ public class mbvConsolidadoFinalAnterior {
                     document.newPage();
                 }
             } catch (Exception e) {
-                
+
                 System.out.println("ENTRO 3 ");
                 System.out.println("Error " + e.getMessage());
             }
@@ -334,22 +339,25 @@ public class mbvConsolidadoFinalAnterior {
             FacesContext context = FacesContext.getCurrentInstance();
             Object response = context.getExternalContext().getResponse();
             if (response instanceof HttpServletResponse) {
-                System.out.println("ENTRO 4 ");
-                HttpServletResponse hsr = (HttpServletResponse) response;
-                hsr.setContentType("application/pdf");
-                hsr.setHeader("Content-disposition", "attachment; filename=report.pdf");
-                hsr.setContentLength(baos.size());
                 try {
-                    System.out.println("ENTRO 5 ");
-                    ServletOutputStream out = hsr.getOutputStream();
-                    baos.writeTo(out);
-                    out.flush();
+                    System.out.println("ENTRO 4 ");
+                    HttpServletResponse hsr = (HttpServletResponse) response;
+                    hsr.reset();
+                    Faces.sendFile(baos.toByteArray(), "consolidadoFinal.pdf", false);
+                    try {
+                        System.out.println("ENTRO 5 ");
+                        ServletOutputStream out = hsr.getOutputStream();
+                        baos.writeTo(out);
+                        out.flush();
+                    } catch (IOException ex) {
+                        System.out.println("ENTRO 6 ");
+                        System.out.println("Error:  " + ex.getMessage());
+                    }
+                    System.out.println("ENTRO 7 ");
+                    context.responseComplete();
                 } catch (IOException ex) {
-                    System.out.println("ENTRO 6 ");
-                    System.out.println("Error:  " + ex.getMessage());
+                    Logger.getLogger(mbvConstanciaEstudios.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                System.out.println("ENTRO 7 ");
-                context.responseComplete();
             }
         }
     }
@@ -364,25 +372,26 @@ public class mbvConsolidadoFinalAnterior {
         }
         return nota.setScale(1, RoundingMode.HALF_EVEN);
     }
-    public void initRender(){
-        if(!this.anlectivos.isEmpty()){
+
+    public void initRender() {
+        if (!this.anlectivos.isEmpty()) {
             this.mostarAños = true;
-        }
-        else{
+        } else {
             this.mostrarBonton = false;
             FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Aun no ha terminado un año escolar"));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Aun no ha terminado un año escolar"));
         }
     }
-    public void cargarAño(){
-        if(anlectivoSelected.getAnlectivoId()!=null){
+
+    public void cargarAño() {
+        if (anlectivoSelected.getAnlectivoId() != null) {
+            System.out.println("ULTIMO MMM" + anlectivoSelected);
             this.anlectivoSelected = anlectivoEjb.find(anlectivoSelected.getAnlectivoId());
             this.anlectivo = anlectivoSelected;
+            System.out.println("ULTIMO MMM" + anlectivoSelected + ";MMMMMKKJHJJ" + this.anlectivo);
             this.mostrarBonton = true;
-        }
-        else{
+        } else {
             this.mostrarBonton = false;
         }
     }
 }
-

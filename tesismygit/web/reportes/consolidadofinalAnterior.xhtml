@@ -32,7 +32,7 @@
                         </p:selectOneMenu>
                     </h:panelGrid>
                     <p:outputPanel id="panelReporteMatriculas" rendered="#{mbvConsolidadoFinalAnterior.mostrarBonton}">
-                        <p:commandButton id="btnReporte" value="Generar reporte" ajax="false" icon="icon-report" actionListener="#{mbvConsolidadoFinal.imprimir}" style="margin-top:5px" />
+                        <p:commandButton id="btnReporte" value="Generar reporte" ajax="false" icon="icon-report" actionListener="#{mbvConsolidadoFinalAnterior.imprimir}" style="margin-top:5px" />
                     </p:outputPanel>
 
                     <p:dialog widgetVar="statusDialog" appendTo="@(body)" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
