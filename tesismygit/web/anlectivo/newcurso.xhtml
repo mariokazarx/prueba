@@ -23,11 +23,11 @@
                         <f:validator validatorId="validatorVacio"/>
                     </p:inputText>
                     <p:message for="txtNombre"/>
-                    <p:outputLabel for="txtMinEst" value="Cantidad de Estudiantes:" />
+                    <p:outputLabel for="txtMinEst" value="Cantidad de estudiantes:" />
                     <p:inputText id="txtMinEst" value="#{mbvCurso.curso.numeroestudiantes}"/>
                     <p:message for="txtMinEst"/>
 
-                    <p:outputLabel for="sltConfiguracion" value="Año Lectivo:" />
+                    <p:outputLabel for="sltConfiguracion" value="Año escolar:" />
                     <p:selectOneMenu id="sltConfiguracion" value="#{mbvCurso.anlectivoSelected.anlectivoId}" required="true" requiredMessage="seleccione un año escolar">
                         <p:ajax listener="#{mbvCurso.cargarCiclo()}" update="sltCiclos"/>
                         <f:selectItem itemLabel="Seleccione."/>
@@ -42,7 +42,7 @@
                     <p:message for="sltCiclos"/>
 
                     <h:panelGroup></h:panelGroup>
-                    <p:commandButton value="Registrar Curso" actionListener="#{mbvCurso.insertar}" ajax="true" update="frmCurso" />
+                    <p:commandButton value="Registrar curso" actionListener="#{mbvCurso.insertar}" ajax="true" update="frmCurso" />
                 </h:panelGrid> 
             </h:panelGroup>
         </h:form>

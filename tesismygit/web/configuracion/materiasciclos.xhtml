@@ -17,7 +17,7 @@
                         <f:event type="preRenderView" listener="#{mbvMateriasCiclos.initRender}" />
                     </f:metadata>
                     <h:panelGroup rendered="#{mbvMateriasCiclos.consultar}">
-                        <p:outputLabel for="sltConfiguracion" value="Configuracion" styleClass="form-titulos" />
+                        <p:outputLabel for="sltConfiguracion" value="Configuración" styleClass="form-titulos" />
                         <p:selectOneMenu id="sltConfiguracion" value="#{mbvMateriasCiclos.configuracionSelected.configuracionId}" styleClass="form-select">
                             <p:ajax listener="#{mbvMateriasCiclos.cargarCiclo()}" update="frmMateriasCiclos"/>
                             <f:selectItem itemLabel="Seleccione."/>

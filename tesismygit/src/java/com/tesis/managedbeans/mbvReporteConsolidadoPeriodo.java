@@ -404,25 +404,54 @@ public class mbvReporteConsolidadoPeriodo {
                         }
                     }
                     table.setTotalWidth(ft);
-                    table.addCell("ESTUDIANTE");
+                    PdfPCell cellT1 = new PdfPCell();
+                    Paragraph parT1 = new Paragraph(10, "ESTUDIANTE", FontFactory.getFont("arial", 8, Font.BOLD));
+                    parT1.setAlignment(Element.ALIGN_CENTER);
+                    cellT1.addElement(parT1);
+                    cellT1.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                    table.addCell(cellT1);
                     for (Contenidotematico con : contenidos) {
-                        table.addCell(con.getAsignaturacicloId().getAsignaturaId().getNombre());
+                        PdfPCell cellT2 = new PdfPCell();
+                        Paragraph parT2 = new Paragraph(10, con.getAsignaturacicloId().getAsignaturaId().getNombre(), FontFactory.getFont("arial", 8, Font.BOLD));
+                        parT2.setAlignment(Element.ALIGN_CENTER);
+                        cellT2.addElement(parT2);
+                        //cellT2.setRotation(90);
+                        //cellT2.setFixedHeight(100);
+                        cellT1.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                        table.addCell(cellT2);
                     }
-                    table.addCell("Promedio");
+                    PdfPCell cellT3 = new PdfPCell();
+                    Paragraph parT3 = new Paragraph(10, "Promedio", FontFactory.getFont("arial", 8, Font.BOLD));
+                    parT3.setAlignment(Element.ALIGN_CENTER);
+                    cellT3.addElement(parT3);
+                    cellT1.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                    table.addCell(cellT3);
                     for (Object p : estudiantesPromedio) {
                         Object[] row = (Object[]) p;
                         for (int i = 0; i < row.length; i++) {
                             if (row[i] instanceof Estudiante) {
                                 Estudiante est = (Estudiante) row[i];
-                                table.addCell(est.getApellido() + " " + est.getNombre());
+                                PdfPCell cellC1 = new PdfPCell();
+                                Paragraph parC1 = new Paragraph(10, est.getApellido() + " " + est.getNombre(), FontFactory.getFont("arial", 9, Font.NORMAL));
+                                //parC1.setAlignment(Element.ALIGN_CENTER);
+                                cellC1.addElement(parC1);
+                                table.addCell(cellC1);
                                 for (Contenidotematico cont : contenidos) {
-                                    table.addCell(getNotaEst(est, cont).toString());
+                                    PdfPCell cellC2 = new PdfPCell();
+                                    Paragraph parC2 = new Paragraph(10, getNotaEst(est, cont).toString(), FontFactory.getFont("arial", 10, Font.NORMAL));
+                                    parC2.setAlignment(Element.ALIGN_CENTER);
+                                    cellC2.addElement(parC2);
+                                    table.addCell(cellC2);
                                 }
                             }
                             if (row[i] instanceof Double) {
                                 BigDecimal nota = new BigDecimal(row[i].toString());
                                 nota = nota.setScale(1, RoundingMode.HALF_EVEN);
-                                table.addCell(nota.toString());
+                                PdfPCell cellC3 = new PdfPCell();
+                                Paragraph parC3 = new Paragraph(10, nota.toString(), FontFactory.getFont("arial", 10, Font.NORMAL));
+                                parC3.setAlignment(Element.ALIGN_CENTER);
+                                cellC3.addElement(parC3);
+                                table.addCell(cellC3);
                             }
                         }
                     }

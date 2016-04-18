@@ -8,7 +8,6 @@ import com.tesis.entity.Profesor;
 import com.tesis.entity.Usuario;
 import com.tesis.managedbeans.mbsLogin;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.faces.context.ExternalContext;
@@ -29,6 +28,8 @@ public class CheckSession implements PhaseListener {
     private boolean login;
     private Profesor profesor;
     private final String PATH_LOGIN = "faces/index.xhtml";
+    private final String PATH_RECUPERAR = "faces/recuperarContrasenia.xhtml";
+    private final String PATH_RESTABLECER = "faces/restablecerContrasenia.xhtml";
     final List<String> urlsProfesor = Arrays.asList("faces/academico/estudiantes.xhtml", "faces/academico/matriculas.xhtml",
             "faces/academico/newestudiante.xhtml", "faces/anlectivo/anlectivos.xhtml", "faces/anlectivo/cursos.xhtml",
             "faces/anlectivo/newAnlectivo.xhtml", "faces/anlectivo/newPeriodo.xhtml", "faces/academico/newcurso.xhtml",
@@ -71,9 +72,11 @@ public class CheckSession implements PhaseListener {
         HttpServletRequest req = (HttpServletRequest) ec.getRequest();
         String url = req.getRequestURL().toString();
         boolean enLogin = url.indexOf(PATH_LOGIN) != -1;
+        boolean enRecuperar = url.indexOf(PATH_RECUPERAR) != -1;
+        boolean enRestablecer = url.indexOf(PATH_RESTABLECER) != -1;
         //boolean enLogin2 = url.indexOf("/index.html") != -1;
 
-        System.out.println("LOGIN PROFE " + profesor);
+        System.out.println("LOGIN PROFE " + profesor + "booolean 1 "+enLogin+"boolean 2 "+enRecuperar+"boolean 3"+enRestablecer);
         //si no esta logeado y no se encuentre en login
         if (profesor.getProfesorId() != null) {
             for (String urlAux : urlsProfesor) {
@@ -87,8 +90,12 @@ public class CheckSession implements PhaseListener {
 
         }
         if (!login && !enLogin) {
-            redirect("/index.xhtml");
-        } else if (login && enLogin) {
+            if(enRecuperar || enRestablecer){
+                //redirect("/recuperarContraseña.xhtml");
+            }else{
+                redirect("/index.xhtml");
+            }
+        } else if (login && (enLogin || enRecuperar)) {
             redirect("/plantilla.xhtml");
         }
         /*if(login){

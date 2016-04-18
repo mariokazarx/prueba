@@ -22,20 +22,20 @@
                     <f:validator validatorId="validatorVacio"/>
                 </p:inputText>
                 <p:message for="txtNombre"/>
-                <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
+                <p:outputLabel for="txtDescripcion" value="Descripción: " />
                 <p:inputTextarea id="txtDescripcion" value="#{mbvEscala.escala.descripcion}" rows="5"  />
                 <p:message for="txtDescripcion"/>
-                <p:outputLabel for="txtMin" value="Nota Minima:" />
+                <p:outputLabel for="txtMin" value="Nota mínima:" />
                 <p:inputText id="txtMin" value="#{mbvEscala.escala.min}"/>
                 <p:message for="txtMin"/>
-                <p:outputLabel for="txtMax" value="Nota Maxima:" />
+                <p:outputLabel for="txtMax" value="Nota máxima:" />
                 <p:inputText id="txtMax" value="#{mbvEscala.escala.max}" />
                 <p:message for="txtMax" />
-                <p:outputLabel for="txtMinaprob" value="Nota Minima Aprobacion:" />
+                <p:outputLabel for="txtMinaprob" value="Nota mínima aprobación:" />
                 <p:inputText id="txtMinaprob" value="#{mbvEscala.escala.notaminimaaprob}"/>
                 <p:message for="txtMinaprob" id="msgPrueba"/>
                 <h:panelGroup></h:panelGroup>
-                <p:commandButton value="Registrar Escala" actionListener="#{mbvEscala.insertar}" onclick="#{mbvEscala.setMensage(false)}" ajax="true" update="frmescala" />
+                <p:commandButton value="Registrar escala" actionListener="#{mbvEscala.insertar}" onclick="#{mbvEscala.setMensage(false)}" ajax="true" update="frmescala" />
             </h:panelGrid> 
             </h:panelGroup>
         </h:form>

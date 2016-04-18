@@ -49,6 +49,8 @@ public class mbvUsuario implements Serializable {
     private String txtRepiteContrasenia;
     private String correoAnetrior;
     private String cedulaAnterior;
+    private EstadoUsuario estadoSelected;
+    private List<EstadoUsuario> estadosUsuarios;
     private boolean cambiarContraseña;
     private boolean mostrarEditar;
     private boolean mostrarCrear;
@@ -59,6 +61,7 @@ public class mbvUsuario implements Serializable {
     private boolean editar;
     private boolean crear;
     private boolean eliminar;
+    private boolean usrRoot;
     private Usuario usr;
     @EJB
     private UsuarioFacade usuarioEjb;
@@ -78,6 +81,30 @@ public class mbvUsuario implements Serializable {
     UserTransaction tx;
 
     public mbvUsuario() {
+    }
+
+    public boolean isUsrRoot() {
+        return usrRoot;
+    }
+
+    public void setUsrRoot(boolean usrRoot) {
+        this.usrRoot = usrRoot;
+    }
+
+    public List<EstadoUsuario> getEstadosUsuarios() {
+        return estadosUsuarios;
+    }
+
+    public void setEstadosUsuarios(List<EstadoUsuario> estadosUsuarios) {
+        this.estadosUsuarios = estadosUsuarios;
+    }
+
+    public EstadoUsuario getEstadoSelected() {
+        return estadoSelected;
+    }
+
+    public void setEstadoSelected(EstadoUsuario estadoSelected) {
+        this.estadoSelected = estadoSelected;
     }
 
     public boolean isConsultar() {
@@ -206,18 +233,23 @@ public class mbvUsuario implements Serializable {
             this.editar = true;
             this.eliminar = true;
             this.crear = true;
+            this.usuarios = this.usuarioEjb.findAll();
+        }else{
+            this.usuarios = this.usuarioEjb.usersAdmin();
         }
         this.mostrarConsultar = false;
         this.mostrarEditar = false;
         this.mostrarEliminar = false;
         this.mostrarCrear = false;
+        this.usrRoot = false;
         System.out.println("ENTRO INICIO");
         this.usuario = new Usuario();
         this.recursoSelected = new Recurso();
-        this.usuarios = this.usuarioEjb.findAll();
         this.recursos = this.recursoEjb.findAll();
         this.roleActual = new Role();
         this.rolesRecursos = new ArrayList<Role>();
+        this.estadosUsuarios = this.estUsuEjb.findAll();
+        this.estadoSelected = new EstadoUsuario();
     }
 
     public void actualizar() {
@@ -225,7 +257,7 @@ public class mbvUsuario implements Serializable {
             if (!login) {
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
             if (this.editar) {
@@ -244,9 +276,9 @@ public class mbvUsuario implements Serializable {
                 }
                 if (cambiarContraseña) {
                     if (this.usuario.getContraseña().equals(this.txtRepiteContrasenia)) {
-                        usuario.setContraseña(Encrypt.sha512(this.usuario.getContraseña()));
+                        usuario.setContraseña(Encrypt.sha512(this.usuario.getContraseña(),this.usuario.getCorreo()));
                     } else {
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error fatal:", "Las contraseñas no coinciden"));
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", "Las contraseñas no coinciden"));
                         tx.rollback();
                         return;
                     }
@@ -260,7 +292,7 @@ public class mbvUsuario implements Serializable {
                     System.out.println("ERRORR GRAVE 13333" + usuario.getUsuarioRoleList() + "EL OTRO" + auxUsrRoles);
                     if (!userroleEjb.removeByUsuario(usuario)) {
                         //tx.rollback();
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error fatal:", "Las contraseñas no coinciden 1"));
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", "Las contraseñas no coinciden"));
                         return;
                     }
                     usuario.getUsuarioRoleList().clear();
@@ -268,7 +300,7 @@ public class mbvUsuario implements Serializable {
                     for (UsuarioRole usrRolAux : auxUsrRoles) {
                         if (!roleEjb.removeById(usrRolAux.getRoleId().getRoleId())) {
                             tx.rollback();
-                            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error fatal:", "Las contraseñas no coinciden 2"));
+                            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", "Las contraseñas no coinciden"));
                             return;
                         }
                     }
@@ -278,7 +310,7 @@ public class mbvUsuario implements Serializable {
                 // borrar usuario roles
                 tx.begin();
                 System.out.println("MIERDAAAA" + userroleEjb.getByUser(usuario));
-                if (rolesRecursos.size() > 0) {
+                if (rolesRecursos.size() > 0 || this.usuario.getTipoUsuarioId().getTipoUsuarioId()==4) {
                     for (Role aux : rolesRecursos) {
                         System.out.println("role lllllll" + aux.getRecursoId());
                         roleEjb.create(aux);
@@ -289,18 +321,20 @@ public class mbvUsuario implements Serializable {
                         userroleEjb.create(usrRol);
                         System.out.println("MIERDAAAA 222212121211111" + userroleEjb.getByUser(usuario));
                     }
+                    estadoSelected = estUsuEjb.find(estadoSelected.getEstadoUsuarioId());
                     System.out.println("MIERDAAAA 22222" + userroleEjb.getByUser(usuario));
+                    this.usuario.setEstadoUsuarioId(estadoSelected);
                     usuarioEjb.edit(this.usuario);
                     tx.commit();
                     //closeDialog();
                     FacesContext.getCurrentInstance().
-                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Criterio Evaluacion creado Satisfactoriamente", ""));
+                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Usiario editado"));
                     //tx.rollback();    
                     RequestContext.getCurrentInstance().execute("PF('dialogoEditarUsuario').hide()");
                     inicioPagina();
                 } else {
                     tx.rollback();
-                    FacesContext.getCurrentInstance().addMessage("frmEditarUsuario:selectRecurso", new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error fatal:", "Debe almenos seleccionar un recurso"));
+                    FacesContext.getCurrentInstance().addMessage("frmEditarUsuario:selectRecurso", new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", "Debe almenos seleccionar un recurso"));
                     return;
                 }
             } else {
@@ -309,7 +343,7 @@ public class mbvUsuario implements Serializable {
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
             }
         } catch (Exception ex) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error fatal:", "Por favor contacte con su administrador " + ex.getMessage()));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error inesperado", "Contáctese con el administrador"));
         }
 
     }
@@ -336,7 +370,7 @@ public class mbvUsuario implements Serializable {
             if (!login) {
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
             if (this.crear) {
@@ -356,7 +390,9 @@ public class mbvUsuario implements Serializable {
                     TipoUsuario tusu = tusuEjb.find(3);
                     usuario.setEstadoUsuarioId(estado);
                     usuario.setTipoUsuarioId(tusu);
-                    usuario.setContraseña(Encrypt.sha512(this.usuario.getContraseña()));
+                    this.usuario.setFoto("default.jpg");
+                    System.out.println("USUARIO BBBBBB MMMMM" + usuario.getUsuarioId());
+                    usuario.setContraseña(Encrypt.sha512(this.usuario.getContraseña(),this.usuario.getCorreo()));
                     System.out.println("USUARIO" + usuario.getIdentificacion());
                     usuarioEjb.create(this.usuario);
                     System.out.println("USUARIO" + usuario);
@@ -370,29 +406,29 @@ public class mbvUsuario implements Serializable {
                         }
                         tx.commit();
                         FacesContext.getCurrentInstance().
-                                addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Criterio Evaluacion creado Satisfactoriamente", ""));
+                                addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Usuario creado satisfactoriamente"));
                         //tx.rollback();   
                         RequestContext.getCurrentInstance().closeDialog(this);
                         inicioPagina();
                     } else {
                         System.out.println("El usuario debe tener al menos un role");
                         tx.rollback();
-                        FacesContext.getCurrentInstance().addMessage("frmUsuario:selectRecurso", new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error fatal:", "Debe asignar almenos un recurso"));
+                        FacesContext.getCurrentInstance().addMessage("frmUsuario:selectRecurso", new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", "Debe asignar almenos un recurso"));
                         return;
                     }
 
                 } else {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error fatal:", "Las contraseñas no coinciden"));
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", "Las contraseñas no coinciden"));
                     tx.rollback();
                     return;
                 }
             } else {
                 System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
         } catch (Exception ex) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error fatal:", "Por favor contacte con su administrador " + ex.getMessage()));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error inesperado", "Contáctese con el administrador"));
         }
 
     }
@@ -520,6 +556,12 @@ public class mbvUsuario implements Serializable {
             if (this.editar) {
                 this.usuario = this.usuarioEjb.find(usuarioId);
                 this.rolesRecursos.clear();
+                this.estadoSelected = estUsuEjb.find(this.usuario.getEstadoUsuarioId().getEstadoUsuarioId());
+                if(this.usuario.getTipoUsuarioId().getTipoUsuarioId()==4){
+                    this.usrRoot = true;
+                }else{
+                    this.usrRoot = false;
+                }
                 //if(!usuario.getUsuarioRoleList().isEmpty()){
                 //    System.out.println("FFGFGHG"+this.usuario.getUsuarioRoleList());
                 //}
@@ -535,17 +577,17 @@ public class mbvUsuario implements Serializable {
                 RequestContext.getCurrentInstance().execute("PF('dialogoEditarUsuario').show()");
             } else {
                 FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado","Contáctese con el administrador"));
         }
     }
 
     public void closeDialog() {
         inicioPagina();
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Escala Registrada", "exitosamente");
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Usuario creado satisfactoriamente");
         FacesContext.getCurrentInstance().addMessage(null, message);
     }
 
@@ -553,7 +595,7 @@ public class mbvUsuario implements Serializable {
         try {
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
         }
     }
 
@@ -566,7 +608,7 @@ public class mbvUsuario implements Serializable {
     public void initRender() {
         if (!this.consultar) {
             FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para manejar criterios de evaluacion"));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para manejar usuarios"));
         }
     }
 }

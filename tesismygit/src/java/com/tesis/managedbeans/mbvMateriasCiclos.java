@@ -268,13 +268,13 @@ public class mbvMateriasCiclos implements Serializable{
                     this.mostrarContenido = true;
                     this.mostrarEditar = false;
                     FacesContext.getCurrentInstance().
-                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Configuracion esta en uso"));
+                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Configuración esta en uso"));
                 }else{
                     this.mostrarEditar = true;
                     this.mostrarContenido = true;
                     if(!this.editar){
                         FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
                     }
                 }
                 System.out.println(cicloselected.getCicloId());
@@ -301,7 +301,7 @@ public class mbvMateriasCiclos implements Serializable{
             if(!login){
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
             if(this.editar){
@@ -331,7 +331,7 @@ public class mbvMateriasCiclos implements Serializable{
             }
             else{
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
         } catch (Exception e) {
             System.out.println(",,2"+e.getMessage());
@@ -343,7 +343,7 @@ public class mbvMateriasCiclos implements Serializable{
     public void initRender(){
         if(!this.consultar){
             FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para manejar criterios de evaluacion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para manejar esta sección"));
         }
     }
 }

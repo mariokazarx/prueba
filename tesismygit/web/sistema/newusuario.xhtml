@@ -57,6 +57,7 @@
                     <p:outputLabel value="Contraseña" for="txtContrasenia"/>
                     <p:password id="txtContrasenia" label="Contraseña: " match="txtContraseniaRepita" size="25" value="#{mbvUsuario.usuario.contraseña}">
                         <f:validator validatorId="validatorVacio"/>
+                        <f:validateRegex pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" />
                     </p:password>
                     <p:message for="txtContrasenia"/>
                     <p:outputLabel value="Repita contraseña" for="txtContraseniaRepita"/>

@@ -11,8 +11,9 @@
         <ui:composition template="./../plantilla.xhtml">
             <ui:define name="content">
                 <h:form id="frmMateriasCiclos" target="_blank" style="width: 100%;display: flex;flex-direction: column;align-items: center;">
-                    <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
+                    
                     <p:outputPanel style="width: 100%;display: flex;flex-direction: column;align-items: center;">
+                        <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
                         <div class="div-perfil">
                             <p:outputLabel for="selectAnio" value="Año " />                 
                             <p:selectOneMenu id="selectAnio" value="#{mbvRecuperacion.anlectivoselected.anlectivoId}">

@@ -16,25 +16,25 @@
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
                     <h:panelGroup rendered="#{mbvcriterioevaluacion.consultar}">
                         <p:outputPanel styleClass="btn-new">
-                            <p:commandButton value="Nueva Asignatura" ajax="true" update="frmListaAsignaturas" icon="ui-icon-document" actionListener="#{mbvAsignatura.newAsignatura}">
+                            <p:commandButton value="Nueva asignatura" ajax="true" update="frmListaAsignaturas" icon="ui-icon-document" actionListener="#{mbvAsignatura.newAsignatura}">
                                 <p:ajax event="dialogReturn" listener="#{mbvAsignatura.closeDialog}" update="frmListaAsignaturas" />
                             </p:commandButton>
                         </p:outputPanel>
                         <p:dataTable id="tablaListaAsiganturas" var="item" value="#{mbvAsignatura.asignaturas}" tableStyle="width:auto" reflow="true" paginator="true" rows="10" selection="#{mbvAsignatura.asignatura}" selectionMode="single"  rowKey="#{item.asignaturaId}" >
                             <p:ajax event="rowSelect" update=":frmListaAsignaturas:panelDetalleAsignatura" oncomplete="PF('dialogoDetalleAsignatura').show()"/>
                             <f:facet name="header">
-                                Lista de Asignaturas
+                                Lista de asignaturas
                             </f:facet>
                             <p:column headerText="Nombre" filterBy="#{item.nombre}" filterMatchMode="contains" sortBy="#{item.nombre}">
                                 <h:outputText value="#{item.nombre}"/>
                             </p:column>
-                            <p:column headerText="Descripcion" filterBy="descripcion">
+                            <p:column headerText="Descripción" filterBy="descripcion">
                                 <h:outputText value="#{item.descripcion}"/>
                             </p:column>
-                            <p:column headerText="Area" filterBy="max" >
+                            <p:column headerText="Área" filterBy="max" >
                                 <h:outputText value="#{item.areaId.nombre}"/>
                             </p:column>
-                            <p:column headerText="Configuracion" filterBy="max">
+                            <p:column headerText="Configuración" filterBy="max">
                                 <h:outputText value="#{item.configuracionId.nombre}"/>
                             </p:column>
                             <p:column>
@@ -46,16 +46,16 @@
                                 </p:commandButton>
                             </p:column>
                         </p:dataTable>
-                        <p:dialog header="Detalle de Asignatura" responsive="true" widgetVar="dialogoDetalleAsignatura" modal="true"  appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
+                        <p:dialog header="Detalle de asignatura" responsive="true" widgetVar="dialogoDetalleAsignatura" modal="true"  appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
                             <p:outputPanel id="panelDetalleAsignatura">
                                 <p:panelGrid columns="2">
                                     <p:outputLabel value="Nombre"/>
                                     <h:outputText value="#{mbvAsignatura.asignatura.nombre}"/>
-                                    <p:outputLabel value="Descripcion"/>
+                                    <p:outputLabel value="Descripción"/>
                                     <h:outputText value="#{mbvAsignatura.asignatura.descripcion}"/>
-                                    <p:outputLabel value="Area"/>
+                                    <p:outputLabel value="Área"/>
                                     <h:outputText value="#{mbvAsignatura.asignatura.areaId.nombre}"/>
-                                    <p:outputLabel value="Configuracion"/>
+                                    <p:outputLabel value="Configuración"/>
                                     <h:outputText value="#{mbvAsignatura.asignatura.configuracionId.nombre}"/>
                                 </p:panelGrid>
                             </p:outputPanel>
@@ -68,8 +68,8 @@
                     </p:dialog>
                 </h:form>
 
-                <p:confirmDialog header="Eliminar Asignatura" widgetVar="removeasignatura" appendTo="@(body)" resizable="false" id="removeDlg"
-                                 showEffect="fade" hideEffect="explode" modal="true" message="Esta Seguro que desea eliminar esta asignatura?">
+                <p:confirmDialog header="Eliminar asignatura" widgetVar="removeasignatura" appendTo="@(body)" resizable="false" id="removeDlg"
+                                 showEffect="fade" hideEffect="explode" modal="true" message="¿Esta seguro que desea eliminar esta asignatura?">
                     <h:form id="frmRemoveAsignatura">
                         <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
 
@@ -89,16 +89,16 @@
                                 <p:outputLabel for="txtNombre" value="Nombre: " />
                                 <p:inputText id="txtNombre" value="#{mbvAsignatura.asignatura.nombre}" />
                                 <p:message for="txtNombre"/>
-                                <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
+                                <p:outputLabel for="txtDescripcion" value="Descrpción: " />
                                 <p:inputTextarea id="txtDescripcion" value="#{mbvAsignatura.asignatura.descripcion}" autoResize="false" rows="5" />
                                 <p:message for="txtDescripcion"/>
-                                <p:outputLabel for="stlConfiguracion" value="Configuracion: " />
+                                <p:outputLabel for="stlConfiguracion" value="Configuración: " />
                                 <p:selectOneMenu id="stlConfiguracion" value="#{mbvAsignatura.confuguracionselected.configuracionId}">
                                     <p:ajax listener="#{mbvAsignatura.cargarAreas}" update="stlArea"/>
                                     <f:selectItems value="#{mbvAsignatura.configuraciones}" var="configuracion" itemLabel="#{configuracion.nombre}" itemValue="#{configuracion.configuracionId}"/>
                                 </p:selectOneMenu>
                                 <p:message for="stlConfiguracion"/>
-                                <p:outputLabel for="stlArea" value="Area: " />
+                                <p:outputLabel for="stlArea" value="Área: " />
                                 <p:selectOneMenu id="stlArea" value="#{mbvAsignatura.areaselected.areaId}" style="width:125px">
                                     <f:selectItems value="#{mbvAsignatura.areas}" var="area" itemLabel="#{area.nombre}" itemValue="#{area.areaId}"/>
                                 </p:selectOneMenu>
@@ -110,7 +110,7 @@
                     </h:form>
                 </p:dialog>
                 <p:confirmDialog header="Advertencia" widgetVar="enUso" appendTo="@(body)" resizable="false" id="digEnUso"
-                                 showEffect="fade" hideEffect="explode" modal="true" message="Escala en uso usted no se puede editar">
+                                 showEffect="fade" hideEffect="explode" modal="true" message="Asignatura en uso no se puede editar">
                     <h:form id="frmNoiniciado">
                         <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
                             <p:commandButton id="cancelButton" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('enUso').hide();" value="OK"/>

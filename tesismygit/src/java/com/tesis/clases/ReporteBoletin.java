@@ -4,7 +4,6 @@
  */
 package com.tesis.clases;
 
-import com.sun.org.apache.bcel.internal.generic.ARRAYLENGTH;
 import com.tesis.entity.Contenidotematico;
 import com.tesis.entity.Curso;
 import com.tesis.entity.Estudiante;

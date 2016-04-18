@@ -151,7 +151,7 @@ public class mbvEscala implements Serializable {
         HtmlInputText maxText = (HtmlInputText) arg1.findComponent("txtMax");
         System.out.print("min" + maxText.getLocalValue() + "max" + arg2);
         if (12 <= escala.getMin()) {
-            throw new ValidatorException(new FacesMessage("Debe ser mayor que nota minima"));
+            throw new ValidatorException(new FacesMessage("Debe ser mayor que nota mínima"));
         }
     }
 
@@ -179,7 +179,7 @@ public class mbvEscala implements Serializable {
                 this.mensage = true;
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
             if(this.crear){
@@ -187,14 +187,14 @@ public class mbvEscala implements Serializable {
                 if (escala.getMax() <= escala.getMin()) {
                     this.mensage = false;
                     FacesContext.getCurrentInstance().
-                            addMessage("frmescala:txtMax", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "debe ser mayor a nota minima"));
+                            addMessage("frmescala:txtMax", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "debe ser mayor a nota mínima"));
                     //this.mensage=false;
                     return;
                 }
                 if (escala.getNotaminimaaprob() <= escala.getMin() || escala.getNotaminimaaprob() >= escala.getMax()) {
                     this.mensage = false;
                     FacesContext.getCurrentInstance().
-                            addMessage("frmescala:txtMinaprob", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Nota minima aprobacion debe ser superior a la nota minima e inferior a la maxima"));
+                            addMessage("frmescala:txtMinaprob", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Nota mínima aprobación debe ser superior a nota mínima e inferior a máxima"));
                     //this.mensage=false;
                     return;
                 }
@@ -202,25 +202,25 @@ public class mbvEscala implements Serializable {
                 RequestContext.getCurrentInstance().closeDialog(this);
                 System.out.print("error");
                 FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Escala creada Satisfactoriamente", ""));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Escala creada Satisfactoriamente"));
                 inicioPagina();
             }else{
                 this.mensage = true;
                 System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
             
         } catch (Exception e) {
             System.out.print("error");
             FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
         }
     }
 
     public void closeDialog() {
         inicioPagina();
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Escala Registrada", "exitosamente");
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Escala registrada");
         FacesContext.getCurrentInstance().addMessage(null, message);
     }
 
@@ -230,27 +230,27 @@ public class mbvEscala implements Serializable {
                 this.mensage = true;
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
             if(this.editar){
                 if (escala.getMax() <= escala.getMin()) {
                     this.mensage = true;
                     FacesContext.getCurrentInstance().
-                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Nota maxima debe ser mayor a nota minima"));
+                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Nota máxima debe ser mayor a nota mínima"));
                     //this.mensage=false;
                     return;
                 }
                 if (escala.getNotaminimaaprob() <= escala.getMin() || escala.getNotaminimaaprob() >= escala.getMax()) {
                     this.mensage = true;
                     FacesContext.getCurrentInstance().
-                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Nota minima aprobacion debe ser superior a la nota minima e inferior a la maxima"));
+                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Nota mínima aprobación debe ser superior a nota mínima e inferior a máxima"));
                     //this.mensage=false;
                     return;
                 }
                 escalaEjb.edit(escala);
                 FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Escala editada Satisfactoriamente", ""));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Escala editada satisfactoriamente"));
                 RequestContext.getCurrentInstance().execute("PF('dialogoEditarEscala').hide()");
                 inicioPagina();
             }
@@ -258,13 +258,13 @@ public class mbvEscala implements Serializable {
                 this.mensage = true;
                 System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
             
         } catch (Exception e) {
             System.out.print("fail" + e.getMessage());
             FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
         }
     }
 
@@ -274,7 +274,7 @@ public class mbvEscala implements Serializable {
                 this.mensage = true;
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
             if(this.editar){
@@ -289,11 +289,11 @@ public class mbvEscala implements Serializable {
                 }
             }else{
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
         }
     }
 
@@ -302,7 +302,7 @@ public class mbvEscala implements Serializable {
             this.mensage = true;
             System.out.println("Usuario NO logeado");
             FacesContext.getCurrentInstance().
-                   addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                   addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
             return;
         }
         if(this.crear){
@@ -316,7 +316,7 @@ public class mbvEscala implements Serializable {
             RequestContext.getCurrentInstance().openDialog("newescala", options, null);
         }else{
             FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
         }
     }
     public void eliminarEscala(Escala escalaid) {
@@ -325,7 +325,7 @@ public class mbvEscala implements Serializable {
                 this.mensage = true;
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
             if(this.eliminar){
@@ -335,11 +335,11 @@ public class mbvEscala implements Serializable {
                     //inicioPagina();
                     //RequestContext.getCurrentInstance().update("frmEditarEscala"); 
                     FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Escala","eliminada"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito","Escala eliminada"));
                 }else{
                     //RequestContext.getCurrentInstance().update("frmEditarEscala:mensajeGeneral");
                     FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Escala","esta escala esta en uso"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia","esta escala está en uso"));
                 }
                 inicioPagina();
             }
@@ -347,11 +347,11 @@ public class mbvEscala implements Serializable {
                 this.mensage = true;
                 System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
         }
     }
     public void initRender(){

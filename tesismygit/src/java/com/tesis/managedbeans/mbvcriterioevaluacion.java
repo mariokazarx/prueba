@@ -185,7 +185,7 @@ public class mbvcriterioevaluacion implements Serializable {
             if(!login){
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
             if(this.crear){
@@ -193,23 +193,23 @@ public class mbvcriterioevaluacion implements Serializable {
                 RequestContext.getCurrentInstance().closeDialog(this);
                 criterioevalEjb.create(criterioeval);
                 FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Criterio Evaluacion editado Satisfactoriamente", ""));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Criterio de evaluación editado satisfactoriamente"));
                 inicioPagina();
             }
             else{
                 System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
         }
     }
 
     public void closeDialog() {
         inicioPagina();
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Criterio de Evaluacion Registrado", "exitosamente");
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Criterio de evaluación registrado");
         FacesContext.getCurrentInstance().addMessage(null, message);
     }
 
@@ -218,7 +218,7 @@ public class mbvcriterioevaluacion implements Serializable {
             if(!login){
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
             if(this.editar){
@@ -226,18 +226,18 @@ public class mbvcriterioevaluacion implements Serializable {
                 criterioeval.setFormacriterioevaluacionId(fcriterioselected);
                 criterioevalEjb.edit(criterioeval);
                 FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Criterio de Evaluacion creado Satisfactoriamente", ""));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Criterio de evaluación creado"));
                 RequestContext.getCurrentInstance().execute("PF('dialogoEditarEscala').hide()");
                 inicioPagina();
             }
             else{
                 System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
         }
     }
 
@@ -246,7 +246,7 @@ public class mbvcriterioevaluacion implements Serializable {
             if(!login){
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
             if(this.editar){
@@ -262,11 +262,11 @@ public class mbvcriterioevaluacion implements Serializable {
             }
             else{
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado","Contáctese con el administrador"));
         }
     }
 
@@ -274,7 +274,7 @@ public class mbvcriterioevaluacion implements Serializable {
         if(!login){
             System.out.println("Usuario NO logeado");
             FacesContext.getCurrentInstance().
-                   addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                   addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
             return;
         }
         if(this.crear){
@@ -289,7 +289,7 @@ public class mbvcriterioevaluacion implements Serializable {
         }
         else{
             FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
         }
     }
     
@@ -298,7 +298,7 @@ public class mbvcriterioevaluacion implements Serializable {
             if(!login){
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
             if(this.eliminar){
@@ -308,28 +308,28 @@ public class mbvcriterioevaluacion implements Serializable {
                     //inicioPagina();
                     //RequestContext.getCurrentInstance().update("frmEditarEscala"); 
                     FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Criterio de Evaluacion","eliminada"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito","Criterio de evaluación eliminado"));
                 }else{
                     //RequestContext.getCurrentInstance().update("frmEditarEscala:mensajeGeneral");
                     FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Criterio de Evaluacion","esta criterio esta en uso"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia","este criterio esta en uso"));
                 }
                 inicioPagina();
             }
             else{
                 System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administradorContáctese con el administrador"));
         }
     }
     public void initRender(){
         if(!this.consultar){
             FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para manejar criterios de evaluacion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para manejar criterios de evaluación"));
         }
     }
 }

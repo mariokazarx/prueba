@@ -135,6 +135,12 @@
                                     <f:validator validatorId="validatorVacio"/>
                                 </p:inputText>
                                 <p:message for="txtCargo"/>
+                                
+                                <p:outputLabel for="stlEstado" value="Estado: " />
+                                <p:selectOneMenu id="stlEstado" value="#{mbvUsuario.estadoSelected.estadoUsuarioId}">
+                                    <f:selectItems value="#{mbvUsuario.estadosUsuarios}" var="estado" itemLabel="#{estado.nombre}" itemValue="#{estado.estadoUsuarioId}"/>
+                                </p:selectOneMenu>
+                                <p:message for="stlEstado"/>
 
                                 <h:outputText value="Cambiar Contraseña: " />
                                 <p:inputSwitch value="#{mbvUsuario.cambiarContraseña}" onLabel="SI" offLabel="NO">
@@ -151,15 +157,15 @@
                                 <p:outputLabel value="Repita contraseña" for="txtContraseniaRepita" rendered="#{mbvUsuario.cambiarContraseña}"/>
                                 <p:password id="txtContraseniaRepita" label="Repita contraseña: " size="25" value="#{mbvUsuario.txtRepiteContrasenia}" rendered="#{mbvUsuario.cambiarContraseña}"/>
                                 <h:panelGroup rendered="#{mbvUsuario.cambiarContraseña}"></h:panelGroup>
-                                <p:outputLabel for="selectRecurso" value="Recursos:" />
-                                <p:selectOneMenu id="selectRecurso" value="#{mbvUsuario.recursoSelected.recursoId}">
+                                <p:outputLabel for="selectRecurso" value="Recursos:" rendered="#{!mbvUsuario.usrRoot}"/>
+                                <p:selectOneMenu id="selectRecurso" value="#{mbvUsuario.recursoSelected.recursoId}" rendered="#{!mbvUsuario.usrRoot}">
                                     <f:selectItem itemLabel="Seleccione." itemValue="-1" />
                                     <p:ajax listener="#{mbvUsuario.cargarPermiso()}" update="chkPermisos"/>
                                     <f:selectItems value="#{mbvUsuario.recursos}" var="recurso" itemLabel="#{recurso.nombre}" itemValue="#{recurso.recursoId}"/>
                                 </p:selectOneMenu>
-                                <p:message for="selectRecurso"/>
-                                <p:outputLabel value="El usuario puede:" />
-                                <h:panelGroup id="chkPermisos">
+                                <p:message for="selectRecurso" rendered="#{!mbvUsuario.usrRoot}"/>
+                                <p:outputLabel value="El usuario puede:" rendered="#{!mbvUsuario.usrRoot}"/>
+                                <h:panelGroup id="chkPermisos" rendered="#{!mbvUsuario.usrRoot}">
                                     <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
                                         <h:outputText value="Consultar: " rendered="#{mbvUsuario.mostrarConsultar}" />
                                         <p:selectBooleanButton id="chkConsultar" rendered="#{mbvUsuario.mostrarConsultar}" value="#{mbvUsuario.roleActual.consultar}" onLabel="Si" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:60px">
@@ -179,11 +185,11 @@
                                         </p:selectBooleanButton>
                                     </h:panelGrid>
                                 </h:panelGroup>
-                                <h:panelGroup></h:panelGroup>
+                                <h:panelGroup rendered="#{!mbvUsuario.usrRoot}"></h:panelGroup>
                                 <h:panelGroup></h:panelGroup>
                                 <p:commandButton value="Editar Usuario" actionListener="#{mbvUsuario.actualizar}" ajax="true" update=":frmListaUsuarios :frmEditarUsuario" />
                             </h:panelGrid> 
-                            <p:dataTable var="rol" value="#{mbvUsuario.rolesRecursos}" id="tablaperfil" tableStyle="width:auto" emptyMessage="No se han asignado permisos aun">
+                            <p:dataTable var="rol" value="#{mbvUsuario.rolesRecursos}" id="tablaperfil" tableStyle="width:auto" emptyMessage="No se han asignado permisos aun" rendered="#{!mbvUsuario.usrRoot}">
                                 <p:column headerText="Recurso">
                                     <h:outputText value="#{rol.recursoId.nombre}" />
                                 </p:column>

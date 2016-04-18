@@ -25,7 +25,7 @@
                     </p:selectOneMenu>
                     <p:message for="selectaño"/>
 
-                    <p:outputLabel for="selectconf" value="Configuracion:" />
+                    <p:outputLabel for="selectconf" value="Configuración:" />
                     <p:selectOneMenu id="selectconf" required="true" value="#{mbvAlectivo.configuracionselected.configuracionId}">
                         <p:ajax listener="#{mbvAlectivo.cargarCopia}" update=":frmAlectivo"/>
                         <f:selectItem itemLabel="Seleccione."/>
@@ -41,7 +41,7 @@
                     </p:selectOneMenu>
                     <p:message for="selectcopia" rendered="#{mbvAlectivo.estCopia}"/>
 
-                    <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
+                    <p:outputLabel for="txtDescripcion" value="Descrpción: " />
                     <p:inputTextarea id="txtDescripcion" value="#{mbvAlectivo.anlectivo.descripcion}" autoResize="false" rows="5" />
                     <p:message for="txtDescripcion"/>
 

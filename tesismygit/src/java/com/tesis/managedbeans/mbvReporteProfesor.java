@@ -87,6 +87,7 @@ public class mbvReporteProfesor implements Serializable {
     private boolean mostrarPeriodos;
     private boolean mostrarCursos;
     private boolean mostrarAsignatura;
+    private boolean mostrarBoton;
     private Anlectivo anlectivoSelected;
     private Periodo periodoSelected;
     private Curso curso;
@@ -114,6 +115,14 @@ public class mbvReporteProfesor implements Serializable {
     private LogronotaFacade logroNotaEjb;
 
     public mbvReporteProfesor() {
+    }
+
+    public boolean isMostrarBoton() {
+        return mostrarBoton;
+    }
+
+    public void setMostrarBoton(boolean mostrarBoton) {
+        this.mostrarBoton = mostrarBoton;
     }
 
     public boolean isMostrarAsignatura() {
@@ -225,6 +234,7 @@ public class mbvReporteProfesor implements Serializable {
         this.profesor = new Profesor();
         //aEscolar = new Anlectivo();
         this.login = false;
+        this.mostrarBoton = false;
         this.mostrarAños = false;
         this.mostrarPrincipal = false;
         this.mostrarAsignatura = false;
@@ -269,6 +279,12 @@ public class mbvReporteProfesor implements Serializable {
             this.periodos = periodoEjb.getPeriodosByAnio(anlectivoSelected);
         } else {
             this.mostrarPeriodos = false;
+            this.mostrarAsignatura = false;
+            this.mostrarBoton = false;
+            this.asignaturaSelected = new Asignatura();
+            this.periodoSelected = new Periodo();
+            this.periodos.clear();
+            this.asignaturas.clear();
         }
     }
 

@@ -122,8 +122,9 @@ public class mbsLogin implements Serializable {
         if (this.tipoUsuario.equals("administrativo")) {
             Usuario auxUsu = new Usuario();
             auxUsu = usuarioEjb.getByCorreo(txtCorreo);
+            //System.out.println("NEW CONTRASEÑA"+Encrypt.sha512(clave,auxUsu.getCorreo())+"FIN");
             if (auxUsu != null) {
-                if (Encrypt.sha512(clave).equals(auxUsu.getContraseña())) {
+                if (Encrypt.sha512(clave,auxUsu.getCorreo()).equals(auxUsu.getContraseña())) {
                     //bien
                     System.out.println("bien");
                     this.login = true;
@@ -148,10 +149,11 @@ public class mbsLogin implements Serializable {
             if (this.tipoUsuario.equals("profesor")) {
                 Profesor auxProf = new Profesor();
                 auxProf = profesorEjb.getByCorreo(txtCorreo);
+                //System.out.println("NEW CONTRASEÑA"+Encrypt.sha512(clave,auxProf.getCorreo())+"FIN");
                 if (auxProf != null) {
-                    if (Encrypt.sha512(clave).equals(auxProf.getContraseña())) {
+                    if (Encrypt.sha512(clave,auxProf.getCorreo()).equals(auxProf.getContraseña())) {
                         System.out.println("bien");
-                        this.login = true;
+                        this.login = true; 
                         this.loginProfesor = true;
                         this.profesor = auxProf;
                         context.getExternalContext().redirect("plantilla.xhtml");

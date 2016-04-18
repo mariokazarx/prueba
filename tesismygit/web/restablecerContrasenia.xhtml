@@ -25,37 +25,35 @@
                     <p:graphicImage library="imagenes" name="escudo.png" height="125" width="125"/>
                 </div>   
                 <div class="inicio-sesion">  
-                    <span class="estilo-iniciar">INICIAR SESIÓN </span>
+                    <span class="estilo-iniciar">RESTABLECER CONTRASEÑA </span>
                 </div>
                 <div class="caja-login-titulo">
-                    <span class="estilo-letra-login">Correo electrónico</span>
+                    <span class="estilo-letra-login">Codigo de seguridad</span>
                 </div>
                 <div class="div-caja-login">
-                    <p:inputText placeholder="Correo" id="txtCorreoElectronico"  value="#{mbsLogin.txtCorreo}" styleClass="caja-texto"/>
+                    <p:inputText placeholder="Codigo" id="txtCorreoElectronico"  value="#{mbvRestablecerContra.txtCodigo}" styleClass="caja-texto"/>
                 </div>
-                <div class="caja-login-titulo">  
+                <div class="caja-login-titulo">
                     <span class="estilo-letra-login">Contraseña</span>
-                </div>  
-                <div class="div-caja-login">  
-                    <p:password placeholder="Contraseña" id="txtContrasenia"  value="#{mbsLogin.clave}" styleClass="caja-texto"/>
-                </div>  
-                <div class="caja-login-titulo">  
-                    <span class="estilo-letra-login">Tipo usuario</span>
-                </div>  
-                <div class="div-caja-login">  
-                    <p:selectOneMenu id="selectTipoUsu" value="#{mbsLogin.tipoUsuario}"  styleClass="select-login">
-                        <f:selectItem itemLabel="Docente" itemValue="profesor" />
-                        <f:selectItem itemLabel="Administrativo" itemValue="administrativo" />
-                    </p:selectOneMenu>
-                </div> 
+                </div>
+                <div class="div-caja-login">
+                    <p:password id="txtContrasenia" match="txtContraseniaRepita" value="#{mbvRestablecerContra.txtContrasenia}" styleClass="caja-texto">
+                        <f:validator validatorId="validatorVacio"/>
+                    </p:password>
+                </div>
+                <div class="caja-login-titulo">
+                    <p:message for="txtContrasenia"/>
+                </div>
+                <div class="caja-login-titulo">
+                    <span class="estilo-letra-login">Repita contraseña</span>
+                </div>
+                <div class="div-caja-login">
+                    <p:password id="txtContraseniaRepita" value="#{mbvRestablecerContra.txtRepita}" styleClass="caja-texto"/>
+                </div>
                 <div class="boton-login">     
-                    <p:commandButton value="Ingresar" ajax="true" update="frmLogin" actionListener="#{mbsLogin.confirmar}"/>
+                    <p:commandButton value="Restablecer" ajax="true" update="frmLogin" actionListener="#{mbvRestablecerContra.restablecerContrasenia}"/>
                 </div>
-                <div>
-                    <p:commandLink id="ajax" >
-                        <h:outputText value="¿Olvidastes tu contraseña?" />
-                    </p:commandLink>
-                </div>
+
                 <p:ajaxStatus onstart="PF('statusDialog').show()" oncomplete="PF('statusDialog').hide()" />
 
                 <p:dialog widgetVar="statusDialog" appendTo="@(body)" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
@@ -67,4 +65,3 @@
 
     </h:body>
 </html>
-

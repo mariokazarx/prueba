@@ -161,13 +161,13 @@ public class mbvCiclo implements Serializable{
             if(!login){
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
             if(this.crear){
                 if(anlectivoEjb.configuracionEnUso(confuguracionselected)){
                     FacesContext.getCurrentInstance().
-                            addMessage("frmCrearCiclo:stlConfiguracion", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Configuracion esta en uso"));
+                            addMessage("frmCrearCiclo:stlConfiguracion", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Configuración esta en uso"));
                     return;
                 }
                 this.confuguracionselected = configuracionEjb.find(confuguracionselected.getConfiguracionId());
@@ -183,22 +183,22 @@ public class mbvCiclo implements Serializable{
                 RequestContext.getCurrentInstance().closeDialog(this);
                 cicloEjb.create(ciclo);
                 FacesContext.getCurrentInstance().
-                           addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Asignatura creada Satisfactoriamente", ""));
+                           addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Ciclo creado satisfactoriamente"));
                 inicioPagina();
             }
             else{
                 System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
         }catch(Exception e){
              FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado","Contáctese con el administrador"));
         }
     }
     public void closeDialog() {
         inicioPagina();
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Ciclo registrada", "exitosamente"); 
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Ciclo registrado"); 
         FacesContext.getCurrentInstance().addMessage(null, message);
     }
 
@@ -207,14 +207,14 @@ public class mbvCiclo implements Serializable{
             if(!login){
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
             if(this.editar){
                 this.confuguracionselected = this.configuracionEjb.find(confuguracionselected.getConfiguracionId());
                 if(anlectivoEjb.configuracionEnUso(confuguracionselected)){
                     FacesContext.getCurrentInstance().
-                            addMessage("frmEditarCiclo:stlConfiguracion", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Configuracion esta en uso"));
+                            addMessage("frmEditarCiclo:stlConfiguracion", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Configuración esta en uso"));
                     return;
                 }
                 this.confuguracionselected = configuracionEjb.find(confuguracionselected.getConfiguracionId());
@@ -229,18 +229,18 @@ public class mbvCiclo implements Serializable{
                 ciclo.setConfiguracion(confuguracionselected);
                 cicloEjb.edit(ciclo);
                 FacesContext.getCurrentInstance().
-                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Ciclo Editado Exitosamente", ""));
+                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Ciclo Editado"));
                 RequestContext.getCurrentInstance().execute("PF('dialogoEditarCiclo').hide()");
                 inicioPagina();
             }
             else{
                 System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
         }catch(Exception e){
             FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
         }
     }
     public void cargarCiclo(int cicloId){
@@ -248,7 +248,7 @@ public class mbvCiclo implements Serializable{
             if(!login){
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
             if(this.editar){
@@ -264,19 +264,19 @@ public class mbvCiclo implements Serializable{
             }
             else{
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
         } catch (Exception e) {
             e.printStackTrace();
             FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
         }
     }
     public void newCiclo(){
         if(!login){
             System.out.println("Usuario NO logeado");
             FacesContext.getCurrentInstance().
-                   addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                   addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
             return;
         }
         if(this.crear){
@@ -291,7 +291,7 @@ public class mbvCiclo implements Serializable{
         }
         else{
             FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
         }
     }
      public void eliminarCiclo(Ciclo cicloremove) {
@@ -299,7 +299,7 @@ public class mbvCiclo implements Serializable{
             if(!login){
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
             if(this.eliminar){
@@ -309,28 +309,28 @@ public class mbvCiclo implements Serializable{
                     //inicioPagina();
                     //RequestContext.getCurrentInstance().update("frmEditarEscala"); 
                     FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Escala","eliminada"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito","Ciclo eliminado"));
                 }else{
                     //RequestContext.getCurrentInstance().update("frmEditarEscala:mensajeGeneral");
                     FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Escala","esta escala esta en uso"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia","este ciclo esta en uso"));
                 }
                 inicioPagina();
             }
             else{
                 System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
         }
     }
      public void initRender(){
         if(!this.consultar){
             FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para manejar criterios de evaluacion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para manejar ciclos"));
         }
     }
 }

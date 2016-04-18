@@ -322,7 +322,7 @@ public class mbvMatricula implements Serializable {
         if (aux != null) {
             if(!this.editar){
                 FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
             this.mostrarPrincipal = true;
             this.estudiante = estudianteEJb.find(aux.getEstudianteId());
@@ -438,7 +438,7 @@ public class mbvMatricula implements Serializable {
                 
             }else if(estudiante.getEstadoEstudianteId().getEstadoEstudianteId()==2){
                 FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "El estudiante ya termindo los estudios"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Información", "El estudiante ya termino los estudios"));
             }
             else if(estudiante.getEstadoEstudianteId().getEstadoEstudianteId()==2){
                 FacesContext.getCurrentInstance().
@@ -467,7 +467,7 @@ public class mbvMatricula implements Serializable {
             } else {
                 //this.banderaSearch = false;
                 FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Estudiante no encontrado", "no se encontro ningun estudiante"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Información", "no se encontro ningun estudiante"));
                 
                 this.contenido = false;
                 this.mensaje = "";
@@ -486,7 +486,7 @@ public class mbvMatricula implements Serializable {
             if(!login){
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
             if(this.editar){
@@ -497,6 +497,7 @@ public class mbvMatricula implements Serializable {
                     esmatricula = estadomatriculaEjB.find(1);
                     Aprobacion aprobacion = new Aprobacion();
                     aprobacion = aprobacionEjb.find(1);
+                    this.matricula = new Matricula();
                     this.matricula.setAprobacionId(aprobacion);
                     this.matricula.setCursoId(cursoSelected);
                     this.matricula.setEstadoMatriculaId(esmatricula);
@@ -506,16 +507,17 @@ public class mbvMatricula implements Serializable {
                     this.contenidoCambiar = true;
                     this.contenidoCancelar = true;
                     FacesContext.getCurrentInstance().
-                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Matricula exitosa", "Estudiante matriulado al Ciclo "+cursoSelected.getCicloId().getNumero()+ " Curso "+cursoSelected.getNombre()));
+                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Estudiante matriulado al ciclo "+cursoSelected.getCicloId().getNumero()+ " Curso "+cursoSelected.getNombre()));
 
                     //inicio();
                 }
             }
             else{
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("ooooOOOO"+e.toString());
         }
 
@@ -525,7 +527,7 @@ public class mbvMatricula implements Serializable {
         if(!login){
             System.out.println("Usuario NO logeado");
             FacesContext.getCurrentInstance().
-                   addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                   addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
             return;
         }
         if(this.editar){
@@ -545,7 +547,7 @@ public class mbvMatricula implements Serializable {
         if(!login){
             System.out.println("Usuario NO logeado");
             FacesContext.getCurrentInstance().
-                   addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                   addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
             return;
         }
         if(this.editar){
@@ -567,7 +569,7 @@ public class mbvMatricula implements Serializable {
         }else{
             if(!this.consultar){
                 FacesContext.getCurrentInstance().
-                           addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para manejar criterios de evaluacion"));
+                           addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para manejar matriculas"));
             }
         }
     }
@@ -585,7 +587,7 @@ public class mbvMatricula implements Serializable {
             if(!login){
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
             if(this.editar){
@@ -593,7 +595,7 @@ public class mbvMatricula implements Serializable {
                 esmatricula = estadomatriculaEjB.find(3);
                 this.matricula.setEstadoMatriculaId(esmatricula);
                 FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Matricula suspendida exitosamente", ""));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Matricula suspendida"));
                 matriculaEjb.edit(matricula);
                 contenidoMatricular=false;
                 contenidoCancelar=false;
@@ -604,11 +606,11 @@ public class mbvMatricula implements Serializable {
             }
             else{
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Error", "error inesperado"));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Error inesperado", "Contáctese con el administrador"));
             
         }
         
@@ -618,7 +620,7 @@ public class mbvMatricula implements Serializable {
             if(!login){
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
             if(this.editar){
@@ -633,15 +635,15 @@ public class mbvMatricula implements Serializable {
                 contenidoSuspender = true;
                 this.matriculaEjb.edit(matricula);
                 FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Matricula activada exitosamente", ""));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Matricula activada"));
             }
             else{
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Error", "error inesperado"));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Error inesperado", "Contáctese con el administrador"));
             
         }
         

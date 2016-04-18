@@ -154,4 +154,54 @@ public class MatriculaFacade extends AbstractFacade<Matricula> {
             return null;
         }
     }
+    public Integer countMatriculadosCurso(Curso curso){
+        try {
+            Query cq = em.createNamedQuery("Matricula.countByCurso");
+            cq.setParameter("curso", curso);
+            if(cq.getSingleResult()!=null){
+                Long result = (Long)cq.getSingleResult();
+                return result.intValue();
+            }
+            else{
+                return null;
+            }
+        } catch (PersistenceException e) {
+            return null;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public boolean tieneMatricula(Estudiante estudiante){
+        try {
+            Query cq = em.createNamedQuery("Matricula.countByEstudiante");
+            cq.setParameter("estudiante", estudiante);
+            System.out.print("esntra 1"+ estudiante);
+            if(cq.getSingleResult()!=null){
+                System.out.print("esntra 2");
+                Long result = (Long)cq.getSingleResult();
+                if(result!=0){
+                    System.out.print("esntra 3");
+                    return true;
+                }else{
+                    System.out.print("esntra 4");
+                    return false;
+                }
+            }
+            else{
+                System.out.print("esntra 5");
+                return false;
+            }
+        } catch (PersistenceException e) {
+            System.out.print("esntra 6");
+            e.printStackTrace();
+            return false;
+        }
+        catch (Exception e) {
+            System.out.print("esntra 7");
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

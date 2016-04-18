@@ -18,7 +18,7 @@
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
                     <h:panelGroup rendered="#{mbvcriterioevaluacion.consultar}">
                         <p:outputPanel styleClass="btn-new">
-                            <p:commandButton value="Nuevo criterio de evaluacion" icon="ui-icon-document" ajax="true" update="frmListaEscala" actionListener="#{mbvcriterioevaluacion.newCriterioEval}">
+                            <p:commandButton value="Nuevo criterio de evaluación" icon="ui-icon-document" ajax="true" update="frmListaEscala" actionListener="#{mbvcriterioevaluacion.newCriterioEval}">
                                 <p:ajax event="dialogReturn" listener="#{mbvcriterioevaluacion.closeDialog}" update="frmListaEscala" />
                             </p:commandButton>
                         </p:outputPanel>
@@ -30,13 +30,13 @@
                             <p:column headerText="Nombre" filterBy="#{item.nombre}" filterMatchMode="contains" sortBy="#{item.nombre}">
                                 <h:outputText value="#{item.nombre}"/>
                             </p:column>
-                            <p:column headerText="Descripcion" filterBy="descripcion">
+                            <p:column headerText="Descripción" filterBy="descripcion">
                                 <h:outputText value="#{item.descripcion}"/>
                             </p:column>
-                            <p:column headerText="Criterio de aprobacion" filterBy="max">
+                            <p:column headerText="Criterio de aprobación" filterBy="max">
                                 <h:outputText value="#{item.formacriterioevaluacionId.nombre}"/>
                             </p:column>
-                            <p:column headerText="Minimo para aprobar" filterBy="min">
+                            <p:column headerText="Mínimo para aprobar" filterBy="min">
                                 <h:outputText value="#{item.minaprob}"/>
                             </p:column>
                             <p:column>
@@ -49,16 +49,16 @@
                             </p:column>
                         </p:dataTable>
 
-                        <p:dialog header="Detalle de Escala" responsive="true" widgetVar="dialogoDetalleEscala" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
+                        <p:dialog header="Detalle criterio de evaluación" responsive="true" widgetVar="dialogoDetalleEscala" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
                             <p:outputPanel id="panelDetalleEscala">
                                 <p:panelGrid columns="2">
                                     <p:outputLabel value="Nombre"/>
                                     <h:outputText value="#{mbvcriterioevaluacion.criterioeval.nombre}"/>
-                                    <p:outputLabel value="Descripcion"/>
+                                    <p:outputLabel value="Descripción"/>
                                     <h:outputText value="#{mbvcriterioevaluacion.criterioeval.descripcion}"/>
-                                    <p:outputLabel value="Criterio de aprobacion"/>
+                                    <p:outputLabel value="Criterio de aprobación"/>
                                     <h:outputText value="#{mbvcriterioevaluacion.criterioeval.formacriterioevaluacionId.nombre}"/>
-                                    <p:outputLabel value="Minimo para aprobar"/>
+                                    <p:outputLabel value="Mínimo para aprobar"/>
                                     <h:outputText value="#{mbvcriterioevaluacion.criterioeval.minaprob}"/>
                                 </p:panelGrid>
                             </p:outputPanel>
@@ -73,12 +73,12 @@
                 </h:form>
 
 
-                <p:confirmDialog header="Eliminar Criterio Evaluacion" widgetVar="removecriterio" responsive="true" appendTo="@(body)" resizable="false" id="removeDlg"
-                                 showEffect="clip" hideEffect="clip" modal="true" message="Esta Seguro que desea eliminar este criterio?">
+                <p:confirmDialog header="Eliminar criterio evaluación" widgetVar="removecriterio" responsive="true" appendTo="@(body)" resizable="false" id="removeDlg"
+                                 showEffect="clip" hideEffect="clip" modal="true" message="¿Está Seguro que desea eliminar este criterio?">
                     <h:form id="frmRemoveCriterio">
                         <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
 
-                            <h:outputText value="Name:" />
+                            <h:outputText value="Nombre:" />
                             <h:outputText value="#{mbvcriterioevaluacion.criterioeval.nombre}" style="font-weight:bold"/>                                               
                             <p:commandButton id="deleteButton" actionListener="#{mbvcriterioevaluacion.eliminarCriterio(mbvcriterioevaluacion.criterioeval)}" oncomplete="PF('removecriterio').hide();" 
                                              update=":frmListaEscala" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" value="Aceptar"/>
@@ -96,15 +96,15 @@
                                     <f:validator validatorId="validatorVacio"/>
                                 </p:inputText>
                                 <p:message for="txtNombre"/>
-                                <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
+                                <p:outputLabel for="txtDescripcion" value="Descripción: " />
                                 <p:inputTextarea id="txtDescripcion" value="#{mbvcriterioevaluacion.criterioeval.descripcion}" autoResize="false" rows="5"/>
                                 <p:message for="txtDescripcion"/>
-                                <p:outputLabel for="stlCriterio" value="Criterio de aprobacion:" />
+                                <p:outputLabel for="stlCriterio" value="Criterio de aprobación:" />
                                 <p:selectOneMenu id="stlCriterio" value="#{mbvcriterioevaluacion.fcriterioselected.formacriterioevaluacionId}">
                                     <f:selectItems value="#{mbvcriterioevaluacion.fcriterios}" var="fcriterio" itemLabel="#{fcriterio.nombre}" itemValue="#{fcriterio.formacriterioevaluacionId}"/>
                                 </p:selectOneMenu>
                                 <p:message for="stlCriterio"/>
-                                <p:outputLabel for="txtMin" value="Minimo para aprobar:" />
+                                <p:outputLabel for="txtMin" value="Mínimo para aprobar:" />
                                 <p:inputText id="txtMin" value="#{mbvcriterioevaluacion.criterioeval.minaprob}" />
                                 <p:message for="txtMin"/>
                                 <h:panelGroup></h:panelGroup>
@@ -114,7 +114,7 @@
                     </h:form>
                 </p:dialog>
                 <p:confirmDialog header="Advertencia" widgetVar="enUso" responsive="true" appendTo="@(body)" resizable="false" id="digEnUso"
-                                 showEffect="clip" hideEffect="clip" modal="true" message="Escala en uso usted no se puede editar">
+                                 showEffect="clip" hideEffect="clip" modal="true" message="Criterio en uso usted no se puede editar">
                     <h:form id="frmNoiniciado">
                         <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
                             <p:commandButton id="cancelButton" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('enUso').hide();" value="OK"/>

@@ -28,6 +28,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Matricula.findAll", query = "SELECT m FROM Matricula m"),
+    @NamedQuery(name = "Matricula.countByEstudiante", query = "SELECT COUNT(m) FROM Matricula m WHERE m.estudianteId = :estudiante AND (m.estadoMatriculaId.estadoMatriculaId = 1 or m.estadoMatriculaId.estadoMatriculaId = 2)"),
+    @NamedQuery(name = "Matricula.countByCurso", query = "SELECT COUNT(m) FROM Matricula m WHERE m.cursoId = :curso"),
     @NamedQuery(name = "Matricula.findEstudianteTerminadas", query = "SELECT m FROM Matricula m where m.estudianteId = :estudiante AND m.estadoMatriculaId.estadoMatriculaId = 4 ORDER BY m.cursoId.anlectivoId.anio"),
     @NamedQuery(name = "Matricula.findEstudianteAño", query = "SELECT m FROM Matricula m where m.estudianteId = :estudiante AND m.estadoMatriculaId.estadoMatriculaId = 4 AND m.cursoId.anlectivoId = :anlectivo"),
     @NamedQuery(name = "Matricula.findMatAño", query = "SELECT m FROM Matricula m WHERE m.cursoId.anlectivoId = :anlectivoId AND (m.estadoMatriculaId.estadoMatriculaId != 2 or m.estadoMatriculaId.estadoMatriculaId != 3)"),

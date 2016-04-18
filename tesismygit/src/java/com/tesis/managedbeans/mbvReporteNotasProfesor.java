@@ -85,6 +85,7 @@ public class mbvReporteNotasProfesor implements Serializable {
     private boolean mostrarPeriodos;
     private boolean mostrarCursos;
     private boolean mostrarAsignatura;
+    private boolean mostrarBoton;
     private Periodo periodoSelected;
     private Curso curso;
     private Asignatura asignaturaSelected;
@@ -109,6 +110,14 @@ public class mbvReporteNotasProfesor implements Serializable {
     private LogronotaFacade logroNotaEjb;
 
     public mbvReporteNotasProfesor() {
+    }
+
+    public boolean isMostrarBoton() {
+        return mostrarBoton;
+    }
+
+    public void setMostrarBoton(boolean mostrarBoton) {
+        this.mostrarBoton = mostrarBoton;
     }
 
     public boolean isMostrarAsignatura() {
@@ -199,6 +208,7 @@ public class mbvReporteNotasProfesor implements Serializable {
         this.mostrarPrincipal = false;
         this.mostrarAsignatura = false;
         this.mostrarCursos = false;
+        this.mostrarBoton = false;
         this.asignaturas = new ArrayList<Asignatura>();
         this.cursos = new ArrayList<Curso>();
         this.periodos = new ArrayList<Periodo>();
@@ -250,11 +260,19 @@ public class mbvReporteNotasProfesor implements Serializable {
             }
         } else {
             this.mostrarCursos = false;
+            this.mostrarAsignatura = false;
+            this.mostrarBoton = false;
+            this.curso = new Curso();
+            this.asignaturaSelected = new Asignatura();
+            this.cursos.clear();
+            this.asignaturas.clear();
         }
     }
 
     public void cargarCurso() {
         if (this.curso.getCursoId() != null) {
+            this.asignaturas.clear();
+            this.mostrarBoton = false;
             this.curso = cursoEjb.find(this.curso.getCursoId());
             List<Asignaturaciclo> asignaturasCiclo = asignaturaCicloEjb.asignaturasProfesor(profesor, curso, periodoSelected);
             for (Asignaturaciclo asc : asignaturasCiclo) {
@@ -263,6 +281,8 @@ public class mbvReporteNotasProfesor implements Serializable {
             }
             this.mostrarAsignatura = true;
         } else {
+            this.asignaturaSelected = new Asignatura();
+            this.asignaturas.clear();
             this.mostrarAsignatura = false;
         }
     }
@@ -273,7 +293,10 @@ public class mbvReporteNotasProfesor implements Serializable {
             System.out.println("CICLO" + curso.getCicloId());
             Asignaturaciclo asg = asignaturaCicloEjb.asignaturasCiclo(curso.getCicloId(), asignaturaSelected);
             contenido = contenidoEjb.getContenidoByAll(profesor, curso, asg, periodoSelected);
+            this.mostrarBoton = true;
         } else {
+            this.asignaturaSelected = new Asignatura();
+            this.mostrarBoton = false;
         }
     }
 

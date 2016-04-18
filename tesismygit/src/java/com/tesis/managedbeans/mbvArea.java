@@ -164,21 +164,21 @@ public class mbvArea implements Serializable{
             if(!login){
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
             if(this.crear){
                 Configuracion auxcfg = confEJB.find(confselected.getConfiguracionId());
                 if(añoEJB.configuracionEnUso(auxcfg)){
                     FacesContext.getCurrentInstance().
-                            addMessage("frmcriterioeval:stlCriterio", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Esta configuracion esta en uso"));
+                            addMessage("frmcriterioeval:stlCriterio", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Esta área esta en uso"));
                     return;
                 }
                 for(Area auxarea:auxcfg.getAreaList()){
                     System.out.print(auxarea.getNombre()+"la otra"+ area.getNombre());
                     if(area.getNombre().trim().equals(auxarea.getNombre().trim())){
                         System.out.println("IGUALLLL");
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Advertencia ", "Nombre en uso para esta configuracion"); 
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Advertencia ", "Nombre en uso para esta configuración"); 
                         FacesContext.getCurrentInstance().addMessage(null, message);
                         return;
                     }
@@ -187,17 +187,17 @@ public class mbvArea implements Serializable{
                 RequestContext.getCurrentInstance().closeDialog(this);
                 areaEJB.create(area);
                 FacesContext.getCurrentInstance().
-                           addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Area creada Satisfactoriamente", ""));
+                           addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Área creada satisfactoriamente"));
                 inicioPagina();
             }
             else{
                 System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
         }catch(Exception e){
              FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
         }
     }
     public void actualizar(){
@@ -205,21 +205,21 @@ public class mbvArea implements Serializable{
             if(!login){
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
             if(this.editar){
                 this.confselected = this.confEJB.find(confselected.getConfiguracionId());
                 if(añoEJB.configuracionEnUso(confselected)){
                     FacesContext.getCurrentInstance().
-                            addMessage("frmEditarEscala:stlConfiguracion", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Esta configuracion esta en uso"));
+                            addMessage("frmEditarEscala:stlConfiguracion", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Esta área esta en uso"));
                     return;
                 }
                 for(Area auxarea:confselected.getAreaList()){
                     System.out.print(auxarea.getNombre()+"la otra"+ area.getNombre());
                     if(area.getNombre().trim().equals(auxarea.getNombre().trim()) && area.getAreaId()!= auxarea.getAreaId()){
                         System.out.println("IGUALLLL");
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Advertencia ", "Nombre en uso para esta configuracion"); 
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Advertencia ", "Nombre en uso para esta configuración"); 
                         FacesContext.getCurrentInstance().addMessage("frmEditarEscala:txtNombre", message);
                         return;
                     }
@@ -227,18 +227,18 @@ public class mbvArea implements Serializable{
                 area.setConfiguracionId(confselected);
                 areaEJB.edit(area);
                 FacesContext.getCurrentInstance().
-                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Escala creada Satisfactoriamente", ""));
+                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Área creada satisfactoriamente"));
                 RequestContext.getCurrentInstance().execute("PF('dialogoEditarEscala').hide()");
                 inicioPagina();
             }
             else{
                 System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
         }catch(Exception e){
             FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
         }
     }
     public void cargarArea(int areaId){
@@ -246,7 +246,7 @@ public class mbvArea implements Serializable{
             if(!login){
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
             if(this.editar){
@@ -262,23 +262,23 @@ public class mbvArea implements Serializable{
             }
             else{
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
         }
     }
     public void closeDialog() {
         inicioPagina();
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Area Registrada", "exitosamente"); 
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Área registrada"); 
         FacesContext.getCurrentInstance().addMessage(null, message);
     }
     public void newArea(){
         if(!login){
             System.out.println("Usuario NO logeado");
             FacesContext.getCurrentInstance().
-                   addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                   addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
             return;
         }
         if(this.crear){
@@ -294,7 +294,7 @@ public class mbvArea implements Serializable{
         }
         else{
             FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
         }
     }
      public void eliminarArea(Area area) {
@@ -302,7 +302,7 @@ public class mbvArea implements Serializable{
             if(!login){
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
             if(this.eliminar){
@@ -312,28 +312,28 @@ public class mbvArea implements Serializable{
                     //inicioPagina();
                     //RequestContext.getCurrentInstance().update("frmEditarEscala"); 
                     FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Escala","eliminada"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito","Área eliminada"));
                 }else{
                     //RequestContext.getCurrentInstance().update("frmEditarEscala:mensajeGeneral");
                     FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Escala","esta escala esta en uso"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia","esta área esta en uso"));
                 }
                 inicioPagina();
             }
             else{
                 System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
         }
     }
      public void initRender(){
         if(!this.consultar){
             FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para manejar criterios de evaluacion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para manejar Áreas"));
         }
     }
 }

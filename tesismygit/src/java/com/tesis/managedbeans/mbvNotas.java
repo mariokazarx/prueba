@@ -416,7 +416,7 @@ public class mbvNotas implements Serializable {
             RequestContext.getCurrentInstance().execute("PF('dialogoCrearLogro').show()");
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
         }
     }
 
@@ -501,7 +501,7 @@ public class mbvNotas implements Serializable {
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contacte con el administrador"));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
             System.out.println("FALLO INGRESO LOGRO");
         }
 
@@ -715,7 +715,7 @@ public class mbvNotas implements Serializable {
         } catch (Exception e) {
             System.out.println("ERROR ELIMINAR LOGRO");
             FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contactese con el administrador"));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
         }
     }
 
@@ -732,7 +732,7 @@ public class mbvNotas implements Serializable {
             RequestContext.getCurrentInstance().execute("PF('dialogoObservaciones').show()");
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
         }
     }
 
@@ -751,7 +751,7 @@ public class mbvNotas implements Serializable {
 
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contactese con el administrador"));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
         }
     }
 
@@ -765,7 +765,7 @@ public class mbvNotas implements Serializable {
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Observacion registrada con exito"));
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contactese con el administrador"));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
         }
     }
 
@@ -840,7 +840,7 @@ public class mbvNotas implements Serializable {
             tx.rollback();
             cargarContenido();
             FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contactese con el administrador"));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
             //updateColumns();
         }
     }
@@ -909,7 +909,7 @@ public class mbvNotas implements Serializable {
             RequestContext.getCurrentInstance().execute("PF('dialogoEditarLogro').show()");
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
         }
     }
 
@@ -968,7 +968,7 @@ public class mbvNotas implements Serializable {
         } catch (Exception e) {
             System.out.println("FALLO INGRESO LOGRO");
             FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contactese con el administrador"));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
         }
     }
 
@@ -981,7 +981,7 @@ public class mbvNotas implements Serializable {
                     // se paso
                     this.mostrarContenido = false;
                     FacesContext.getCurrentInstance().
-                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "la fecha de evaluacion termiono"));
+                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "la fecha de evaluación termino"));
                 } else {
                     this.mostrarContenido = true;
                     // bien
@@ -989,7 +989,7 @@ public class mbvNotas implements Serializable {
             } else {
                 this.mostrarContenido = false;
                 FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "aun no se activa la evaluacion"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "aun no se activa la evaluacin"));
             }
         } else {
             this.mostrarContenido = false;
@@ -1051,7 +1051,7 @@ public class mbvNotas implements Serializable {
             tablaLogros.addCell(cellTituloLogro);
 
             PdfPCell cellTituloDescrip = new PdfPCell();
-            Paragraph partituloDescrip = new Paragraph("Descripcion", FontFactory.getFont("arial", 12));
+            Paragraph partituloDescrip = new Paragraph("Descripci´ón", FontFactory.getFont("arial", 12));
             partituloDescrip.setAlignment(Element.ALIGN_CENTER);
             cellTituloDescrip.addElement(partituloDescrip);
             tablaLogros.addCell(cellTituloDescrip);

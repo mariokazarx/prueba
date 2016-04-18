@@ -37,6 +37,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Usuario.findAll", query = "SELECT u FROM Usuario u"),
+    @NamedQuery(name = "Usuario.findByAdmins", query = "SELECT u FROM Usuario u WHERE u.tipoUsuarioId.tipoUsuarioId = 3"),
     @NamedQuery(name = "Usuario.countCedula", query = "SELECT COUNT(u) FROM Usuario u WHERE u.identificacion = :identificacion"),
     @NamedQuery(name = "Usuario.countCorreo", query = "SELECT COUNT(u) FROM Usuario u WHERE u.correo = :correo"),
     @NamedQuery(name = "Usuario.findByUsuarioId", query = "SELECT u FROM Usuario u WHERE u.usuarioId = :usuarioId"),
@@ -105,6 +106,8 @@ public class Usuario implements Serializable {
     private EstadoUsuario estadoUsuarioId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioId", fetch = FetchType.LAZY)
     private List<UsuarioRole> usuarioRoleList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioId", fetch = FetchType.LAZY)
+    private List<CodigoUsuario> codigoUsuarioList;
 
     public Usuario() {
     }
@@ -227,6 +230,15 @@ public class Usuario implements Serializable {
 
     public void setUsuarioRoleList(List<UsuarioRole> usuarioRoleList) {
         this.usuarioRoleList = usuarioRoleList;
+    }
+    
+    @XmlTransient
+    public List<CodigoUsuario> getCodigoUsuarioList() {
+        return codigoUsuarioList;
+    }
+
+    public void setCodigoUsuarioList(List<CodigoUsuario> codigoUsuarioList) {
+        this.codigoUsuarioList = codigoUsuarioList;
     }
 
     @Override

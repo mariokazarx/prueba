@@ -16,7 +16,7 @@
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
                     <h:panelGroup rendered="#{mbvAlectivo.consultar}">
                         <p:outputPanel styleClass="btn-new">
-                            <p:commandButton value="Nuevo año lectivo" ajax="true" update="frmanlectios" icon="ui-icon-document" actionListener="#{mbvAlectivo.newAnlectivo}">
+                            <p:commandButton value="Nuevo año escolar" ajax="true" update="frmanlectios" icon="ui-icon-document" actionListener="#{mbvAlectivo.newAnlectivo}">
                                 <p:ajax event="dialogReturn" listener="#{mbvAlectivo.closeDialog}" update="frmanlectios" />
                             </p:commandButton>
                         </p:outputPanel>
@@ -28,10 +28,10 @@
                             <p:column headerText="Año" filterBy="Año">
                                 <h:outputText value="#{item.anio}"/>
                             </p:column>
-                            <p:column headerText="Descripcion" filterBy="descripcion">
+                            <p:column headerText="Descripción" filterBy="descripcion">
                                 <h:outputText value="#{item.descripcion}"/>
                             </p:column>
-                            <p:column headerText="Configuracion" filterBy="max">
+                            <p:column headerText="Configuración" filterBy="max">
                                 <h:outputText value="#{item.configuracionId.nombre}"/>
                             </p:column>
                             <p:column headerText="Estado" filterBy="max">
@@ -50,14 +50,14 @@
                             </p:column>
                         </p:dataTable>
 
-                        <p:dialog header="Detalle Año Lectivo" widgetVar="dialogoDetalleAlectivo" responsive="true" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
+                        <p:dialog header="Detalle año escolar" widgetVar="dialogoDetalleAlectivo" responsive="true" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
                             <p:outputPanel id="panelDetalleAlectivo">
                                 <p:panelGrid columns="2">
                                     <p:outputLabel value="Año"/>
                                     <h:outputText value="#{mbvAlectivo.anlectivo.anio}"/>
-                                    <p:outputLabel value="Descripcion"/>
+                                    <p:outputLabel value="Descripción"/>
                                     <h:outputText value="#{mbvAlectivo.anlectivo.descripcion}"/>
-                                    <p:outputLabel value="Configuracion"/>
+                                    <p:outputLabel value="Configuración"/>
                                     <h:outputText value="#{mbvAlectivo.anlectivo.configuracionId.nombre}"/>
                                     <p:outputLabel value="Estado"/>
                                     <h:outputText value="#{mbvAlectivo.anlectivo.estadoAniolectivoId.estado}"/>
@@ -75,12 +75,12 @@
                     </p:dialog>
                 </h:form>
 
-                <p:confirmDialog header="Eliminar año lectivo" widgetVar="removeanlectivo" appendTo="@(body)" resizable="false" id="removeDlg"
-                                 showEffect="fade" hideEffect="explode" modal="true" message="Esta Seguro que desea eliminar esta escala?">
+                <p:confirmDialog header="Eliminar año escolar" widgetVar="removeanlectivo" appendTo="@(body)" resizable="false" id="removeDlg"
+                                 showEffect="fade" hideEffect="explode" modal="true" message="¿Esta Seguro que desea eliminar este año?">
                     <h:form id="frmRemoveAnlectivo">
                         <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
 
-                            <h:outputText value="Name:" />
+                            <h:outputText value="Nombre:" />
                             <h:outputText value="#{mbvAlectivo.anlectivo.anio}" style="font-weight:bold"/>                                               
                             <p:commandButton id="deleteButton" actionListener="#{mbvAlectivo.eliminarAnlectivo(mbvAlectivo.anlectivo)}" oncomplete="PF('removeanlectivo').hide();" 
                                              update=":frmanlectios" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" value="Aceptar"/>
@@ -104,7 +104,7 @@
                                 <p:outputLabel id="txtaño" value="#{mbvAlectivo.anlectivo.anio}" rendered="#{mbvAlectivo.mostrarLabel}"/>
                                 <h:panelGroup rendered="#{mbvAlectivo.mostrarLabel}"></h:panelGroup>
 
-                                <p:outputLabel for="selectconf" value="Configuracion: " />
+                                <p:outputLabel for="selectconf" value="Configuración: " />
                                 <p:selectOneMenu id="selectconf" required="true" value="#{mbvAlectivo.configuracionselected.configuracionId}" rendered="#{mbvAlectivo.mostrarEditar}">
                                     <p:ajax listener="#{mbvAlectivo.cargarCopia}" update="frmEditarAlectivo"/>
                                     <f:selectItem itemLabel="Seleccione."/>
@@ -121,7 +121,7 @@
                                 </p:selectOneMenu>
                                 <p:message for="selectestado"/>
 
-                                <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
+                                <p:outputLabel for="txtDescripcion" value="Descrpción: " />
                                 <p:inputTextarea id="txtDescripcion" value="#{mbvAlectivo.anlectivo.descripcion}" autoResize="false" rows="5" />
                                 <p:message for="txtDescripcion"/>
 

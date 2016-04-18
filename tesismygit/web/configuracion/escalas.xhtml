@@ -16,7 +16,7 @@
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
                     <h:panelGroup rendered="#{mbvEscala.consultar}">
                         <p:outputPanel id="panelReporteMatriculas" styleClass="btn-new" >
-                            <p:commandButton rendered="true" value="Nueva Escala" icon="ui-icon-document" ajax="true" update="frmListaEscala" actionListener="#{mbvEscala.newEscala}">
+                            <p:commandButton rendered="true" value="Nueva escala" icon="ui-icon-document" ajax="true" update="frmListaEscala" actionListener="#{mbvEscala.newEscala}">
                                 <p:ajax event="dialogReturn" listener="#{mbvEscala.closeDialog}" update="frmListaEscala" />
                             </p:commandButton>
                         </p:outputPanel>
@@ -31,7 +31,7 @@
                                 <p:column headerText="Nombre" filterBy="#{item.nombre}" filterMatchMode="contains">
                                     <h:outputText value="#{item.nombre}"/>
                                 </p:column>
-                                <p:column headerText="Descripcion" filterBy="descripcion">
+                                <p:column headerText="Descripción" filterBy="descripcion">
                                     <h:outputText value="#{item.descripcion}"/>
                                 </p:column>
                                 <p:column headerText="Nota mínima" filterBy="min">
@@ -59,13 +59,13 @@
                                 <p:panelGrid columns="2">
                                     <p:outputLabel value="Nombre"/>
                                     <h:outputText value="#{mbvEscala.escala.nombre}"/>
-                                    <p:outputLabel value="Descripcion"/>
+                                    <p:outputLabel value="Descripción"/>
                                     <h:outputText value="#{mbvEscala.escala.descripcion}"/>
-                                    <p:outputLabel value="Nota minima"/>
+                                    <p:outputLabel value="Nota mínima"/>
                                     <h:outputText value="#{mbvEscala.escala.min}"/>
-                                    <p:outputLabel value="Nota Maxima"/>
+                                    <p:outputLabel value="Nota máxima"/>
                                     <h:outputText value="#{mbvEscala.escala.max}"/>
-                                    <p:outputLabel value="Nota minima aprobacion"/>
+                                    <p:outputLabel value="Nota mínima aprobación"/>
                                     <h:outputText value="#{mbvEscala.escala.notaminimaaprob}"/>
                                 </p:panelGrid>
                             </p:outputPanel>
@@ -79,12 +79,12 @@
                     
                 </h:form>
                 
-                <p:confirmDialog header="Eliminar Escala" widgetVar="studentDialog" appendTo="@(body)" resizable="false" id="studentDlg"
-                                 showEffect="clip" hideEffect="clip" modal="true" message="Esta Seguro que desea eliminar esta escala?">
+                <p:confirmDialog header="Eliminar escala" widgetVar="studentDialog" appendTo="@(body)" resizable="false" id="studentDlg"
+                                 showEffect="clip" hideEffect="clip" modal="true" message="¿Está Seguro que desea eliminar esta escala?">
                     <h:form id="frmRemoveEscala">
                         <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
 
-                            <h:outputText value="Name:" />
+                            <h:outputText value="Nombre:" />
                             <h:outputText value="#{mbvEscala.escala.nombre}" style="font-weight:bold"/>                                               
                             <p:commandButton id="deleteButton" actionListener="#{mbvEscala.eliminarEscala(mbvEscala.escala)}" oncomplete="PF('studentDialog').hide();" 
                                              update=":frmListaEscala" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" value="Aceptar"/>
@@ -104,20 +104,20 @@
                                     <f:validator validatorId="validatorVacio"/>
                                 </p:inputText>
                                 <p:message for="txtNombre"/>
-                                <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
+                                <p:outputLabel for="txtDescripcion" value="Descripción: " />
                                 <p:inputTextarea id="txtDescripcion" value="#{mbvEscala.escala.descripcion}" autoResize="false" rows="5" />
                                 <p:message for="txtDescripcion"/>
-                                <p:outputLabel for="txtMin" value="Nota Minima:" />
+                                <p:outputLabel for="txtMin" value="Nota mínima:" />
                                 <p:inputText id="txtMin" value="#{mbvEscala.escala.min}"/>
                                 <p:message for="txtMin"/>
-                                <p:outputLabel for="txtMax" value="Nota Maxima:" />
+                                <p:outputLabel for="txtMax" value="Nota máxima:" />
                                 <p:inputText id="txtMax" value="#{mbvEscala.escala.max}" />
                                 <p:message for="txtMax" />
-                                <p:outputLabel for="txtMinaprob" value="Nota Minima Aprobacion:" />
+                                <p:outputLabel for="txtMinaprob" value="Nota mínima aprobación:" />
                                 <p:inputText id="txtMinaprob" value="#{mbvEscala.escala.notaminimaaprob}"/>
                                 <p:message for="txtMinaprob"/>
                                 <h:panelGroup></h:panelGroup>
-                                <p:commandButton value="editar Escala" ajax="true" actionListener="#{mbvEscala.actualizar}" update=":frmListaEscala :frmEditarEscala" onclick="#{mbvEscala.setMensage(false)}" />
+                                <p:commandButton value="Editar escala" ajax="true" actionListener="#{mbvEscala.actualizar}" update=":frmListaEscala :frmEditarEscala" onclick="#{mbvEscala.setMensage(false)}" />
                             </h:panelGrid>
                         </p:outputPanel>
                     </h:form>

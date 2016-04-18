@@ -14,31 +14,31 @@
     </h:head>
     <h:body>
         <h:form id="frmCrearrAsignatura">
-            <h:panelGroup rendered="#{mbvcriterioevaluacion.crear}">
+            <h:panelGroup rendered="#{mbvAsignatura.crear}">
                 <h:panelGrid columns="3">
                     <p:outputLabel for="txtNombre" value="Nombre: " />
                     <p:inputText id="txtNombre" value="#{mbvAsignatura.asignatura.nombre}" >
                         <f:validator validatorId="validatorVacio"/>
                     </p:inputText>
                     <p:message for="txtNombre"/>
-                    <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
+                    <p:outputLabel for="txtDescripcion" value="Descrpción: " />
                     <p:inputTextarea id="txtDescripcion" value="#{mbvAsignatura.asignatura.descripcion}" autoResize="false" rows="5" />
                     <p:message for="txtDescripcion"/>
-                    <p:outputLabel for="stlConfiguracion" value="Configuracion: " />
-                    <p:selectOneMenu id="stlConfiguracion" value="#{mbvAsignatura.confuguracionselected.configuracionId}" required="true" requiredMessage="Seleccione una configuracion">
+                    <p:outputLabel for="stlConfiguracion" value="Configuración: " />
+                    <p:selectOneMenu id="stlConfiguracion" value="#{mbvAsignatura.confuguracionselected.configuracionId}" required="true" requiredMessage="Seleccione una configuración">
                         <p:ajax listener="#{mbvAsignatura.cargarAreas}" update="stlArea"/>
                         <f:selectItem itemLabel="Seleccione."/>
                         <f:selectItems value="#{mbvAsignatura.configuraciones}" var="configuracion" itemLabel="#{configuracion.nombre}" itemValue="#{configuracion.configuracionId}"/>
                     </p:selectOneMenu>
                     <p:message for="stlConfiguracion"/>
-                    <p:outputLabel for="stlArea" value="Area: " />
-                    <p:selectOneMenu id="stlArea" value="#{mbvAsignatura.areaselected.areaId}" style="width:125px" required="true" requiredMessage="Seleccione un area">
+                    <p:outputLabel for="stlArea" value="Área: " />
+                    <p:selectOneMenu id="stlArea" value="#{mbvAsignatura.areaselected.areaId}" style="width:125px" required="true" requiredMessage="Seleccione un área">
                         <f:selectItem itemLabel="Seleccione."/>
                         <f:selectItems value="#{mbvAsignatura.areas}" var="area" itemLabel="#{area.nombre}" itemValue="#{area.areaId}"/>
                     </p:selectOneMenu>
                     <p:message for="stlArea"/>
                     <h:panelGroup></h:panelGroup>
-                    <p:commandButton value="Registrar Asignatura" actionListener="#{mbvAsignatura.insertar}" ajax="true" update="frmCrearrAsignatura" />
+                    <p:commandButton value="Registrar asignatura" actionListener="#{mbvAsignatura.insertar}" ajax="true" update="frmCrearrAsignatura" />
                 </h:panelGrid> 
             </h:panelGroup>
         </h:form>

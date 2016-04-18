@@ -115,6 +115,8 @@ public class Profesor implements Serializable {
     private List<Contenidotematico> contenidotematicoList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "profesorId", fetch = FetchType.LAZY)
     private List<Notafinalrecuperacion> notafinalrecuperacionList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "profesorId", fetch = FetchType.LAZY)
+    private List<CodigoProfesor> codigoProfesorList;
 
     public Profesor() {
     }
@@ -255,6 +257,15 @@ public class Profesor implements Serializable {
 
     public void setContenidotematicoList(List<Contenidotematico> contenidotematicoList) {
         this.contenidotematicoList = contenidotematicoList;
+    }
+    
+    @XmlTransient
+    public List<CodigoProfesor> getCodigoProfesorList() {
+        return codigoProfesorList;
+    }
+
+    public void setCodigoProfesorList(List<CodigoProfesor> codigoProfesorList) {
+        this.codigoProfesorList = codigoProfesorList;
     }
 
     @XmlTransient

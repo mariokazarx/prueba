@@ -96,4 +96,23 @@ public class UsuarioFacade extends AbstractFacade<Usuario> {
             return false;
         }
     }
+    public List<Usuario> usersAdmin() {
+        try {
+            Query cq = em.createNamedQuery("Usuario.findByAdmins");
+            if(cq.getResultList() != null){
+                return cq.getResultList();
+            }
+            else{
+                System.out.println("ENTRA 2");
+                return null;
+            }
+        } catch (PersistenceException e) {
+            System.out.println("ENTRA 3");
+            return null;
+        }
+        catch (Exception e) {
+            System.out.println("ENTRA 4");
+            return null;
+        }
+    }
 }

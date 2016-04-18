@@ -118,7 +118,7 @@
                     <h:form id="frmArchivosView">
                         <p:outputPanel id="panelArchivosEstudiante" >
                             <p:messages showDetail="true"/>  
-                            <p:dataTable id="tablaArchivosEstudiante" var="documento" value="#{mbvEstudiante.documentos}" paginator="true" rows="10" selection="#{mbvEstudiante.documento}" selectionMode="single" lazy="true" rowKey="#{documento.documentoId}" >
+                            <p:dataTable id="tablaArchivosEstudiante" tableStyle="width:auto" reflow="true" var="documento" value="#{mbvEstudiante.documentos}" paginator="true" rows="10" selection="#{mbvEstudiante.documento}" selectionMode="single" lazy="true" rowKey="#{documento.documentoId}" >
                                 <f:facet name="header">
                                     documentos
                                 </f:facet>

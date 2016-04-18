@@ -37,7 +37,6 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.primefaces.context.RequestContext;
 
 /**
@@ -272,7 +271,7 @@ public class mbvPeriodo implements Serializable {
             if (!login) {
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
             if (this.editar) {
@@ -302,12 +301,12 @@ public class mbvPeriodo implements Serializable {
                 }
             } else {
                 FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
         } catch (Exception e) {
             System.out.println("LLego Cargar" + e.toString());
             FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
         }
     }
 
@@ -318,48 +317,48 @@ public class mbvPeriodo implements Serializable {
             if (!login) {
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
             if (this.eliminar) {
-                if(!anlectivoselected.getTerminado()){
-                Anlectivo aEscolar = anlectivoEjb.getIniciado();
-                System.out.println("Numero de periodos" + periodoEjb.getNumeroPeriodosAño(aEscolar) + "En uso" + contenidoEjb.tieneNotas(periodo));
-                if (periodoEjb.getNumeroPeriodosAño(aEscolar) <= 1) {
-                    System.out.println("ultimo no se puede");
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro", "No se puede eliminar todos los periodos");
+                if (!anlectivoselected.getTerminado()) {
+                    Anlectivo aEscolar = anlectivoEjb.getIniciado();
+                    System.out.println("Numero de periodos" + periodoEjb.getNumeroPeriodosAño(aEscolar) + "En uso" + contenidoEjb.tieneNotas(periodo));
+                    if (periodoEjb.getNumeroPeriodosAño(aEscolar) <= 1) {
+                        System.out.println("ultimo no se puede");
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro", "No se puede eliminar todos los periodos");
+                        FacesContext.getCurrentInstance().addMessage(null, message);
+                        return;
+                    }
+                    if (contenidoEjb.tieneNotas(periodo)) {
+                        System.out.println("esta en uso");
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Periodo en uso");
+                        FacesContext.getCurrentInstance().addMessage(null, message);
+                        return;
+                    }
+                    tx.begin();
+                    if (!contenidoEjb.removeByPeriodo(periodo)) {
+                        tx.rollback();
+                        return;
+                    }
+                    if (!periodoEjb.removeById(periodo)) {
+                        tx.rollback();
+                        return;
+                    }
+                    //si tiene contenido   
+                    System.out.println("Exito al eliminar");
+                    this.periodos = this.periodoEjb.getPeriodosByAnio(anlectivoselected);
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Periodo eliminado");
                     FacesContext.getCurrentInstance().addMessage(null, message);
-                    return;
-                }
-                if (contenidoEjb.tieneNotas(periodo)) {
-                    System.out.println("esta en uso");
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Periodo en uso");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                    return;
-                }
-                tx.begin();
-                if (!contenidoEjb.removeByPeriodo(periodo)) {
-                    tx.rollback();
-                    return;
-                }
-                if (!periodoEjb.removeById(periodo)) {
-                    tx.rollback();
-                    return;
-                }
-                //si tiene contenido   
-                System.out.println("Exito al eliminar");
-                this.periodos = this.periodoEjb.getPeriodosByAnio(anlectivoselected);
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Periodo eliminado");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-                tx.commit();
-                }else{
+                    tx.commit();
+                } else {
                     FacesContext.getCurrentInstance().
                             addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "el año escolar ya termino no se puede eliminar este periodo"));
                 }
             } else {
                 System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -371,7 +370,7 @@ public class mbvPeriodo implements Serializable {
             if (!login) {
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
             if (this.editar) {
@@ -408,7 +407,7 @@ public class mbvPeriodo implements Serializable {
                                 periodo.setEstadoPeriodoId(estadoSelected);
                                 periodoEjb.edit(periodo);
                                 FacesContext.getCurrentInstance().
-                                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Periodo editado,con exito", ""));
+                                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Periodo editado"));
                                 RequestContext.getCurrentInstance().execute("PF('dialogoEditarPeriodo').hide()");
                                 //inicio();
                                 this.periodos = this.periodoEjb.getPeriodosByAnio(anlectivoselected);
@@ -420,10 +419,16 @@ public class mbvPeriodo implements Serializable {
                                  }*/
                             }
                         } else {
+                            FacesContext.getCurrentInstance().
+                                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Actualmente ya se encuentra otro periodo en evaluación"));
                             System.out.println("ESTA EN USO" + estadoSelected.getEstadoPeriodoId() + "  aa" + this.periodo.getEstadoPeriodoId().getEstadoPeriodoId());
+                            return;
                         }
                     } else {
+                        FacesContext.getCurrentInstance().
+                                addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Tiene asignaturas sin asignar profesor"));
                         System.out.println("TIENE ADVERTECIA");
+                        return;
                     }
 
 
@@ -444,30 +449,38 @@ public class mbvPeriodo implements Serializable {
                                     periodo.setFechacierre(fecha);
                                     periodoEjb.edit(periodo);
                                     FacesContext.getCurrentInstance().
-                                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Periodo editado,con exito", ""));
+                                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Periodo editado"));
                                     RequestContext.getCurrentInstance().execute("PF('dialogoEditarPeriodo').hide()");
                                     //inicio();
                                     this.periodos = this.periodoEjb.getPeriodosByAnio(anlectivoselected);
                                 } else {
-                                    System.out.println("ERROR AL INICIAR EVALUACION NO CAMBIO ESTADO");
+                                    FacesContext.getCurrentInstance().
+                                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
+                                    return;
                                 }
                             } else {
                                 System.out.println("NO TIENE NOTAS");
+                                FacesContext.getCurrentInstance().
+                                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "todos los profesores deben realizar la evaluación"));
+                                return;
                             }
                         } else {
                             System.out.println("TIENE ADVERTECIA");
+                            FacesContext.getCurrentInstance().
+                                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Tiene asignaturas sin asignar profesor"));
+                            return;
                         }
                     } else {
                         System.out.println("TIENE PENDIENTES");
                         FacesContext.getCurrentInstance().
-                                addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "todos los profesores deben realizar la evaluacion"));
+                                addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "todos los profesores deben realizar la evaluación"));
                     }
                 }
                 if (estadoSelected.getEstadoPeriodoId() == 1) {
                     periodo.setEstadoPeriodoId(estadoSelected);
                     periodoEjb.edit(periodo);
                     FacesContext.getCurrentInstance().
-                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Periodo editado,con exito", ""));
+                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Periodo editado"));
                     RequestContext.getCurrentInstance().execute("PF('dialogoEditarPeriodo').hide()");
                     //inicio();
                     this.periodos = this.periodoEjb.getPeriodosByAnio(anlectivoselected);
@@ -476,12 +489,12 @@ public class mbvPeriodo implements Serializable {
             } else {
                 System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
 
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Escala editada Satisfactoriamente", ""));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
         }
 
 
@@ -493,7 +506,7 @@ public class mbvPeriodo implements Serializable {
             if (!login) {
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
             if (this.crear) {
@@ -522,10 +535,12 @@ public class mbvPeriodo implements Serializable {
             } else {
                 System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
         } catch (Exception e) {
             tx.rollback();
+            FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
         }
 
     }
@@ -534,11 +549,11 @@ public class mbvPeriodo implements Serializable {
         if (!login) {
             System.out.println("Usuario NO logeado");
             FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
             return;
         }
         if (this.crear) {
-            if(!anlectivoselected.getTerminado()){
+            if (!anlectivoselected.getTerminado()) {
                 Map<String, Object> options = new HashMap<String, Object>();
                 /*options.put("contentHeight", 340);
                  options.put("height", 400);*/
@@ -547,13 +562,13 @@ public class mbvPeriodo implements Serializable {
                 options.put("draggable", true);
                 options.put("resizable", true);
                 RequestContext.getCurrentInstance().openDialog("newPeriodo", options, null);
-            }else{
+            } else {
                 FacesContext.getCurrentInstance().
-                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "el año escolar ya termino no se crear un nuevo periodo"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "el año escolar ya termino no se puede crear un nuevo periodo"));
             }
         } else {
             FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
         }
     }
 
@@ -575,7 +590,7 @@ public class mbvPeriodo implements Serializable {
     public void initRender() {
         if (!this.consultar) {
             FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para manejar criterios de evaluacion"));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para manejar periodos"));
         }
     }
 }

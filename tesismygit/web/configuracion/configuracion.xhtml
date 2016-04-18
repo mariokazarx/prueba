@@ -16,25 +16,25 @@
                     </f:metadata>
                     <h:panelGroup rendered="#{mbvConfiguracion.consultar}">
                         <p:outputPanel styleClass="btn-new">
-                            <p:commandButton value="Nueva Configuracion" icon="ui-icon-document" ajax="true" update="frmListaConf" actionListener="#{mbvConfiguracion.newConfig}">
+                            <p:commandButton value="Nueva configuración" icon="ui-icon-document" ajax="true" update="frmListaConf" actionListener="#{mbvConfiguracion.newConfig}">
                                 <p:ajax event="dialogReturn" listener="#{mbvConfiguracion.closeDialog}" update="frmListaConf" />
                             </p:commandButton>
                         </p:outputPanel>
                         <p:dataTable id="tablaListaConf" var="item" value="#{mbvConfiguracion.configuraciones}" tableStyle="width:auto" reflow="true" paginator="true" rows="10" selection="#{mbvConfiguracion.configuracion}" selectionMode="single" rowKey="#{item.configuracionId}" >
                             <p:ajax event="rowSelect" update=":frmListaConf:panelDetalleConf" oncomplete="PF('dialogoDetalleConf').show()"/>
                             <f:facet name="header">
-                                Lista de Configuraciones
+                                Lista de configuraciones
                             </f:facet>
                             <p:column headerText="Nombre" filterBy="#{item.nombre}" filterMatchMode="contains">
                                 <h:outputText value="#{item.nombre}"/>
                             </p:column>
-                            <p:column headerText="Descripcion" filterBy="descripcion">
+                            <p:column headerText="Descripción" filterBy="descripcion">
                                 <h:outputText value="#{item.descripcion}"/>
                             </p:column>
-                            <p:column headerText="Criterio Evaluacion" filterBy="minaprob">
+                            <p:column headerText="Criterio evaluación" filterBy="minaprob">
                                 <h:outputText value="#{item.criterioevaluacionId.nombre}"/>
                             </p:column>
-                            <p:column headerText="Escala de Evaluacion" filterBy="minaprob">
+                            <p:column headerText="Escala de evaluación" filterBy="minaprob">
                                 <h:outputText value="#{item.escalaId.nombre}"/>
                             </p:column>
                             <p:column>
@@ -47,7 +47,7 @@
                             </p:column>
                         </p:dataTable>
 
-                        <p:dialog header="Detalle de Configuracion" responsive="true" widgetVar="dialogoDetalleConf" modal="true"  appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
+                        <p:dialog header="Detalle de configuración" responsive="true" widgetVar="dialogoDetalleConf" modal="true"  appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
                             <p:outputPanel id="panelDetalleConf">
                                 <p:panelGrid columns="1">
                                     <p:outputLabel value="configuracion escala"/>
@@ -55,11 +55,11 @@
                                 <p:panelGrid columns="2">
                                     <p:outputLabel value="Nombre"/>
                                     <h:outputText value="#{mbvConfiguracion.configuracion.nombre}"/>
-                                    <p:outputLabel value="Descripcion"/>
+                                    <p:outputLabel value="Descripción"/>
                                     <h:outputText value="#{mbvConfiguracion.configuracion.descripcion}"/>
                                     <p:outputLabel value="Escala evaluativa"/>
                                     <h:outputText value="#{mbvConfiguracion.configuracion.escalaId.nombre}"/>
-                                    <p:outputLabel value="Criterio de evaluacion"/>
+                                    <p:outputLabel value="Criterio de evaluación"/>
                                     <h:outputText value="#{mbvConfiguracion.configuracion.criterioevaluacionId.nombre}"/>
                                     
                                 </p:panelGrid>
@@ -74,12 +74,12 @@
 
                 </h:form>
 
-                <p:confirmDialog header="Eliminar Configuracion" widgetVar="removeconfiguracion" appendTo="@(body)" resizable="false" id="removeDlg"
-                                 showEffect="fade" hideEffect="explode" modal="true" message="Esta Seguro que desea eliminar esta Configuracion?">
+                <p:confirmDialog header="Eliminar configuración" widgetVar="removeconfiguracion" appendTo="@(body)" resizable="false" id="removeDlg"
+                                 showEffect="fade" hideEffect="explode" modal="true" message="¿Está Seguro que desea eliminar esta configuración?">
                     <h:form id="frmRemoveConfiguracion">
                         <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
 
-                            <h:outputText value="Name:" />
+                            <h:outputText value="Nombrea:" />
                             <h:outputText value="#{mbvConfiguracion.configuracion.nombre}" style="font-weight:bold"/>                                               
                             <p:commandButton id="deleteButton" actionListener="#{mbvConfiguracion.eliminarConfiguracion(mbvConfiguracion.configuracion)}" oncomplete="PF('removeconfiguracion').hide();" 
                                              update=":frmListaConf" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" value="Aceptar"/>
@@ -88,9 +88,9 @@
                     </h:form>
                 </p:confirmDialog>
                 <p:dialog header="Advertencia" responsive="true" widgetVar="dlg2" modal="true" height="100" showEffect="clip" hideEffect="clip" appendTo="@(body)">
-                    <h:outputText value="esta configuracion ya esta en uso no es posible si edicion" />
+                    <h:outputText value="esta configuración ya está en uso no es posible su edición" />
                 </p:dialog>   
-                <p:dialog header="Datos de la configuracion" responsive="true" widgetVar="dialogoEditarEscala" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
+                <p:dialog header="Datos de la configuración" responsive="true" widgetVar="dialogoEditarEscala" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
                     <h:form id="frmEditarEscala">
                         <p:outputPanel id="panelEditarEscala" >
                             <h:panelGrid columns="3">
@@ -99,15 +99,15 @@
                                     <f:validator validatorId="validatorVacio"/>
                                 </p:inputText>
                                 <p:message for="txtNombre"/>
-                                <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
+                                <p:outputLabel for="txtDescripcion" value="Descripción: " />
                                 <p:inputTextarea id="txtDescripcion" value="#{mbvConfiguracion.configuracion.descripcion}" autoResize="false" rows="5"/>
                                 <p:message for="txtDescripcion"/>
-                                <p:outputLabel for="sltCriterio" value="Criterio Evaluacion:" />
+                                <p:outputLabel for="sltCriterio" value="Criterio de evaluación:" />
                                 <p:selectOneMenu id="sltCriterio" value="#{mbvConfiguracion.criterioevaluacionselected.criterioevaluacionId}" required="true">
                                     <f:selectItems value="#{mbvConfiguracion.criterios}" var="criterio" itemLabel="#{criterio.nombre}" itemValue="#{criterio.criterioevaluacionId}"/>
                                 </p:selectOneMenu>
                                 <p:message for="sltCriterio"/>
-                                <p:outputLabel for="sltEscala" value="Escala Evaluacion" />
+                                <p:outputLabel for="sltEscala" value="Escala de evaluación" />
                                 <p:selectOneMenu id="sltEscala" value="#{mbvConfiguracion.escalaselected.escalaId}" required="true">
                                     <f:selectItems value="#{mbvConfiguracion.escalas}" var="escala" itemLabel="#{escala.nombre}" itemValue="#{escala.escalaId}"/>
                                 </p:selectOneMenu>

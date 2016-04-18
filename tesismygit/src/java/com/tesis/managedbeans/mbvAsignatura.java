@@ -201,13 +201,13 @@ public class mbvAsignatura implements Serializable{
             if(!login){
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
             if(this.crear){
                 if(anlectivoEjb.configuracionEnUso(confuguracionselected)){
                     FacesContext.getCurrentInstance().
-                            addMessage("frmCrearrAsignatura:stlConfiguracion", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Esta configuracion esta en uso"));
+                            addMessage("frmCrearrAsignatura:stlConfiguracion", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Esta configuración esta en uso"));
                     return;
                 }
                 this.confuguracionselected = configuracionEjb.find(confuguracionselected.getConfiguracionId());
@@ -215,7 +215,7 @@ public class mbvAsignatura implements Serializable{
                     System.out.print(auxasig.getNombre()+"la otra"+ asignatura.getNombre());
                     if(asignatura.getNombre().trim().equals(auxasig.getNombre().trim())){//&& area.getAreaId()!= auxarea.getAreaId()
                         System.out.println("IGUALLLL");
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Advertencia ", "Nombre en uso para esta configuracion"); 
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Advertencia ", "Nombre en uso para esta configuración"); 
                         FacesContext.getCurrentInstance().addMessage("frmCrearrAsignatura:txtNombre", message);
                         return;
                     }
@@ -225,22 +225,22 @@ public class mbvAsignatura implements Serializable{
                 RequestContext.getCurrentInstance().closeDialog(this);
                 asignaturaEjb.create(asignatura);
                 FacesContext.getCurrentInstance().
-                           addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Asignatura creada Satisfactoriamente", ""));
+                           addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Asignatura creada satisfactoriamente"));
                 inicioPagina();
             }
             else{
                 System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
         }catch(Exception e){
              FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
         }
     }
     public void closeDialog() {
         inicioPagina();
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Asignatura registrada", "exitosamente"); 
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Asignatura registrada"); 
         FacesContext.getCurrentInstance().addMessage(null, message);
     }
 
@@ -249,7 +249,7 @@ public class mbvAsignatura implements Serializable{
             if(!login){
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
             if(this.editar){
@@ -257,7 +257,7 @@ public class mbvAsignatura implements Serializable{
                 this.confuguracionselected = this.configuracionEjb.find(confuguracionselected.getConfiguracionId());
                 if(anlectivoEjb.configuracionEnUso(confuguracionselected)){
                     FacesContext.getCurrentInstance().
-                            addMessage("frmEditarAsignatura:stlConfiguracion", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Esta configuracion esta en uso"));
+                            addMessage("frmEditarAsignatura:stlConfiguracion", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Esta configuración esta en uso"));
                     return;
                 }
                 this.confuguracionselected = configuracionEjb.find(confuguracionselected.getConfiguracionId());
@@ -265,7 +265,7 @@ public class mbvAsignatura implements Serializable{
                     System.out.print(auxasig.getNombre()+"la otra"+ asignatura.getNombre());
                     if(asignatura.getNombre().trim().equals(auxasig.getNombre().trim()) && asignatura.getAsignaturaId()!= auxasig.getAsignaturaId()){
                         System.out.println("IGUALLLL");
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Advertencia ", "Nombre en uso para esta configuracion"); 
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Advertencia ", "Nombre en uso para esta configuración"); 
                         FacesContext.getCurrentInstance().addMessage("frmEditarAsignatura:txtNombre", message);
                         return;
                     }
@@ -274,18 +274,18 @@ public class mbvAsignatura implements Serializable{
                 asignatura.setConfiguracionId(confuguracionselected);
                 asignaturaEjb.edit(asignatura);
                 FacesContext.getCurrentInstance().
-                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Asignatura Editada Exitosamente", ""));
+                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Asignatura editada"));
                 RequestContext.getCurrentInstance().execute("PF('dialogoEditarAsignatura').hide()");
                 inicioPagina();
             }
             else{
                 System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
         }catch(Exception e){
             FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
         }
     }
     public void cargarAreas(){
@@ -297,7 +297,7 @@ public class mbvAsignatura implements Serializable{
             if(!login){
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
             if(this.editar){
@@ -316,18 +316,18 @@ public class mbvAsignatura implements Serializable{
             }
             else{
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
         }
     }
     public void newAsignatura(){
         if(!login){
             System.out.println("Usuario NO logeado");
             FacesContext.getCurrentInstance().
-                   addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                   addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
             return;
         }
         if(this.crear){
@@ -343,7 +343,7 @@ public class mbvAsignatura implements Serializable{
         }
         else{
             FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
         }
     }
      public void eliminarAsignatura(Asignatura asignatura) {
@@ -351,7 +351,7 @@ public class mbvAsignatura implements Serializable{
             if(!login){
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
             if(this.eliminar){
@@ -361,28 +361,28 @@ public class mbvAsignatura implements Serializable{
                     //inicioPagina();
                     //RequestContext.getCurrentInstance().update("frmEditarEscala"); 
                     FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Escala","eliminada"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito","Asignatura eliminada"));
                 }else{
                     //RequestContext.getCurrentInstance().update("frmEditarEscala:mensajeGeneral");
                     FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Escala","esta escala esta en uso"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia","esta asignatura esta en uso"));
                 }
                 inicioPagina();
             }
             else{
                 System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
         }
     }
      public void initRender(){
         if(!this.consultar){
             FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para manejar criterios de evaluacion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para manejar asignaturas"));
         }
     }
 }

@@ -33,17 +33,20 @@
                             </p:selectOneMenu>
                         </div>
                         <div class="div-perfil">
-                            <p:outputLabel for="sltAsignaturas" value="Asignatura:" />
-                            <p:selectOneMenu id="sltAsignaturas" value="#{mbvListaEstudiantes.asignaturaSelected.asignaturaId}">
-                                <f:selectItem itemLabel="Seleccione."/>
-                                <f:selectItems value="#{mbvListaEstudiantes.asignaturas}" var="asignatura" itemLabel="#{asignatura.nombre}" itemValue="#{asignatura.asignaturaId}"/>
-                            </p:selectOneMenu>
+                            <h:panelGroup rendered="#{mbvListaEstudiantes.mostrarAsignaturas}">
+                                <p:outputLabel for="sltAsignaturas" value="Asignatura:" />
+                                <p:selectOneMenu id="sltAsignaturas" value="#{mbvListaEstudiantes.asignaturaSelected.asignaturaId}">
+                                    <p:ajax listener="#{mbvListaEstudiantes.mostrarBoton()}" update="frmListEstudiantes"/>
+                                    <f:selectItem itemLabel="Seleccione."/>
+                                    <f:selectItems value="#{mbvListaEstudiantes.asignaturas}" var="asignatura" itemLabel="#{asignatura.nombre}" itemValue="#{asignatura.asignaturaId}"/>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
                         </div>
 
-                        <div style="margin-top: 15px">
+                        <h:panelGroup  style="margin-top: 15px" rendered="#{mbvListaEstudiantes.mostarBoton}">
                             <p:commandButton value="Generar lista" ajax="false" actionListener="#{mbvListaEstudiantes.imprimir}"/>
-                        </div>
-                        
+                        </h:panelGroup>
+
                     </p:outputPanel>
 
                 </h:form>        

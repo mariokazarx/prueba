@@ -72,6 +72,8 @@ public class mbvListaEstudiantes {
     private List<Curso> cursos;
     private List<Asignatura> asignaturas;
     private boolean login;
+    private boolean mostrarAsignaturas;
+    private boolean mostarBoton;
     @EJB
     private ProfesorFacade profesorEjb;
     @EJB
@@ -86,6 +88,14 @@ public class mbvListaEstudiantes {
     private MatriculaFacade matriculaEjb;
 
     public mbvListaEstudiantes() {
+    }
+
+    public boolean isMostrarAsignaturas() {
+        return mostrarAsignaturas;
+    }
+
+    public boolean isMostarBoton() {
+        return mostarBoton;
     }
 
     public boolean isMostrarContenido() {
@@ -128,6 +138,8 @@ public class mbvListaEstudiantes {
             this.login = false;
         }
         this.mostrarContenido = false;
+        this.mostrarAsignaturas = false;
+        this.mostarBoton = false;
         this.asignaturaSelected = new Asignatura();
         this.aEscolar = anlectivoEjb.getIniciado();
         this.cursoSelected = new Curso();
@@ -150,8 +162,11 @@ public class mbvListaEstudiantes {
                 asignaturas.add(asg);
             }
             asignaturas = new ArrayList<Asignatura>(new LinkedHashSet<Asignatura>(asignaturas));
+            this.mostrarAsignaturas = true;
         } else {
             asignaturaSelected = new Asignatura();
+            this.mostrarAsignaturas = false;
+            this.mostarBoton = false;
         }
     }
 
@@ -163,7 +178,15 @@ public class mbvListaEstudiantes {
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "aun no inicia el año escolar"));
         }
     }
-
+    
+    public void mostrarBoton(){
+        if(asignaturaSelected.getAsignaturaId()!=null){
+            this.mostarBoton = true;
+        }else{
+            this.mostarBoton = false;
+        }
+    }
+    
     public void imprimir() {
         if (login) {
             if (this.cursoSelected.getCursoId() != null && this.asignaturaSelected.getAsignaturaId() != null) {
@@ -221,17 +244,41 @@ public class mbvListaEstudiantes {
                     //par5.setSpacingBefore(20);
                     document.add(par5);
                     
-                    PdfPTable table = new PdfPTable(1);
+                    PdfPTable table = new PdfPTable(5);
                     table.setWidthPercentage(100);
-                    //table.setWidths(new int[]{70, 8, 20});
+                    table.setWidths(new int[]{70, 8, 8,8,8});
                     PdfPCell cellTituloAsignatura = new PdfPCell();
                     Paragraph partituloAsignatura = new Paragraph(10, "ESTUDIANTES", FontFactory.getFont("arial", 11));
                     partituloAsignatura.setAlignment(Element.ALIGN_CENTER);
                     cellTituloAsignatura.addElement(partituloAsignatura);
                     table.addCell(cellTituloAsignatura);
+                    PdfPCell cellTituloNotas = new PdfPCell();
+                    Paragraph partituloNotas = new Paragraph(10, "N1", FontFactory.getFont("arial", 11));
+                    partituloNotas.setAlignment(Element.ALIGN_CENTER);
+                    cellTituloNotas.addElement(partituloNotas);
+                    table.addCell(cellTituloNotas);
+                    PdfPCell cellTituloNotas2 = new PdfPCell();
+                    partituloNotas = new Paragraph(10, "N2", FontFactory.getFont("arial", 11));
+                    partituloNotas.setAlignment(Element.ALIGN_CENTER);
+                    cellTituloNotas2.addElement(partituloNotas);
+                    table.addCell(cellTituloNotas2);
+                    PdfPCell cellTituloNotas3 = new PdfPCell();
+                    partituloNotas = new Paragraph(10, "N3", FontFactory.getFont("arial", 11));
+                    partituloNotas.setAlignment(Element.ALIGN_CENTER);
+                    cellTituloNotas3.addElement(partituloNotas);
+                    table.addCell(cellTituloNotas3);
+                    PdfPCell cellTituloNotas4 = new PdfPCell();
+                    partituloNotas = new Paragraph(10, "N4", FontFactory.getFont("arial", 11));
+                    partituloNotas.setAlignment(Element.ALIGN_CENTER);
+                    cellTituloNotas4.addElement(partituloNotas);
+                    table.addCell(cellTituloNotas4);
                     List<Estudiante> est = new ArrayList<Estudiante>();
                     for (Matricula matriculasCurso : matriculaEjb.matriculasCurso(cursoSelected)) {
                         table.addCell(matriculasCurso.getEstudianteId().getApellido() + " " + matriculasCurso.getEstudianteId().getApellido());
+                        table.addCell("");
+                        table.addCell("");
+                        table.addCell("");
+                        table.addCell("");
                     }
 
 

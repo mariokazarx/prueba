@@ -131,7 +131,7 @@ public class mbvPerfinUsuario {
             } else {
                 if (cambiarContraseña) {
                     if (this.usuario.getContraseña().equals(this.txtRepiteContrasenia)) {
-                        usuario.setContraseña(Encrypt.sha512(this.usuario.getContraseña()));
+                        usuario.setContraseña(Encrypt.sha512(this.usuario.getContraseña(),this.usuario.getCorreo()));
                     } else {
                         FacesContext.getCurrentInstance().addMessage("frmPerfilUsuario:txtContrasenia", new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error fatal:", "Las contraseñas no coinciden"));
                         return;

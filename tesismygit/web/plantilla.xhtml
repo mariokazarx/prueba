@@ -54,18 +54,50 @@
                     <center>
                         <h:form id="MenuLeft">
                             <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
-                            <div style="margin-top: 15px;margin-bottom: 20px;">
-                                <h:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/fotosprofesores/#{mbvPrueba.prof.foto}"  width="150" height="150" cache="false" alt="Sin definir" style="border-radius: 4px;box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7)">
-                                    <p:ajax id="id3" event="click" listener="#{mbvPrueba.cambiarFotoProfesor()}" />
-                                </h:graphicImage>
-                            </div>
+                            <p:outputPanel rendered="#{mbvPrueba.loginProfesor}">
+                                <div style="margin-top: 15px;margin-bottom: 20px;">
+                                    <div>
+                                        <span>#{mbvPrueba.prof.nombre} #{mbvPrueba.prof.apellido}</span>
+                                    </div>
+                                    <div>
+                                        <span>#{mbvPrueba.prof.tipoUsuarioId.nombre}</span>
+                                    </div>
+                                    <div>
+                                        <h:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/fotosprofesores/#{mbvPrueba.prof.foto}"  width="150" height="150" cache="false" alt="Sin definir" style="border-radius: 4px;box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7)">
+                                            <p:ajax id="id3" event="click" listener="#{mbvPrueba.cambiarFotoProfesor()}" />
+                                        </h:graphicImage>
+                                    </div>
+                                </div>
+                            </p:outputPanel>
+                            <p:outputPanel rendered="#{mbvPrueba.loginUsuario}">
+                                <div style="margin-top: 15px;margin-bottom: 20px;">
+                                    <div>
+                                        <span>#{mbvPrueba.usuario.nombres} #{mbvPrueba.usuario.apellidos}</span>
+                                    </div>
+                                    <div>
+                                        <span>#{mbvPrueba.usuario.tipoUsuarioId.nombre}</span>
+                                    </div>
+                                    <div>
+                                        <h:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/fotosusuarios/#{mbvPrueba.usuario.foto}"  width="150" height="150" cache="false" alt="Sin definir" style="border-radius: 4px;box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7)">
+                                            <p:ajax id="id3" event="click" listener="#{mbvPrueba.cambiarFotoUsuario()}" />
+                                        </h:graphicImage>
+                                    </div>
+                                </div>
+                            </p:outputPanel>
                             <p:panelMenu  id="menuPpal" model="#{mbvMenu.model}">
                             </p:panelMenu>
                         </h:form>
-                        <p:dialog header="Cambiar foto" responsive="true" widgetVar="dialogoSubirArchivos" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
+                        <p:dialog header="Cambiar foto" rendered="#{mbvPrueba.loginProfesor}" responsive="true" widgetVar="dialogoSubirArchivos" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
                             <h:form id="frmFotoProfesor" enctype="multipart/form-data">
                                 <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
                                 <p:fileUpload fileUploadListener="#{mbvPrueba.subirFotoProfesor}" multiple="true" fileLimit="1" mode="advanced" update="frmFotoProfesor :MenuLeft"  allowTypes="/(\.|\/)(png|jpg)$/" cancelLabel="Cancelar" uploadLabel="Cambiar foto" label="Seleccione foto">
+                                </p:fileUpload>   
+                            </h:form>
+                        </p:dialog>
+                        <p:dialog header="Cambiar foto" rendered="#{mbvPrueba.loginUsuario}" responsive="true" widgetVar="dialogoSubirFotoUsuario" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
+                            <h:form id="frmFotoUsuario" enctype="multipart/form-data">
+                                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+                                <p:fileUpload fileUploadListener="#{mbvPrueba.subirFotoUsuario}" multiple="true" fileLimit="1" mode="advanced" update="frmFotoUsuario :MenuLeft"  allowTypes="/(\.|\/)(png|jpg)$/" cancelLabel="Cancelar" uploadLabel="Cambiar foto" label="Seleccione foto">
                                 </p:fileUpload>   
                             </h:form>
                         </p:dialog>
@@ -135,11 +167,16 @@
                             <div>
                                 <span class="saludo">Bienvenido</span>
                             </div>
-
-                            <div>
-                                <span class="saludo-nombre">#{mbvPrueba.usuario.nombres} #{mbvPrueba.usuario.apellidos}</span>
-                            </div>
-
+                            <p:outputPanel rendered="#{mbvPrueba.loginUsuario}">
+                                <div>
+                                    <span class="saludo-nombre">#{mbvPrueba.usuario.nombres} #{mbvPrueba.usuario.apellidos}</span>
+                                </div>
+                            </p:outputPanel>
+                            <p:outputPanel rendered="#{mbvPrueba.loginProfesor}">
+                                <div>
+                                    <span class="saludo-nombre">#{mbvPrueba.prof.nombre} #{mbvPrueba.prof.apellido}</span>
+                                </div>
+                            </p:outputPanel>
                         </div>    
                     </ui:insert>
 

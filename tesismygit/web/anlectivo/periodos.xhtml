@@ -27,7 +27,7 @@
                         </p:outputPanel>
 
                         <p:outputPanel styleClass="btn-new" >
-                            <p:commandButton value="Nuevo Periodo" icon="ui-icon-document" ajax="true" update="frmPeriodos" actionListener="#{mbvPeriodo.newPeriodo()}">
+                            <p:commandButton value="Nuevo periodo" icon="ui-icon-document" ajax="true" update="frmPeriodos" actionListener="#{mbvPeriodo.newPeriodo()}">
                                 <p:ajax event="dialogReturn" listener="#{mbvPeriodo.closeDialog}" update="frmPeriodos" />
                             </p:commandButton>
                         </p:outputPanel>
@@ -40,7 +40,7 @@
                             <p:column headerText="Numero" filterBy="Numero">
                                 <h:outputText value="#{periodo.numero}"/>
                             </p:column>
-                            <p:column headerText="Ano Lectivo" filterBy="descripcion">
+                            <p:column headerText="Año escolar" filterBy="descripcion">
                                 <h:outputText value="#{periodo.anlectivoId.anio}"/>
                             </p:column>
                             <p:column headerText="Estado" filterBy="max">
@@ -70,8 +70,8 @@
                     </p:dialog>
 
                 </h:form>
-                <p:confirmDialog header="Eliminar Periodo" widgetVar="removePeriodo" appendTo="@(body)" resizable="false" id="removeDlg"
-                                 showEffect="fade" hideEffect="explode" modal="true" message="Esta Seguro que desea eliminar esta periodo?">
+                <p:confirmDialog header="Eliminar periodo" widgetVar="removePeriodo" appendTo="@(body)" resizable="false" id="removeDlg"
+                                 showEffect="fade" hideEffect="explode" modal="true" message="¿Esta seguro que desea eliminar este periodo?">
                     <h:form id="frmRemovePeriodo">
                         <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
                             <h:outputText value="Numero:" />
@@ -82,7 +82,7 @@
                         </h:panelGrid>
                     </h:form>
                 </p:confirmDialog>
-                <p:dialog header="Datos Periodo" responsive="true" widgetVar="dialogoEditarPeriodo" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
+                <p:dialog header="Datos periodo" responsive="true" widgetVar="dialogoEditarPeriodo" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
                     <h:form id="frmEditarPeriodo">
                         <p:outputPanel id="panelEditarPeriodo" >
                             <h:panelGrid columns="3">
@@ -105,7 +105,7 @@
 
 
                                 <h:panelGroup></h:panelGroup>
-                                <p:commandButton value="Editar Periodo" actionListener="#{mbvPeriodo.actualizar}" ajax="true" update=":frmPeriodos" />
+                                <p:commandButton value="Editar periodo" actionListener="#{mbvPeriodo.actualizar}" ajax="true" update=":frmPeriodos" />
                             </h:panelGrid> 
                         </p:outputPanel>
                     </h:form>

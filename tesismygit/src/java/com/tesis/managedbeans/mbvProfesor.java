@@ -222,14 +222,14 @@ public class mbvProfesor implements Serializable {
                     this.profesor.setEstadoProfesorId(estado);
                     this.profesor.setTipoUsuarioId(tusu);
                     this.profesor.setFoto("default.jpg");
-                    this.profesor.setContraseña(Encrypt.sha512(this.profesor.getContraseña()));
+                    this.profesor.setContraseña(Encrypt.sha512(this.profesor.getContraseña(),this.profesor.getCorreo()));
                     this.profesorEjb.create(profesor);
                     FacesContext.getCurrentInstance().
-                               addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Criterio Evaluacion creado Satisfactoriamente", ""));
+                               addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Profesor creado satisfactoriamente"));
                     //tx.rollback();   
                     inicioPagina();
                 }else{
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error fatal:", "Las contraseñas no coinciden"));
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", "Las contraseñas no coinciden"));
                     return;
                 }
             }
@@ -240,7 +240,7 @@ public class mbvProfesor implements Serializable {
             }
             
         } catch (Exception ex) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error fatal:", "Por favor contacte con su administrador "+ex.getMessage()));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error inesperado", "Contáctese con el administrador"));
         }
         
     }
@@ -281,7 +281,7 @@ public class mbvProfesor implements Serializable {
             if(!login){
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
             if(this.editar){
@@ -299,7 +299,7 @@ public class mbvProfesor implements Serializable {
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
         }
     }
     public void activarContraseña(){
@@ -314,7 +314,7 @@ public class mbvProfesor implements Serializable {
             if(!login){
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
             if(this.editar){
@@ -332,7 +332,7 @@ public class mbvProfesor implements Serializable {
                     return;
                 }
                 if(cambiarContraseña){
-                    this.profesor.setContraseña(Encrypt.sha512(this.profesor.getContraseña()));
+                    this.profesor.setContraseña(Encrypt.sha512(this.profesor.getContraseña(),this.profesor.getCorreo()));
                 }
                 this.estadoSelected = this.estadoEjb.find(estadoSelected.getEstadoProfesorId());
                 if(estadoSelected.getEstadoProfesorId()==2){
@@ -355,7 +355,7 @@ public class mbvProfesor implements Serializable {
                 profesor.setEstadoProfesorId(estadoSelected);
                 profesorEjb.edit(profesor);
                 FacesContext.getCurrentInstance().
-                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Escala creada Satisfactoriamente", ""));
+                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Profesor editado"));
                 RequestContext.getCurrentInstance().execute("PF('dialogoEditarProfesor').hide()");
                 inicioPagina();
                 tx.commit();
@@ -367,13 +367,13 @@ public class mbvProfesor implements Serializable {
             }
         }catch(Exception e){
             FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", e.getMessage()));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
         }
     }
     public void initRender(){
         if(!this.consultar){
             FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para manejar criterios de evaluacion"));
+                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para manejar profesores"));
         }
     }
 }

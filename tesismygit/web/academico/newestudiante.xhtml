@@ -16,14 +16,14 @@
         <h:form id="frmProfesor" enctype="multipart/form-data">
             <h:panelGroup rendered="#{mbvEstudiante.crear}">
                 <h:panelGrid columns="3">
-                    <p:outputLabel for="selectTipo" value="Tipo Identificacion: " />
+                    <p:outputLabel for="selectTipo" value="Tipo identificación: " />
                     <p:selectOneMenu id="selectTipo" value="#{mbvEstudiante.estudiante.tipoIdentifcacion}" style="width:125px">
                         <f:selectItem itemLabel="Select One" itemValue="" />
                         <f:selectItem itemLabel="Cedula de ciudadania" itemValue="C.C" />
                         <f:selectItem itemLabel="Tarjeta de Identidad" itemValue="T.I" />
                     </p:selectOneMenu>
                     <p:message for="selectTipo"/>
-                    <p:outputLabel for="txtIdentificacion" value="Numero Identificacion: " />
+                    <p:outputLabel for="txtIdentificacion" value="Numero Identificación: " />
                     <p:inputText id="txtIdentificacion" validatorMessage="Identificacion ivalida" type="number" value="#{mbvEstudiante.estudiante.identificiacion}" size="25" >
                         <f:validator validatorId="validatorVacio"/>
                         <f:validateLength minimum="5" maximum="25" /> 
@@ -40,12 +40,12 @@
                         <f:validator validatorId="validatorVacio"/>
                     </p:inputText>
                     <p:message for="txtApellidos"/>
-                    <p:outputLabel for="txtTelefono" value="Telefono: " />
+                    <p:outputLabel for="txtTelefono" value="Teléfono: " />
                     <p:inputText id="txtTelefono" value="#{mbvEstudiante.estudiante.telefono}" size="25" >
                         <f:validator validatorId="validatorVacio"/>
                     </p:inputText>
                     <p:message for="txtTelefono"/>
-                    <p:outputLabel for="txtDireccion" value="Direccion: " />
+                    <p:outputLabel for="txtDireccion" value="Dirección: " />
                     <p:inputText id="txtDireccion" value="#{mbvEstudiante.estudiante.direccion}" size="25">
                         <f:validator validatorId="validatorVacio"/>
                     </p:inputText>
@@ -106,7 +106,7 @@
                     <p:fileUpload id="txtFoto" mode="simple" value="#{mbvEstudiante.foto}" />
                     <p:message for="txtFoto"/>
                     <h:panelGroup></h:panelGroup>
-                    <p:commandButton value="Registrar Estudiante" action="#{mbvEstudiante.insertar}" ajax="false" update="frmProfesor" />
+                    <p:commandButton value="Registrar estudiante" action="#{mbvEstudiante.insertar}" ajax="false" update="frmProfesor" />
                 </h:panelGrid> 
             </h:panelGroup>
         </h:form>

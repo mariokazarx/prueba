@@ -29,7 +29,7 @@
                                 </p:selectOneMenu>
                             </div>
                             <div class="div-perfil">
-                                <p:outputLabel for="sltAsignaturas" value="Asignaturas:" />
+                                <p:outputLabel for="sltAsignaturas" value="Asignatura:" />
                                 <p:selectOneMenu id="sltAsignaturas" value="#{mbvNotas.asignaturaSelected.asignaturaId}">
                                     <p:ajax listener="#{mbvNotas.cargarContenido()}" update="frmMateriasCiclos"/>
                                     <f:selectItem itemLabel="Seleccione."/>
@@ -37,7 +37,7 @@
                                 </p:selectOneMenu>
                             </div>
 
-                            <p:commandButton value="Crear Logro" icon="ui-icon-pencil" actionListener="#{mbvNotas.newLogro}" rendered="#{mbvNotas.contenidoLogros}" style="margin-top: 15px;margin-bottom: 15px"/>
+                            <p:commandButton value="Crear logro" icon="ui-icon-pencil" actionListener="#{mbvNotas.newLogro}" rendered="#{mbvNotas.contenidoLogros}" style="margin-top: 15px;margin-bottom: 15px"/>
                         </p:outputPanel>
 
 
@@ -46,7 +46,7 @@
                                 <p:column headerText="Titulo" sortBy="#{logro.titulo}">
                                     <h:outputText value="#{logro.titulo}" />
                                 </p:column>
-                                <p:column headerText="Descripcion" sortBy="#{logro.descripcion}">
+                                <p:column headerText="Descripción" sortBy="#{logro.descripcion}">
                                     <h:outputText value="#{logro.descripcion}" />
                                 </p:column>
                                 <p:column headerText="Porcentaje" sortBy="#{logro.porcentaje}" style="width: auto ">
@@ -107,7 +107,7 @@
                     </p:dialog>
 
                 </h:form>
-                <p:dialog header="Nuevo Logro" responsive="true" widgetVar="dialogoCrearLogro" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
+                <p:dialog header="Nuevo logro" responsive="true" widgetVar="dialogoCrearLogro" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip">
                     <h:form id="frmCrearLogro">
                         <p:outputPanel id="panelCrearLogro" >
                             <h:panelGrid columns="3">
@@ -122,11 +122,11 @@
                                     <f:validator validatorId="validatorVacio"/>
                                 </p:inputText>
                                 <p:message for="txtPorcentaje"/>
-                                <p:outputLabel for="txtDescripcion" value="Descripcion: " />
+                                <p:outputLabel for="txtDescripcion" value="Descripción: " />
                                 <p:inputTextarea id="txtDescripcion" value="#{mbvNotas.logro.descripcion}" rows="5" cols="22" />
                                 <p:message for="txtDescripcion"/>
                                 <h:panelGroup></h:panelGroup>
-                                <p:commandButton value="Registrar Logro" actionListener="#{mbvNotas.insertarLogro}" ajax="true" update=":frmMateriasCiclos frmCrearLogro" />
+                                <p:commandButton value="Registrar logro" actionListener="#{mbvNotas.insertarLogro}" ajax="true" update=":frmMateriasCiclos frmCrearLogro" />
                             </h:panelGrid> 
                         </p:outputPanel>
                     </h:form>
@@ -146,11 +146,11 @@
                                     <f:validator validatorId="validatorVacio"/>
                                 </p:inputText>
                                 <p:message for="txtPorcentaje"/>
-                                <p:outputLabel for="txtDescripcion" value="Descripcion: " />
+                                <p:outputLabel for="txtDescripcion" value="Descripción: " />
                                 <p:inputTextarea id="txtDescripcion" value="#{mbvNotas.logro.descripcion}" rows="5" cols="22" />
                                 <p:message for="txtDescripcion"/>
                                 <h:panelGroup></h:panelGroup>
-                                <p:commandButton value="Editar Logro" actionListener="#{mbvNotas.actualizarLogro}" ajax="true" update=":frmMateriasCiclos frmEditarLogro" />
+                                <p:commandButton value="Editar logro" actionListener="#{mbvNotas.actualizarLogro}" ajax="true" update=":frmMateriasCiclos frmEditarLogro" />
                             </h:panelGrid> 
                         </p:outputPanel>
                     </h:form>
@@ -168,7 +168,7 @@
                             <p:outputLabel for="txtObservacion" value="Observaciones: " />
                             <p:inputTextarea id="txtObservacion" value="#{mbvNotas.observaciones}" rows="5"  />
                             <p:message for="txtObservacion"/> 
-                            <p:commandButton value="Registrar Observacion" actionListener="#{mbvNotas.insertarObservacionDB()}" ajax="true" update=":frmMateriasCiclos" />
+                            <p:commandButton value="Registrar observacion" actionListener="#{mbvNotas.insertarObservacionDB()}" ajax="true" update=":frmMateriasCiclos" />
                         </p:outputPanel>
                     </h:form>
                 </p:dialog>

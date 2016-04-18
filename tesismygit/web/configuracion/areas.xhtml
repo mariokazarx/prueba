@@ -16,22 +16,22 @@
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
                     <h:panelGroup rendered="#{mbvArea.consultar}">
                         <p:outputPanel styleClass="btn-new">
-                            <p:commandButton value="Nueva asignatura" icon="ui-icon-document" ajax="true" update="frmListaArea" actionListener="#{mbvArea.newArea}">
+                            <p:commandButton value="Nueva área" icon="ui-icon-document" ajax="true" update="frmListaArea" actionListener="#{mbvArea.newArea}">
                                 <p:ajax event="dialogReturn" listener="#{mbvArea.closeDialog}" update="frmListaArea" />
                             </p:commandButton>
                         </p:outputPanel>
                         <p:dataTable id="tablaListaArea" tableStyle="width:auto" reflow="true" var="item" value="#{mbvArea.areas}" paginator="true" rows="10" selection="#{mbvArea.area}" selectionMode="single" rowKey="#{item.areaId}" >
                             <p:ajax event="rowSelect" update=":frmListaArea:panelDetalleArea" oncomplete="PF('dialogoDetalleArea').show()"/>
                             <f:facet name="header">
-                                Lista de Areas
+                                Lista de áreas
                             </f:facet>
                             <p:column headerText="Nombre" filterBy="#{item.nombre}" filterMatchMode="contains" sortBy="#{item.nombre}">
                                 <h:outputText value="#{item.nombre}"/>
                             </p:column>
-                            <p:column headerText="Descripcion" filterBy="descripcion">
+                            <p:column headerText="Descripcion" filterBy="descripción">
                                 <h:outputText value="#{item.descripcion}"/>
                             </p:column>
-                            <p:column headerText="Configuracion" filterBy="#{item.configuracionId.nombre}" filterMatchMode="contains" sortBy="#{item.configuracionId.nombre}">
+                            <p:column headerText="Configuración" filterBy="#{item.configuracionId.nombre}" filterMatchMode="contains" sortBy="#{item.configuracionId.nombre}">
                                 <h:outputText value="#{item.configuracionId.nombre}"/>
                             </p:column>
                             <p:column>
@@ -44,14 +44,14 @@
                             </p:column>
                         </p:dataTable>
 
-                        <p:dialog header="Detalle de Area" widgetVar="dialogoDetalleArea" modal="true"  appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
+                        <p:dialog header="Detalle de área" widgetVar="dialogoDetalleArea" modal="true"  appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
                             <p:outputPanel id="panelDetalleArea">
                                 <p:panelGrid columns="2">
                                     <p:outputLabel value="Nombre"/>
                                     <h:outputText value="#{mbvArea.area.nombre}"/>
-                                    <p:outputLabel value="Descripcion"/>
+                                    <p:outputLabel value="Descripción"/>
                                     <h:outputText value="#{mbvArea.area.descripcion}"/>
-                                    <p:outputLabel value="Configuracion"/>
+                                    <p:outputLabel value="Configuración"/>
                                     <h:outputText value="#{mbvArea.area.configuracionId.nombre}"/>
                                 </p:panelGrid>
                             </p:outputPanel>
@@ -64,12 +64,12 @@
                     </p:dialog>
                 </h:form>
 
-                <p:confirmDialog header="Eliminar Area" widgetVar="removearea" appendTo="@(body)" resizable="false" id="removeDlg"
-                                 showEffect="fade" hideEffect="explode" modal="true" message="Esta Seguro que desea eliminar esta area?">
+                <p:confirmDialog header="Eliminar área" widgetVar="removearea" appendTo="@(body)" resizable="false" id="removeDlg"
+                                 showEffect="fade" hideEffect="explode" modal="true" message="¿Esta seguro que desea eliminar esta área?">
                     <h:form id="frmRemoveArea">
                         <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
 
-                            <h:outputText value="Name:" />
+                            <h:outputText value="Nombre:" />
                             <h:outputText value="#{mbvArea.area.nombre}" style="font-weight:bold"/>                                               
                             <p:commandButton id="deleteButton" actionListener="#{mbvArea.eliminarArea(mbvArea.area)}" oncomplete="PF('removearea').hide();" 
                                              update=":frmListaArea" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" value="Aceptar"/>
@@ -78,7 +78,7 @@
                     </h:form>
                 </p:confirmDialog>
 
-                <p:dialog header="Datos de area" widgetVar="dialogoEditarEscala" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
+                <p:dialog header="Datos de área" widgetVar="dialogoEditarEscala" modal="true" appendTo="@(body)" showEffect="clip" hideEffect="clip" resizable="false">
                     <h:form id="frmEditarEscala">
                         <p:outputPanel id="panelEditarEscala" >
                             <h:panelGrid columns="3">
@@ -87,25 +87,25 @@
                                     <f:validator validatorId="validatorVacio"/>
                                 </p:inputText>
                                 <p:message for="txtNombre"/>
-                                <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
+                                <p:outputLabel for="txtDescripcion" value="Descrpción: " />
                                 <p:inputTextarea id="txtDescripcion" autoResize="false" rows="5" value="#{mbvArea.area.descripcion}"/>
                                 <p:message for="txtDescripcion"/>
-                                <p:outputLabel for="stlConfiguracion" value="Configuracion:" />
+                                <p:outputLabel for="stlConfiguracion" value="Configuración:" />
                                 <p:selectOneMenu id="stlConfiguracion" value="#{mbvArea.confselected.configuracionId}">
                                     <f:selectItems value="#{mbvArea.configs}" var="configuracion" itemLabel="#{configuracion.nombre}" itemValue="#{configuracion.configuracionId}"/>
                                 </p:selectOneMenu>
                                 <p:message for="stlConfiguracion"/>
                                 <h:panelGroup></h:panelGroup>
-                                <p:commandButton value="Editar area" ajax="true" actionListener="#{mbvArea.actualizar}" update=":frmListaArea frmEditarEscala" />
+                                <p:commandButton value="Editar área" ajax="true" actionListener="#{mbvArea.actualizar}" update=":frmListaArea frmEditarEscala" />
                             </h:panelGrid>
                         </p:outputPanel>
                     </h:form>
                 </p:dialog>
                 <p:confirmDialog header="Advertencia" widgetVar="enUso" appendTo="@(body)" resizable="false" id="digEnUso"
-                                 showEffect="fade" hideEffect="explode" modal="true" message="Escala en uso usted no se puede editar">
+                                 showEffect="fade" hideEffect="explode" modal="true" message="Área en uso no se puede editar">
                     <h:form id="frmNoiniciado">
                         <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
-                            <p:commandButton id="cancelButton" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('enUso').hide();" value="OK"/>
+                            <p:commandButton id="cancelButton" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('enUso').hide();" value="Aceptar"/>
                         </h:panelGrid>
                     </h:form>
                 </p:confirmDialog>

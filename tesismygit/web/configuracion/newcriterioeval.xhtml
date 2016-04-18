@@ -21,16 +21,16 @@
                         <f:validator validatorId="validatorVacio"/>
                     </p:inputText>
                     <p:message for="txtNombre"/>
-                    <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
+                    <p:outputLabel for="txtDescripcion" value="Descripción: " />
                     <p:inputTextarea id="txtDescripcion" value="#{mbvcriterioevaluacion.criterioeval.descripcion}" autoResize="false" rows="5"/>
                     <p:message for="txtDescripcion"/>
-                    <p:outputLabel for="stlCriterio" value="Criterio de aprobacion:" />
+                    <p:outputLabel for="stlCriterio" value="Criterio de aprobación:" />
                     <p:selectOneMenu id="stlCriterio" value="#{mbvcriterioevaluacion.fcriterioselected.formacriterioevaluacionId}">
                         <f:selectItem itemLabel="Seleccione."/>
                         <f:selectItems value="#{mbvcriterioevaluacion.fcriterios}" var="fcriterio" itemLabel="#{fcriterio.nombre}" itemValue="#{fcriterio.formacriterioevaluacionId}"/>
                     </p:selectOneMenu>
                     <p:message for="stlCriterio"/>
-                    <p:outputLabel for="txtMin" value="Minimo para aprobar:" />
+                    <p:outputLabel for="txtMin" value="Mínimo para aprobar:" />
                     <p:inputText id="txtMin" value="#{mbvcriterioevaluacion.criterioeval.minaprob}" />
                     <p:message for="txtMin"/>
                     <h:panelGroup></h:panelGroup>

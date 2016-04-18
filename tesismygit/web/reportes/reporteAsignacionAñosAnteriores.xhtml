@@ -17,56 +17,61 @@
     <h:body>
         <ui:composition template="./../plantilla.xhtml">
             <ui:define name="content">
-                <h:form id="frmReporteMatriculas" styleClass="form-principal">
+                <h:form id="frmReporteMatriculas" styleClass="form-principal" target="_blank">
                     <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
-                    <h3>Reporte asignacion academica</h3>
+                    <h3>Reporte asignación académica</h3>
                     <f:metadata>
                         <f:event type="preRenderView" listener="#{mbvReporteAsignacionAnteriores.initRender}" />
                     </f:metadata>
                     <h:panelGroup rendered="#{mbvReporteAsignacionAnteriores.consultar}">
-                        <p:outputPanel rendered="#{mbvReporteAsignacionAnteriores.mostrarPrincipal}">
+                        <p:outputPanel rendered="#{mbvReporteAsignacionAnteriores.mostrarPrincipal}" style="width: 90%">
 
-                            <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
-                                <p:outputLabel for="selectanlectivo" value="Año Escolar: " />
-                                <p:selectOneMenu id="selectanlectivo" value="#{mbvReporteAsignacionAnteriores.anlectivoSelected.anlectivoId}">
+                            <h:panelGroup>
+                                <div style="margin-top: 15px">    
+                                    <p:outputLabel for="selectanlectivo" value="Año Escolar: " styleClass="form-titulos" />
+                                </div>    
+                                <p:selectOneMenu id="selectanlectivo" value="#{mbvReporteAsignacionAnteriores.anlectivoSelected.anlectivoId}" styleClass="form-select">
                                     <p:ajax listener="#{mbvReporteAsignacionAnteriores.cargarAño}" update="frmReporteMatriculas"/>
                                     <f:selectItem itemLabel="Seleccione."/>
                                     <f:selectItems value="#{mbvReporteAsignacionAnteriores.anlectivos}" var="anlectivo" itemLabel="#{anlectivo.anio}" itemValue="#{anlectivo.anlectivoId}"/>
                                 </p:selectOneMenu>
-                            </h:panelGrid>
+                            </h:panelGroup>
 
                             <h:panelGroup rendered="#{mbvReporteAsignacionAnteriores.mostrarPeriodos}">
-                                <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
-                                    <p:outputLabel for="selectPeriodo" value="Periodos: " />
-                                    <p:selectOneMenu id="selectPeriodo" value="#{mbvReporteAsignacionAnteriores.periodoSelected.periodoId}">
-                                        <p:ajax listener="#{mbvReporteAsignacionAnteriores.cargarPeriodo}" update="frmReporteMatriculas"/>
-                                        <f:selectItem itemLabel="Seleccione."/>
-                                        <f:selectItems value="#{mbvReporteAsignacionAnteriores.periodos}" var="periodo" itemLabel="#{periodo.numero}" itemValue="#{periodo.periodoId}"/>
-                                    </p:selectOneMenu>
-                                </h:panelGrid>
+                                <div style="margin-top: 15px">    
+                                    <p:outputLabel for="selectPeriodo" value="Periodo: " styleClass="form-titulos" />
+                                </div>    
+                                <p:selectOneMenu id="selectPeriodo" value="#{mbvReporteAsignacionAnteriores.periodoSelected.periodoId}" styleClass="form-select">
+                                    <p:ajax listener="#{mbvReporteAsignacionAnteriores.cargarPeriodo}" update="frmReporteMatriculas"/>
+                                    <f:selectItem itemLabel="Seleccione."/>
+                                    <f:selectItems value="#{mbvReporteAsignacionAnteriores.periodos}" var="periodo" itemLabel="#{periodo.numero}" itemValue="#{periodo.periodoId}"/>
+                                </p:selectOneMenu>
                             </h:panelGroup>
 
                             <p:outputPanel  rendered="#{mbvReporteAsignacionAnteriores.mostrarOpciones}">
-                                <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
-                                    <p:outputLabel for="options" value="Tipo de reporte:"/>
+                                <div style="margin-top: 15px">   
+                                    <p:outputLabel for="options" value="Tipo de reporte" styleClass="form-titulos"/>
+                                </div>
+                                <div class="form-select">
                                     <p:selectOneRadio id="options" value="#{mbvReporteAsignacionAnteriores.seleccion}">
                                         <p:ajax listener="#{mbvReporteAsignacionAnteriores.cargarCurso}" update="frmReporteMatriculas"/>
                                         <f:selectItem itemLabel="Todos" itemValue="todos" />
                                         <f:selectItem itemLabel="Por curso" itemValue="curso" />
                                     </p:selectOneRadio>
-                                </h:panelGrid>
+                                </div>
                             </p:outputPanel>
+
                             <p:outputPanel rendered="#{mbvReporteAsignacionAnteriores.mostrarCursos}">
-                                <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
-                                    <p:outputLabel for="selectCourse" value="Curso: " />
-                                    <p:selectOneMenu id="selectCourse" value="#{mbvReporteAsignacionAnteriores.cursoSelected.cursoId}">
-                                        <p:ajax listener="#{mbvReporteAsignacionAnteriores.seleccionCurso}" update="frmReporteMatriculas"/>
-                                        <f:selectItem itemLabel="Seleccione."/>
-                                        <f:selectItems value="#{mbvReporteAsignacionAnteriores.cursos}" var="curso" itemLabel="ciclo #{curso.cicloId.numero} - #{curso.nombre} " itemValue="#{curso.cursoId}"/>
-                                    </p:selectOneMenu>
-                                </h:panelGrid>
+                                <div style="margin-top: 15px">    
+                                    <p:outputLabel for="selectCourse" value="Curso: " styleClass="form-titulos" />
+                                </div>    
+                                <p:selectOneMenu id="selectCourse" value="#{mbvReporteAsignacionAnteriores.cursoSelected.cursoId}" styleClass="form-select">
+                                    <p:ajax listener="#{mbvReporteAsignacionAnteriores.seleccionCurso}" update="frmReporteMatriculas"/>
+                                    <f:selectItem itemLabel="Seleccione."/>
+                                    <f:selectItems value="#{mbvReporteAsignacionAnteriores.cursos}" var="curso" itemLabel="ciclo #{curso.cicloId.numero} - #{curso.nombre} " itemValue="#{curso.cursoId}"/>
+                                </p:selectOneMenu>
                             </p:outputPanel>
-                            <p:outputPanel id="panelReporteMatriculas" rendered="#{mbvReporteAsignacionAnteriores.mostrarBoton}">
+                            <p:outputPanel id="panelReporteMatriculas" style="margin-top: 15px;text-align: center" rendered="#{mbvReporteAsignacionAnteriores.mostrarBoton}">
                                 <p:commandButton ajax="false" value="Generar Reporte" actionListener="#{mbvReporteAsignacionAnteriores.pdf}"/>
                             </p:outputPanel> 
                         </p:outputPanel>

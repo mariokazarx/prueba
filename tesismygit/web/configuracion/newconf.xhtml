@@ -21,23 +21,23 @@
                         <f:validator validatorId="validatorVacio"/>
                     </p:inputText>
                     <p:message for="txtNombre"/>
-                    <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
+                    <p:outputLabel for="txtDescripcion" value="Descripción: " />
                     <p:inputTextarea id="txtDescripcion" value="#{mbvConfiguracion.configuracion.descripcion}" autoResize="false" rows="5"/>
                     <p:message for="txtDescripcion"/>
-                    <p:outputLabel for="sltCriterio" value="Criterio Evaluacion:" />
+                    <p:outputLabel for="sltCriterio" value="Criterio evaluación:" />
                     <p:selectOneMenu id="sltCriterio" value="#{mbvConfiguracion.criterioevaluacionselected.criterioevaluacionId}" required="true" requiredMessage="Seleccione un Criterio de evaluacion">
                         <f:selectItem itemLabel="Seleccione."/>
                         <f:selectItems value="#{mbvConfiguracion.criterios}" var="criterio" itemLabel="#{criterio.nombre}" itemValue="#{criterio.criterioevaluacionId}"/>
                     </p:selectOneMenu>
                     <p:message for="sltCriterio"/>
-                    <p:outputLabel for="sltEscala" value="Escala Evaluacion" />
-                    <p:selectOneMenu id="sltEscala" value="#{mbvConfiguracion.escalaselected.escalaId}" required="true" requiredMessage="seleccione una escala de evaluacion">
+                    <p:outputLabel for="sltEscala" value="Escala evaluación" />
+                    <p:selectOneMenu id="sltEscala" value="#{mbvConfiguracion.escalaselected.escalaId}" required="true" requiredMessage="seleccione una escala de evaluación">
                         <f:selectItem itemLabel="Seleccione."/>
                         <f:selectItems value="#{mbvConfiguracion.escalas}" var="escala" itemLabel="#{escala.nombre}" itemValue="#{escala.escalaId}"/>
                     </p:selectOneMenu>
                     <p:message for="sltEscala"/>                
                     <h:panelGroup></h:panelGroup>
-                    <p:commandButton value="Registrar Configuracion" actionListener="#{mbvConfiguracion.insertar}" ajax="true" update="frmconf" />
+                    <p:commandButton value="Registrar configuración" actionListener="#{mbvConfiguracion.insertar}" ajax="true" update="frmconf" />
                 </h:panelGrid> 
             </h:panelGroup>
         </h:form>
