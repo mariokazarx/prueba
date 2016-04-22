@@ -20,18 +20,18 @@
                                 <p:ajax event="dialogReturn" listener="#{mbvCiclo.closeDialog}" update="frmListaCiclos" />
                             </p:commandButton>
                         </p:outputPanel>
-                        <p:dataTable id="tablaListaCiclos" reflow="true" var="item" tableStyle="width:auto" value="#{mbvCiclo.ciclos}" paginator="true" rows="10" selection="#{mbvCiclo.ciclo}" selectionMode="single" lazy="true" rowKey="#{item.cicloId}" >
+                        <p:dataTable id="tablaListaCiclos" widgetVar="tableCiclos" reflow="true" var="item" tableStyle="width:auto" value="#{mbvCiclo.ciclos}" paginator="true" rows="10" selection="#{mbvCiclo.ciclo}" selectionMode="single" rowKey="#{item.cicloId}" >
                             <p:ajax event="rowSelect" update=":frmListaCiclos:panelDetalleCiclo" oncomplete="PF('dialogoDetalleCiclo').show()"/>
                             <f:facet name="header">
                                 Lista de Ciclos
                             </f:facet>
-                            <p:column headerText="Numero"  filterBy="numero">
+                            <p:column headerText="Numero" filterBy="#{item.numero}" filterMatchMode="contains" sortBy="#{item.numero}">
                                 <h:outputText value="#{item.numero}"/>
                             </p:column>
                             <p:column headerText="Descripción" filterBy="descripcion">
                                 <h:outputText value="#{item.descripcion}"/>
                             </p:column>
-                            <p:column headerText="Configuración" filterBy="max">
+                            <p:column headerText="Configuración" filterBy="#{item.configuracion.nombre}" filterMatchMode="contains" sortBy="#{item.configuracion.nombre}">
                                 <h:outputText value="#{item.configuracion.nombre}"/>
                             </p:column>
                             <p:column>
@@ -84,10 +84,10 @@
                                 <p:outputLabel for="txtNumero" value="Numero: " />
                                 <p:inputText id="txtNumero" value="#{mbvCiclo.ciclo.numero}" />
                                 <p:message for="txtNumero"/>
-                                <p:outputLabel for="txtDescripción" value="Descrpcion: " />
+                                <p:outputLabel for="txtDescripcion" value="Descrpcion: " />
                                 <p:inputTextarea id="txtDescripcion" value="#{mbvCiclo.ciclo.descripcion}" autoResize="false" rows="5" cols="22" />
                                 <p:message for="txtDescripcion"/>
-                                <p:outputLabel for="stlConfiguración" value="Configuracion: " />
+                                <p:outputLabel for="stlConfiguracion" value="Configuracion: " />
                                 <p:selectOneMenu id="stlConfiguracion" value="#{mbvCiclo.confuguracionselected.configuracionId}">
                                     <f:selectItems value="#{mbvCiclo.configuraciones}" var="configuracion" itemLabel="#{configuracion.nombre}" itemValue="#{configuracion.configuracionId}"/>
                                 </p:selectOneMenu>

@@ -227,7 +227,7 @@ public class mbvArea implements Serializable{
                 area.setConfiguracionId(confselected);
                 areaEJB.edit(area);
                 FacesContext.getCurrentInstance().
-                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Área creada satisfactoriamente"));
+                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Área editada satisfactoriamente"));
                 RequestContext.getCurrentInstance().execute("PF('dialogoEditarEscala').hide()");
                 inicioPagina();
             }

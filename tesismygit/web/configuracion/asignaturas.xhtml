@@ -31,10 +31,10 @@
                             <p:column headerText="Descripción" filterBy="descripcion">
                                 <h:outputText value="#{item.descripcion}"/>
                             </p:column>
-                            <p:column headerText="Área" filterBy="max" >
+                            <p:column headerText="Área" filterBy="#{item.areaId.nombre}" filterMatchMode="contains" sortBy="#{item.areaId.nombre}" >
                                 <h:outputText value="#{item.areaId.nombre}"/>
                             </p:column>
-                            <p:column headerText="Configuración" filterBy="max">
+                            <p:column headerText="Configuración" filterBy="#{item.configuracionId.nombre}" filterMatchMode="contains" sortBy="#{item.configuracionId.nombre}">
                                 <h:outputText value="#{item.configuracionId.nombre}"/>
                             </p:column>
                             <p:column>

@@ -197,6 +197,7 @@ public class mbvCiclo implements Serializable{
         }
     }
     public void closeDialog() {
+        RequestContext.getCurrentInstance().execute("PF('tableCiclos').clearFilters()");
         inicioPagina();
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Ciclo registrado"); 
         FacesContext.getCurrentInstance().addMessage(null, message);
@@ -230,6 +231,7 @@ public class mbvCiclo implements Serializable{
                 cicloEjb.edit(ciclo);
                 FacesContext.getCurrentInstance().
                             addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Ciclo Editado"));
+                RequestContext.getCurrentInstance().execute("PF('tableCiclos').clearFilters()");
                 RequestContext.getCurrentInstance().execute("PF('dialogoEditarCiclo').hide()");
                 inicioPagina();
             }
@@ -315,6 +317,7 @@ public class mbvCiclo implements Serializable{
                     FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia","este ciclo esta en uso"));
                 }
+                RequestContext.getCurrentInstance().execute("PF('tableCiclos').clearFilters()");
                 inicioPagina();
             }
             else{
