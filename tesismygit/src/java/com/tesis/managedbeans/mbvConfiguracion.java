@@ -295,7 +295,7 @@ public class mbvConfiguracion implements Serializable {
                 this.configuracion.setEscalaId(escalaselected);
                 this.configuracionEjb.edit(this.configuracion);
                 FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Configuración creada satisfactoriamente"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Configuración editada satisfactoriamente"));
                 RequestContext.getCurrentInstance().execute("PF('dialogoEditarEscala').hide()");
                 inicioPagina();
             }
