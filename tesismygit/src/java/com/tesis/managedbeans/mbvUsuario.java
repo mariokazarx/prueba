@@ -328,7 +328,7 @@ public class mbvUsuario implements Serializable {
                     tx.commit();
                     //closeDialog();
                     FacesContext.getCurrentInstance().
-                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Usiario editado"));
+                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Usuario editado"));
                     //tx.rollback();    
                     RequestContext.getCurrentInstance().execute("PF('dialogoEditarUsuario').hide()");
                     inicioPagina();
@@ -593,6 +593,8 @@ public class mbvUsuario implements Serializable {
 
     public void eliminarUsuario(Usuario usuario) {
         try {
+            
+            
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));

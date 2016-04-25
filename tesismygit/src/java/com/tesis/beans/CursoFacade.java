@@ -55,6 +55,19 @@ public class CursoFacade extends AbstractFacade<Curso> {
             return null;
         }
     }
+    public List<Curso> getCursosByCiclo(Ciclo ciclo){
+        try {
+            Query cq = em.createNamedQuery("Curso.findByCiclo");
+            cq.setParameter("ciclo",ciclo);
+            if(cq.getResultList()==null){
+                return null;
+            }else{
+                return cq.getResultList();
+            }
+        } catch (Exception e) {
+            return null;
+        }
+    }
     public boolean removeById(Curso curso) {
         try {
             Query cq = em.createNamedQuery("Curso.removeById");

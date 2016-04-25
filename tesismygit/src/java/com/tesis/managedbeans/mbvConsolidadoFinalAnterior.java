@@ -52,7 +52,10 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -186,6 +189,13 @@ public class mbvConsolidadoFinalAnterior {
                     cell3.setBorder(Rectangle.NO_BORDER);
                     table2.addCell(cell3);
                     document.add(table2);
+                    
+                    document.add(new Paragraph(10,"Reporte consolidado cierre de año "+anlectivoSelected.getAnio()));
+                    DateFormat formatter = new SimpleDateFormat("dd/MM/yy '-' hh:mm:ss:");
+                    Date currentDate = new Date();
+                    String date = formatter.format(currentDate);
+                    document.add(new Paragraph("Fecha de generación: " + date));
+                    document.add(new Paragraph("\n"));
 
                     Ciclo cicloaux = cicloEjb.find(cur.getCicloId().getCicloId());
                     List<Asignatura> asignaturasAux = new ArrayList<Asignatura>();
@@ -328,6 +338,61 @@ public class mbvConsolidadoFinalAnterior {
                         }
                     }
                     document.add(tablaContenido);
+                    //---firmas
+                    document.add(new Paragraph("\n \n"));
+                    PdfPTable tableFirmas = new PdfPTable(2);
+                    tableFirmas.setWidthPercentage(80);
+                    tableFirmas.setWidths(new int[]{2, 2});
+
+                    PdfPCell cellNombre = new PdfPCell();
+                    Paragraph parNombre = new Paragraph(10, "Lic. YOLANDA SANCHEZ C.", FontFactory.getFont("arial", 12, Font.NORMAL));
+                    parNombre.setAlignment(Element.ALIGN_CENTER);
+                    cellNombre.addElement(parNombre);
+                    cellNombre.setVerticalAlignment(Element.ALIGN_CENTER);
+                    cellNombre.setBorder(Rectangle.NO_BORDER);
+                    tableFirmas.addCell(cellNombre);
+
+                    PdfPCell cellNombre2 = new PdfPCell();
+                    Paragraph parNombre2 = new Paragraph(10, "Mag. HERNANDO BARAHONA D.", FontFactory.getFont("arial", 12, Font.NORMAL));
+                    parNombre2.setAlignment(Element.ALIGN_CENTER);
+                    cellNombre2.addElement(parNombre2);
+                    cellNombre2.setVerticalAlignment(Element.ALIGN_CENTER);
+                    cellNombre2.setBorder(Rectangle.NO_BORDER);
+                    tableFirmas.addCell(cellNombre2);
+
+                    PdfPCell cellCargo = new PdfPCell();
+                    Paragraph parCargo = new Paragraph(10, "Rectora", FontFactory.getFont("arial", 12, Font.NORMAL));
+                    parCargo.setAlignment(Element.ALIGN_CENTER);
+                    cellCargo.addElement(parCargo);
+                    cellCargo.setVerticalAlignment(Element.ALIGN_CENTER);
+                    cellCargo.setBorder(Rectangle.NO_BORDER);
+                    tableFirmas.addCell(cellCargo);
+
+                    PdfPCell cellCargo2 = new PdfPCell();
+                    Paragraph parCargo2 = new Paragraph(10, "Secretario Académico", FontFactory.getFont("arial", 12, Font.NORMAL));
+                    parCargo2.setAlignment(Element.ALIGN_CENTER);
+                    cellCargo2.addElement(parCargo2);
+                    cellCargo2.setVerticalAlignment(Element.ALIGN_CENTER);
+                    cellCargo2.setBorder(Rectangle.NO_BORDER);
+                    tableFirmas.addCell(cellCargo2);
+
+                    PdfPCell cellDocumento = new PdfPCell();
+                    Paragraph parDocumento = new Paragraph(10, "C.C. No. 30.715.393 de Pasto", FontFactory.getFont("arial", 12, Font.NORMAL));
+                    parDocumento.setAlignment(Element.ALIGN_CENTER);
+                    cellDocumento.addElement(parDocumento);
+                    cellDocumento.setVerticalAlignment(Element.ALIGN_CENTER);
+                    cellDocumento.setBorder(Rectangle.NO_BORDER);
+                    tableFirmas.addCell(cellDocumento);
+
+                    PdfPCell cellDocumento2 = new PdfPCell();
+                    Paragraph parDocumento2 = new Paragraph(10, "C.C. No. 6.744.418 de Tunja", FontFactory.getFont("arial", 12, Font.NORMAL));
+                    parDocumento2.setAlignment(Element.ALIGN_CENTER);
+                    cellDocumento2.addElement(parDocumento2);
+                    cellDocumento2.setVerticalAlignment(Element.ALIGN_CENTER);
+                    cellDocumento2.setBorder(Rectangle.NO_BORDER);
+                    tableFirmas.addCell(cellDocumento2);
+
+                    document.add(tableFirmas);
                     document.newPage();
                 }
             } catch (Exception e) {

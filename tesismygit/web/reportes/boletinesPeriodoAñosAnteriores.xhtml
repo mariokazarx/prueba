@@ -17,14 +17,14 @@
     <h:body>
         <ui:composition template="./../plantilla.xhtml">
             <ui:define name="content">
-                <h:form id="frmReporteMatriculas" styleClass="container-form">
+                <h:form id="frmReporteMatriculas" styleClass="form-principal"  target="_blank">
+                    <h3>Boletines años escolares anteriores</h3>
                     <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
                     <f:metadata>
                         <f:event type="preRenderView" listener="#{mbvBoletinesAnteriores.initRender}" />
                     </f:metadata>
                     <h:panelGroup rendered="#{mbvBoletinesAnteriores.consultar}">
-                        <p:outputPanel rendered="#{mbvBoletinesAnteriores.mostrarPrincipal}">
-                            <h3>Titulo</h3>
+                        <p:outputPanel rendered="#{mbvBoletinesAnteriores.mostrarPrincipal}"  style="width: 90%">
                             <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5" styleClass="cont-control">
                                 <p:outputLabel for="selectanlectivo" value="Año Escolar: " styleClass="control-label"/>
                                 <p:selectOneMenu id="selectanlectivo" value="#{mbvBoletinesAnteriores.anlectivoSelected.anlectivoId}" styleClass="control">

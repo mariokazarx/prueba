@@ -80,7 +80,7 @@ public class mbvMatricula implements Serializable {
     private CursoFacade CursoEjb;
     @EJB
     private UsuarioRoleFacade usrRoleEjb;
-    
+
     public mbvMatricula() {
     }
 
@@ -139,7 +139,7 @@ public class mbvMatricula implements Serializable {
     public void setEstMatriculados(List<Estudiante> estMatriculados) {
         this.estMatriculados = estMatriculados;
     }
-    
+
     public boolean isContenidoMatricular() {
         return contenidoMatricular;
     }
@@ -156,8 +156,6 @@ public class mbvMatricula implements Serializable {
         this.contenidoCancelar = contenidoCancelar;
     }
 
-    
-    
     public String getMensajeCancelar() {
         return mensajeCancelar;
     }
@@ -166,8 +164,6 @@ public class mbvMatricula implements Serializable {
         this.mensajeCancelar = mensajeCancelar;
     }
 
-    
-    
     public boolean isContenido() {
         return contenido;
     }
@@ -180,11 +176,9 @@ public class mbvMatricula implements Serializable {
         return mensaje;
     }
 
-    public void setMensaje(String mensaje) {  
+    public void setMensaje(String mensaje) {
         this.mensaje = mensaje;
     }
-
-   
 
     public String getTxtmensaje() {
         return txtmensaje;
@@ -240,7 +234,7 @@ public class mbvMatricula implements Serializable {
         this.cursoSelected = new Curso();
         this.matricula = new Matricula();
         this.cursos = new ArrayList<Curso>();
-        this.estMatriculados = new ArrayList<Estudiante>(); 
+        this.estMatriculados = new ArrayList<Estudiante>();
         this.contenidoSuspender = false;
         contenidoActivar = false;
         //mbvEstudiante estudiante = (mbvEstudiante) FacesContext.getCurrentInstance().getViewRoot().getViewMap().get("mbvEstudiante");
@@ -248,62 +242,63 @@ public class mbvMatricula implements Serializable {
                 .getExternalContext()
                 .getFlash()
                 .get("param1");
-        
-        estudiantes= estudianteEJb.findAll();
-        this.consultar=false;
-        this.editar=false;
-        this.eliminar=false;
-        this.crear=false;
+
+        estudiantes = estudianteEJb.findAll();
+        this.consultar = false;
+        this.editar = false;
+        this.eliminar = false;
+        this.crear = false;
         try {
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
-             usr = mbslogin.getUsuario();
-             this.login = mbslogin.isLogin();
-            System.out.println("usuario"+usr.getNombres()+"Login"+login);
+            usr = mbslogin.getUsuario();
+            this.login = mbslogin.isLogin();
+            System.out.println("usuario" + usr.getNombres() + "Login" + login);
         } catch (Exception e) {
             System.out.println(e.toString());
             this.login = false;
         }
-        if(this.usr!=null){
-            for(UsuarioRole usrRol:usrRoleEjb.getByUser(usr)){
-                if(usrRol.getRoleId().getRecursoId().getRecursoId()==9){
-                    if(usrRol.getRoleId().getAgregar()){
-                        this.crear=true;
+        if (this.usr != null) {
+            for (UsuarioRole usrRol : usrRoleEjb.getByUser(usr)) {
+                if (usrRol.getRoleId().getRecursoId().getRecursoId() == 9) {
+                    if (usrRol.getRoleId().getAgregar()) {
+                        this.crear = true;
                     }
-                    if(usrRol.getRoleId().getConsultar()){
-                        this.consultar=true;
+                    if (usrRol.getRoleId().getConsultar()) {
+                        this.consultar = true;
                     }
-                    if(usrRol.getRoleId().getEditar()){
-                        this.editar=true;
+                    if (usrRol.getRoleId().getEditar()) {
+                        this.editar = true;
                     }
-                    if(usrRol.getRoleId().getEliminar()){
-                        this.eliminar=true;
+                    if (usrRol.getRoleId().getEliminar()) {
+                        this.eliminar = true;
                     }
                 }
             }
         }
-        if(this.usr.getTipoUsuarioId().getTipoUsuarioId()==4){
-            this.consultar=true;
-            this.editar=true;
-            this.eliminar=true;
-            this.crear=true;
+        if (this.usr.getTipoUsuarioId().getTipoUsuarioId() == 4) {
+            this.consultar = true;
+            this.editar = true;
+            this.eliminar = true;
+            this.crear = true;
         }
         cargarDatos(aux);
     }
 
     public void cargarCursos() {
         try {
-            this.contenido=true;
+            this.contenido = true;
             this.mensaje = "";
             this.cicloEstudiante = cicloEjb.getCicloByNum(this.estudiante.getUltimoaprobado());
             this.cursos = new ArrayList<Curso>();
-            this.cursos = this.cicloEstudiante.getCursoList();
+            this.cursos = this.CursoEjb.getCursosByCiclo(cicloEstudiante);
             System.out.println("ciclo" + this.cicloEstudiante + "cursos" + this.cicloEstudiante.getNumero());
         } catch (Exception e) {
-            this.contenido=false;
+            this.contenido = false;
             this.mensaje = "";
         }
-        
+
     }
+
     public List<Estudiante> completeEstudiante(String query) {
 
         List<Estudiante> allThemes = estudianteEJb.findAll();
@@ -318,116 +313,116 @@ public class mbvMatricula implements Serializable {
 
         return filteredThemes;
     }
-    private void cargarDatos(Estudiante aux){
+
+    private void cargarDatos(Estudiante aux) {
         if (aux != null) {
-            if(!this.editar){
+            if (!this.editar) {
                 FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
             this.mostrarPrincipal = true;
             this.estudiante = estudianteEJb.find(aux.getEstudianteId());
-            System.out.println("QQQQQ1" + this.estudiante + "EEE1" + estudiante.getNombre()+"estado"+estudiante.getEstadoEstudianteId());
-            if(estudiante.getEstadoEstudianteId().getEstadoEstudianteId()==1){
+            System.out.println("QQQQQ1" + this.estudiante + "EEE1" + estudiante.getNombre() + "estado" + estudiante.getEstadoEstudianteId());
+            if (estudiante.getEstadoEstudianteId().getEstadoEstudianteId() == 1) {
                 Anlectivo auxEscolar = aEscolarEjb.getIniciado();
-                if(auxEscolar!=null){
+                if (auxEscolar != null) {
                     //existe año iniciado
                     boolean bandera = false;
-                    for(Ciclo ciclo:auxEscolar.getConfiguracionId().getCicloList()){
-                        System.out.println("CICLO"+ciclo.getNumero());
-                        if(ciclo.getNumero()==estudiante.getUltimoaprobado()){
-                            bandera=true;
+                    for (Ciclo ciclo : auxEscolar.getConfiguracionId().getCicloList()) {
+                        System.out.println("CICLO" + ciclo.getNumero());
+                        if (ciclo.getNumero() == estudiante.getUltimoaprobado()) {
+                            bandera = true;
                             break;
                         }
                     }
-                    if(!bandera){
+                    if (!bandera) {
                         FacesContext.getCurrentInstance().
-                                addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Actualmente no se ofrece el ciclo para este estudiante")); 
+                                addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Actualmente no se ofrece el ciclo para este estudiante"));
                         System.out.println("No se ofrece el ciclo");
-                    }
-                    else{
-                        boolean banderaCursos=false;
+                    } else {
+                        boolean banderaCursos = false;
                         System.out.println("se ofrece el ciclo");
                         cursos.clear();
-                        for(Curso curAux:auxEscolar.getCursoList()){
-                            System.out.println("Curso"+curAux.getNombre()+"Ciclo"+curAux.getCicloId().getNumero());
-                            if(curAux.getCicloId().getNumero()==estudiante.getUltimoaprobado()){
+                        for (Curso curAux : auxEscolar.getCursoList()) {
+                            System.out.println("Curso" + curAux.getNombre() + "Ciclo" + curAux.getCicloId().getNumero());
+                            if (curAux.getCicloId().getNumero() == estudiante.getUltimoaprobado()) {
                                 banderaCursos = true;
                                 cursos.add(curAux);
                                 //break;
                             }
                         }
-                        if(cursos.isEmpty()){
+                        if (cursos.isEmpty()) {
                             FacesContext.getCurrentInstance().
-                                addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "No hay cursos registrados para el ciclo del estudiante")); 
+                                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "No hay cursos registrados para el ciclo del estudiante"));
                             System.out.println("No se ofrece curso");
-                        }else{
+                        } else {
                             System.out.println("se ofrece curso");
                             System.out.println("si año iniciado");
                             Matricula auxMatricula = matriculaEjb.getActivaByEstudiante(estudiante);
-                            if(auxMatricula!=null){
+                            if (auxMatricula != null) {
                                 //hay matricula activa 
-                                System.out.println("Curso"+auxMatricula.getCursoId().getAnlectivoId()+"año escolar"+auxEscolar.getAnlectivoId());
-                                if(auxMatricula.getCursoId().getAnlectivoId().getAnlectivoId()==auxEscolar.getAnlectivoId()){
+                                System.out.println("Curso" + auxMatricula.getCursoId().getAnlectivoId() + "año escolar" + auxEscolar.getAnlectivoId());
+                                if (auxMatricula.getCursoId().getAnlectivoId().getAnlectivoId() == auxEscolar.getAnlectivoId()) {
                                     //son matriculas del mismo año
                                     System.out.println("mismo año");
                                     Long cursosCount = CursoEjb.countCursosCiclo(auxEscolar, auxMatricula.getCursoId().getCicloId());
-                                    if(cursosCount>1){
-                                        contenidoCancelar=true;
-                                        contenidoMatricular=false;
+                                    if (cursosCount > 1) {
+                                        contenidoCancelar = true;
+                                        contenidoMatricular = false;
                                         contenidoCambiar = true;
                                         contenidoSuspender = true;
                                         contenidoActivar = false;
                                         matricula = auxMatricula;
-                                        mensajeCancelar="Detalle matricula";
+                                        mensajeCancelar = "Detalle matricula";
                                         cursos.remove(auxMatricula.getCursoId());
                                         estMatriculados.clear();
-                                        for(Matricula matriculasCurso : matriculaEjb.matriculasCurso(auxMatricula.getCursoId())){
+                                        for (Matricula matriculasCurso : matriculaEjb.matriculasCurso(auxMatricula.getCursoId())) {
                                             estMatriculados.add(matriculasCurso.getEstudianteId());
                                         }
-                                    }else{
-                                        contenidoCancelar=true;
-                                        contenidoMatricular=false;
+                                    } else {
+                                        matricula = auxMatricula;
+                                        contenidoCancelar = true;
+                                        contenidoMatricular = false;
                                         contenidoCambiar = false;
                                         contenidoSuspender = true;
                                         contenidoActivar = false;
                                     }
-                                    
-                                }
-                                else{
+
+                                } else {
                                     System.out.println("diferente año");
                                     // no son en el mismo año 
-                                    contenidoCancelar=true;
-                                    contenidoMatricular=false;
+                                    contenidoCancelar = true;
+                                    contenidoMatricular = false;
                                     contenidoSuspender = false;
                                     contenidoActivar = false;
                                     matricula = auxMatricula;
-                                    mensajeCancelar="El estudiante tiene una matricula activa en otro año debe cancelarla para realizar matricula al año actual";
+                                    mensajeCancelar = "El estudiante tiene una matricula activa en otro año debe cancelarla para realizar matricula al año actual";
                                 }
-                            }else{
+                            } else {
                                 //no esta matriculado
-                                Matricula suspendida = matriculaEjb.getSuspendidaByEstudiante(estudiante,auxEscolar);
+                                Matricula suspendida = matriculaEjb.getSuspendidaByEstudiante(estudiante, auxEscolar);
                                 matricula = suspendida;
-                                if(suspendida!=null){
+                                if (suspendida != null) {
                                     contenidoActivar = true;
                                     contenidoCambiar = false;
                                     contenidoCancelar = true;
                                     contenidoSuspender = false;
                                     contenidoMatricular = false;
-                                    
-                                }else{
+
+                                } else {
                                     System.out.println("No matriculado");
-                                    contenidoMatricular=true;
+                                    contenidoMatricular = true;
                                     contenidoCambiar = false;
-                                    contenidoCancelar=false;
+                                    contenidoCancelar = false;
                                     contenidoSuspender = false;
                                     contenidoActivar = false;
                                 }
-                                
+
                             }
                         }
                     }
-                    
-                    
+
+
                 }
                 //el estudiante esta activo
                 //comprobar si el ciclo se ofrece ese año
@@ -435,40 +430,40 @@ public class mbvMatricula implements Serializable {
                 //comprobar si hay un año activo o iniciado no terminado
                 //comprobar que el estudiante no tenga ninguna matrocula activa
                 // si tiene una matricula activa comprobar si es dle mismo año activo
-                
-            }else if(estudiante.getEstadoEstudianteId().getEstadoEstudianteId()==2){
+
+            } else if (estudiante.getEstadoEstudianteId().getEstadoEstudianteId() == 2) {
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Información", "El estudiante ya termino los estudios"));
-            }
-            else if(estudiante.getEstadoEstudianteId().getEstadoEstudianteId()==2){
+            } else if (estudiante.getEstadoEstudianteId().getEstadoEstudianteId() == 2) {
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "El estudiante se encuentra inactivo en el sistema"));
             }
             //cargarCursos();
         } else {
             this.mostrarPrincipal = false;
-            this.contenido=false;
+            this.contenido = false;
             contenidoActivar = false;
             this.mensaje = "";
             System.out.println("QQQQQ2" + this.estudiante);
-            System.out.println("OTRO"+this.estudiante);
+            System.out.println("OTRO" + this.estudiante);
             //this.estudiante = new Estudiante();
         }
     }
+
     public void buscar() {
         try {
             if (this.estudiante != null) {
-                System.out.println("aaaaww"+this.estudiante.getNombre());
+                System.out.println("aaaaww" + this.estudiante.getNombre());
                 //cursoSelected = cursoEjb.find(1);
-               // this.banderaSearch = true;
+                // this.banderaSearch = true;
                 this.cargarDatos(this.estudiante);
-                this.contenido=true;
+                this.contenido = true;
                 this.mensaje = "";
             } else {
                 //this.banderaSearch = false;
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Información", "no se encontro ningun estudiante"));
-                
+
                 this.contenido = false;
                 this.mensaje = "";
             }
@@ -481,15 +476,16 @@ public class mbvMatricula implements Serializable {
         }
 
     }
+
     public void matricularEstudiante() {
         try {
-            if(!login){
+            if (!login) {
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
-            if(this.editar){
+            if (this.editar) {
                 System.out.println("curso");
                 if (cursoSelected != null) {
                     cursoSelected = CursoEjb.find(cursoSelected.getCursoId());
@@ -504,148 +500,174 @@ public class mbvMatricula implements Serializable {
                     this.matricula.setEstudianteId(estudiante);
                     matriculaEjb.create(matricula);
                     this.contenidoMatricular = false;
-                    this.contenidoCambiar = true;
                     this.contenidoCancelar = true;
+                    this.contenidoSuspender = true;
+                    if (cursos.size() > 1) {
+                        this.contenidoCambiar = true;
+                    } else {
+                        this.contenidoCambiar = false;
+                    }
                     FacesContext.getCurrentInstance().
-                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Estudiante matriulado al ciclo "+cursoSelected.getCicloId().getNumero()+ " Curso "+cursoSelected.getNombre()));
+                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Estudiante matriulado al ciclo " + cursoSelected.getCicloId().getNumero() + " Curso " + cursoSelected.getNombre()));
 
                     //inicio();
                 }
-            }
-            else{
+            } else {
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("ooooOOOO"+e.toString());
+            System.out.println("ooooOOOO" + e.toString());
         }
 
 
     }
-    public void cancelarMatricula(){
-        if(!login){
-            System.out.println("Usuario NO logeado");
-            FacesContext.getCurrentInstance().
-                   addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
-            return;
-        }
-        if(this.editar){
-            EstadoMatricula esmatricula = new EstadoMatricula();
-            esmatricula = estadomatriculaEjB.find(2);
-            this.matricula.setEstadoMatriculaId(esmatricula);
-            matriculaEjb.edit(matricula);
-            contenidoMatricular=true;
-            contenidoCancelar=false;
-        }
-        else{
-            FacesContext.getCurrentInstance().
-                   addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
-        }
-    }
-    public void cambiarMatricularEstudiante(){
-        if(!login){
-            System.out.println("Usuario NO logeado");
-            FacesContext.getCurrentInstance().
-                   addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
-            return;
-        }
-        if(this.editar){
-            if(cursoSelected!=null){
-                this.matricula.setCursoId(cursoSelected);
-                matriculaEjb.edit(matricula);
-            }
-        }
-        else{
-            FacesContext.getCurrentInstance().
-                   addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
-        }
-    }
-    public void initRender(){
-        Anlectivo aEscolarAux = aEscolarEjb.getIniciado();
-        if(aEscolarAux==null){
-            FacesContext.getCurrentInstance().
-                addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Aun no ha iniciado el año escolar"));
-        }else{
-            if(!this.consultar){
+
+    public void cancelarMatricula() {
+        try {
+            if (!login) {
+                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                           addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para manejar matriculas"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
+                return;
+            }
+            if (this.editar) {
+                EstadoMatricula esmatricula = new EstadoMatricula();
+                esmatricula = estadomatriculaEjB.find(2);
+                this.matricula.setEstadoMatriculaId(esmatricula);
+                matriculaEjb.edit(matricula);
+                contenidoMatricular = true;
+                contenidoCancelar = false;
+                contenidoSuspender = false;
+                contenidoCambiar = false;
+                FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Matricula cancelada"));
+
+            } else {
+                FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+            }
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Error inesperado", "Contáctese con el administrador"));
+        }
+
+    }
+
+    public void cambiarMatricularEstudiante() {
+        try {
+            if (!login) {
+                System.out.println("Usuario NO logeado");
+                FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
+                return;
+            }
+            if (this.editar) {
+                if (cursoSelected != null) {
+                    this.cursoSelected = CursoEjb.find(this.cursoSelected.getCursoId());
+                    this.matricula.setCursoId(cursoSelected);
+                    matriculaEjb.edit(matricula);
+                    FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Estudiante cambiado de curso a: "+cursoSelected.getNombre()));
+                }
+            } else {
+                FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+            }
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Error inesperado", "Contáctese con el administrador"));
+        }
+
+    }
+
+    public void initRender() {
+        Anlectivo aEscolarAux = aEscolarEjb.getIniciado();
+        if (aEscolarAux == null) {
+            FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Aun no ha iniciado el año escolar"));
+        } else {
+            if (!this.consultar) {
+                FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para manejar matriculas"));
             }
         }
     }
-    public String getMatricula(Estudiante estAux){
-        System.out.println("AUX EST"+estAux);
+
+    public String getMatricula(Estudiante estAux) {
+        System.out.println("AUX EST" + estAux);
         Matricula auxMatricula = matriculaEjb.getActivaByEstudiante(estAux);
-        if(auxMatricula!=null){
+        if (auxMatricula != null) {
             return auxMatricula.getCursoId().getNombre();
-        }else{
+        } else {
             return "PENDIENTE";
         }
     }
-    public void suspenderMatricula(){
+
+    public void suspenderMatricula() {
         try {
-            if(!login){
+            if (!login) {
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
-            if(this.editar){
+            if (this.editar) {
                 EstadoMatricula esmatricula = new EstadoMatricula();
                 esmatricula = estadomatriculaEjB.find(3);
                 this.matricula.setEstadoMatriculaId(esmatricula);
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Matricula suspendida"));
                 matriculaEjb.edit(matricula);
-                contenidoMatricular=false;
-                contenidoCancelar=false;
+                contenidoMatricular = false;
+                contenidoCancelar = false;
                 contenidoCambiar = false;
                 contenidoActivar = true;
                 contenidoSuspender = false;
                 this.matriculaEjb.edit(matricula);
-            }
-            else{
+            } else {
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Error inesperado", "Contáctese con el administrador"));
-            
+
         }
-        
+
     }
-    public void activarMatricula(){
+
+    public void activarMatricula() {
         try {
-            if(!login){
+            if (!login) {
                 System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
-            if(this.editar){
+            if (this.editar) {
                 EstadoMatricula esmatricula = new EstadoMatricula();
                 esmatricula = estadomatriculaEjB.find(1);
                 this.matricula.setEstadoMatriculaId(esmatricula);
                 matriculaEjb.edit(matricula);
-                contenidoMatricular=false;
-                contenidoCancelar=true;
+                contenidoMatricular = false;
+                contenidoCancelar = true;
                 contenidoCambiar = false;
                 contenidoActivar = false;
                 contenidoSuspender = true;
                 this.matriculaEjb.edit(matricula);
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Matricula activada"));
-            }
-            else{
+            } else {
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Error inesperado", "Contáctese con el administrador"));
-            
+
         }
-        
+
     }
 }

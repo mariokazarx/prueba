@@ -484,7 +484,7 @@ public class mbvCargaAcademica implements Serializable {
                 }
                 tx.commit();
                 FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Asignacion academica", "Exitosa"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "La operación se realizó satisfactoriamente"));
                 cargarPickList();
                 this.contenidosProfesor = contenidoEjb.getByProfesorAño(profesor, aEscolarP);
             }
@@ -560,6 +560,9 @@ public class mbvCargaAcademica implements Serializable {
                      }
                      }*/
                 }
+            }else{
+                FacesContext.getCurrentInstance().
+                                addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Este profesor se encuentra inactivo en el sistema"));
             }
 
             //profesor debe estar activo 

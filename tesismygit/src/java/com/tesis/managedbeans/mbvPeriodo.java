@@ -337,11 +337,15 @@ public class mbvPeriodo implements Serializable {
                         return;
                     }
                     tx.begin();
-                    if (!contenidoEjb.removeByPeriodo(periodo)) {
-                        tx.rollback();
-                        return;
+                    if (contenidoEjb.tieneContenidoPeriodo(periodo)) {
+                        if (!contenidoEjb.removeByPeriodo(periodo)) {
+                            System.out.println("NO BORRO 1");
+                            tx.rollback();
+                            return;
+                        }
                     }
                     if (!periodoEjb.removeById(periodo)) {
+                        System.out.println("NO BORRO 2");
                         tx.rollback();
                         return;
                     }

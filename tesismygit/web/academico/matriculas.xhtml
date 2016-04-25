@@ -99,16 +99,16 @@
                                             <f:selectItem itemLabel="Seleccione."/>
                                             <f:selectItems value="#{mbvMatricula.cursos}" var="curso" itemLabel="ciclo #{curso.cicloId.numero} - #{curso.nombre} " itemValue="#{curso.cursoId}"/>
                                         </p:selectOneMenu>
-                                        <p:commandButton id="btnCambiar" value="Confirmar" update="frmMatricula" actionListener="#{mbvMatricula.cambiarMatricularEstudiante}"/>
+                                        <p:commandButton id="btnCambiar" value="Confirmar" ajax="true" update="frmMatricula" actionListener="#{mbvMatricula.cambiarMatricularEstudiante}"/>
                                     </h:panelGrid>
                                 </p:outputPanel>
 
                                 <p:outputPanel id="panelCancelar" rendered="#{mbvMatricula.contenidoCancelar}" styleClass="div-cont-matricula">
-                                    <p:commandButton id="btnCancelarMatricula" value="Cancelar matricula" actionListener="#{mbvMatricula.cancelarMatricula}" style="margin-top:5px" />
+                                    <p:commandButton id="btnCancelarMatricula" value="Cancelar matricula" ajax="true" update="frmMatricula" actionListener="#{mbvMatricula.cancelarMatricula}" style="margin-top:5px" />
                                 </p:outputPanel>
 
                                 <p:outputPanel id="panelSuspender" rendered="#{mbvMatricula.contenidoSuspender}" styleClass="div-cont-matricula">
-                                    <p:commandButton id="btnSuspenderMatricula" value="Suspender matricula" actionListener="#{mbvMatricula.suspenderMatricula}" style="margin-top:5px" />
+                                    <p:commandButton id="btnSuspenderMatricula" value="Suspender matricula" ajax="true" update="frmMatricula" actionListener="#{mbvMatricula.suspenderMatricula}" style="margin-top:5px" />
                                 </p:outputPanel>
 
                                 <p:outputPanel id="panelActivar" rendered="#{mbvMatricula.contenidoActivar}" styleClass="div-cont-matricula">

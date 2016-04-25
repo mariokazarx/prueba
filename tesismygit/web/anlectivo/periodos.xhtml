@@ -63,10 +63,10 @@
                             </p:column>
                         </p:dataTable>
                     </h:panelGroup>
-                    <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
-
-                    <p:dialog widgetVar="statusDialog" modal="true" appendTo="@(body)" draggable="false" closable="false" resizable="false" showHeader="false">
-                        <p:graphicImage library="imagenes" name="load.gif"/>
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" oncomplete="PF('statusDialog').hide()" />
+ 
+                    <p:dialog widgetVar="statusDialog" appendTo="@(body)" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage library="imagenes" name="load1.gif"/>
                     </p:dialog>
 
                 </h:form>

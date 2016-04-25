@@ -17,7 +17,7 @@
                     </f:metadata>
                     <p:growl id="mensajeGeneral" showDetail="true" sticky="false" />
                     <h:panelGroup rendered="#{mbvCurso.consultar}">
-                        <p:outputPanel styleClass="btn-new">|
+                        <p:outputPanel styleClass="btn-new">
                             <p:commandButton value="Nuevo curso" icon="ui-icon-document" ajax="true" update="frmListaCursos" actionListener="#{mbvCurso.newCurso}">
                                 <p:ajax event="dialogReturn" listener="#{mbvCurso.closeDialog}" update="frmListaCursos" />
                             </p:commandButton>
