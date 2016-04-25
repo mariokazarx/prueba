@@ -25,7 +25,7 @@
                         <p:dataTable id="tablaListaEscala" var="item" value="#{mbvcriterioevaluacion.criterioseval}" tableStyle="width:auto" reflow="true" paginator="true" rows="10" selection="#{mbvcriterioevaluacion.criterioeval}" selectionMode="single" rowKey="#{item.criterioevaluacionId}" >
                             <p:ajax event="rowSelect" update=":frmListaEscala:panelDetalleEscala" oncomplete="PF('dialogoDetalleEscala').show()"/>
                             <f:facet name="header">
-                                Criterios de valiacion
+                                Criterios de evaluación
                             </f:facet>
                             <p:column headerText="Nombre" filterBy="#{item.nombre}" filterMatchMode="contains" sortBy="#{item.nombre}">
                                 <h:outputText value="#{item.nombre}"/>
