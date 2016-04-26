@@ -91,3 +91,10 @@
     width: 15%;
     display: inline-flex;
 }
+.div-recuperar-contra{
+    border: thin solid #FFFFFF;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 5px;
+    text-align: center;
+}

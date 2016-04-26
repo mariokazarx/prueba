@@ -51,8 +51,8 @@
                 <div class="boton-login">     
                     <p:commandButton value="Ingresar" ajax="true" update="frmLogin" actionListener="#{mbsLogin.confirmar}"/>
                 </div>
-                <div>
-                    <p:commandLink id="ajax" >
+                <div class="div-recuperar-contra">
+                    <p:commandLink id="ajax" actionListener="#{mbsLogin.recuperar}" style="color: #6dc0cd">
                         <h:outputText value="¿Olvidastes tu contraseña?" />
                     </p:commandLink>
                 </div>

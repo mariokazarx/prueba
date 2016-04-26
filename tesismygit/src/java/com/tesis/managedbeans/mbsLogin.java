@@ -7,15 +7,19 @@ package com.tesis.managedbeans;
 import com.tesis.beans.ProfesorFacade;
 import com.tesis.beans.UsuarioFacade;
 import com.tesis.clases.Encrypt;
+import com.tesis.entity.Estudiante;
 import com.tesis.entity.Profesor;
 import com.tesis.entity.Usuario;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
 
@@ -194,5 +198,14 @@ public class mbsLogin implements Serializable {
     }
     public boolean login(){
         return false;
+    }
+    public void recuperar(){
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        try {
+            context.redirect("/tesismygit/faces/recuperarContrasenia.xhtml");
+            //return "matriculas.xhtml?faces-redirect=true";
+        } catch (IOException ex) {
+            Logger.getLogger(mbvEstudiante.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
