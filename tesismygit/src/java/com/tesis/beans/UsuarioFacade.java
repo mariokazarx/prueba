@@ -115,4 +115,26 @@ public class UsuarioFacade extends AbstractFacade<Usuario> {
             return null;
         }
     }
+    public boolean removeById(Integer usuarioId) {
+        try {
+            Query cq = em.createNamedQuery("Usuario.removeById");
+            cq.setParameter("usrid", usuarioId);
+            if(cq.executeUpdate()>0){
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        catch (PersistenceException e) {
+            e.printStackTrace();
+            return false;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        
+
+    }
 }

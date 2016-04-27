@@ -29,6 +29,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 import org.primefaces.context.RequestContext;
 
@@ -234,7 +235,7 @@ public class mbvUsuario implements Serializable {
             this.eliminar = true;
             this.crear = true;
             this.usuarios = this.usuarioEjb.findAll();
-        }else{
+        } else {
             this.usuarios = this.usuarioEjb.usersAdmin();
         }
         this.mostrarConsultar = false;
@@ -276,7 +277,7 @@ public class mbvUsuario implements Serializable {
                 }
                 if (cambiarContraseña) {
                     if (this.usuario.getContraseña().equals(this.txtRepiteContrasenia)) {
-                        usuario.setContraseña(Encrypt.sha512(this.usuario.getContraseña(),this.usuario.getCorreo()));
+                        usuario.setContraseña(Encrypt.sha512(this.usuario.getContraseña(), this.usuario.getCorreo()));
                     } else {
                         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", "Las contraseñas no coinciden"));
                         tx.rollback();
@@ -310,7 +311,7 @@ public class mbvUsuario implements Serializable {
                 // borrar usuario roles
                 tx.begin();
                 System.out.println("MIERDAAAA" + userroleEjb.getByUser(usuario));
-                if (rolesRecursos.size() > 0 || this.usuario.getTipoUsuarioId().getTipoUsuarioId()==4) {
+                if (rolesRecursos.size() > 0 || this.usuario.getTipoUsuarioId().getTipoUsuarioId() == 4) {
                     for (Role aux : rolesRecursos) {
                         System.out.println("role lllllll" + aux.getRecursoId());
                         roleEjb.create(aux);
@@ -392,7 +393,7 @@ public class mbvUsuario implements Serializable {
                     usuario.setTipoUsuarioId(tusu);
                     this.usuario.setFoto("default.jpg");
                     System.out.println("USUARIO BBBBBB MMMMM" + usuario.getUsuarioId());
-                    usuario.setContraseña(Encrypt.sha512(this.usuario.getContraseña(),this.usuario.getCorreo()));
+                    usuario.setContraseña(Encrypt.sha512(this.usuario.getContraseña(), this.usuario.getCorreo()));
                     System.out.println("USUARIO" + usuario.getIdentificacion());
                     usuarioEjb.create(this.usuario);
                     System.out.println("USUARIO" + usuario);
@@ -503,7 +504,7 @@ public class mbvUsuario implements Serializable {
     public void cargarPermiso() {
         System.out.println("Recurso selected" + recursoSelected.getRecursoId());
         if (recursoSelected.getRecursoId() != null) {
-            if (recursoSelected.getRecursoId() > 0 || recursoSelected.getRecursoId()<19) {
+            if (recursoSelected.getRecursoId() > 0 || recursoSelected.getRecursoId() < 19) {
                 if (recursoSelected.getRecursoId() == 16 || recursoSelected.getRecursoId() == 8 || recursoSelected.getRecursoId() == 9 || recursoSelected.getRecursoId() == 4) {
                     this.mostrarConsultar = true;
                     this.mostrarEditar = true;
@@ -557,9 +558,9 @@ public class mbvUsuario implements Serializable {
                 this.usuario = this.usuarioEjb.find(usuarioId);
                 this.rolesRecursos.clear();
                 this.estadoSelected = estUsuEjb.find(this.usuario.getEstadoUsuarioId().getEstadoUsuarioId());
-                if(this.usuario.getTipoUsuarioId().getTipoUsuarioId()==4){
+                if (this.usuario.getTipoUsuarioId().getTipoUsuarioId() == 4) {
                     this.usrRoot = true;
-                }else{
+                } else {
                     this.usrRoot = false;
                 }
                 //if(!usuario.getUsuarioRoleList().isEmpty()){
@@ -581,7 +582,7 @@ public class mbvUsuario implements Serializable {
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado","Contáctese con el administrador"));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
         }
     }
 
@@ -593,9 +594,37 @@ public class mbvUsuario implements Serializable {
 
     public void eliminarUsuario(Usuario usuario) {
         try {
+            List<UsuarioRole> auxUsrRoles = new ArrayList<UsuarioRole>(userroleEjb.getByUser(usuario));
+            tx.begin();
+            if (!userroleEjb.getByUser(usuario).isEmpty()) {
+                System.out.println("ERRORR GRAVE 13333" + usuario.getUsuarioRoleList() + "EL OTRO" + auxUsrRoles);
+                if (!userroleEjb.removeByUsuario(usuario)) {
+                    //tx.rollback();
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", "Las contraseñas no coinciden"));
+                    return;
+                }
+                usuario.getUsuarioRoleList().clear();
+                System.out.println("ERRORR GRAVE 13333" + userroleEjb.getByUser(usuario) + "EL O>TRO" + auxUsrRoles);
+                for (UsuarioRole usrRolAux : auxUsrRoles) {
+                    if (!roleEjb.removeById(usrRolAux.getRoleId().getRoleId())) {
+                        tx.rollback();
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", "Las contraseñas no coinciden"));
+                        return;
+                    }
+                }
+            }
+            if(usuarioEjb.removeById(usuario.getUsuarioId())){
+                tx.commit();
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Usuario eliminado"));
+                inicioPagina();
+            }else{
+                tx.rollback();
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", "Las contraseñas no coinciden"));
+            }
             
-            
+
         } catch (Exception e) {
+            e.printStackTrace();
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
         }
