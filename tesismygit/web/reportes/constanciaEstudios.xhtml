@@ -26,7 +26,7 @@
                     <h:panelGroup rendered="#{mbvConstanciaEstudios.consultar}">
                         <div class="div-buscar-p">
                             <div style="margin-right: 15px">
-                                 <p:outputLabel for="txtBusqueda" value="No identificacion: " />
+                                <p:outputLabel for="txtBusqueda" value="No identificacion: " />
                             </div>
                             <div>
                                 <p:inputText id="txtNombre" value="#{mbvConstanciaEstudios.identificacion}"  size="13" />
@@ -35,7 +35,7 @@
                                 <p:commandButton id="txtBusqueda" value="Buscar" ajax="true" actionListener="#{mbvConstanciaEstudios.buscar}" update="frmReporteFinal" />
                             </div>
                         </div>
-                        
+
                         <h:panelGroup style="margin-top: 15px" rendered="#{mbvConstanciaEstudios.mostrarBusqueda}">
                             <p:panelGrid columns="2" id="estudianteTable">
                                 <f:facet name="header">
@@ -57,10 +57,9 @@
                             </p:panelGrid>
                         </h:panelGroup>
                         <p:outputPanel id="panelReporteMatriculas" rendered="#{mbvConstanciaEstudios.mostrarGenerar}" style="margin-top: 15px;margin-bottom: 20px">
-                            <p:commandButton id="btnReporte" value="Generar constancia" ajax="false" icon="icon-report" actionListener="#{mbvConstanciaEstudios.imprimir}" style="margin-top:5px" />
+                            <p:commandButton id="btnReporte" value="Generar constancia" ajax="false" icon="icon-report" action= "#{mbvConstanciaEstudios.imprimirnue}" style="margin-top:5px" />
                         </p:outputPanel>    
-                            <p:commandButton value= "Download PDF" ajax="false" action= "#{mbvConstanciaEstudios.imprimirnue}" />
-                       
+
                     </h:panelGroup>
                 </h:form>        
             </ui:define>

@@ -143,13 +143,13 @@ public class mbvRecuperarContra implements Serializable {
                 message.addRecipient(Message.RecipientType.TO, new InternetAddress("mariokazarx@hotmail.com"));
                 message.setSubject("Recuperación Contraseña sistema SAMY");
                 message.setContent(message, "text/html");
-                message.setText("Texto" + code);
+                message.setText(this.textoCorreo(code), "utf-8", "html");
                 Transport t = session.getTransport("smtp");
                 t.connect((String) properties.get("mail.smtp.user"), "mfjkazar");
                 t.sendMessage(message, message.getAllRecipients());
                 t.close();
                 FacesContext.getCurrentInstance().
-                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Por favor revise su correo electrónico"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Por favor revise su correo electrónico"));
                 context.getExternalContext().redirect("restablecerContrasenia.xhtml");
             }
         } catch (MessagingException me) {
@@ -177,5 +177,22 @@ public class mbvRecuperarContra implements Serializable {
             }
         }
         return cadenaAleatoria;
+    }
+
+    private String textoCorreo(String codigo) {
+        String texto = "";
+        texto += "<div style='width: 600px;margin: 0 auto; font-family: Arial, Helvetica, sans-serif'>"
+                + "<center> <table style='width: 600px;' cellpadding='0' cellspacing='0'> <tr>"
+                + "<td style='border-right: 0px;border-bottom: 0px;'>"
+                + "<div style='background-color: gainsboro; text-align: center; height: 70px; line-height: 4;'>"
+                + "<span>CENTRO EDUCATIVO ANTONIO RICAURTE</span></div></td></tr><tr><td><div>"
+                + "Para restablecer tu contraseña ingresa el siguiente codigo: " + codigo + "<a href='http://localhost:8080/tesismygit/faces/restablecerContrasenia.xhtml'> Aqui</a>\n"
+                + "El codigo de seguridad es unico y valido por 15 minutos "
+                + "</div></td></tr><tr>	<td style='border-right: 0px;border-bottom: 0px;'>"
+                + "<div style='background-color: gainsboro; text-align: center; height: 70px; line-height: 4;'>"
+                + "<span>¡Educamos para la paz y el Progreso!</span>"
+                + "<span>Sede Escuela Bloque 3 - Ricaurte Nariño Celular: 3218300831 Emll cericaurte@hotmail.com</span>"
+                + "</div></td></tr></table></center></div>";
+        return texto;
     }
 }
