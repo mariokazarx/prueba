@@ -7,6 +7,7 @@ package com.tesis.managedbeans;
 import com.tesis.beans.ProfesorFacade;
 import com.tesis.clases.Encrypt;
 import com.tesis.entity.Profesor;
+import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -20,7 +21,8 @@ import javax.faces.context.FacesContext;
  */
 @ManagedBean
 @SessionScoped
-public class mbvPerfilProfesor {
+public class mbvPerfilProfesor implements Serializable{
+    private static final long serialVersionUID = 6762211022687548350L;
 
     private Profesor profesor;
     private boolean login;
@@ -64,9 +66,7 @@ public class mbvPerfilProfesor {
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
              profesor = mbslogin.getProfesor();
              login = mbslogin.isLogin();
-            System.out.println(mbslogin.getProfesor().getNombre());
         } catch (Exception e) {
-            System.out.println(e.toString());
             profesor = null;
         }
     }
@@ -78,7 +78,6 @@ public class mbvPerfilProfesor {
     public void actualizar() {
         try {
             if (!login) {
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
                 return;

@@ -25,13 +25,11 @@ public class ProfesorConverter implements Converter {
     
     @Override
     public Object getAsObject(FacesContext fc, UIComponent uic, String value) {
-        System.out.println("aaaa"+value);
         if(value != null && value.trim().length() > 0) {
             try {
                 //Profesor profesor = (mbvCargaAcademica) fc.getExternalContext().getApplicationMap().get("mbvCargaAcademica");
                 mbvCargaAcademica profesor = (mbvCargaAcademica) fc.getViewRoot().getViewMap().get("mbvCargaAcademica");
                 //Profesor profesor = this.profesorEjb.find(value);
-                System.out.println("aaaassssLL"+profesor.getProfesores());
                 List<Profesor> aux = profesor.getProfesores();
                 for(Profesor prof: aux){
                     if(prof.getCedula().equals(value)){
@@ -40,7 +38,6 @@ public class ProfesorConverter implements Converter {
                 }
                 return null;
             } catch(NumberFormatException e) {
-                System.out.println("ddddd"+e.toString());
                 throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Conversion Error", "Not a valid theme."));
             }
         }
@@ -51,7 +48,6 @@ public class ProfesorConverter implements Converter {
  
     @Override
     public String getAsString(FacesContext fc, UIComponent uic, Object object) {
-        System.out.println("bbb ESTE");
         if(object != null) {
             return String.valueOf(((Profesor) object).getCedula());
         }

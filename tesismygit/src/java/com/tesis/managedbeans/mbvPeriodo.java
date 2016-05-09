@@ -212,9 +212,10 @@ public class mbvPeriodo implements Serializable {
             this.anlectivos = this.anlectivoEjb.getEnUso();
             //this.periodo.setNumero(numero);
         }
-        Integer numero = this.periodoEjb.getMaxByAnio(this.anlectivoEjb.getIniciado());
-        System.out.println("NUMERO PERIODO" + numero);
-        this.periodo.setNumero(numero + 1);
+        if (this.anlectivoEjb.getIniciado() != null) {
+            Integer numero = this.periodoEjb.getMaxByAnio(this.anlectivoEjb.getIniciado());
+            this.periodo.setNumero(numero + 1);
+        }
         this.consultar = false;
         this.editar = false;
         this.eliminar = false;
@@ -223,9 +224,7 @@ public class mbvPeriodo implements Serializable {
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
             usr = mbslogin.getUsuario();
             this.login = mbslogin.isLogin();
-            System.out.println("usuario" + usr.getNombres() + "Login" + login);
         } catch (Exception e) {
-            System.out.println(e.toString());
             this.login = false;
         }
         if (this.usr != null) {
@@ -256,10 +255,8 @@ public class mbvPeriodo implements Serializable {
 
     public void cargarAnio() {
         try {
-            System.out.println("LLego Cargar");
             this.anlectivoselected = anlectivoEjb.find(this.anlectivoselected.getAnlectivoId());
             this.periodos = this.periodoEjb.getPeriodosByAnio(anlectivoselected);
-            System.out.println("LLego Cargar a:" + this.periodos.toString());
         } catch (Exception e) {
             this.periodos = null;
         }
@@ -269,14 +266,12 @@ public class mbvPeriodo implements Serializable {
     public void cargarPeriodo(Integer periodoId) {
         try {
             if (!login) {
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
             if (this.editar) {
                 if (!anlectivoselected.getTerminado()) {
-                    System.out.println("LLego Cargarasasa");
                     this.periodo = this.periodoEjb.find(periodoId);
                     this.estadoSelected = this.estadoEjb.find(this.periodo.getEstadoPeriodoId().getEstadoPeriodoId());
                     /*this.año = this.anlectivo.getAnio();
@@ -304,7 +299,6 @@ public class mbvPeriodo implements Serializable {
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
         } catch (Exception e) {
-            System.out.println("LLego Cargar" + e.toString());
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
         }
@@ -315,7 +309,6 @@ public class mbvPeriodo implements Serializable {
         // eliminar contenido y periodo
         try {
             if (!login) {
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
@@ -323,15 +316,12 @@ public class mbvPeriodo implements Serializable {
             if (this.eliminar) {
                 if (!anlectivoselected.getTerminado()) {
                     Anlectivo aEscolar = anlectivoEjb.getIniciado();
-                    System.out.println("Numero de periodos" + periodoEjb.getNumeroPeriodosAño(aEscolar) + "En uso" + contenidoEjb.tieneNotas(periodo));
                     if (periodoEjb.getNumeroPeriodosAño(aEscolar) <= 1) {
-                        System.out.println("ultimo no se puede");
                         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro", "No se puede eliminar todos los periodos");
                         FacesContext.getCurrentInstance().addMessage(null, message);
                         return;
                     }
                     if (contenidoEjb.tieneNotas(periodo)) {
-                        System.out.println("esta en uso");
                         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Periodo en uso");
                         FacesContext.getCurrentInstance().addMessage(null, message);
                         return;
@@ -339,18 +329,15 @@ public class mbvPeriodo implements Serializable {
                     tx.begin();
                     if (contenidoEjb.tieneContenidoPeriodo(periodo)) {
                         if (!contenidoEjb.removeByPeriodo(periodo)) {
-                            System.out.println("NO BORRO 1");
                             tx.rollback();
                             return;
                         }
                     }
                     if (!periodoEjb.removeById(periodo)) {
-                        System.out.println("NO BORRO 2");
                         tx.rollback();
                         return;
                     }
                     //si tiene contenido   
-                    System.out.println("Exito al eliminar");
                     this.periodos = this.periodoEjb.getPeriodosByAnio(anlectivoselected);
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Periodo eliminado");
                     FacesContext.getCurrentInstance().addMessage(null, message);
@@ -360,7 +347,6 @@ public class mbvPeriodo implements Serializable {
                             addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "el año escolar ya termino no se puede eliminar este periodo"));
                 }
             } else {
-                System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
@@ -372,7 +358,6 @@ public class mbvPeriodo implements Serializable {
     public void actualizar() {
         try {
             if (!login) {
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
@@ -395,7 +380,6 @@ public class mbvPeriodo implements Serializable {
                         List<Curso> cursosAux = cursoEjb.getCursosByAño(periodo.getAnlectivoId());
                         for (Curso cur : cursosAux) {
                             if (asignaturaCicloEjb.countAsignaturasCiclo(cur.getCicloId()) != contenidoEjb.countAsignaturasCursoPerido(cur, periodo)) {
-                                System.out.println("Falta completar la asignacion academica del curso" + cur.getNombre());
                                 FacesContext.getCurrentInstance().
                                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Falta completar la asignacion academica del curso" + cur.getNombre()));
                                 return;
@@ -407,7 +391,6 @@ public class mbvPeriodo implements Serializable {
                             Date auxMax = cal.getTime();
                             Date auxMin = new Date();
                             if (periodo.getFechacierre().after(auxMin) && periodo.getFechacierre().before(auxMax)) {
-                                System.out.println("Funciona Fecha Periodo");
                                 periodo.setEstadoPeriodoId(estadoSelected);
                                 periodoEjb.edit(periodo);
                                 FacesContext.getCurrentInstance().
@@ -425,13 +408,11 @@ public class mbvPeriodo implements Serializable {
                         } else {
                             FacesContext.getCurrentInstance().
                                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Actualmente ya se encuentra otro periodo en evaluación"));
-                            System.out.println("ESTA EN USO" + estadoSelected.getEstadoPeriodoId() + "  aa" + this.periodo.getEstadoPeriodoId().getEstadoPeriodoId());
                             return;
                         }
                     } else {
                         FacesContext.getCurrentInstance().
                                 addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Tiene asignaturas sin asignar profesor"));
-                        System.out.println("TIENE ADVERTECIA");
                         return;
                     }
 
@@ -445,7 +426,6 @@ public class mbvPeriodo implements Serializable {
                     if (!contenidoEjb.tienePendientes(periodo)) {
                         if (!contenidoEjb.tieneAdvertencias(periodo)) {
                             if (logroNotaEjb.tieneNotas(periodo)) {
-                                System.out.println("Tiene NOTAS");
                                 periodo.setEstadoPeriodoId(estadoSelected);
                                 Estadocontenidotematico estadoAux = estadoContenidoEjb.find(4);
                                 if (contenidoEjb.updateIniciarPeriodo(periodo, estadoAux)) {
@@ -463,19 +443,16 @@ public class mbvPeriodo implements Serializable {
                                     return;
                                 }
                             } else {
-                                System.out.println("NO TIENE NOTAS");
                                 FacesContext.getCurrentInstance().
                                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "todos los profesores deben realizar la evaluación"));
                                 return;
                             }
                         } else {
-                            System.out.println("TIENE ADVERTECIA");
                             FacesContext.getCurrentInstance().
                                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Tiene asignaturas sin asignar profesor"));
                             return;
                         }
                     } else {
-                        System.out.println("TIENE PENDIENTES");
                         FacesContext.getCurrentInstance().
                                 addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "todos los profesores deben realizar la evaluación"));
                     }
@@ -491,7 +468,6 @@ public class mbvPeriodo implements Serializable {
                 }
 
             } else {
-                System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
@@ -508,7 +484,6 @@ public class mbvPeriodo implements Serializable {
 
         try {
             if (!login) {
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
@@ -518,7 +493,6 @@ public class mbvPeriodo implements Serializable {
                 Anlectivo aEscolar = anlectivoEjb.getIniciado();
                 Periodo periodoAux = periodoEjb.getPeriodoMinByAnio(aEscolar);
                 List<Contenidotematico> contenidosAux = new ArrayList<Contenidotematico>(contenidoEjb.getByPeriodo(periodoAux));
-                System.out.println("periodo " + periodoAux);
                 periodo.setEstadoPeriodoId(estadoPeriodoEjb.find(1));
                 periodo.setAnlectivoId(aEscolar);
                 tx.begin();
@@ -530,14 +504,12 @@ public class mbvPeriodo implements Serializable {
                     contenidoNuevo.setProfesorId(contenido.getProfesorId());
                     contenidoNuevo.setPeriodoId(periodo);
                     contenidoEjb.create(contenidoNuevo);
-                    System.out.println("Contenido " + contenido);
                 }
                 periodoEjb.create(periodo);
                 tx.commit();
                 this.periodos = this.periodoEjb.getPeriodosByAnio(anlectivoselected);
                 RequestContext.getCurrentInstance().closeDialog(this);
             } else {
-                System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
@@ -551,7 +523,6 @@ public class mbvPeriodo implements Serializable {
 
     public void newPeriodo() {
         if (!login) {
-            System.out.println("Usuario NO logeado");
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
             return;

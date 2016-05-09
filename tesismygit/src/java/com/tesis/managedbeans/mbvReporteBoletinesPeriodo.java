@@ -83,6 +83,7 @@ import org.omnifaces.util.Faces;
 @ManagedBean
 @ViewScoped
 public class mbvReporteBoletinesPeriodo implements Serializable {
+    private static final long serialVersionUID = -1284459605713846064L;
 
     private List<Curso> cursos;
     private Curso cursoSelected;
@@ -210,9 +211,7 @@ public class mbvReporteBoletinesPeriodo implements Serializable {
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
             usr = mbslogin.getUsuario();
             this.login = mbslogin.isLogin();
-            System.out.println("usuario" + usr.getNombres() + "Login" + login);
         } catch (Exception e) {
-            System.out.println(e.toString());
             this.login = false;
         }
         if (this.usr != null) {
@@ -263,7 +262,6 @@ public class mbvReporteBoletinesPeriodo implements Serializable {
     }
 
     public void init() throws JRException {
-        System.out.println("entro init" + reporte.get(0).getContenidos().size());
         JRBeanCollectionDataSource beanCollectionDataSource = new JRBeanCollectionDataSource(reporte);
         String reportpath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/boletinPeriodo.jasper");//boletinPeriodo.jasper
         /*Map<String, Object> parametros = new HashMap<String, Object>();
@@ -311,14 +309,11 @@ public class mbvReporteBoletinesPeriodo implements Serializable {
                     conrpt.add(conBoletin);
                     conBoletin.setLogros(logrosNotaAux);
                 }
-                System.out.println("CONTENIDO" + conrpt.size());
                 rpt.setContenidos(conrpt);
                 reporte.add(rpt);
             }
             init();
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("ERROR Datos" + e.toString());
         }
 
     }
@@ -336,7 +331,6 @@ public class mbvReporteBoletinesPeriodo implements Serializable {
 
     public void imprimir() {
         if (!login) {
-            System.out.println("Usuario NO logeado");
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
             return;
@@ -548,35 +542,27 @@ public class mbvReporteBoletinesPeriodo implements Serializable {
                     document.newPage();
                 }
             } catch (Exception e) {
-                System.out.println("ENTRO 3 ");
-                System.out.println("Error " + e.getMessage());
             }
             document.close();
             FacesContext context = FacesContext.getCurrentInstance();
             Object response = context.getExternalContext().getResponse();
             if (response instanceof HttpServletResponse) {
                 try {
-                    System.out.println("ENTRO 4 ");
                     HttpServletResponse hsr = (HttpServletResponse) response;
                     hsr.reset();
                     Faces.sendFile(baos.toByteArray(), "ConsolidadoPeriodo.pdf", false);
                     try {
-                        System.out.println("ENTRO 5 ");
                         ServletOutputStream out = hsr.getOutputStream();
                         baos.writeTo(out);
                         out.flush();
                     } catch (IOException ex) {
-                        System.out.println("ENTRO 6 ");
-                        System.out.println("Error:  " + ex.getMessage());
                     }
-                    System.out.println("ENTRO 7 ");
                     context.responseComplete();
                 } catch (IOException ex) {
                     Logger.getLogger(mbvConstanciaEstudios.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         } else {
-            System.out.print("error permiso denegado");
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
         }
@@ -584,19 +570,15 @@ public class mbvReporteBoletinesPeriodo implements Serializable {
 
     public void initRender() {
         Anlectivo auxEscolar = aEscolarEjb.getIniciado();
-        System.out.println("ENTRO 1 ");
         //this.periodos = new ArrayList<Periodo>();
         if (auxEscolar != null) {
-            System.out.println("ENTRO 2 ");
             //hay año iniciado
             this.periodos = periodoEjb.getPeriodosByAnioTerminados(auxEscolar);
             if (this.periodos.isEmpty()) {
-                System.out.println("ENTRO 3 ");
                 this.mostrarPrincipal = false;
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Aun no hay periodos terminados"));
             } else {
-                System.out.println("ENTRO 4 ");
                 if (!this.consultar) {
                     FacesContext.getCurrentInstance().
                             addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para generar reportes"));
@@ -618,7 +600,7 @@ public class mbvReporteBoletinesPeriodo implements Serializable {
 
     public void cargarPeriodo() {
         if (periodoSelected.getPeriodoId() != null) {
-            this.cursos = aEscolarEjb.getIniciado().getCursoList();
+            this.cursos = cursoEjb.getCursosByAño(aEscolarEjb.getIniciado());//aEscolarEjb.getIniciado().getCursoList()
             cursoSelected = new Curso();
             this.mostrarCursos = true;
             this.mostrarBoton = false;

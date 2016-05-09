@@ -126,25 +126,18 @@ public class mbsLogin implements Serializable {
         if (this.tipoUsuario.equals("administrativo")) {
             Usuario auxUsu = new Usuario();
             auxUsu = usuarioEjb.getByCorreo(txtCorreo);
-            //System.out.println("NEW CONTRASEÑA"+Encrypt.sha512(clave,auxUsu.getCorreo())+"FIN");
             if (auxUsu != null) {
                 if (Encrypt.sha512(clave,auxUsu.getCorreo()).equals(auxUsu.getContraseña())) {
-                    //bien
-                    System.out.println("bien");
                     this.login = true;
                     this.loginUsuario = true;
                     this.usuario = auxUsu;
                     context.getExternalContext().redirect("plantilla.xhtml");
                 } else {
-                    //clave mal
-                    System.out.println("clave mal");
                     FacesContext.getCurrentInstance().
                             addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Datos incorrectos"));
                     return;
                 }
             } else {
-                //usuario no existe
-                System.out.println("usuario no existe");
                 FacesContext.getCurrentInstance().
                             addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Datos incorrectos"));
                 return;
@@ -153,10 +146,8 @@ public class mbsLogin implements Serializable {
             if (this.tipoUsuario.equals("profesor")) {
                 Profesor auxProf = new Profesor();
                 auxProf = profesorEjb.getByCorreo(txtCorreo);
-                //System.out.println("NEW CONTRASEÑA"+Encrypt.sha512(clave,auxProf.getCorreo())+"FIN");
                 if (auxProf != null) {
                     if (Encrypt.sha512(clave,auxProf.getCorreo()).equals(auxProf.getContraseña())) {
-                        System.out.println("bien");
                         this.login = true; 
                         this.loginProfesor = true;
                         this.profesor = auxProf;
@@ -164,14 +155,12 @@ public class mbsLogin implements Serializable {
                         //bien
                     } else {
                         //clave mal
-                        System.out.println("clave mal");
                         FacesContext.getCurrentInstance().
                             addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Datos incorrectos"));
                         return;
                     }
                 } else {
                     //usuario no existe
-                    System.out.println("usuario no existe");
                     FacesContext.getCurrentInstance().
                             addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Datos incorrectos"));
                     return;

@@ -22,28 +22,20 @@ import com.tesis.beans.CursoFacade;
 import com.tesis.beans.MatriculaFacade;
 import com.tesis.beans.ProfesorFacade;
 import com.tesis.clases.BackgroundF;
-import com.tesis.clases.MatriculaReporte;
 import com.tesis.entity.Anlectivo;
 import com.tesis.entity.Asignatura;
-import com.tesis.entity.Asignaturaciclo;
-import com.tesis.entity.Ciclo;
 import com.tesis.entity.Contenidotematico;
 import com.tesis.entity.Curso;
-import com.tesis.entity.Escala;
 import com.tesis.entity.Estudiante;
 import com.tesis.entity.Matricula;
-import com.tesis.entity.Notafinal;
-import com.tesis.entity.Notafinalrecuperacion;
 import com.tesis.entity.Profesor;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.math.BigDecimal;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -62,8 +54,9 @@ import org.omnifaces.util.Faces;
  */
 @ManagedBean
 @ViewScoped
-public class mbvListaEstudiantes {
-
+public class mbvListaEstudiantes implements Serializable{
+    private static final long serialVersionUID = 4391195023827415798L;
+    
     private Profesor profesor;
     private boolean mostrarContenido;
     private Curso cursoSelected;
@@ -133,7 +126,6 @@ public class mbvListaEstudiantes {
             profesor = mbslogin.getProfesor();
             login = mbslogin.isLogin();
         } catch (Exception e) {
-            System.out.println(e.toString());
             profesor = null;
             this.login = false;
         }
@@ -290,8 +282,6 @@ public class mbvListaEstudiantes {
 
 
                 } catch (Exception e) {
-                    System.out.println("ENTRO 3 ");
-                    System.out.println("Error " + e.getMessage());
                 }
 
                 document.close();
@@ -299,7 +289,6 @@ public class mbvListaEstudiantes {
                 Object response = context.getExternalContext().getResponse();
                 if (response instanceof HttpServletResponse) {
                     try {
-                        System.out.println("ENTRO 4 ");
                         HttpServletResponse hsr = (HttpServletResponse) response;
                         //hsr.setContentType("application/pdf");
                         //hsr.setHeader("Content-disposition", "attachment; filename=report.pdf");
@@ -309,15 +298,11 @@ public class mbvListaEstudiantes {
 
                         Faces.sendFile(baos.toByteArray(), "ListadoEstudiantes.pdf", false);
                         try {
-                            System.out.println("ENTRO 5 ");
                             ServletOutputStream out = hsr.getOutputStream();
                             baos.writeTo(out);
                             out.flush();
                         } catch (IOException ex) {
-                            System.out.println("ENTRO 6 ");
-                            System.out.println("Error:  " + ex.getMessage());
                         }
-                        System.out.println("ENTRO 7 ");
                         context.responseComplete();
                     } catch (IOException ex) {
                         Logger.getLogger(mbvConstanciaEstudios.class.getName()).log(Level.SEVERE, null, ex);

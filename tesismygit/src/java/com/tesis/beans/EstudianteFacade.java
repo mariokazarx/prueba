@@ -46,35 +46,29 @@ public class EstudianteFacade extends AbstractFacade<Estudiante> {
 
     public Logronota findNotaEstudiante(Logro logro, Estudiante estudiante) {
         try {
-            //em.flush();
             Query cq = em.createNamedQuery("Estudiante.findNotaLOgro");
             cq.setParameter("logroId", logro);
             cq.setParameter("estudianteId", estudiante.getEstudianteId());
             if (cq.getSingleResult() != null) {
-                //System.out.println("***ENCONTRO****");
                 return (Logronota) cq.getSingleResult();
             } else {
-                //System.out.println("***NO ENCONTRO****");
                 return null;
             }
         } catch (Exception e) {
-            //System.out.println("***ERROR****"+e.toString());
             return null;
         }
     }
+
     public Estudiante getEstudianteByIdentificacion(String identificacion) {
         try {
             Query cq = em.createNamedQuery("Estudiante.findByIdentificiacion");
             cq.setParameter("identificiacion", identificacion);
             if (cq.getSingleResult() != null) {
-                //System.out.println("***ENCONTRO****");
                 return (Estudiante) cq.getSingleResult();
             } else {
-                //System.out.println("***NO ENCONTRO****");
                 return null;
             }
         } catch (Exception e) {
-            //System.out.println("***ERROR****"+e.toString());
             return null;
         }
     }
@@ -85,100 +79,86 @@ public class EstudianteFacade extends AbstractFacade<Estudiante> {
             cq.setParameter("contenidotematicoId", contenido);
             cq.setParameter("estudianteId", estudiante.getEstudianteId());
             if (cq.getSingleResult() != null) {
-                //System.out.println("***ENCONTRO****");
                 return (Nota) cq.getSingleResult();
             } else {
-                //System.out.println("***NO ENCONTRO****");
                 return null;
             }
         } catch (Exception e) {
-            //System.out.println("***ERROR****"+e.toString());
             return null;
         }
     }
-    public List<Object> getFinalPeriodo(Curso curso,Periodo periodo){
+
+    public List<Object> getFinalPeriodo(Curso curso, Periodo periodo) {
         try {
             Query cq = em.createNamedQuery("Estudiante.findPromedioNotaPeriodo");
             cq.setParameter("periodo", periodo);
             cq.setParameter("curso", curso);
-            if(cq.getResultList()!=null){
+            if (cq.getResultList() != null) {
                 return cq.getResultList();
-            }
-            else{
+            } else {
                 return null;
             }
         } catch (PersistenceException e) {
-            e.printStackTrace();
+            return null;
+        } catch (Exception e) {
             return null;
         }
-        catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-        
+
     }
-    public List<Estudiante> getOrdenados(){
+
+    public List<Estudiante> getOrdenados() {
         try {
             Query cq = em.createNamedQuery("Estudiante.findAllOrdenado");
-            if(cq.getResultList()!=null){
+            if (cq.getResultList() != null) {
                 return cq.getResultList();
-            }
-            else{
+            } else {
                 return null;
             }
         } catch (PersistenceException e) {
-            e.printStackTrace();
+            return null;
+        } catch (Exception e) {
             return null;
         }
-        catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-        
+
     }
+
     public boolean existeIdentificacion(String identificacion) {
         try {
             Query cq = em.createNamedQuery("Estudiante.countCedula");
-            cq.setParameter("identificacion",identificacion);
-            if(cq.getSingleResult()!=null){
+            cq.setParameter("identificacion", identificacion);
+            if (cq.getSingleResult() != null) {
                 Long count = (Long) cq.getSingleResult();
-                System.out.println("Entra resultado "+count);
-                if(count != 0){
+                if (count != 0) {
                     return true;
-                }else{
+                } else {
                     return false;
                 }
-            }
-            else{
-                System.out.println("ENTRA 2");
+            } else {
                 return false;
             }
         } catch (PersistenceException e) {
-            System.out.println("ENTRA 3");
             return false;
-        }
-        catch (Exception e) {
-            System.out.println("ENTRA 4");
+        } catch (Exception e) {
             return false;
         }
     }
-    private static void printResult(Object result) {
-    if (result == null) {
-      System.out.print("NULL");
-    } else if (result instanceof Object[]) {
-      Object[] row = (Object[]) result;
-      System.out.print("[");
-      for (int i = 0; i < row.length; i++) {
-        printResult(row[i]);
-      }
-      System.out.print("]");
-    } else if (result instanceof Long || result instanceof Double
-        || result instanceof String) {
-      System.out.print(result.getClass().getName() + ": " + result);
-    } else {
-      System.out.print(result);
-    }
-    System.out.println();
-  }
 
+    private static void printResult(Object result) {
+        if (result == null) {
+            System.out.print("NULL");
+        } else if (result instanceof Object[]) {
+            Object[] row = (Object[]) result;
+            System.out.print("[");
+            for (int i = 0; i < row.length; i++) {
+                printResult(row[i]);
+            }
+            System.out.print("]");
+        } else if (result instanceof Long || result instanceof Double
+                || result instanceof String) {
+            System.out.print(result.getClass().getName() + ": " + result);
+        } else {
+            System.out.print(result);
+        }
+        System.out.println();
+    }
 }

@@ -48,6 +48,7 @@ import org.primefaces.context.RequestContext;
 @ManagedBean
 @ViewScoped
 public class mbvReporteMatriculas implements Serializable {
+    private static final long serialVersionUID = -2942508357894312052L;
 
     private List<Curso> cursos;
     private List<Curso> cursosReporte;
@@ -149,9 +150,7 @@ public class mbvReporteMatriculas implements Serializable {
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
             usr = mbslogin.getUsuario();
             this.login = mbslogin.isLogin();
-            System.out.println("usuario" + usr.getNombres() + "Login" + login);
         } catch (Exception e) {
-            System.out.println(e.toString());
             this.login = false;
         }
         if (this.usr != null) {
@@ -189,7 +188,7 @@ public class mbvReporteMatriculas implements Serializable {
         if (auxEscolar != null) {
 
             //hay año iniciado
-            if (auxEscolar.getCursoList().isEmpty()) {
+            if (cursoEjb.getCursosByAño(auxEscolar).isEmpty()) {//auxEscolar.getCursoList().isEmpty()
                 //no hay cursos activos
                 this.mostrarPrincipal = false;
             } else {
@@ -204,7 +203,6 @@ public class mbvReporteMatriculas implements Serializable {
 
     public void generar() {
         try {
-            System.out.println("curso" + cursoSelected);
             if (cursoSelected != null && this.todos.compareTo("curso") == 0) {
                 cursoSelected = cursoEjb.find(cursoSelected.getCursoId());
                 this.cursosReporte.add(cursoSelected);
@@ -217,7 +215,6 @@ public class mbvReporteMatriculas implements Serializable {
                 mtrReporte.setCurso(cur.getNombre());
                 mtrReporte.setNumero(cur.getCicloId().getNumero());
                 for (Matricula matriculasCurso : matriculaEjb.matriculasCurso(cur)) {
-                    System.out.println("entro for");
                     est.add(matriculasCurso.getEstudianteId());
                 }
                 mtrReporte.setEstudiantes(est);
@@ -225,13 +222,10 @@ public class mbvReporteMatriculas implements Serializable {
             }
             init();
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("ooooOOOO" + e.toString());
         }
     }
 
     public void init() throws JRException {
-        System.out.println("entro init");
         JRBeanCollectionDataSource beanCollectionDataSource = new JRBeanCollectionDataSource(reporte);
         String reportpath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/Cursos.jasper");
         /*Map<String, Object> parametros = new HashMap<String, Object>();
@@ -243,7 +237,6 @@ public class mbvReporteMatriculas implements Serializable {
 
     public void pdf() throws JRException, IOException {
         if (!login) {
-            System.out.println("Usuario NO logeado");
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
             return;
@@ -258,7 +251,6 @@ public class mbvReporteMatriculas implements Serializable {
             FacesContext.getCurrentInstance().responseComplete();
             
         } else {
-            System.out.print("error permiso denegado");
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
         }
@@ -266,7 +258,6 @@ public class mbvReporteMatriculas implements Serializable {
     }
 
     public void cargarCurso() {
-        System.out.println("todos" + this.todos);
         if (this.todos.compareTo("todos") == 0) {
             this.mostrarBoton = true;
             this.mostrarCursos = false;
@@ -286,7 +277,7 @@ public class mbvReporteMatriculas implements Serializable {
     public void initRender() {
         Anlectivo auxEscolar = aEscolarEjb.getIniciado();
         if (auxEscolar != null) {
-            if (auxEscolar.getCursoList().isEmpty()) {
+            if (cursoEjb.getCursosByAño(auxEscolar).isEmpty()) {//auxEscolar.getCursoList().isEmpty()
                 this.mostrarPrincipal = false;
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Aun no ha han registrado cursos"));

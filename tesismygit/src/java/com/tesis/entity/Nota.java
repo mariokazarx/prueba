@@ -34,6 +34,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Nota.findAll", query = "SELECT n FROM Nota n"),
+    @NamedQuery(name = "Nota.countAprobadasContenido", query = "SELECT COUNT(n) FROM Nota n WHERE n.contenidotematicoId = :contenido and n.valor >= :valor"),
+    @NamedQuery(name = "Nota.countReprobadasContenido", query = "SELECT COUNT(n) FROM Nota n WHERE n.contenidotematicoId = :contenido and n.valor < :valor"),
     @NamedQuery(name = "Nota.findByFinal", query = "SELECT n.valor FROM Nota n WHERE n.estudianteId = :estudiante AND n.contenidotematicoId = :contenido"),
     @NamedQuery(name = "Nota.findByNotaId", query = "SELECT n FROM Nota n WHERE n.notaId = :notaId"),
     @NamedQuery(name = "Nota.findByValor", query = "SELECT n FROM Nota n WHERE n.valor = :valor"),

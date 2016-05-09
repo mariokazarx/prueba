@@ -34,6 +34,7 @@ import org.primefaces.event.FileUploadEvent;
 @ManagedBean
 @ViewScoped
 public class mbvPrueba implements Serializable {
+    private static final long serialVersionUID = 118792163111188002L;
 
     private Profesor prof;
     private Usuario usuario;
@@ -111,7 +112,6 @@ public class mbvPrueba implements Serializable {
             login = mbslogin.isLogin();
         } catch (Exception e) {
             loginProfesor = false;
-            System.out.println(e.toString());
         }
         try {
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
@@ -119,9 +119,7 @@ public class mbvPrueba implements Serializable {
             login = mbslogin.isLogin();
         } catch (Exception e) {
             loginUsuario = false;
-            System.out.println(e.toString());
         }
-        System.out.println("USR " + usuario + "PROF " + prof);
         if (prof.getProfesorId() != null) {
             this.loginProfesor = true;
         } else {
@@ -137,7 +135,6 @@ public class mbvPrueba implements Serializable {
     public void cambiarFotoProfesor() {
         try {
             if (!loginProfesor) {
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
                 return;
@@ -161,10 +158,8 @@ public class mbvPrueba implements Serializable {
             //file.delete();
 
             try {
-                System.out.println("ENTRA 2" + event.getFile().getFileName());
                 if (event.getFile().getSize() <= 0) {
                 } else {
-                    System.out.println("ENTRA 4" + event.getFile().getFileName().endsWith(".jpg"));
                     boolean ban = false;
                     if (event.getFile().getFileName().endsWith(".jpg") == true) {
                         ban = true;
@@ -173,19 +168,16 @@ public class mbvPrueba implements Serializable {
                         ban = true;
                     }
                     if (ban == false) {
-                        System.out.println("ENTRA 5" + event.getFile().getFileName());
                         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error:", "El archivo debe ser con extensión \".png\" o \".jpg\" "));
                         //inicioPagina();  
                         return;
                     }
                     if (event.getFile().getSize() > 20971520) {
-                        System.out.println("ENTRA 6");
                         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error:", "El archivo no puede ser más de 20mb"));
                         return;
                     }
                     if (!prof.getFoto().equals("default.jpg")) {
                         if (file.delete()) {
-                            System.out.println("ENTRA 7");
                             String nombreArchivo = "/";
                             nombreArchivo += this.prof.getCedula();
                             Calendar fecha = new GregorianCalendar();
@@ -209,17 +201,14 @@ public class mbvPrueba implements Serializable {
                                 outputStream.write(bytes, 0, read);
                             }
                             this.prof.setFoto(nombreArchivo);
-                            System.out.println("ENTRA 8");
                             profesorEjb.edit(prof);
                             FacesContext.getCurrentInstance().
                                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Foto actualizada exitosamente", ""));
                             RequestContext.getCurrentInstance().execute("PF('dialogoSubirArchivos').hide()");
                             //inicioPagina();
                         } else {
-                            System.out.println("Delete operation is failed.");
                         }
                     } else {
-                        System.out.println("ENTRA 7");
                         String nombreArchivo = "/";
                         nombreArchivo += this.prof.getCedula();
                         Calendar fecha = new GregorianCalendar();
@@ -243,7 +232,6 @@ public class mbvPrueba implements Serializable {
                             outputStream.write(bytes, 0, read);
                         }
                         this.prof.setFoto(nombreArchivo);
-                        System.out.println("ENTRA 8");
                         profesorEjb.edit(prof);
                         FacesContext.getCurrentInstance().
                                 addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Foto actualizada exitosamente", ""));
@@ -255,12 +243,10 @@ public class mbvPrueba implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error fatal:", "Por favor contacte con su administrador " + ex.getMessage()));
             } finally {
                 if (inputStream != null) {
-                    System.out.println("ENTRA 10");
                     inputStream.close();
                 }
 
                 if (outputStream != null) {
-                    System.out.println("ENTRA 10");
                     outputStream.close();
                 }
             }
@@ -271,7 +257,6 @@ public class mbvPrueba implements Serializable {
     public void cambiarFotoUsuario() {
         try {
             if (!loginUsuario) {
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
                 return;
@@ -295,10 +280,8 @@ public class mbvPrueba implements Serializable {
             //file.delete();
 
             try {
-                System.out.println("ENTRA 2" + event.getFile().getFileName());
                 if (event.getFile().getSize() <= 0) {
                 } else {
-                    System.out.println("ENTRA 4" + event.getFile().getFileName().endsWith(".jpg"));
                     boolean ban = false;
                     if (event.getFile().getFileName().endsWith(".jpg") == true) {
                         ban = true;
@@ -307,19 +290,16 @@ public class mbvPrueba implements Serializable {
                         ban = true;
                     }
                     if (ban == false) {
-                        System.out.println("ENTRA 5" + event.getFile().getFileName());
                         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error:", "El archivo debe ser con extensión \".png\" o \".jpg\" "));
                         //inicioPagina();  
                         return;
                     }
                     if (event.getFile().getSize() > 20971520) {
-                        System.out.println("ENTRA 6");
                         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error:", "El archivo no puede ser más de 20mb"));
                         return;
                     }
                     if (!usuario.getFoto().equals("default.jpg")) {
                         if (file.delete()) {
-                            System.out.println("ENTRA 7");
                             String nombreArchivo = "/";
                             nombreArchivo += this.usuario.getIdentificacion();
                             Calendar fecha = new GregorianCalendar();
@@ -343,17 +323,14 @@ public class mbvPrueba implements Serializable {
                                 outputStream.write(bytes, 0, read);
                             }
                             this.usuario.setFoto(nombreArchivo);
-                            System.out.println("ENTRA 8");
                             usuarioEjb.edit(usuario);
                             FacesContext.getCurrentInstance().
                                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Foto actualizada exitosamente", ""));
                             RequestContext.getCurrentInstance().execute("PF('dialogoSubirArchivos').hide()");
                             //inicioPagina();
                         } else {
-                            System.out.println("Delete operation is failed.");
                         }
                     } else {
-                        System.out.println("ENTRA 7");
                         String nombreArchivo = "/";
                         nombreArchivo += this.usuario.getIdentificacion();
                         Calendar fecha = new GregorianCalendar();
@@ -377,7 +354,6 @@ public class mbvPrueba implements Serializable {
                             outputStream.write(bytes, 0, read);
                         }
                         this.usuario.setFoto(nombreArchivo);
-                        System.out.println("ENTRA 8");
                         usuarioEjb.edit(usuario);
                         FacesContext.getCurrentInstance().
                                 addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Foto actualizada exitosamente", ""));
@@ -389,12 +365,10 @@ public class mbvPrueba implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error fatal:", "Por favor contacte con su administrador " + ex.getMessage()));
             } finally {
                 if (inputStream != null) {
-                    System.out.println("ENTRA 10");
                     inputStream.close();
                 }
 
                 if (outputStream != null) {
-                    System.out.println("ENTRA 10");
                     outputStream.close();
                 }
             }

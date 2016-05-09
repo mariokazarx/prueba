@@ -38,6 +38,7 @@ import javax.faces.context.FacesContext;
 @ManagedBean
 @ViewScoped
 public class mbvMatricula implements Serializable {
+    private static final long serialVersionUID = -2430161257977978462L;
 
     private Estudiante estudiante;
     private boolean banderaExiste;
@@ -252,9 +253,7 @@ public class mbvMatricula implements Serializable {
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
             usr = mbslogin.getUsuario();
             this.login = mbslogin.isLogin();
-            System.out.println("usuario" + usr.getNombres() + "Login" + login);
         } catch (Exception e) {
-            System.out.println(e.toString());
             this.login = false;
         }
         if (this.usr != null) {
@@ -291,7 +290,6 @@ public class mbvMatricula implements Serializable {
             this.cicloEstudiante = cicloEjb.getCicloByNum(this.estudiante.getUltimoaprobado());
             this.cursos = new ArrayList<Curso>();
             this.cursos = this.CursoEjb.getCursosByCiclo(cicloEstudiante);
-            System.out.println("ciclo" + this.cicloEstudiante + "cursos" + this.cicloEstudiante.getNumero());
         } catch (Exception e) {
             this.contenido = false;
             this.mensaje = "";
@@ -303,7 +301,6 @@ public class mbvMatricula implements Serializable {
 
         List<Estudiante> allThemes = estudianteEJb.findAll();
         List<Estudiante> filteredThemes = new ArrayList<Estudiante>();
-        System.out.println("ccc" + query + allThemes.size());
         for (int i = 0; i < allThemes.size(); i++) {
             Estudiante skin = allThemes.get(i);
             if (skin.getIdentificiacion().startsWith(query)) {
@@ -322,14 +319,12 @@ public class mbvMatricula implements Serializable {
             }
             this.mostrarPrincipal = true;
             this.estudiante = estudianteEJb.find(aux.getEstudianteId());
-            System.out.println("QQQQQ1" + this.estudiante + "EEE1" + estudiante.getNombre() + "estado" + estudiante.getEstadoEstudianteId());
             if (estudiante.getEstadoEstudianteId().getEstadoEstudianteId() == 1) {
                 Anlectivo auxEscolar = aEscolarEjb.getIniciado();
                 if (auxEscolar != null) {
                     //existe año iniciado
                     boolean bandera = false;
                     for (Ciclo ciclo : auxEscolar.getConfiguracionId().getCicloList()) {
-                        System.out.println("CICLO" + ciclo.getNumero());
                         if (ciclo.getNumero() == estudiante.getUltimoaprobado()) {
                             bandera = true;
                             break;
@@ -338,13 +333,10 @@ public class mbvMatricula implements Serializable {
                     if (!bandera) {
                         FacesContext.getCurrentInstance().
                                 addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Actualmente no se ofrece el ciclo para este estudiante"));
-                        System.out.println("No se ofrece el ciclo");
                     } else {
                         boolean banderaCursos = false;
-                        System.out.println("se ofrece el ciclo");
                         cursos.clear();
-                        for (Curso curAux : auxEscolar.getCursoList()) {
-                            System.out.println("Curso" + curAux.getNombre() + "Ciclo" + curAux.getCicloId().getNumero());
+                        for (Curso curAux : CursoEjb.getCursosByAño(auxEscolar)) {
                             if (curAux.getCicloId().getNumero() == estudiante.getUltimoaprobado()) {
                                 banderaCursos = true;
                                 cursos.add(curAux);
@@ -354,17 +346,12 @@ public class mbvMatricula implements Serializable {
                         if (cursos.isEmpty()) {
                             FacesContext.getCurrentInstance().
                                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "No hay cursos registrados para el ciclo del estudiante"));
-                            System.out.println("No se ofrece curso");
                         } else {
-                            System.out.println("se ofrece curso");
-                            System.out.println("si año iniciado");
                             Matricula auxMatricula = matriculaEjb.getActivaByEstudiante(estudiante);
                             if (auxMatricula != null) {
                                 //hay matricula activa 
-                                System.out.println("Curso" + auxMatricula.getCursoId().getAnlectivoId() + "año escolar" + auxEscolar.getAnlectivoId());
                                 if (auxMatricula.getCursoId().getAnlectivoId().getAnlectivoId() == auxEscolar.getAnlectivoId()) {
                                     //son matriculas del mismo año
-                                    System.out.println("mismo año");
                                     Long cursosCount = CursoEjb.countCursosCiclo(auxEscolar, auxMatricula.getCursoId().getCicloId());
                                     if (cursosCount > 1) {
                                         contenidoCancelar = true;
@@ -389,7 +376,6 @@ public class mbvMatricula implements Serializable {
                                     }
 
                                 } else {
-                                    System.out.println("diferente año");
                                     // no son en el mismo año 
                                     contenidoCancelar = true;
                                     contenidoMatricular = false;
@@ -410,7 +396,6 @@ public class mbvMatricula implements Serializable {
                                     contenidoMatricular = false;
 
                                 } else {
-                                    System.out.println("No matriculado");
                                     contenidoMatricular = true;
                                     contenidoCambiar = false;
                                     contenidoCancelar = false;
@@ -444,8 +429,6 @@ public class mbvMatricula implements Serializable {
             this.contenido = false;
             contenidoActivar = false;
             this.mensaje = "";
-            System.out.println("QQQQQ2" + this.estudiante);
-            System.out.println("OTRO" + this.estudiante);
             //this.estudiante = new Estudiante();
         }
     }
@@ -453,7 +436,6 @@ public class mbvMatricula implements Serializable {
     public void buscar() {
         try {
             if (this.estudiante != null) {
-                System.out.println("aaaaww" + this.estudiante.getNombre());
                 //cursoSelected = cursoEjb.find(1);
                 // this.banderaSearch = true;
                 this.cargarDatos(this.estudiante);
@@ -469,7 +451,6 @@ public class mbvMatricula implements Serializable {
             }
 
         } catch (Exception e) {
-            System.out.println("errrrooorrrr" + e.toString());
             //this.banderaAsig = true;
             this.contenido = false;
             this.mensaje = "";
@@ -480,13 +461,11 @@ public class mbvMatricula implements Serializable {
     public void matricularEstudiante() {
         try {
             if (!login) {
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
             if (this.editar) {
-                System.out.println("curso");
                 if (cursoSelected != null) {
                     cursoSelected = CursoEjb.find(cursoSelected.getCursoId());
                     EstadoMatricula esmatricula = new EstadoMatricula();
@@ -517,8 +496,6 @@ public class mbvMatricula implements Serializable {
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("ooooOOOO" + e.toString());
         }
 
 
@@ -527,7 +504,6 @@ public class mbvMatricula implements Serializable {
     public void cancelarMatricula() {
         try {
             if (!login) {
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
@@ -558,7 +534,6 @@ public class mbvMatricula implements Serializable {
     public void cambiarMatricularEstudiante() {
         try {
             if (!login) {
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
@@ -596,7 +571,6 @@ public class mbvMatricula implements Serializable {
     }
 
     public String getMatricula(Estudiante estAux) {
-        System.out.println("AUX EST" + estAux);
         Matricula auxMatricula = matriculaEjb.getActivaByEstudiante(estAux);
         if (auxMatricula != null) {
             return auxMatricula.getCursoId().getNombre();
@@ -608,7 +582,6 @@ public class mbvMatricula implements Serializable {
     public void suspenderMatricula() {
         try {
             if (!login) {
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
@@ -641,7 +614,6 @@ public class mbvMatricula implements Serializable {
     public void activarMatricula() {
         try {
             if (!login) {
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;

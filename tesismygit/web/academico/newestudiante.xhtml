@@ -6,6 +6,7 @@
       xmlns:f="http://java.sun.com/jsf/core">
     <h:head>
         <title>Nuevo Estudiante</title>
+        <h:outputScript name="js/calendar-localization.js"/>
         <style type="text/css">
             .ui-widget {
                 font-size: 90%;
@@ -18,7 +19,7 @@
                 <h:panelGrid columns="3">
                     <p:outputLabel for="selectTipo" value="Tipo identificación: " />
                     <p:selectOneMenu id="selectTipo" value="#{mbvEstudiante.estudiante.tipoIdentifcacion}" style="width:125px">
-                        <f:selectItem itemLabel="Select One" itemValue="" />
+                        <f:selectItem itemLabel="Seleccione. " itemValue="" />
                         <f:selectItem itemLabel="Cedula de ciudadania" itemValue="C.C" />
                         <f:selectItem itemLabel="Tarjeta de Identidad" itemValue="T.I" />
                     </p:selectOneMenu>
@@ -75,13 +76,13 @@
 
                     <p:outputLabel for="selectZona" value="Zona:" />
                     <p:selectOneMenu id="selectZona" value="#{mbvEstudiante.estudiante.zona}" style="width:125px">
-                        <f:selectItem itemLabel="Select One" itemValue="" />
+                        <f:selectItem itemLabel="Seleccione. " itemValue="" />
                         <f:selectItem itemLabel="Rular" itemValue="RURAL" />
                         <f:selectItem itemLabel="Urbano" itemValue="URBANO" />
                     </p:selectOneMenu>
                     <p:message for="selectZona"/>
                     <p:outputLabel value="Fecha de Nacimiento" for="txtFechaNacimiento"/>
-                    <p:calendar id="txtFechaNacimiento" label="Fecha de nacimiento" showOn="button" title="Ejemplo: dd/mm/yyyy" value="#{mbvEstudiante.estudiante.fechaNacimiento}" pattern="dd/MM/yyyy" required="true" requiredMessage="Fecha de nacimiento es requerido"/>
+                    <p:calendar id="txtFechaNacimiento" locale="es" label="Fecha de nacimiento" showOn="button" title="Ejemplo: dd/mm/yyyy" value="#{mbvEstudiante.estudiante.fechaNacimiento}" pattern="dd/MM/yyyy" required="true" navigator="true" requiredMessage="Fecha de nacimiento es requerido"/>
                     <p:message for="txtFechaNacimiento"/>
                     <p:outputLabel for="rdbSexo" value="Sexo:" />
                     <p:selectOneRadio id="rdbSexo" value="#{mbvEstudiante.estudiante.sexo}" >

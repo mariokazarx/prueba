@@ -86,7 +86,8 @@ import org.primefaces.event.RowEditEvent;
  */
 @ManagedBean
 @ViewScoped
-public class mbvRectificarNota {
+public class mbvRectificarNota implements Serializable{
+    private static final long serialVersionUID = -1953016497050704900L;
 
     private List<ReporteNotasProfesor> reporte;
     private String notaxxLogro;
@@ -311,33 +312,27 @@ public class mbvRectificarNota {
     }
 
     public String getNotaxxLogro() {
-        System.out.println("GET" + notaxxLogro);
         return notaxxLogro;
     }
 
     public void setNotaxxLogro(String notaxxLogro) {
         try {
-            System.out.println("hola" + notaxxLogro);
             this.notaxxLogro = notaxxLogro;
         } catch (Exception e) {
-            System.out.println("EROR" + e.toString());
         }
 
     }
 
     public void setNotaxxLogro(Estudiante es) {
         try {
-            System.out.println("hola" + es.getNombre());
             //this.notaxxLogro = notaxxLogro;
         } catch (Exception e) {
-            System.out.println("EROR" + e.toString());
         }
 
     }
 
     @PostConstruct
     public void inicioPagina() {
-        System.out.println("ENTRA POSTCONSTRUCT");
         this.contenidoSelected = new Contenidotematico();
         this.contenidos = new ArrayList<Contenidotematico>();
         this.anlectivoselected = new Anlectivo();
@@ -347,9 +342,7 @@ public class mbvRectificarNota {
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
             profesor = mbslogin.getProfesor();
             login = mbslogin.isLogin();
-            System.out.println(mbslogin.getProfesor().getNombre());
         } catch (Exception e) {
-            System.out.println(e.toString());
             profesor = null;
         }
         this.estudiantesN = new ArrayList<EstudianteNotas>();
@@ -365,7 +358,6 @@ public class mbvRectificarNota {
             // verificar profesor activo
             anlectivos = anlectivoEjb.getAñosEnUso();
             //this.contenidos = contenidoEjb.getRectificar(profesor);
-            System.out.println("logueado como profesor");
             anlectivo = anlectivoEjb.getIniciado();
             //año iniciado
             //this.periodo = periodoEjb.getPeriodEvaluar(anlectivo);
@@ -405,10 +397,8 @@ public class mbvRectificarNota {
         notaxxLogro = "";
         Integer suma = 0;
         for (Logro logAuxSum : logroEjb.getByContenido(contenido)) {
-            System.out.println("SUMARRRR" + logAuxSum.getPorcentaje());
             suma += logAuxSum.getPorcentaje();
         }
-        System.out.println("SUMAAAA" + suma);
         if (suma == 100) {
             contenidoNotas = true;
         } else {
@@ -424,7 +414,6 @@ public class mbvRectificarNota {
         List<Logro> logrosaux = logroEjb.getContenidoByAll(contenido);
 
         estudiantesN.clear();
-        System.out.println("CONTENIDOOOOOO " + estudiantesN.size());
         for (Estudiante est : estudiantes) {
             EstudianteNotas estNota = new EstudianteNotas();
             estNota.setId(est.getEstudianteId());
@@ -436,7 +425,6 @@ public class mbvRectificarNota {
             for (Logro aux : logrosaux) {
                 logrosNotaAux.add(logroNotaEjb.getByLogroestudiante(est, aux));
                 notasLog.put(aux.getLogroId(), getNotaEstudiante(est, aux.getLogroId()));
-                System.out.println("CONTENIDOOOOOO 22222 " + getNotaEstudiante(est, aux.getLogroId()));
             }
             estNota.setLogros(logrosNotaAux);
             estNota.setNotasLogros(notasLog);
@@ -459,18 +447,13 @@ public class mbvRectificarNota {
         try {
             Integer suma = 0;
             if (this.logro.getPorcentaje() < 0 || this.logro.getPorcentaje() > 100) {
-                System.out.println("LOGRO FUERA DE RAMGO");
                 return;
             }
-            System.out.println("contenido" + contenido + "    " + contenido.getLogroList());//traer por sql
             for (Logro logAuxSum : logroEjb.getByContenido(contenido)) {
-                System.out.println("SUMARRRR" + logAuxSum.getPorcentaje());
                 suma += logAuxSum.getPorcentaje();
             }
             suma += this.logro.getPorcentaje();
-            System.out.println("SUMA FINAL" + suma);
             if (suma > 100) {
-                System.out.println("SE PASA DE 100");
                 return;
             }
             if (suma == 100) {
@@ -515,12 +498,12 @@ public class mbvRectificarNota {
                 this.logros = logroEjb.getContenidoByAll(contenido);
             }
         } catch (Exception e) {
-            System.out.println("FALLO INGRESO LOGRO");
         }
 
     }
 
     static public class ColumnModel implements Serializable {
+        private static final long serialVersionUID = 9005520615394412702L;
 
         private String header;
         private Integer property;
@@ -542,9 +525,7 @@ public class mbvRectificarNota {
     private void createDynamicColumns() {
         columns = new ArrayList<mbvNotas.ColumnModel>();
         List<Logro> logrosaux = logroEjb.getContenidoByAll(contenido);
-        System.out.println("CONTENIDOOOOOO " + contenido);
         for (Logro aux : logrosaux) {
-            System.out.println("QAAAAAAAAAAAAA" + aux.getTitulo().toUpperCase() + "  ffffFFFFF" + aux.getLogroId());
             columns.add(new mbvNotas.ColumnModel(aux.getTitulo().toUpperCase(), aux.getLogroId()));
         }
 
@@ -579,7 +560,6 @@ public class mbvRectificarNota {
         if (notaEst != null) {
             nota = notaEst.getValor();
         }
-        System.out.println("***TABLA**" + nota);
         return nota.setScale(1, RoundingMode.HALF_EVEN);
     }
 
@@ -607,11 +587,9 @@ public class mbvRectificarNota {
             notaEstAux.setContenidotematicoId(contenido);
             notaEstAux.setEstudianteId(es);
             notaEstAux.setValor(nota);
-            System.out.println("MM QUE SERA NOTA DIFERENTE" + notaEstAux.getValor());
             notaEstEJB.create(notaEstAux);
         } else {
             notaEst.setValor(nota);
-            System.out.println("MM QUE SERA NOTA DIFERENTE" + notaEst.getValor());
             notaEstEJB.edit(notaEst);
         }
         Asignaturaciclo asc = new Asignaturaciclo();
@@ -623,11 +601,8 @@ public class mbvRectificarNota {
         //anlectivoAux = anlectivoEjb.find(cursoSelected.getAnlectivoId().getAnlectivoId());
         //System.out.println("MM QUE SERA::::"+notaf.toString()+"aa a"+asc.toString()+"bbb"+es.toString());
         Double notaFinal = notaEstEJB.getNotaFinal(anlectivoAuxSelected, es, contenido.getCursoId(), contenido.getAsignaturacicloId());
-        System.out.println("NOTA FINAL OKkkkkzzzzz" + notaFinal);
         BigDecimal notaFinalDef = new BigDecimal(notaFinal.toString());
-        System.out.println("NOTA FINAL OKkkkk" + notaFinalDef);
         notaFinalDef = notaFinalDef.setScale(1, RoundingMode.HALF_UP);
-        System.out.println("NOTA FINAL OK" + notaFinalDef);
         if (notaf == null) {
             Notafinal notaFinalAux = new Notafinal();
             notaFinalAux.setAsignaturacicloId(asc);
@@ -636,7 +611,6 @@ public class mbvRectificarNota {
             notaFinalAux.setAnlectivoId(anlectivoAuxSelected);
             notaFinalAux.setValor(notaFinalDef);
             notaFinalAux.setRecuperacion("NO");
-            System.out.println("NOTA FINAL OKKaKKK" + notaFinalAux.getValor());
             notafEjb.create(notaFinalAux);
         } else {
             notaf.setProfesorId(profesor);
@@ -656,7 +630,6 @@ public class mbvRectificarNota {
             this.contenidoNotas = false;
             this.logros = logroEjb.getContenidoByAll(contenido);
         } catch (Exception e) {
-            System.out.println("ERROR ELIMINAR LOGRO");
         }
     }
 
@@ -664,7 +637,6 @@ public class mbvRectificarNota {
         Estudiante estAux = estudianteEjB.find(estId);
         Nota notaEst = new Nota();
         notaEst = estudianteEjB.findNotaEst(contenido, estAux);
-        System.out.println("insertar observacion" + estAux + "NOTA EST" + notaEst);
         this.estActual = estAux;
         this.notaEstudianteActual = notaEst;
         this.observaciones = notaEst.getObservaciones();
@@ -681,7 +653,6 @@ public class mbvRectificarNota {
         Estudiante estAux = estudianteEjB.find(estId);
         Nota notaEst = new Nota();
         notaEst = estudianteEjB.findNotaEst(contenido, estAux);
-        System.out.println("insertar observacion" + estAux + "NOTA EST" + notaEst);
         this.estActual = estAux;
         this.notaEstudianteActual = notaEst;
         this.observaciones = notaEst.getObservaciones();
@@ -695,7 +666,6 @@ public class mbvRectificarNota {
     }
 
     public void insertarObservacionDB() {
-        System.out.println("insertar observacionDB" + estActual + "NOTA ESTDB" + notaEstudianteActual + "OBSERVACION" + this.observaciones);
         this.notaEstudianteActual.setObservaciones(observaciones);
         this.notaEstEJB.edit(notaEstudianteActual);
     }
@@ -703,7 +673,6 @@ public class mbvRectificarNota {
     public void onRowCancel(RowEditEvent event) {
         //FacesMessage msg = new FacesMessage("Edit Cancelled", ((Car) event.getObject()).getId());
         //FacesContext.getCurrentInstance().addMessage(null, msg);
-        System.out.println("Edito");
     }
 
     public void onRowEdit(RowEditEvent event) throws IllegalStateException, SecurityException, SystemException {
@@ -711,13 +680,11 @@ public class mbvRectificarNota {
         Estudiante es = estudianteEjB.find(estNotaAux.getId());
         try {
 
-            System.out.println("Edito" + estNotaAux.getNombre());
 
             tx.begin();
             for (Map.Entry<Integer, Object> entry : estNotaAux.getNotasLogros().entrySet()) {
                 Integer key = entry.getKey();
                 //BigDecimal value = entry.getValue();
-                System.out.println("Edito 22" + key + "   " + entry.getValue());
                 //editable = false;
                 Anlectivo auxEscolar = anlectivoEjb.find(anlectivoselected.getAnlectivoId());
                 BigDecimal notaLogroValidacion = new BigDecimal(entry.getValue().toString());
@@ -725,7 +692,6 @@ public class mbvRectificarNota {
                 BigDecimal max = new BigDecimal(auxEscolar.getConfiguracionId().getEscalaId().getMax());
                 //System.out.println("MIN"+min+" MAX"+max+"Nota"+notaLogroValidacion);
                 if (notaLogroValidacion.compareTo(max) > 0 || notaLogroValidacion.compareTo(min) < 0) {
-                    System.out.println("FUNCIONOOOOO");
                     return;
                 }
                 Integer logroId = key;
@@ -734,7 +700,6 @@ public class mbvRectificarNota {
 
                 Logronota logNota = new Logronota();
                 logNota = estudianteEjB.findNotaEstudiante(log, es);
-                System.out.println("RESPUESTA****" + logNota);
                 if (logNota == null) {
                     Logronota logNotaNew = new Logronota();
                     Estadologronota estLogroNota = new Estadologronota();
@@ -757,8 +722,6 @@ public class mbvRectificarNota {
             cargarContenido();
             tx.commit();
         } catch (Exception e) {
-            System.out.println("EERROORR" + e.toString());
-            e.printStackTrace();
             //actualizarNota(contenido, es);
             //cargarEstudiantes();
             tx.rollback();
@@ -768,12 +731,10 @@ public class mbvRectificarNota {
     }
 
     public void prueba() {
-        System.out.println("PRUEBA");
         this.editable = false;
     }
 
     public void pruebaac() {
-        System.out.println("PRUEBADC");
         this.editable = true;
     }
 
@@ -791,13 +752,10 @@ public class mbvRectificarNota {
             init();
             cursoSelected.getCicloId().getNumero();
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("ooooOOOO" + e.toString());
         }
     }
 
     public void init() throws JRException {
-        System.out.println("entro init");
         JRBeanCollectionDataSource beanCollectionDataSource = new JRBeanCollectionDataSource(reporte);
         String reportpath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/notasProfesor.jasper");
         /*Map<String, Object> parametros = new HashMap<String, Object>();
@@ -828,7 +786,6 @@ public class mbvRectificarNota {
                 this.contenidoPrincipal = true;
             }
         } else {
-            System.out.println("ENTRA ELSE PRUEBA ");
             contenidoPrincipal = false;
         }
     }
@@ -909,7 +866,6 @@ public class mbvRectificarNota {
             int tam = 2 + columns.size();
             float[] ft = new float[tam];
             for (int i = 0; i < tam; i++) {
-                System.out.println(i);
                 if (i == 0) {
                     ft[i] = 80f;
                 } else if (i == tam - 1) {
@@ -948,28 +904,22 @@ public class mbvRectificarNota {
             parNombre.setAlignment(Element.ALIGN_CENTER);
             document.add(parNombre);
         } catch (Exception e) {
-            System.out.println("ENTRO 3 ");
-            System.out.println("Error " + e.getMessage());
         }
         document.close();
         FacesContext context = FacesContext.getCurrentInstance();
         Object response = context.getExternalContext().getResponse();
         if (response instanceof HttpServletResponse) {
             try {
-                System.out.println("ENTRO 4 ");
                 HttpServletResponse hsr = (HttpServletResponse) response;
                 hsr.reset();
                 Faces.sendFile(baos.toByteArray(), "reporteNotas.pdf", false);
                 try {
-                    System.out.println("ENTRO 5 ");
                     ServletOutputStream out = hsr.getOutputStream();
                     baos.writeTo(out);
                     out.flush();
                 } catch (IOException ex) {
-                    System.out.println("ENTRO 6 ");
-                    System.out.println("Error:  " + ex.getMessage());
+                    
                 }
-                System.out.println("ENTRO 7 ");
                 context.responseComplete();
             } catch (IOException ex) {
                 Logger.getLogger(mbvConstanciaEstudios.class.getName()).log(Level.SEVERE, null, ex);

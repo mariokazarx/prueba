@@ -12,8 +12,6 @@ import com.lowagie.text.Image;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Rectangle;
-import com.lowagie.text.pdf.PdfContentByte;
-import com.lowagie.text.pdf.PdfGState;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
@@ -27,8 +25,6 @@ import com.tesis.beans.LogroFacade;
 import com.tesis.beans.LogronotaFacade;
 import com.tesis.beans.PeriodoFacade;
 import com.tesis.clases.BackgroundF;
-import com.tesis.clases.EstudianteNotas;
-import com.tesis.clases.ReporteNotasProfesor;
 import com.tesis.entity.Anlectivo;
 import com.tesis.entity.Asignatura;
 import com.tesis.entity.Asignaturaciclo;
@@ -47,9 +43,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -60,11 +54,6 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JasperExportManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.omnifaces.util.Faces;
 
 /**
@@ -74,6 +63,7 @@ import org.omnifaces.util.Faces;
 @ManagedBean
 @ViewScoped
 public class mbvReporteNotasProfesor implements Serializable {
+    private static final long serialVersionUID = -5152318452926478538L;
 
     private boolean login;
     private Anlectivo aEscolar;
@@ -222,7 +212,6 @@ public class mbvReporteNotasProfesor implements Serializable {
             login = mbslogin.isLogin();
 
         } catch (Exception e) {
-            System.out.println(e.toString());
             this.login = false;
             //profesor = null;
         }
@@ -290,7 +279,6 @@ public class mbvReporteNotasProfesor implements Serializable {
     public void cargarAsignatura() {
         if (this.asignaturaSelected.getAsignaturaId() != null) {
             this.asignaturaSelected = asignaturaEjb.find(this.asignaturaSelected.getAsignaturaId());
-            System.out.println("CICLO" + curso.getCicloId());
             Asignaturaciclo asg = asignaturaCicloEjb.asignaturasCiclo(curso.getCicloId(), asignaturaSelected);
             contenido = contenidoEjb.getContenidoByAll(profesor, curso, asg, periodoSelected);
             this.mostrarBoton = true;
@@ -309,7 +297,6 @@ public class mbvReporteNotasProfesor implements Serializable {
         if (notaEst != null) {
             nota = notaEst.getValor();
         }
-        System.out.println("***TABLA**" + nota);
         return nota.setScale(1, RoundingMode.HALF_EVEN);
     }
 
@@ -403,7 +390,6 @@ public class mbvReporteNotasProfesor implements Serializable {
             int tam = 2 + logrosaux.size();
             float[] ft = new float[tam];
             for (int i = 0; i < tam; i++) {
-                System.out.println(i);
                 if (i == 0) {
                     ft[i] = 80f;
                 } else if (i == tam - 1) {
@@ -445,28 +431,21 @@ public class mbvReporteNotasProfesor implements Serializable {
             document.add(parNombre);
 
         } catch (Exception e) {
-            System.out.println("ENTRO 3 ");
-            System.out.println("Error " + e.getMessage());
         }
         document.close();
         FacesContext context = FacesContext.getCurrentInstance();
         Object response = context.getExternalContext().getResponse();
         if (response instanceof HttpServletResponse) {
             try {
-                System.out.println("ENTRO 4 ");
                 HttpServletResponse hsr = (HttpServletResponse) response;
                 hsr.reset();
                 Faces.sendFile(baos.toByteArray(), "reporteNotas.pdf", false);
                 try {
-                    System.out.println("ENTRO 5 ");
                     ServletOutputStream out = hsr.getOutputStream();
                     baos.writeTo(out);
                     out.flush();
                 } catch (IOException ex) {
-                    System.out.println("ENTRO 6 ");
-                    System.out.println("Error:  " + ex.getMessage());
                 }
-                System.out.println("ENTRO 7 ");
                 context.responseComplete();
             } catch (IOException ex) {
                 Logger.getLogger(mbvConstanciaEstudios.class.getName()).log(Level.SEVERE, null, ex);

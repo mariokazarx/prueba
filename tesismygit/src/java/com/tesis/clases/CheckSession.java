@@ -1,7 +1,7 @@
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
- */
+ */ 
 package com.tesis.clases;
 
 import com.tesis.entity.Profesor;
@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author Mario Jurado
  */
 public class CheckSession implements PhaseListener {
+    private static final long serialVersionUID = -2713924006104518931L;
 
     private Usuario usr;
     private boolean login;
@@ -33,12 +34,17 @@ public class CheckSession implements PhaseListener {
     final List<String> urlsProfesor = Arrays.asList("faces/academico/estudiantes.xhtml", "faces/academico/matriculas.xhtml",
             "faces/academico/newestudiante.xhtml", "faces/anlectivo/anlectivos.xhtml", "faces/anlectivo/cursos.xhtml",
             "faces/anlectivo/newAnlectivo.xhtml", "faces/anlectivo/newPeriodo.xhtml", "faces/academico/newcurso.xhtml",
-            "faces/academico/periodos.xhtml", "faces/configuracion/areas.xhtml", "faces/configuracion/asignaturas.xhtml",
+            "faces/anlectivo/periodos.xhtml", "faces/configuracion/areas.xhtml", "faces/configuracion/asignaturas.xhtml",
             "faces/configuracion/ciclo.xhtml", "faces/configuracion/configuracion.xhtml", "faces/configuracion/criterioevaluacion.xhtml",
             "faces/configuracion/escalas.xhtml", "faces/configuracion/materiasciclos.xhtml", "faces/configuracion/newarea.xhtml",
             "faces/configuracion/newasignatura.xhtml", "faces/configuracion/newciclo.xhtml", "faces/configuracion/newconf.xhtml",
             "faces/configuracion/newcriterioeval.xhtml", "faces/configuracion/newescala.xhtml", "faces/profesores/cargaAcademica.xhtml",
-            "faces/profesores/newprofesor.xhtml", "faces/profesores/profesores.xhtml", "faces/profesores/rectificarNotas.xhtml");
+            "faces/profesores/newprofesor.xhtml", "faces/profesores/profesores.xhtml", "faces/profesores/rectificarNotas.xhtml",
+            "faces/reportes/boletinPeriodo.xhtml", "faces/reportes/boletinesPeriodoAñosAnteriores.xhtml", "faces/reportes/certificadoMatricula.xhtml",
+            "faces/reportes/consolidadoPeriodo.xhtml", "faces/reportes/consolidadoPeriodoAñosAnteriores.xhtml", "faces/reportes/consolidadofinal.xhtml",
+            "faces/reportes/consolidadofinalAnterior.xhtml", "faces/reportes/constanciaEstudios.xhtml", "faces/reportes/estadisticas.xhtml",
+            "faces/reportes/reporteAsignacionAcademica.xhtml", "faces/reportes/reporteAsignacionAñosAnteriores.xhtml", "faces/reportes/reporteMatriculaAñosAnteriores.xhtml",
+            "faces/reportes/reporteMatriculas.xhtml", "faces/sistema/newusuario.xhtml", "faces/sistema/perfilUsuario.xhtml", "faces/sistema/usuarios.xhtml");
 
     @Override
     public void afterPhase(PhaseEvent event) {
@@ -62,9 +68,9 @@ public class CheckSession implements PhaseListener {
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
             profesor = mbslogin.getProfesor();
             login = mbslogin.isLogin();
-            System.out.println(mbslogin.getProfesor().getNombre());
+            //System.out.println(mbslogin.getProfesor().getNombre());
         } catch (Exception e) {
-            System.out.println(e.toString());
+            //System.out.println(e.toString());
             //profesor = null;
         }
 
@@ -76,12 +82,12 @@ public class CheckSession implements PhaseListener {
         boolean enRestablecer = url.indexOf(PATH_RESTABLECER) != -1;
         //boolean enLogin2 = url.indexOf("/index.html") != -1;
 
-        System.out.println("LOGIN PROFE " + profesor + "booolean 1 "+enLogin+"boolean 2 "+enRecuperar+"boolean 3"+enRestablecer);
+        //System.out.println("LOGIN PROFE " + profesor + "booolean 1 "+enLogin+"boolean 2 "+enRecuperar+"boolean 3"+enRestablecer);
         //si no esta logeado y no se encuentre en login
         if (profesor.getProfesorId() != null) {
             for (String urlAux : urlsProfesor) {
                 boolean enOtra = url.indexOf(urlAux) != -1;
-                System.out.println("LOGIN PROFE " + enOtra);
+                //System.out.println("LOGIN PROFE " + enOtra);
                 if (enOtra) {
                     redirect("/plantilla.xhtml");
                     break;
@@ -134,7 +140,7 @@ public class CheckSession implements PhaseListener {
         try {
             FacesContext.getCurrentInstance().getExternalContext().redirect(url);
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 }

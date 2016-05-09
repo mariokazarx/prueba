@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:head>
+        <title>Nueva Escala</title>
+        <style type="text/css">
+            .ui-widget {
+                font-size: 90%;
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <ui:composition template="./../plantilla.xhtml">
+            <ui:define name="content">
+                <h:form id="frmReporteFinal" styleClass="form-principal" target="_blank">
+                    <h3>Constancia de estudios</h3>
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
+                    <f:metadata>
+                        <f:event type="preRenderView" listener="#{mbvCertificadoProfesor.initRender}" />
+                    </f:metadata>
+                    <h:panelGroup rendered="#{mbvCertificadoProfesor.consultar}">
+                        <div class="div-buscar-p">
+                            <div style="margin-right: 15px">
+                                <p:outputLabel for="txtBusqueda" value="No identificacion: " />
+                            </div>
+                            <div>
+                                <p:inputText id="txtNombre" value="#{mbvCertificadoProfesor.identificacion}"  size="13" />
+                            </div>
+                            <div style="margin-left: 15px">
+                                <p:commandButton id="txtBusqueda" value="Buscar" ajax="true" actionListener="#{mbvCertificadoProfesor.buscar}" update="frmReporteFinal" />
+                            </div>
+                        </div>
+
+                        <h:panelGroup style="margin-top: 15px" rendered="#{mbvCertificadoProfesor.mostrarBusqueda}">
+                            <p:panelGrid columns="2" id="profesorTable">
+                                <f:facet name="header">
+                                    <p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/fotosprofesores/#{mbvCertificadoProfesor.profesor.foto}" width="240" height="240" cache="false" alt="Sin definir" style="border-radius: 4px;box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7)"/>
+                                </f:facet>
+
+                                <h:outputText value="Cedula:" />
+                                <h:outputText value="#{mbvCertificadoProfesor.profesor.cedula}" />
+
+
+                                <h:outputText value="Nombres:" />
+                                <h:outputText value="#{mbvCertificadoProfesor.profesor.nombre}" />
+
+                                <h:outputText value="Apellidos:" />
+                                <h:outputText value="#{mbvCertificadoProfesor.profesor.apellido}" />
+
+                                <h:outputText value="Email:" />
+                                <h:outputText value="#{mbvCertificadoProfesor.profesor.correo}" />
+
+                                <h:outputText value="Titulo:" />
+                                <h:outputText value="#{mbvCertificadoProfesor.profesor.tituloProfesional}" />
+                            </p:panelGrid>
+                        </h:panelGroup>
+                        <p:outputPanel id="panelReporteMatriculas" rendered="#{mbvCertificadoProfesor.mostrarGenerar}" style="margin-top: 15px;margin-bottom: 20px">
+                            <p:commandButton id="btnReporte" value="Generar constancia" ajax="false" icon="icon-report" action= "#{mbvCertificadoProfesor.imprimirnue}" style="margin-top:5px" />
+                        </p:outputPanel>    
+
+                    </h:panelGroup>
+                </h:form>        
+            </ui:define>
+        </ui:composition>
+
+    </h:body>
+</html>
+

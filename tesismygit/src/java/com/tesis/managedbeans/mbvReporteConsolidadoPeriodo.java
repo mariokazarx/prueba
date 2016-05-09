@@ -28,22 +28,18 @@ import com.tesis.beans.MatriculaFacade;
 import com.tesis.beans.PeriodoFacade;
 import com.tesis.beans.UsuarioRoleFacade;
 import com.tesis.clases.BackgroundF;
-import com.tesis.clases.ContenidoBoletin;
-import com.tesis.clases.ReporteAsignacionAcademica;
 import com.tesis.clases.ReporteBoletin;
 import com.tesis.entity.Anlectivo;
 import com.tesis.entity.Contenidotematico;
 import com.tesis.entity.Curso;
 import com.tesis.entity.Estudiante;
-import com.tesis.entity.Logro;
-import com.tesis.entity.Logronota;
 import com.tesis.entity.Nota;
 import com.tesis.entity.Periodo;
 import com.tesis.entity.Usuario;
 import com.tesis.entity.UsuarioRole;
-import java.awt.Color;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
@@ -51,7 +47,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -63,11 +58,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JasperExportManager;
-import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.omnifaces.util.Faces;
 
 /**
@@ -76,7 +67,8 @@ import org.omnifaces.util.Faces;
  */
 @ManagedBean
 @ViewScoped
-public class mbvReporteConsolidadoPeriodo {
+public class mbvReporteConsolidadoPeriodo implements Serializable{
+    private static final long serialVersionUID = 7298959117010728707L;
 
     private List<Curso> cursos;
     private Curso cursoSelected;
@@ -226,9 +218,7 @@ public class mbvReporteConsolidadoPeriodo {
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
             usr = mbslogin.getUsuario();
             this.login = mbslogin.isLogin();
-            System.out.println("usuario" + usr.getNombres() + "Login" + login);
         } catch (Exception e) {
-            System.out.println(e.toString());
             this.login = false;
         }
         if (this.usr != null) {
@@ -308,28 +298,23 @@ public class mbvReporteConsolidadoPeriodo {
             for (int i = 0; i < row.length; i++) {
                 if (row[i] instanceof Estudiante) {
                     Estudiante est = (Estudiante) row[i];
-                    System.out.println("OBJ22 " + est.getNombre());
                 }
-                System.out.println("OBJ22 " + row[i]);
             }
         }
     }
 
     public void imprimir() {
         if (!login) {
-            System.out.println("Usuario NO logeado");
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
             return;
         }
         if (this.consultar) {
-            System.out.println("ENTRO 1 ");
             List<Object> estudiantesPromedio = new ArrayList<Object>();
             List<Curso> cursos22 = new ArrayList<Curso>();
             Document document = new Document(PageSize.LEGAL.rotate());
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             try {
-                System.out.println("ENTRO 2 ");
                 PdfWriter writer = PdfWriter.getInstance(document, baos);
                 BackgroundF event = new BackgroundF();
                 writer.setPageEvent(event);
@@ -342,14 +327,11 @@ public class mbvReporteConsolidadoPeriodo {
                 if (this.seleccion.compareTo("todos") == 0) {
                     this.cursosReporte.clear();
                     Anlectivo auxEscolar = aEscolarEjb.getIniciado();
-                    if (!auxEscolar.getCursoList().isEmpty()) {
-                        this.cursosReporte = auxEscolar.getCursoList();
+                    if (!cursoEjb.getCursosByAño(aEscolar).isEmpty()) {//auxEscolar.getCursoList().isEmpty()
+                        this.cursosReporte = cursoEjb.getCursosByAño(aEscolar);//auxEscolar.getCursoList();
                     }
                 }
-                System.out.println("ENTRO 222 " + this.cursosReporte.size());
                 for (Curso curPrueba : cursosReporte) {
-
-                    System.out.println("ENTRO for ");
                     Curso cur = cursoEjb.find(curPrueba.getCursoId());
                     Periodo periodo = periodoEjb.find(periodoSelected.getPeriodoId());
                     estudiantesPromedio = estudianteEjB.getFinalPeriodo(cur, periodo);
@@ -394,7 +376,6 @@ public class mbvReporteConsolidadoPeriodo {
                     table.setWidthPercentage(100);
                     float[] ft = new float[tam];
                     for (int i = 0; i < tam; i++) {
-                        System.out.println(i);
                         if (i == 0) {
                             ft[i] = 2f;
                         } else if (i == tam - 1) {
@@ -514,8 +495,6 @@ public class mbvReporteConsolidadoPeriodo {
                     document.newPage();
                 }
             } catch (Exception ex) {
-                System.out.println("ENTRO 3 ");
-                System.out.println("Error " + ex.getMessage());
             }
 
             document.close();
@@ -523,27 +502,21 @@ public class mbvReporteConsolidadoPeriodo {
             Object response = context.getExternalContext().getResponse();
             if (response instanceof HttpServletResponse) {
                 try {
-                    System.out.println("ENTRO 4 ");
                     HttpServletResponse hsr = (HttpServletResponse) response;
                     hsr.reset();
                     Faces.sendFile(baos.toByteArray(), "ConsolidadoPeriodo.pdf", false);
                     try {
-                        System.out.println("ENTRO 5 ");
                         ServletOutputStream out = hsr.getOutputStream();
                         baos.writeTo(out);
                         out.flush();
                     } catch (IOException ex) {
-                        System.out.println("ENTRO 6 ");
-                        System.out.println("Error:  " + ex.getMessage());
                     }
-                    System.out.println("ENTRO 7 ");
                     context.responseComplete();
                 } catch (IOException ex) {
                     Logger.getLogger(mbvConstanciaEstudios.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         } else {
-            System.out.print("error permiso denegado");
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
         }
@@ -564,7 +537,7 @@ public class mbvReporteConsolidadoPeriodo {
             if (this.seleccion.compareTo("curso") == 0) {
                 this.cursoSelected = new Curso();
                 this.cursosReporte.clear();
-                this.cursos = aEscolar.getCursoList();
+                this.cursos = cursoEjb.getCursosByAño(aEscolar);//aEscolar.getCursoList();
                 this.mostrarCursos = true;
                 this.mostrarBoton = false;
             }
@@ -581,7 +554,7 @@ public class mbvReporteConsolidadoPeriodo {
         if (this.seleccion.compareTo("todos") == 0) {
             Anlectivo auxEscolar = aEscolarEjb.getIniciado();
             this.cursosReporte.clear();
-            this.cursosReporte = auxEscolar.getCursoList();
+            this.cursosReporte = cursoEjb.getCursosByAño(aEscolar);//auxEscolar.getCursoList();
             this.cursoSelected = new Curso();
             this.mostrarBoton = true;
             this.mostrarCursos = false;
@@ -589,7 +562,7 @@ public class mbvReporteConsolidadoPeriodo {
         if (this.seleccion.compareTo("curso") == 0) {
             this.cursoSelected = new Curso();
             this.cursosReporte.clear();
-            this.cursos = aEscolar.getCursoList();
+            this.cursos = cursoEjb.getCursosByAño(aEscolar);//aEscolar.getCursoList();
             this.mostrarCursos = true;
             this.mostrarBoton = false;
         }
@@ -606,17 +579,17 @@ public class mbvReporteConsolidadoPeriodo {
     public void initRender() {
         this.aEscolar = aEscolarEjb.getIniciado();
         if (aEscolar != null) {
-            if (aEscolar.getCursoList().isEmpty()) {
+            if (cursoEjb.getCursosByAño(aEscolar).isEmpty()) {//aEscolar.getCursoList().isEmpty()
                 this.mostrarPrincipal = false;
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Aun no ha han registrado cursos"));
             }
-            if (aEscolar.getPeriodoList().isEmpty()) {
+            if (periodoEJb.getPeriodosByAnio(aEscolar).isEmpty()) {//aEscolar.getPeriodoList().isEmpty()
                 this.mostrarPrincipal = false;
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Aun no ha han registrado periodos"));
             }
-            if (!aEscolar.getPeriodoList().isEmpty() && !aEscolar.getCursoList().isEmpty()) {
+            if (!periodoEJb.getPeriodosByAnio(aEscolar).isEmpty() && !cursoEjb.getCursosByAño(aEscolar).isEmpty()) {//aEscolar.getPeriodoList().isEmpty() && !aEscolar.getCursoList().isEmpty()
                 if (!this.consultar) {
                     FacesContext.getCurrentInstance().
                             addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para generar reportes"));

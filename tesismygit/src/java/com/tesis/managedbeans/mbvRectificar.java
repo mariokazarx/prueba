@@ -39,6 +39,7 @@ import javax.transaction.UserTransaction;
 @ManagedBean
 @ViewScoped
 public class mbvRectificar implements Serializable {
+    private static final long serialVersionUID = -3217110688918374122L;
 
     private Profesor profesor;
     private List<Profesor> profesores;
@@ -212,9 +213,7 @@ public class mbvRectificar implements Serializable {
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
              usr = mbslogin.getUsuario();
              this.login = mbslogin.isLogin();
-            System.out.println("usuario"+usr.getNombres()+"Login"+login);
         } catch (Exception e) {
-            System.out.println(e.toString());
             this.login = false;
         }
         if(this.usr!=null){
@@ -263,7 +262,6 @@ public class mbvRectificar implements Serializable {
     }
 
     public void cargarContenido(){
-        System.out.println("PEROIODP SELECTED"+periodoSelected);
         if(periodoSelected.getPeriodoId()!=null){
             //si el periodo esta en evaluacion no se puede
             periodoSelected = periodoEjb.find(periodoSelected.getPeriodoId());
@@ -271,7 +269,6 @@ public class mbvRectificar implements Serializable {
                 contenidosRectificar = contenidoEjb.getRectificar(periodoSelected, profesor);
                 //contenidosRectificados = contenidoEjb.getRectificados(periodoSelected, profesor);
             }else{
-                System.out.println("ENTRO MENSAJE");
                 this.contenidoSelected = new Contenidotematico();
                 contenidosRectificar.clear();
                 FacesContext.getCurrentInstance().
@@ -286,7 +283,6 @@ public class mbvRectificar implements Serializable {
     }
     
     public void cargarBoton(){
-        System.out.println("PEROIODP SELECTED"+contenidoSelected);
         if(contenidoSelected.getContenidotematicoId()!=null){
             this.banderaRectificar = true;
         }
@@ -298,7 +294,6 @@ public class mbvRectificar implements Serializable {
     public void rectificarMateria(){
         try {
             if(!login){
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
                 return;
@@ -324,7 +319,6 @@ public class mbvRectificar implements Serializable {
     public void terminarRectificar(Contenidotematico contenicoAux){
         try {
             if(!login){
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
                 return;
@@ -351,7 +345,6 @@ public class mbvRectificar implements Serializable {
 
         List<Profesor> allThemes = profesorEjb.findAll();
         List<Profesor> filteredThemes = new ArrayList<Profesor>();
-        System.out.println("ccc" + query + allThemes.size());
         for (int i = 0; i < allThemes.size(); i++) {
             Profesor skin = allThemes.get(i);
             if (skin.getCedula().startsWith(query)) {
@@ -365,23 +358,19 @@ public class mbvRectificar implements Serializable {
     public void prueba() {
         try {
             if (this.profesor != null) {
-                System.out.println("aaaaww"+this.profesor.getNombre());
                 //cursoSelected = cursoEjb.find(1);
                 this.cargarDatos(profesor);
             } else {
-                System.out.println("errrrooorrrr 123" );
                 this.contenidoPrincipal = false;
             }
 
         } catch (Exception e) {
-            System.out.println("errrrooorrrr" + e.toString());
             this.contenidoPrincipal = false;
         }
 
     }
 
     public void mensajeAdvertencia(){
-        System.out.println("mensjaeee");
         
         FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Asignacion academica", "Exitosa"));
@@ -390,24 +379,19 @@ public class mbvRectificar implements Serializable {
     private void cargarDatos(Profesor aux){
         if (aux != null) {
             this.profesor = aux;
-            System.out.println("QQQQQ1" + this.profesor + "EEE1" + profesor.getNombre());
             if(profesor.getEstadoProfesorId().getEstadoProfesorId()==1){
                 contenidosRectificados = contenidoEjb.getRectificadosTodos(profesor);
                 //profesor activo
-                System.out.println("entro 1");
                 anlectivos = anlectivoEjb.getAñosEnUso();
                 if(!this.anlectivos.isEmpty()){ 
                     //hay año iniciado
-                    System.out.println("entro 3");
                     this.contenidoPrincipal = true;
                     
                 }else{
-                    System.out.println("entro 5");
                     this.contenidoPrincipal = false;
                 }
             }
             else{
-                System.out.println("entro 6");
                 this.contenidoPrincipal = false;
                 //profesor debe estar activo 
                 //alño esdcolar iniciado 
@@ -416,7 +400,6 @@ public class mbvRectificar implements Serializable {
             }
         }
         else{
-            System.out.println("entro 7");
             this.profesor = new Profesor();
         }
     }

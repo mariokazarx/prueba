@@ -109,7 +109,6 @@ public class mbvRecuperarContra implements Serializable {
                     enviar = true;
                 } else {
                     //usuario no existe
-                    System.out.println("usuario no existe");
                     FacesContext.getCurrentInstance().
                             addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Datos incorrectos"));
                     return;
@@ -129,7 +128,6 @@ public class mbvRecuperarContra implements Serializable {
                     enviar = true;
                 } else {
                     //usuario no existe
-                    System.out.println("usuario no existe");
                     FacesContext.getCurrentInstance().
                             addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Datos incorrectos"));
                     return;
@@ -153,13 +151,11 @@ public class mbvRecuperarContra implements Serializable {
                 context.getExternalContext().redirect("restablecerContrasenia.xhtml");
             }
         } catch (MessagingException me) {
-            me.printStackTrace();
             //Aqui se deberia o mostrar un mensaje de error o en lugar
             //de no hacer nada con la excepcion, lanzarla para que el modulo
             //superior la capture y avise al usuario con un popup, por ejemplo.
             return;
         } catch (Exception ex) {
-            ex.printStackTrace();
             return;
         }
     }

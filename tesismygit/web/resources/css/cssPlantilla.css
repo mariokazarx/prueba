@@ -83,7 +83,6 @@
     width: 150px;
     height: 170px;
     margin: auto;
-    background-image: url("#{resource['imagenes/dila1.png']}");
     background-repeat: no-repeat;
 }
 .saludo{
@@ -150,7 +149,6 @@
 
 @media screen and (max-width: 680px){
     .contenedor-top1{
-        background-image: url("#{resource['imagenes/escudo2.png']}");
         background-size: cover;
         width: 30%;
         display: none;
@@ -179,7 +177,6 @@
 }
 @media screen and (max-device-width: 680px){
     .contenedor-top1{
-        background-image: url("#{resource['imagenes/escudo2.png']}");
         background-size: cover;
         width: 30%;
         display: none;

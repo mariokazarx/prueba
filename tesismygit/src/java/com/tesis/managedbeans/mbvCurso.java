@@ -34,6 +34,7 @@ import org.primefaces.context.RequestContext;
 @ManagedBean
 @ViewScoped
 public class mbvCurso implements Serializable {
+    private static final long serialVersionUID = 3509165305608421289L;
 
     private Curso curso;
     private List<Curso> cursos;
@@ -163,9 +164,7 @@ public class mbvCurso implements Serializable {
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
             usr = mbslogin.getUsuario();
             this.login = mbslogin.isLogin();
-            System.out.println("usuario" + usr.getNombres() + "Login" + login);
         } catch (Exception e) {
-            System.out.println(e.toString());
             this.login = false;
         }
         if (this.usr != null) {
@@ -199,19 +198,16 @@ public class mbvCurso implements Serializable {
             this.anlectivoSelected = anlectivoEJB.find(anlectivoSelected.getAnlectivoId());
             //System.out.println("mma"+anlectivoSelected.getConfiguracionId().getNombre());
             this.ciclosSelected = cicloEJB.getByConfiguracion(anlectivoSelected.getConfiguracionId());
-            System.out.println(this.ciclosSelected.isEmpty());
             //if(this.ciclosSlected.isEmpty()==true){
             //this.banAsig=false;
             //}
         } catch (Exception e) {
-            System.out.println("mmaaaaa" + e.getMessage());
         }
     }
 
     public void insertar() {
         try {
             if (!login) {
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
@@ -225,7 +221,6 @@ public class mbvCurso implements Serializable {
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Curso creado satisfactoriamente"));
                 inicioPagina();
             } else {
-                System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
@@ -243,7 +238,6 @@ public class mbvCurso implements Serializable {
 
     public void newCurso() {
         if (!login) {
-            System.out.println("Usuario NO logeado");
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
             return;
@@ -272,7 +266,6 @@ public class mbvCurso implements Serializable {
     public void eliminarCurso(Curso curso) {
         try {
             if (!login) {
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
@@ -292,7 +285,6 @@ public class mbvCurso implements Serializable {
                 }
                 inicioPagina();
             } else {
-                System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
@@ -305,7 +297,6 @@ public class mbvCurso implements Serializable {
     public void cargarCurso(int cursoId) {
         try {
             if (!login) {
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;

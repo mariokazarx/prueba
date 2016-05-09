@@ -37,17 +37,13 @@ public class RoleFacade extends AbstractFacade<Role> {
                 return true;
             }
             else{
-                System.out.println("ERROR 1"+roleId);
                 return false;
             }
         }
         catch (PersistenceException e) {
-            e.printStackTrace();
             return false;
         }
         catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("ERROR 2"+roleId);
             return false;
         }
         

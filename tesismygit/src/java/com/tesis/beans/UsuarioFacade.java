@@ -34,7 +34,6 @@ public class UsuarioFacade extends AbstractFacade<Usuario> {
         try {
             Query cq = em.createNamedQuery("Usuario.findByCorreo");
             cq.setParameter("correo", correo);
-            System.out.println("RESULTQDO USUARIO" + cq.getSingleResult());
             if (cq.getSingleResult() == null) {
                 return null;
             } else {
@@ -50,7 +49,6 @@ public class UsuarioFacade extends AbstractFacade<Usuario> {
             cq.setParameter("identificacion",identificacion);
             if(cq.getSingleResult()!=null){
                 Long count = (Long) cq.getSingleResult();
-                System.out.println("Entra resultado "+count);
                 if(count != 0){
                     return true;
                 }else{
@@ -58,15 +56,12 @@ public class UsuarioFacade extends AbstractFacade<Usuario> {
                 }
             }
             else{
-                System.out.println("ENTRA 2");
                 return false;
             }
         } catch (PersistenceException e) {
-            System.out.println("ENTRA 3");
             return false;
         }
         catch (Exception e) {
-            System.out.println("ENTRA 4");
             return false;
         }
     }
@@ -76,7 +71,6 @@ public class UsuarioFacade extends AbstractFacade<Usuario> {
             cq.setParameter("correo",correo);
             if(cq.getSingleResult()!=null){
                 Long count = (Long) cq.getSingleResult();
-                System.out.println("Entra resultado "+count);
                 if(count != 0){
                     return true;
                 }else{
@@ -84,15 +78,12 @@ public class UsuarioFacade extends AbstractFacade<Usuario> {
                 }
             }
             else{
-                System.out.println("ENTRA 2");
                 return false;
             }
         } catch (PersistenceException e) {
-            System.out.println("ENTRA 3");
             return false;
         }
         catch (Exception e) {
-            System.out.println("ENTRA 4");
             return false;
         }
     }
@@ -103,15 +94,12 @@ public class UsuarioFacade extends AbstractFacade<Usuario> {
                 return cq.getResultList();
             }
             else{
-                System.out.println("ENTRA 2");
                 return null;
             }
         } catch (PersistenceException e) {
-            System.out.println("ENTRA 3");
             return null;
         }
         catch (Exception e) {
-            System.out.println("ENTRA 4");
             return null;
         }
     }
@@ -127,11 +115,9 @@ public class UsuarioFacade extends AbstractFacade<Usuario> {
             }
         }
         catch (PersistenceException e) {
-            e.printStackTrace();
             return false;
         }
         catch (Exception e) {
-            e.printStackTrace();
             return false;
         }
         

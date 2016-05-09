@@ -46,6 +46,7 @@ import org.omnifaces.util.Faces;
 @ManagedBean
 @ViewScoped
 public class mbvReporteMatriculasAnteriores implements Serializable {
+    private static final long serialVersionUID = 4211857195986800143L;
 
     private List<Curso> cursos;
     private List<Curso> cursosReporte;
@@ -174,9 +175,7 @@ public class mbvReporteMatriculasAnteriores implements Serializable {
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
             usr = mbslogin.getUsuario();
             this.login = mbslogin.isLogin();
-            System.out.println("usuario" + usr.getNombres() + "Login" + login);
         } catch (Exception e) {
-            System.out.println(e.toString());
             this.login = false;
         }
         if (this.usr != null) {
@@ -238,23 +237,19 @@ public class mbvReporteMatriculasAnteriores implements Serializable {
     public void generar() {
         try {
             anlectivoSelected = aEscolarEjb.find(anlectivoSelected.getAnlectivoId());
-            System.out.println("curso" + cursoSelected);
             if (cursoSelected != null && this.todos.compareTo("curso") == 0) {
                 this.cursosReporte.clear();
                 cursoSelected = cursoEjb.find(cursoSelected.getCursoId());
                 this.cursosReporte.add(cursoSelected);
             }
-            System.out.println("curso" + cursosReporte);
             reporte.clear();
             for (Curso cur : this.cursosReporte) {
-                System.out.println("entro for curso");
                 List<Estudiante> est = new ArrayList<Estudiante>();
                 MatriculaReporte mtrReporte = new MatriculaReporte();
                 mtrReporte.setAño(anlectivoSelected.getAnio());
                 mtrReporte.setCurso(cur.getNombre());
                 mtrReporte.setNumero(cur.getCicloId().getNumero());
                 for (Matricula matriculasCurso : matriculaEjb.matriculasTerminadasCurso(cur)) {
-                    System.out.println("entro for");
                     est.add(matriculasCurso.getEstudianteId());
                 }
                 mtrReporte.setEstudiantes(est);
@@ -262,13 +257,10 @@ public class mbvReporteMatriculasAnteriores implements Serializable {
             }
             init();
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("ooooOOOO" + e.toString());
         }
     }
 
     public void init() throws JRException {
-        System.out.println("entro init");
         JRBeanCollectionDataSource beanCollectionDataSource = new JRBeanCollectionDataSource(reporte);
         String reportpath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/Cursos.jasper");
         /*Map<String, Object> parametros = new HashMap<String, Object>();
@@ -280,7 +272,6 @@ public class mbvReporteMatriculasAnteriores implements Serializable {
 
     public void pdf() throws JRException, IOException {
         if (!login) {
-            System.out.println("Usuario NO logeado");
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
             return;
@@ -294,19 +285,17 @@ public class mbvReporteMatriculasAnteriores implements Serializable {
             Faces.sendFile(JasperExportManager.exportReportToPdf(jasperPrint), "reporteMatricula.pdf", false);
             FacesContext.getCurrentInstance().responseComplete();
         }else {
-            System.out.print("error permiso denegado");
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
         }
     }
 
     public void cargarCurso() {
-        System.out.println("todos" + this.todos);
         if (this.todos.compareTo("todos") == 0) {
             this.mostrarBoton = true;
             this.mostrarCursos = false;
             anlectivoSelected = aEscolarEjb.find(anlectivoSelected.getAnlectivoId());
-            if (!anlectivoSelected.getCursoList().isEmpty()) {
+            if (!cursoEjb.getCursosByAño(anlectivoSelected).isEmpty()) {//anlectivoSelected.getCursoList().isEmpty()
                 this.cursosReporte = cursoEjb.getCursosByAño(anlectivoSelected);
                 this.cursoSelected = new Curso();
             } else {
@@ -317,7 +306,6 @@ public class mbvReporteMatriculasAnteriores implements Serializable {
                 this.cursos = cursoEjb.getCursosByAño(anlectivoSelected);
             } else {
             }
-            System.out.println("CURSOS " + this.cursos);
             this.mostrarCursos = true;
             this.mostrarBoton = false;
             this.cursoSelected = new Curso();
@@ -362,7 +350,7 @@ public class mbvReporteMatriculasAnteriores implements Serializable {
                 this.mostrarBoton = true;
                 this.mostrarCursos = false;
                 anlectivoSelected = aEscolarEjb.find(anlectivoSelected.getAnlectivoId());
-                if (!anlectivoSelected.getCursoList().isEmpty()) {
+                if (!cursoEjb.getCursosByAño(anlectivoSelected).isEmpty()) {//anlectivoSelected.getCursoList().isEmpty()
                     this.cursosReporte = cursoEjb.getCursosByAño(anlectivoSelected);
                     this.cursoSelected = new Curso();
                 } else {

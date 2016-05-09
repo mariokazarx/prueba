@@ -57,7 +57,6 @@ public class AnlectivoFacade extends AbstractFacade<Anlectivo> {
                 bandera = false;
             }
         } catch (Exception e) {
-            System.out.println("ERROR[]"+e.toString());
             bandera = false;
         }
         return bandera;
@@ -88,10 +87,8 @@ public class AnlectivoFacade extends AbstractFacade<Anlectivo> {
         try {
             Query cq = em.createNamedQuery("Anlectivo.añoEnUso");
             cq.setParameter("anio",anio);
-            System.out.println("ENTRA 1"+anio);
             if(cq.getSingleResult()!=null){
                 Long count = (Long) cq.getSingleResult();
-                System.out.println("Entra resultado "+count);
                 if(count != 0){
                     return true;
                 }else{
@@ -99,15 +96,12 @@ public class AnlectivoFacade extends AbstractFacade<Anlectivo> {
                 }
             }
             else{
-                System.out.println("ENTRA 2");
                 return false;
             }
         } catch (PersistenceException e) {
-            System.out.println("ENTRA 3");
             return false;
         }
         catch (Exception e) {
-            System.out.println("ENTRA 4");
             return false;
         }
     }
@@ -166,7 +160,6 @@ public class AnlectivoFacade extends AbstractFacade<Anlectivo> {
                 bandera = false;
             }
         } catch (Exception e) {
-            System.out.println("ERROR[]"+e.toString());
             bandera = false;
         }
         return bandera;
@@ -191,7 +184,6 @@ public class AnlectivoFacade extends AbstractFacade<Anlectivo> {
     }
     public boolean enUso(){
         try {
-            System.out.println("llega a");
             Query cq = em.createNamedQuery("Anlectivo.findByUso");
             if(cq.getSingleResult()!=null){
                 Long count = (Long) cq.getSingleResult();
@@ -205,13 +197,9 @@ public class AnlectivoFacade extends AbstractFacade<Anlectivo> {
                 return false;
             }
         } catch (PersistenceException e) {
-            System.out.println("llega b");
-            e.printStackTrace();
             return false;
         }
         catch (Exception e) {
-            System.out.println("llega c");
-            e.printStackTrace();
             return false;
         }
         
@@ -231,11 +219,9 @@ public class AnlectivoFacade extends AbstractFacade<Anlectivo> {
                 return false;
             }
         } catch (PersistenceException e) {
-            e.printStackTrace();
             return false;
         }
         catch (Exception e) {
-            e.printStackTrace();
             return false;
         }
         
@@ -255,11 +241,9 @@ public class AnlectivoFacade extends AbstractFacade<Anlectivo> {
                 return false;
             }
         } catch (PersistenceException e) {
-            e.printStackTrace();
             return false;
         }
         catch (Exception e) {
-            e.printStackTrace();
             return false;
         }
         
@@ -279,11 +263,9 @@ public class AnlectivoFacade extends AbstractFacade<Anlectivo> {
                 return false;
             }
         } catch (PersistenceException e) {
-            e.printStackTrace();
             return false;
         }
         catch (Exception e) {
-            e.printStackTrace();
             return false;
         }
         
@@ -299,11 +281,9 @@ public class AnlectivoFacade extends AbstractFacade<Anlectivo> {
                 return null;
             }
         } catch (PersistenceException e) {
-            //e.printStackTrace();
             return null;
         }
         catch (Exception e) {
-            //e.printStackTrace();
             return null;
         }
         
@@ -318,13 +298,9 @@ public class AnlectivoFacade extends AbstractFacade<Anlectivo> {
                 return null;
             }
         } catch (PersistenceException e) {
-            System.out.println("llega b");
-            e.printStackTrace();
             return null;
         }
         catch (Exception e) {
-            System.out.println("llega c");
-            e.printStackTrace();
             return null;
         }
         
@@ -339,13 +315,9 @@ public class AnlectivoFacade extends AbstractFacade<Anlectivo> {
                 return null;
             }
         } catch (PersistenceException e) {
-            System.out.println("llega b");
-            e.printStackTrace();
             return null;
         }
         catch (Exception e) {
-            System.out.println("llega c");
-            e.printStackTrace();
             return null;
         }
         
@@ -360,13 +332,9 @@ public class AnlectivoFacade extends AbstractFacade<Anlectivo> {
                 return null;
             }
         } catch (PersistenceException e) {
-            System.out.println("llega b");
-            e.printStackTrace();
             return null;
         }
         catch (Exception e) {
-            System.out.println("llega c");
-            e.printStackTrace();
             return null;
         }
         

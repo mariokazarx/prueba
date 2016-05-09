@@ -32,7 +32,6 @@ public class ProfesorFacade extends AbstractFacade<Profesor> {
         try {
             Query cq = em.createNamedQuery("Profesor.findByCorreo");
             cq.setParameter("correo", correo);
-            System.out.println("RESULTQDO USUARIO" + cq.getSingleResult());
             if (cq.getSingleResult() == null) {
                 return null;
             } else {
@@ -48,7 +47,6 @@ public class ProfesorFacade extends AbstractFacade<Profesor> {
             cq.setParameter("cedula",cedula);
             if(cq.getSingleResult()!=null){
                 Long count = (Long) cq.getSingleResult();
-                System.out.println("Entra resultado "+count);
                 if(count != 0){
                     return true;
                 }else{
@@ -56,15 +54,12 @@ public class ProfesorFacade extends AbstractFacade<Profesor> {
                 }
             }
             else{
-                System.out.println("ENTRA 2");
                 return false;
             }
         } catch (PersistenceException e) {
-            System.out.println("ENTRA 3");
             return false;
         }
         catch (Exception e) {
-            System.out.println("ENTRA 4");
             return false;
         }
     }
@@ -74,7 +69,6 @@ public class ProfesorFacade extends AbstractFacade<Profesor> {
             cq.setParameter("correo",correo);
             if(cq.getSingleResult()!=null){
                 Long count = (Long) cq.getSingleResult();
-                System.out.println("Entra resultado "+count);
                 if(count != 0){
                     return true;
                 }else{
@@ -82,16 +76,26 @@ public class ProfesorFacade extends AbstractFacade<Profesor> {
                 }
             }
             else{
-                System.out.println("ENTRA 2");
                 return false;
             }
         } catch (PersistenceException e) {
-            System.out.println("ENTRA 3");
             return false;
         }
         catch (Exception e) {
-            System.out.println("ENTRA 4");
             return false;
+        }
+    }
+    public Profesor getByCedula(String identificacion) {
+        try {
+            Query cq = em.createNamedQuery("Profesor.findByCedula");
+            cq.setParameter("cedula", identificacion);
+            if (cq.getSingleResult() != null) {
+                return (Profesor) cq.getSingleResult();
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            return null;
         }
     }
 }

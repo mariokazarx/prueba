@@ -54,6 +54,7 @@ import com.tesis.entity.Notafinalrecuperacion;
 import com.tesis.entity.Periodo;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
@@ -81,7 +82,8 @@ import org.omnifaces.util.Faces;
  */
 @ManagedBean
 @ViewScoped
-public class mbvConsolidadoFinal {
+public class mbvConsolidadoFinal implements Serializable{
+    private static final long serialVersionUID = 1L;
 
     private boolean mostrarBonton;
     private Anlectivo anlectivo;
@@ -129,28 +131,24 @@ public class mbvConsolidadoFinal {
 
     @PostConstruct()
     public void inicio() {
-        System.out.println("Entro POSTCOSTRUCT");
         this.mostrarBonton = false;
         this.anlectivo = anlectivoEjb.getIniciado();
     }
 
     public void imprimir() {
-        System.out.println("Entro 1");
         List<Matricula> matriculasAnio;
         List<Curso> cursos;
         Escala escala = escalaEjb.find(anlectivo.getConfiguracionId().getEscalaId().getEscalaId());
         Criterioevaluacion criterio = criterioEjb.find(anlectivo.getConfiguracionId().getCriterioevaluacionId().getCriterioevaluacionId());
         Document document = new Document(PageSize.LEGAL.rotate());
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        if (!anlectivo.getCursoList().isEmpty()) {
-            System.out.println("Entro 2");
+        if (!cursoEjb.getCursosByAño(anlectivo).isEmpty()) {//anlectivo.getCursoList().isEmpty()
             try {
-                System.out.println("Entro 3");
                 PdfWriter writer = PdfWriter.getInstance(document, baos);
                 BackgroundF event = new BackgroundF();
                 writer.setPageEvent(event);
                 document.open();
-                cursos = anlectivo.getCursoList();
+                cursos = cursoEjb.getCursosByAño(anlectivo);//anlectivo.getCursoList();
                 for (Curso cur : cursos) {
                     URL url = FacesContext.getCurrentInstance().getExternalContext().getResource("/escudo.png");
                     Image image = Image.getInstance(url);
@@ -189,7 +187,6 @@ public class mbvConsolidadoFinal {
                     asignaturasAux = asignaturaEjb.findByCiclo(cicloaux);
                     int numPeriodos = Integer.parseInt(periodoEjb.getNumeroPeriodosAño(anlectivo).toString());
                     int totalP = asignaturasAux.size() * numPeriodos;
-                    System.out.println("NUMERO PERIODOS" + numPeriodos + "TOTAL p" + totalP);
                     PdfPTable tablaContenido = new PdfPTable(2 + asignaturasAux.size() + totalP);
                     int tam = 2 + asignaturasAux.size() + totalP;
                     tablaContenido.setWidthPercentage(100);
@@ -383,28 +380,21 @@ public class mbvConsolidadoFinal {
                 }
             } catch (Exception e) {
 
-                System.out.println("ENTRO 3 ");
-                System.out.println("Error " + e.getMessage());
             }
             document.close();
             FacesContext context = FacesContext.getCurrentInstance();
             Object response = context.getExternalContext().getResponse();
             if (response instanceof HttpServletResponse) {
                 try {
-                    System.out.println("ENTRO 4 ");
                     HttpServletResponse hsr = (HttpServletResponse) response;
                     hsr.reset();
                     Faces.sendFile(baos.toByteArray(), "consolidadoFinal.pdf", false);
                     try {
-                        System.out.println("ENTRO 5 ");
                         ServletOutputStream out = hsr.getOutputStream();
                         baos.writeTo(out);
                         out.flush();
                     } catch (IOException ex) {
-                        System.out.println("ENTRO 6 ");
-                        System.out.println("Error:  " + ex.getMessage());
                     }
-                    System.out.println("ENTRO 7 ");
                     context.responseComplete();
                 } catch (IOException ex) {
                     Logger.getLogger(mbvConstanciaEstudios.class.getName()).log(Level.SEVERE, null, ex);

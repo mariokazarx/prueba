@@ -44,6 +44,7 @@ import org.primefaces.context.RequestContext;
 @ManagedBean
 @ViewScoped
 public class mbvProfesor implements Serializable {
+    private static final long serialVersionUID = 1473135353663963105L;
 
     private Profesor profesor;
     private List<Profesor> profesores;
@@ -169,9 +170,7 @@ public class mbvProfesor implements Serializable {
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
             usr = mbslogin.getUsuario();
             this.login = mbslogin.isLogin();
-            System.out.println("usuario" + usr.getNombres() + "Login" + login);
         } catch (Exception e) {
-            System.out.println(e.toString());
             this.login = false;
         }
         if (this.usr != null) {
@@ -203,7 +202,6 @@ public class mbvProfesor implements Serializable {
     public void insertar() {
         try {
             if (!login) {
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
                 return;
@@ -238,7 +236,6 @@ public class mbvProfesor implements Serializable {
                     return;
                 }
             } else {
-                System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
             }
@@ -251,7 +248,6 @@ public class mbvProfesor implements Serializable {
 
     public void newProfesor() {
         if (!login) {
-            System.out.println("Usuario NO logeado");
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
             return;
@@ -285,7 +281,6 @@ public class mbvProfesor implements Serializable {
     public void cargarProfesor(int profesorid) {
         try {
             if (!login) {
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
@@ -323,7 +318,6 @@ public class mbvProfesor implements Serializable {
     public void actualizar() {
         try {
             if (!login) {
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
@@ -371,7 +365,6 @@ public class mbvProfesor implements Serializable {
                 inicioPagina();
                 tx.commit();
             } else {
-                System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
             }

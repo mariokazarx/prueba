@@ -45,7 +45,6 @@ public class LogroFacade extends AbstractFacade<Logro> {
             Query cq = em.createNamedQuery("Logro.findByEstdudiante");
             cq.setParameter("estudianteId", estudiante);
             cq.setParameter("logroId", logro.getLogroId());
-            System.out.println("RESULTQDO" + cq.getSingleResult());
             if (cq.getSingleResult() == null) {
                 return null;
             } else {
@@ -66,13 +65,9 @@ public class LogroFacade extends AbstractFacade<Logro> {
                 return null;
             }
         } catch (PersistenceException e) {
-            System.out.println("llega b");
-            e.printStackTrace();
             return null;
         }
         catch (Exception e) {
-            System.out.println("llega c");
-            e.printStackTrace();
             return null;
         }
         

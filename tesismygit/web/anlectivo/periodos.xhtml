@@ -6,7 +6,6 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://java.sun.com/jsf/core">
     <body>
-        <h:outputScript library="js" name="calendar_es.js" />
         <ui:composition template="./../plantilla.xhtml">
             <ui:define name="content">
                 <h:form id="frmPeriodos">
@@ -100,7 +99,7 @@
 
 
                                 <p:outputLabel for="txtFechaCierre" value="Fecha Cierre:" rendered="#{mbvPeriodo.mostrarFecha}"/>
-                                <p:calendar id="txtFechaCierre" value="#{mbvPeriodo.periodo.fechacierre}" mindate="#{mbvPeriodo.minDate}" maxdate="#{mbvPeriodo.maxDate}" locale="es" rendered="#{mbvPeriodo.mostrarFecha}" />
+                                <p:calendar id="txtFechaCierre" locale="es" value="#{mbvPeriodo.periodo.fechacierre}" mindate="#{mbvPeriodo.minDate}" maxdate="#{mbvPeriodo.maxDate}" rendered="#{mbvPeriodo.mostrarFecha}" />
                                 <p:message for="txtFechaCierre" rendered="#{mbvPeriodo.mostrarFecha}"/>
 
 

@@ -15,7 +15,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
-import org.omg.CORBA.PRIVATE_MEMBER;
 
 /**
  *
@@ -44,16 +43,12 @@ public class NotafinalFacade extends AbstractFacade<Notafinal> {
                 return (Notafinal)cq.getSingleResult();
             }
             else{
-                System.out.println("1");
                 return null;
             }
         } catch (PersistenceException e) {
-            System.out.println("2");
             return null;
         }
         catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("3"+e.toString());
             return null;
         }
         
@@ -68,16 +63,12 @@ public class NotafinalFacade extends AbstractFacade<Notafinal> {
                 return cq.getResultList();
             }
             else{
-                System.out.println("1");
                 return null;
             }
         } catch (PersistenceException e) {
-            System.out.println("2");
             return null;
         }
         catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("3"+e.toString());
             return null;
         }
         

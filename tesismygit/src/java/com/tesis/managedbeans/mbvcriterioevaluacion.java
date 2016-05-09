@@ -33,6 +33,7 @@ import org.primefaces.context.RequestContext;
 @ManagedBean
 @ViewScoped
 public class mbvcriterioevaluacion implements Serializable {
+    private static final long serialVersionUID = 84672469225979328L;
 
     /**
      * Creates a new instance of mbvcriterioevaluacion
@@ -131,9 +132,7 @@ public class mbvcriterioevaluacion implements Serializable {
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
              usr = mbslogin.getUsuario();
              this.login = mbslogin.isLogin();
-            System.out.println("usuario"+usr.getNombres()+"Login"+login);
         } catch (Exception e) {
-            System.out.println(e.toString());
             this.login = false;
         }
         if(this.usr!=null){
@@ -183,7 +182,6 @@ public class mbvcriterioevaluacion implements Serializable {
     public void insertar() {
         try {
             if(!login){
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
@@ -197,7 +195,6 @@ public class mbvcriterioevaluacion implements Serializable {
                 inicioPagina();
             }
             else{
-                System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
@@ -216,7 +213,6 @@ public class mbvcriterioevaluacion implements Serializable {
     public void actualizar() {
         try {
             if(!login){
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
@@ -231,7 +227,6 @@ public class mbvcriterioevaluacion implements Serializable {
                 inicioPagina();
             }
             else{
-                System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
@@ -244,7 +239,6 @@ public class mbvcriterioevaluacion implements Serializable {
     public void cargarCriterioseval(int criterioevalid) {
         try {
             if(!login){
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
@@ -272,7 +266,6 @@ public class mbvcriterioevaluacion implements Serializable {
 
     public void newCriterioEval() {
         if(!login){
-            System.out.println("Usuario NO logeado");
             FacesContext.getCurrentInstance().
                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
             return;
@@ -296,14 +289,12 @@ public class mbvcriterioevaluacion implements Serializable {
     public void eliminarCriterio(Criterioevaluacion criterioeval) {
         try {
             if(!login){
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
             if(this.eliminar){
                 //this.escala = this.escalaEjb.find(escalaid);
-                System.out.println("ELIMINAR CRITERIO :"+criterioeval);
                 if(criterioevalEjb.removeById(criterioeval)==true){
                     //inicioPagina();
                     //RequestContext.getCurrentInstance().update("frmEditarEscala"); 
@@ -317,7 +308,6 @@ public class mbvcriterioevaluacion implements Serializable {
                 inicioPagina();
             }
             else{
-                System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }

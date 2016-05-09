@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:head>
+        <title>Nueva Escala</title>
+        <style type="text/css">
+            .ui-widget {
+                font-size: 90%;
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <ui:composition template="./../plantilla.xhtml">
+            <ui:define name="content">
+                <h:form id="frmEstadisticas" styleClass="form-principal">
+                    <h3>Estadísticas</h3>
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
+                    <f:metadata>
+                        <f:event type="preRenderView" listener="#{mbvEstadisticas.initRender}" />
+                    </f:metadata>
+                    <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+                        <p:outputLabel for="selectanlectivo" value="Año Escolar: " />
+                        <p:selectOneMenu id="selectanlectivo" value="#{mbvEstadisticas.anlectivoSelected.anlectivoId}">
+                            <p:ajax listener="#{mbvEstadisticas.cargarGrafico}" update="frmEstadisticas"/>
+                            <f:selectItem itemLabel="Seleccione."/>
+                            <f:selectItems value="#{mbvEstadisticas.anlectivos}" var="anlectivo" itemLabel="#{anlectivo.anio}" itemValue="#{anlectivo.anlectivoId}"/>
+                        </p:selectOneMenu>
+                    </h:panelGrid>
+                    <h:panelGroup rendered="#{mbvEstadisticas.mostrarEstAños}" style="width: 90%">
+
+                        <p:chart type="pie" model="#{mbvEstadisticas.pieModel1}"  style="height:300px;" responsive="true">
+                        </p:chart>
+                    </h:panelGroup>
+                    
+                    <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+                        <p:outputLabel for="selectanlectivo" value="Periodo: " />
+                        <p:selectOneMenu id="selectperiodo" value="#{mbvEstadisticas.periodoSelected.periodoId}">
+                            <p:ajax listener="#{mbvEstadisticas.cargarGraficoPeriodo}" update="frmEstadisticas"/>
+                            <f:selectItem itemLabel="Seleccione."/>
+                            <f:selectItems value="#{mbvEstadisticas.periodos}" var="periodo" itemLabel="#{periodo.numero}" itemValue="#{periodo.periodoId}"/>
+                        </p:selectOneMenu>
+                    </h:panelGrid>
+                    <h:panelGroup rendered="#{mbvEstadisticas.mostrarEstPeriodo}" style="width: 90%">
+
+                        <p:chart type="bar" model="#{mbvEstadisticas.barModel}"  style="height:600px" responsive="true">
+                        </p:chart>
+                    </h:panelGroup>
+                    <p:dialog widgetVar="statusDialog" appendTo="@(body)" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage library="imagenes" name="load1.gif"/>
+                    </p:dialog>
+                </h:form>        
+            </ui:define>
+        </ui:composition>
+
+    </h:body>
+</html>
+

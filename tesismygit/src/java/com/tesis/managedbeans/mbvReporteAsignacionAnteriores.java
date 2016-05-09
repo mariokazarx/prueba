@@ -22,6 +22,7 @@ import com.tesis.entity.Periodo;
 import com.tesis.entity.Usuario;
 import com.tesis.entity.UsuarioRole;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,7 +47,8 @@ import org.omnifaces.util.Faces;
  */
 @ManagedBean
 @ViewScoped
-public class mbvReporteAsignacionAnteriores {
+public class mbvReporteAsignacionAnteriores implements Serializable{
+    private static final long serialVersionUID = 2626739799949039422L;
 
     private List<Curso> cursos;
     private List<Curso> cursosReporte;
@@ -212,9 +214,7 @@ public class mbvReporteAsignacionAnteriores {
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
             usr = mbslogin.getUsuario();
             this.login = mbslogin.isLogin();
-            System.out.println("usuario" + usr.getNombres() + "Login" + login);
         } catch (Exception e) {
-            System.out.println(e.toString());
             this.login = false;
         }
         if (this.usr != null) {
@@ -295,9 +295,7 @@ public class mbvReporteAsignacionAnteriores {
                 mtrReporte.setAño(aEscolar.getAnio());
                 mtrReporte.setCurso(curReporte.getNombre());
                 mtrReporte.setNumero(periodo.getNumero());
-                System.out.println("MMMMMM" + mtrReporte.getNumero() + "   " + mtrReporte.getAño() + "    " + cursoSelected + "   " + matriculaEjb.matriculasCurso(cursoSelected));
                 for (Contenidotematico conenido : contenidoEjb.getByPeriodoCurso(periodo, curReporte)) {
-                    System.out.println("entro for" + conenido.getAsignaturacicloId().getAsignaturaId().getNombre());
                     con.add(conenido);
                 }
                 mtrReporte.setContenidos(con);
@@ -306,13 +304,10 @@ public class mbvReporteAsignacionAnteriores {
             init();
 
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("ooooOOOO" + e.toString());
         }
     }
 
     public void init() throws JRException {
-        System.out.println("entro init");
         JRBeanCollectionDataSource beanCollectionDataSource = new JRBeanCollectionDataSource(reporte);
         String reportpath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/AsignacionAcademica.jasper");
         /*Map<String, Object> parametros = new HashMap<String, Object>();
@@ -324,7 +319,6 @@ public class mbvReporteAsignacionAnteriores {
 
     public void pdf() throws JRException, IOException {
         if (!login) {
-            System.out.println("Usuario NO logeado");
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
             return;
@@ -338,7 +332,6 @@ public class mbvReporteAsignacionAnteriores {
             Faces.sendFile(JasperExportManager.exportReportToPdf(jasperPrint), "reporteMatricula.pdf", false);
             FacesContext.getCurrentInstance().responseComplete();
         }else {
-            System.out.print("error permiso denegado");
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
         }

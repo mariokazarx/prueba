@@ -7,6 +7,7 @@ import java.util.Comparator;
 import org.primefaces.model.SortOrder;
 
 public class LazySorter implements Comparator<Asignatura>,Serializable {
+    private static final long serialVersionUID = -3309710606753568785L;
  
     private String sortField;
      

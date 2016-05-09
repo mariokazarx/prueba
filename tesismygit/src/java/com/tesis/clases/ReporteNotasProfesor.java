@@ -20,6 +20,7 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
  * @author Mario Jurado
  */
 public class ReporteNotasProfesor implements Serializable{
+    private static final long serialVersionUID = -7172251679449731306L;
     private Profesor profesor;
     private Curso curso;
     private Periodo periodo;

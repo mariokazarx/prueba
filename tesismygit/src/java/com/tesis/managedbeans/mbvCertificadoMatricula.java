@@ -27,6 +27,7 @@ import com.tesis.entity.Usuario;
 import com.tesis.entity.UsuarioRole;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.URL;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -43,7 +44,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 @ManagedBean
 @ViewScoped
-public class mbvCertificadoMatricula {
+public class mbvCertificadoMatricula implements Serializable{
+    private static final long serialVersionUID = 4445443271082147122L;
 
     private String identificacion;
     private Estudiante estudiante;
@@ -105,9 +107,7 @@ public class mbvCertificadoMatricula {
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
             usr = mbslogin.getUsuario();
             this.login = mbslogin.isLogin();
-            System.out.println("usuario" + usr.getNombres() + "Login" + login);
         } catch (Exception e) {
-            System.out.println(e.toString());
             this.login = false;
         }
         if (this.usr != null) {
@@ -140,7 +140,6 @@ public class mbvCertificadoMatricula {
 
     public void imprimir() {
         if (!login) {
-            System.out.println("Usuario NO logeado");
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
             return;
@@ -216,32 +215,24 @@ public class mbvCertificadoMatricula {
 
 
             } catch (Exception e) {
-                System.out.println("ENTRO 3 ");
-                System.out.println("Error " + e.getMessage());
             }
             document.close();
             FacesContext context = FacesContext.getCurrentInstance();
             Object response = context.getExternalContext().getResponse();
             if (response instanceof HttpServletResponse) {
-                System.out.println("ENTRO 4 ");
                 HttpServletResponse hsr = (HttpServletResponse) response;
                 hsr.setContentType("application/pdf");
                 hsr.setHeader("Content-disposition", "attachment; filename=report.pdf");
                 hsr.setContentLength(baos.size());
                 try {
-                    System.out.println("ENTRO 5 ");
                     ServletOutputStream out = hsr.getOutputStream();
                     baos.writeTo(out);
                     out.flush();
                 } catch (IOException ex) {
-                    System.out.println("ENTRO 6 ");
-                    System.out.println("Error:  " + ex.getMessage());
                 }
-                System.out.println("ENTRO 7 ");
                 context.responseComplete();
             }
         } else {
-            System.out.print("error permiso denegado");
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
         }

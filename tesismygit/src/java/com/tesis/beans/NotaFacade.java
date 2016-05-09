@@ -23,6 +23,7 @@ import javax.persistence.Query;
  */
 @Stateless
 public class NotaFacade extends AbstractFacade<Nota> {
+
     @PersistenceContext(unitName = "tesismygitPU")
     private EntityManager em;
 
@@ -34,48 +35,76 @@ public class NotaFacade extends AbstractFacade<Nota> {
     public NotaFacade() {
         super(Nota.class);
     }
-    public Double getNotaFinal(Anlectivo alectivo,Estudiante est,Curso curso,Asignaturaciclo asignatura){
+
+    public Double getNotaFinal(Anlectivo alectivo, Estudiante est, Curso curso, Asignaturaciclo asignatura) {
         try {
-            System.out.println("MM QUE SERA::::"+alectivo.toString()+"aaa"+est.toString()+"bbb"+curso.toString());
             Query cq = em.createNamedQuery("Nota.findNotaFinal");
             cq.setParameter("cursoId", curso);
             cq.setParameter("estudianteId", est);
             cq.setParameter("anlectivoId", alectivo);
             cq.setParameter("asignatura", asignatura);
-            if(cq.getResultList()!=null){
-                return (Double)cq.getSingleResult();
-            }
-            else{
-                System.out.println("MM QUE SERA::::222");
+            if (cq.getResultList() != null) {
+                return (Double) cq.getSingleResult();
+            } else {
                 return null;
             }
         } catch (PersistenceException e) {
-            e.printStackTrace();
+            return null;
+        } catch (Exception e) {
             return null;
         }
-        catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-        
+
     }
-    public BigDecimal getNotaFinalPeriodo(Contenidotematico contenido,Estudiante estudiante){
+
+    public BigDecimal getNotaFinalPeriodo(Contenidotematico contenido, Estudiante estudiante) {
         try {
             Query cq = em.createNamedQuery("Nota.findByFinal");
             cq.setParameter("estudiante", estudiante);
             cq.setParameter("contenido", contenido);
-            if(cq.getResultList()!=null){
-                return (BigDecimal)cq.getSingleResult();
-            }
-            else{
+            if (cq.getResultList() != null) {
+                return (BigDecimal) cq.getSingleResult();
+            } else {
                 return null;
             }
         } catch (PersistenceException e) {
-            e.printStackTrace();
+            return null;
+        } catch (Exception e) {
             return null;
         }
-        catch (Exception e) {
-            e.printStackTrace();
+    }
+
+    public Integer getReprobadosMateria(Contenidotematico contenido, BigDecimal valor) {
+        try {
+            Query cq = em.createNamedQuery("Nota.countReprobadasContenido");
+            cq.setParameter("contenido", contenido);
+            cq.setParameter("valor", valor);
+            if (cq.getSingleResult() != null) {
+                Long result = (Long) cq.getSingleResult();
+                return result.intValue();
+            } else {
+                return null;
+            }
+        } catch (PersistenceException e) {
+            return null;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Integer getAprobadosMateria(Contenidotematico contenido, BigDecimal valor) {
+        try {
+            Query cq = em.createNamedQuery("Nota.countAprobadasContenido");
+            cq.setParameter("contenido", contenido);
+            cq.setParameter("valor", valor);
+            if (cq.getSingleResult() != null) {
+                Long result = (Long) cq.getSingleResult();
+                return result.intValue();
+            } else {
+                return null;
+            }
+        } catch (PersistenceException e) {
+            return null;
+        } catch (Exception e) {
             return null;
         }
     }

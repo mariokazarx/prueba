@@ -19,6 +19,7 @@ import org.primefaces.model.SortOrder;
  * @author Mario Jurado
  */
 public class LazyAsignaturaDataModel extends LazyDataModel<Asignatura> {
+    private static final long serialVersionUID = -5510367588806242023L;
      
     private List<Asignatura> datasource;
      

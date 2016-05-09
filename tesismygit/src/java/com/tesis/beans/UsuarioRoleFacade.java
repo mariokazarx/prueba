@@ -35,15 +35,12 @@ public class UsuarioRoleFacade extends AbstractFacade<UsuarioRole> {
             Query cq = em.createNamedQuery("UsuarioRole.removeByUsuarioId");
             cq.setParameter("usuario", usuario);
             if(cq.executeUpdate()>0){
-                System.out.println("EXITOSO BORRAR");
                 return true;
             }
             else{
-                System.out.println("ERRO GRAVE 1");
                 return false;
             }
         } catch (Exception e) {
-            System.out.println("ERRO GRAVE 2");
             return false;
         }
 
@@ -59,13 +56,9 @@ public class UsuarioRoleFacade extends AbstractFacade<UsuarioRole> {
                 return null;
             }
         } catch (PersistenceException e) {
-            System.out.println("llega b");
-            e.printStackTrace();
             return null;
         }
         catch (Exception e) {
-            System.out.println("llega c");
-            e.printStackTrace();
             return null;
         }
         

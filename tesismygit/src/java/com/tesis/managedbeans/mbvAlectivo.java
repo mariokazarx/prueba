@@ -63,6 +63,7 @@ import org.primefaces.context.RequestContext;
 @ManagedBean
 @ViewScoped
 public class mbvAlectivo implements Serializable {
+    private static final long serialVersionUID = -6848841797073531076L;
 
     private Anlectivo anlectivo;
     private Usuario usr;
@@ -271,9 +272,7 @@ public class mbvAlectivo implements Serializable {
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
             usr = mbslogin.getUsuario();
             this.login = mbslogin.isLogin();
-            System.out.println("usuario" + usr.getNombres() + "Login" + login);
         } catch (Exception e) {
-            System.out.println(e.toString());
             this.login = false;
         }
         if (this.usr != null) {
@@ -311,7 +310,6 @@ public class mbvAlectivo implements Serializable {
         años = new ArrayList<SelectItem>();
         int a = fecha.get(Calendar.YEAR);
         for (int i = a; i > 2000; i--) {
-            //System.out.println("mmm"+i);
             años.add(new SelectItem(i, "" + i));
         }
         //this.criterioeval.setFormacriterioevaluacionId(fcriterioselected);
@@ -319,10 +317,8 @@ public class mbvAlectivo implements Serializable {
     }
 
     public void insertar() {
-        System.out.println("INSERTAR" + año + "---" + configuracionselected + ":::" + anlectivo.getDescripcion());
         try {
             if (!login) {
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
@@ -349,12 +345,10 @@ public class mbvAlectivo implements Serializable {
                 inicioPagina();
             } else {
                 this.mensage = true;
-                System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
         } catch (Exception e) {
-            System.out.println("INSERTAR ERROR" + e.toString());
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
         }
@@ -369,7 +363,6 @@ public class mbvAlectivo implements Serializable {
     public void actualizar() {
         try {
             if (!login) {
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
@@ -383,7 +376,6 @@ public class mbvAlectivo implements Serializable {
                     return;
                 }
                 //revisar editar 
-                System.out.println("AUX" + this.estadoAlectivoselectedAux.getEstadoAniolectivoId() + "cambio" + this.estadoAlectivoselected.getEstadoAniolectivoId());
                 if (this.estadoAlectivoselected.getEstadoAniolectivoId() != this.estadoAlectivoselectedAux.getEstadoAniolectivoId()) {
                     if (anlectivoEjb.existActivo() && estadoAlectivoselected.getEstadoAniolectivoId() == 5) {
                         FacesContext.getCurrentInstance().
@@ -423,7 +415,6 @@ public class mbvAlectivo implements Serializable {
                     Escala escala = escalaEjb.find(anlectivo.getConfiguracionId().getEscalaId().getEscalaId());
                     Criterioevaluacion criterio = criterioEjb.find(anlectivo.getConfiguracionId().getCriterioevaluacionId().getCriterioevaluacionId());
                     //Formacriterioevaluacion formaEvaluacion = formaEvaluacionEjb.find(criterio.getFormacriterioevaluacionId().getFormacriterioevaluacionId());
-                    System.out.println("MATRICULA ESTUDIANTE DATOS!!!! MIN APROB" + escala.getNotaminimaaprob() + "FORMA" + criterio.getFormacriterioevaluacionId().getFormacriterioevaluacionId() + "MINIMO FORMA" + criterio.getMinaprob());
                     //Anlectivo anAux = anlectivoEjb.find(anlectivo.getAnlectivoId());
                     //hacer transacion 1 asignatura 2 areas 
                     List<Matricula> matriculasAnio;
@@ -446,7 +437,6 @@ public class mbvAlectivo implements Serializable {
                                 Asignaturaciclo asg = asiganturaCicloEjb.asignaturasCiclo(ciclo, asignatura);
                                 Notafinal notafinalEst = notaFinalEjb.findNotaFinalActual(asg, est, anlectivo);
                                 BigDecimal max = new BigDecimal(escala.getNotaminimaaprob());
-                                System.out.println("NMNMNM" + notafinalEst + "ESTUDIANTE " + est + "asignatura " + asg + "año escolar " + anlectivo + "MATRICULA " + maticula);
                                 if (notafinalEst.getRecuperacion().compareTo("SI") == 0) {
                                     //tiene recupeacion
                                     Notafinalrecuperacion notaRecuperacion = notaFinalRecEjb.getNotaFinalRecuperar(notafinalEst);
@@ -488,7 +478,6 @@ public class mbvAlectivo implements Serializable {
                             maticula.setEstadoMatriculaId(estadoMat);
                             estdudianteEjb.edit(est);
                             matriculaEjb.edit(maticula);
-                            System.out.println("estudiante " + est + "matricula " + maticula + "perdidos " + perdidas);
                         }
                     } else {
                         FacesContext.getCurrentInstance().
@@ -505,12 +494,10 @@ public class mbvAlectivo implements Serializable {
                 inicioPagina();
             } else {
                 this.mensage = true;
-                System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
         } catch (Exception e) {
-            e.printStackTrace();
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
         }
@@ -519,7 +506,6 @@ public class mbvAlectivo implements Serializable {
     public void cargarAnlectivo(int anlectivoId) {
         try {
             if (!login) {
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
@@ -576,7 +562,6 @@ public class mbvAlectivo implements Serializable {
 
     public void newAnlectivo() {
         if (!login) {
-            System.out.println("Usuario NO logeado");
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
             return;
@@ -603,10 +588,8 @@ public class mbvAlectivo implements Serializable {
 
     public void cargarCopia() {
         if (anlectivoEjb.existeConfiguracion(configuracionselected)) {
-            System.out.println("mbvENCONTRO" + this.año);
             estCopia = true;
         } else {
-            System.out.println("NO mbvENCONTRO");
             estCopia = false;
         }
     }
@@ -614,14 +597,11 @@ public class mbvAlectivo implements Serializable {
     public void eliminarAnlectivo(Anlectivo anlectivo) {
         try {
             if (!login) {
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
             if (this.eliminar) {
-                //this.escala = this.escalaEjb.find(escalaid);
-                //System.out.println("ELIMINAR CRITERIO :"+criterioeval);
                 if (anlectivoEjb.removeById(anlectivo) == true) {
                     //inicioPagina();
                     //RequestContext.getCurrentInstance().update("frmEditarEscala"); 
@@ -635,7 +615,6 @@ public class mbvAlectivo implements Serializable {
                 inicioPagina();
             } else {
                 this.mensage = true;
-                System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }

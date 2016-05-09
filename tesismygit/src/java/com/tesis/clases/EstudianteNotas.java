@@ -20,6 +20,7 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
  * @author Mario Jurado
  */
 public class EstudianteNotas  implements Serializable{
+    private static final long serialVersionUID = 1609626031408349652L;
     private Integer id;
     private String nombre;
     private String apellido;

@@ -60,13 +60,9 @@ public class AreaFacade extends AbstractFacade<Area> {
                 return null;
             }
         } catch (PersistenceException e) {
-            System.out.println("llega b");
-            e.printStackTrace();
             return null;
         }
         catch (Exception e) {
-            System.out.println("llega c");
-            e.printStackTrace();
             return null;
         }
         

@@ -34,6 +34,7 @@ import org.primefaces.context.RequestContext;
 @ManagedBean
 @ViewScoped
 public class mbvConfiguracion implements Serializable {
+    private static final long serialVersionUID = -5420321695588672739L;
 
     /**
      * Creates a new instance of mbvConfiguracion
@@ -182,9 +183,7 @@ public class mbvConfiguracion implements Serializable {
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
              usr = mbslogin.getUsuario();
              this.login = mbslogin.isLogin();
-            System.out.println("usuario"+usr.getNombres()+"Login"+login);
         } catch (Exception e) {
-            System.out.println(e.toString());
             this.login = false;
         }
         if(this.usr!=null){
@@ -230,7 +229,6 @@ public class mbvConfiguracion implements Serializable {
 //                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado","null escala"));
 //            }
             if(!login){
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
@@ -248,7 +246,6 @@ public class mbvConfiguracion implements Serializable {
                 inicioPagina();
             }
             else{
-                System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
@@ -283,7 +280,6 @@ public class mbvConfiguracion implements Serializable {
     public void actualizar() {
         try {
             if(!login){
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
@@ -300,12 +296,10 @@ public class mbvConfiguracion implements Serializable {
                 inicioPagina();
             }
             else{
-                System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
         } catch (Exception e) {
-            System.out.print("fail" + e.getMessage());
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado","Contáctese con el administrador"));
         }
@@ -314,7 +308,6 @@ public class mbvConfiguracion implements Serializable {
     public void cargarConfiguracion(int configuracionId) {
         try {
             if(!login){
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 //inicioPagina();
@@ -344,7 +337,6 @@ public class mbvConfiguracion implements Serializable {
 
     public void newConfig() {
         if(!login){
-            System.out.println("Usuario NO logeado");
             FacesContext.getCurrentInstance().
                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
             //inicioPagina();
@@ -370,14 +362,12 @@ public class mbvConfiguracion implements Serializable {
     public void eliminarConfiguracion(Configuracion configuracion) {
         try {
             if(!login){
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
             if(this.eliminar){
                 //this.escala = this.escalaEjb.find(escalaid);
-                System.out.println("ELIMINAR CRITERIO :" + configuracion);
                 if (configuracionEjb.removeById(configuracion) == true) {
                     //inicioPagina();
                     //RequestContext.getCurrentInstance().update("frmEditarEscala"); 
@@ -391,7 +381,6 @@ public class mbvConfiguracion implements Serializable {
                 inicioPagina();
             }
             else{
-                System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }

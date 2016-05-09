@@ -39,6 +39,7 @@ import com.tesis.entity.Usuario;
 import com.tesis.entity.UsuarioRole;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
@@ -66,7 +67,8 @@ import org.omnifaces.util.Faces;
  */
 @ManagedBean
 @ViewScoped
-public class mbvConsolidadoPeriodoAnteriores {
+public class mbvConsolidadoPeriodoAnteriores implements Serializable{
+    private static final long serialVersionUID = 3746672106314158863L;
 
     private List<Curso> cursos;
     private Curso cursoSelected;
@@ -234,9 +236,7 @@ public class mbvConsolidadoPeriodoAnteriores {
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
             usr = mbslogin.getUsuario();
             this.login = mbslogin.isLogin();
-            System.out.println("usuario" + usr.getNombres() + "Login" + login);
         } catch (Exception e) {
-            System.out.println(e.toString());
             this.login = false;
         }
         if (this.usr != null) {
@@ -324,28 +324,23 @@ public class mbvConsolidadoPeriodoAnteriores {
             for (int i = 0; i < row.length; i++) {
                 if (row[i] instanceof Estudiante) {
                     Estudiante est = (Estudiante) row[i];
-                    System.out.println("OBJ22 " + est.getNombre());
                 }
-                System.out.println("OBJ22 " + row[i]);
             }
         }
     }
 
     public void imprimir() {
         if (!login) {
-            System.out.println("Usuario NO logeado");
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
             return;
         }
         if (this.consultar) {
-            System.out.println("ENTRO 1 ");
             List<Object> estudiantesPromedio = new ArrayList<Object>();
             List<Curso> cursos22 = new ArrayList<Curso>();
             Document document = new Document(PageSize.LEGAL.rotate());
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             try {
-                System.out.println("ENTRO 2 ");
                 PdfWriter writer = PdfWriter.getInstance(document, baos);
                 BackgroundF event = new BackgroundF();
                 writer.setPageEvent(event);
@@ -361,10 +356,8 @@ public class mbvConsolidadoPeriodoAnteriores {
                         this.cursosReporte = cursoEjb.getCursosByAño(aEscolar);
                     }
                 }
-                System.out.println("ENTRO 222 " + this.cursosReporte.size());
                 for (Curso curPrueba : cursosReporte) {
 
-                    System.out.println("ENTRO for ");
                     Curso cur = cursoEjb.find(curPrueba.getCursoId());
                     Periodo periodo = periodoEjb.find(periodoSelected.getPeriodoId());
                     estudiantesPromedio = estudianteEjB.getFinalPeriodo(cur, periodo);
@@ -409,7 +402,6 @@ public class mbvConsolidadoPeriodoAnteriores {
                     table.setWidthPercentage(100);
                     float[] ft = new float[tam];
                     for (int i = 0; i < tam; i++) {
-                        System.out.println(i);
                         if (i == 0) {
                             ft[i] = 2f;
                         } else if (i == tam - 1) {
@@ -534,8 +526,6 @@ public class mbvConsolidadoPeriodoAnteriores {
                     document.newPage();
                 }
             } catch (Exception ex) {
-                System.out.println("ENTRO 3 ");
-                System.out.println("Error " + ex.getMessage());
             }
 
             document.close();
@@ -543,27 +533,21 @@ public class mbvConsolidadoPeriodoAnteriores {
             Object response = context.getExternalContext().getResponse();
             if (response instanceof HttpServletResponse) {
                 try {
-                    System.out.println("ENTRO 4 ");
                     HttpServletResponse hsr = (HttpServletResponse) response;
                     hsr.reset();
                     Faces.sendFile(baos.toByteArray(), "consolidadoPeriodo.pdf", false);
                     try {
-                        System.out.println("ENTRO 5 ");
                         ServletOutputStream out = hsr.getOutputStream();
                         baos.writeTo(out);
                         out.flush();
                     } catch (IOException ex) {
-                        System.out.println("ENTRO 6 ");
-                        System.out.println("Error:  " + ex.getMessage());
                     }
-                    System.out.println("ENTRO 7 ");
                     context.responseComplete();
                 } catch (IOException ex) {
                     Logger.getLogger(mbvConstanciaEstudios.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }else {
-            System.out.print("error permiso denegado");
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
         }
@@ -584,7 +568,7 @@ public class mbvConsolidadoPeriodoAnteriores {
             if (this.seleccion.compareTo("curso") == 0) {
                 this.cursoSelected = new Curso();
                 this.cursosReporte.clear();
-                this.cursos = aEscolar.getCursoList();
+                this.cursos = cursoEjb.getCursosByAño(aEscolar);//aEscolar.getCursoList();
                 this.mostrarCursos = true;
                 this.mostrarBoton = false;
             }

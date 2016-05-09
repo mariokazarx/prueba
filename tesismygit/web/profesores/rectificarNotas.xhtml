@@ -85,12 +85,22 @@
                             </p:outputPanel>
 
                             <h:panelGroup rendered="#{mbvRectificar.editar}">
-                                <p:outputLabel for="selectAnio" value="Año: " styleClass="form-titulos"/>
-                                <p:selectOneMenu id="selectAnio" value="#{mbvRectificar.anlectivoselected.anlectivoId}" styleClass="form-select">
-                                    <p:ajax listener="#{mbvRectificar.cargarAnio}" update="frmRectificar"/>
-                                    <f:selectItem itemLabel="Seleccione."/>
-                                    <f:selectItems value="#{mbvRectificar.anlectivos}" var="anio" itemLabel="#{anio.anio}" itemValue="#{anio.anlectivoId}"/>
-                                </p:selectOneMenu>
+
+                                <div>
+                                    <div>
+                                        <p:outputLabel for="selectAnio" value="Año: " styleClass="form-titulos"/>
+                                    </div>
+                                    <div>
+                                        <p:selectOneMenu id="selectAnio" value="#{mbvRectificar.anlectivoselected.anlectivoId}" styleClass="form-select">
+                                            <p:ajax listener="#{mbvRectificar.cargarAnio}" update="frmRectificar"/>
+                                            <f:selectItem itemLabel="Seleccione."/>
+                                            <f:selectItems value="#{mbvRectificar.anlectivos}" var="anio" itemLabel="#{anio.anio}" itemValue="#{anio.anlectivoId}"/>
+                                        </p:selectOneMenu>
+                                    </div>
+                                </div>
+
+
+
 
                                 <p:outputLabel for="selectPeriodo" value="Periodo: " styleClass="form-titulos"/>
                                 <p:selectOneMenu id="selectPeriodo" value="#{mbvRectificar.periodoSelected.periodoId}" styleClass="form-select">
@@ -105,10 +115,11 @@
                                     <f:selectItem itemLabel="Seleccione."/>
                                     <f:selectItems value="#{mbvRectificar.contenidosRectificar}" var="contenido" itemLabel="#{contenido.asignaturacicloId.asignaturaId.nombre} - #{contenido.cursoId.nombre}" itemValue="#{contenido.contenidotematicoId}"/>
                                 </p:selectOneMenu>
-
-                                <p:commandButton id="Confirmar" value="Rectificar"  style="margin-top:5px" rendered="#{mbvRectificar.banderaRectificar}" >
-                                    <p:ajax listener="#{mbvRectificar.rectificarMateria}" update="frmRectificar"/>
-                                </p:commandButton>
+                                <div style="text-align: center;margin-bottom: 20px;margin-top: 10px">
+                                    <p:commandButton id="Confirmar" value="Rectificar"  style="margin-top:5px" rendered="#{mbvRectificar.banderaRectificar}" >
+                                        <p:ajax listener="#{mbvRectificar.rectificarMateria}" update="frmRectificar"/>
+                                    </p:commandButton>
+                                </div>
                             </h:panelGroup>
                         </h:panelGroup>
 

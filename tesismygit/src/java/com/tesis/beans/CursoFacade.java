@@ -36,7 +36,6 @@ public class CursoFacade extends AbstractFacade<Curso> {
     }
 
     public List<Curso> findCursosProfeso(Profesor profesor, Periodo periodo) {
-        System.out.println("MMMM" + profesor.getNombre());
         Query cq = em.createNamedQuery("Curso.findByCursoProfesor");
         cq.setParameter("profesorId", profesor);
         cq.setParameter("periodoId", periodo);

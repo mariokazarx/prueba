@@ -9,7 +9,6 @@ import com.tesis.beans.AreaFacade;
 import com.tesis.beans.AsignaturaFacade;
 import com.tesis.beans.ConfiguracionFacade;
 import com.tesis.beans.UsuarioRoleFacade;
-import com.tesis.clases.LazyAsignaturaDataModel;
 import com.tesis.entity.Area;
 import com.tesis.entity.Asignatura;
 import com.tesis.entity.Configuracion;
@@ -25,8 +24,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import org.primefaces.context.RequestContext;
-import org.primefaces.model.LazyDataModel;
+import org.primefaces.context.RequestContext;;
 
 /**
  *
@@ -35,6 +33,7 @@ import org.primefaces.model.LazyDataModel;
 @ManagedBean
 @ViewScoped
 public class mbvAsignatura implements Serializable{
+    private static final long serialVersionUID = -3593970165471501041L;
 
     /**
      * Creates a new instance of mbvAsignatura
@@ -158,9 +157,7 @@ public class mbvAsignatura implements Serializable{
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
              usr = mbslogin.getUsuario();
              this.login = mbslogin.isLogin();
-            System.out.println("usuario"+usr.getNombres()+"Login"+login);
         } catch (Exception e) {
-            System.out.println(e.toString());
             this.login = false;
         }
         if(this.usr!=null){
@@ -199,7 +196,6 @@ public class mbvAsignatura implements Serializable{
     public void insertar(){
         try{
             if(!login){
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
@@ -212,9 +208,7 @@ public class mbvAsignatura implements Serializable{
                 }
                 this.confuguracionselected = configuracionEjb.find(confuguracionselected.getConfiguracionId());
                 for(Asignatura auxasig:asignaturaEjb.findByConfiguracionNew(confuguracionselected)){
-                    System.out.print(auxasig.getNombre()+"la otra"+ asignatura.getNombre());
                     if(asignatura.getNombre().trim().equals(auxasig.getNombre().trim())){//&& area.getAreaId()!= auxarea.getAreaId()
-                        System.out.println("IGUALLLL");
                         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Advertencia ", "Nombre en uso para esta configuración"); 
                         FacesContext.getCurrentInstance().addMessage("frmCrearrAsignatura:txtNombre", message);
                         return;
@@ -229,7 +223,6 @@ public class mbvAsignatura implements Serializable{
                 inicioPagina();
             }
             else{
-                System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
@@ -247,7 +240,6 @@ public class mbvAsignatura implements Serializable{
     public void actualizar(){
         try{
             if(!login){
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
@@ -262,9 +254,7 @@ public class mbvAsignatura implements Serializable{
                 }
                 this.confuguracionselected = configuracionEjb.find(confuguracionselected.getConfiguracionId());
                 for(Asignatura auxasig:asignaturaEjb.findByConfiguracionNew(confuguracionselected)){
-                    System.out.print(auxasig.getNombre()+"la otra"+ asignatura.getNombre());
                     if(asignatura.getNombre().trim().equals(auxasig.getNombre().trim()) && asignatura.getAsignaturaId()!= auxasig.getAsignaturaId()){
-                        System.out.println("IGUALLLL");
                         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Advertencia ", "Nombre en uso para esta configuración"); 
                         FacesContext.getCurrentInstance().addMessage("frmEditarAsignatura:txtNombre", message);
                         return;
@@ -279,7 +269,6 @@ public class mbvAsignatura implements Serializable{
                 inicioPagina();
             }
             else{
-                System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
@@ -295,7 +284,6 @@ public class mbvAsignatura implements Serializable{
     public void cargarAsignatura(int asignaturaid){
         try {
             if(!login){
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
@@ -306,7 +294,7 @@ public class mbvAsignatura implements Serializable{
                 if(!anlectivoEjb.configuracionEnUso(auxcfg)){
                     this.areaselected = this.areaEjb.find(asignatura.getAreaId().getAreaId());
                     this.confuguracionselected = this.configuracionEjb.find(asignatura.getConfiguracionId().getConfiguracionId());
-                    this.areas = this.confuguracionselected.getAreaList();
+                    this.areas = areaEjb.getByConfiguracion(this.confuguracionselected);//this.confuguracionselected.getAreaList()
                     RequestContext.getCurrentInstance().update("frmEditarAsignatura:panelEditarAsignatura");
                     RequestContext.getCurrentInstance().execute("PF('dialogoEditarAsignatura').show()");
                 }
@@ -325,7 +313,6 @@ public class mbvAsignatura implements Serializable{
     }
     public void newAsignatura(){
         if(!login){
-            System.out.println("Usuario NO logeado");
             FacesContext.getCurrentInstance().
                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
             return;
@@ -349,7 +336,6 @@ public class mbvAsignatura implements Serializable{
      public void eliminarAsignatura(Asignatura asignatura) {
         try {
             if(!login){
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
@@ -370,7 +356,6 @@ public class mbvAsignatura implements Serializable{
                 inicioPagina();
             }
             else{
-                System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }

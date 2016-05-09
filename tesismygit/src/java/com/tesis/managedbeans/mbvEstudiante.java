@@ -61,6 +61,7 @@ import org.primefaces.model.UploadedFile;
 @ManagedBean
 @ViewScoped
 public class mbvEstudiante implements Serializable {
+    private static final long serialVersionUID = 5654550342783817474L;
 
     private Estudiante estudiante;
     private List<Estudiante> estudiantes;
@@ -190,7 +191,6 @@ public class mbvEstudiante implements Serializable {
 
     @PostConstruct
     public void inicioPagina() {
-        System.out.println("AAAAAAAAAAAAAAA" + this.prueba);
         this.estudiante = new Estudiante();
         this.estadoSelected = new EstadoEstudiante();
         this.estadosEstudiante = new ArrayList<EstadoEstudiante>();
@@ -208,9 +208,7 @@ public class mbvEstudiante implements Serializable {
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
             usr = mbslogin.getUsuario();
             this.login = mbslogin.isLogin();
-            System.out.println("usuario" + usr.getNombres() + "Login" + login);
         } catch (Exception e) {
-            System.out.println(e.toString());
             this.login = false;
         }
         if (this.usr != null) {
@@ -242,7 +240,6 @@ public class mbvEstudiante implements Serializable {
     public void insertar() {
         try {
             if (!login) {
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
@@ -256,10 +253,8 @@ public class mbvEstudiante implements Serializable {
                 }
                 EstadoEstudiante estado = estadoEjb.find(1);
                 TipoUsuario tusu = tusuEjb.find(1);
-                System.out.println("ooOO" + estado.getNombre());
                 this.estudiante.setEstadoEstudianteId(estado);
                 this.estudiante.setTipoUsuarioId(tusu);
-                System.out.println("ESTUDIANTE: " + estudiante.getEstudianteId());
                 InputStream inputStream = null;
                 OutputStream outputStream = null;
                 ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
@@ -300,8 +295,6 @@ public class mbvEstudiante implements Serializable {
                         }
                         this.estudiante.setFoto(nombreArchivo);
                     }
-
-                    System.out.println("ESTUDIANTE: " + this.estudiante);
                     this.estudianteEjb.create(estudiante);
                     FacesContext.getCurrentInstance().
                             addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Estudiante creado satisfactoriamente"));
@@ -321,7 +314,6 @@ public class mbvEstudiante implements Serializable {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error inesperado", "Contáctese con el administrador"));
                 }
             } else {
-                System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
@@ -335,7 +327,6 @@ public class mbvEstudiante implements Serializable {
     }
 
     public void handleFileUpload(FileUploadEvent event) throws IOException {
-        System.out.println("mm" + event.getFile().getFileName());
         InputStream inputStream = null;
         OutputStream outputStream = null;
 
@@ -367,7 +358,6 @@ public class mbvEstudiante implements Serializable {
             nombreArchivo += "_" + año + "_" + mes + "_" + dia + "_" + hora + "_" + minuto + "_" + segundo + "_" + milseg;
             Random nrd = new Random();
             nombreArchivo += nrd.nextInt() + event.getFile().getFileName().substring(event.getFile().getFileName().lastIndexOf("."));
-            System.out.println(" NMBRE :" + nombreArchivo);
             ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
             String carpetaAvatar = (String) servletContext.getRealPath("/avatar");
 
@@ -408,10 +398,8 @@ public class mbvEstudiante implements Serializable {
         //file.delete();
 
         try {
-            System.out.println("ENTRA 2" + event.getFile().getFileName());
             if (event.getFile().getSize() <= 0) {
             } else {
-                System.out.println("ENTRA 4" + event.getFile().getFileName().endsWith(".jpg"));
                 boolean ban = false;
                 if (event.getFile().getFileName().endsWith(".jpg") == true) {
                     ban = true;
@@ -420,19 +408,16 @@ public class mbvEstudiante implements Serializable {
                     ban = true;
                 }
                 if (ban == false) {
-                    System.out.println("ENTRA 5" + event.getFile().getFileName());
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "El archivo debe ser con extensión \".png\" o \".jpg\" "));
                     //inicioPagina();  
                     return;
                 }
                 if (event.getFile().getSize() > 20971520) {
-                    System.out.println("ENTRA 6");
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "El archivo no puede ser más de 20mb"));
                     return;
                 }
                 if (!this.estudiante.getFoto().equals("default.png")) {
                     if (file.delete()) {
-                        System.out.println("ENTRA 7");
                         String nombreArchivo = "/";
                         nombreArchivo += this.estudiante.getIdentificiacion();
                         Calendar fecha = new GregorianCalendar();
@@ -456,17 +441,14 @@ public class mbvEstudiante implements Serializable {
                             outputStream.write(bytes, 0, read);
                         }
                         this.estudiante.setFoto(nombreArchivo);
-                        System.out.println("ENTRA 8");
                         estudianteEjb.edit(estudiante);
                         FacesContext.getCurrentInstance().
                                 addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Foto actualizada"));
                         //RequestContext.getCurrentInstance().execute("PF('dialogoEditarEstudiante').hide()");
                         //inicioPagina();
                     } else {
-                        System.out.println("Delete operation is failed.");
                     }
                 } else {
-                    System.out.println("ENTRA 7");
                     String nombreArchivo = "/";
                     nombreArchivo += this.estudiante.getIdentificiacion();
                     Calendar fecha = new GregorianCalendar();
@@ -490,7 +472,6 @@ public class mbvEstudiante implements Serializable {
                         outputStream.write(bytes, 0, read);
                     }
                     this.estudiante.setFoto(nombreArchivo);
-                    System.out.println("ENTRA 8");
                     estudianteEjb.edit(estudiante);
                     FacesContext.getCurrentInstance().
                             addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Foto actualizada"));
@@ -500,12 +481,10 @@ public class mbvEstudiante implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error inesperado", "Contáctese con el administrador"));
         } finally {
             if (inputStream != null) {
-                System.out.println("ENTRA 10");
                 inputStream.close();
             }
 
             if (outputStream != null) {
-                System.out.println("ENTRA 10");
                 outputStream.close();
             }
         }
@@ -518,7 +497,6 @@ public class mbvEstudiante implements Serializable {
     }
 
     public DefaultStreamedContent getDownload() throws Exception {
-        System.out.println("GET = " + download.getName());
         return download;
     }
 
@@ -528,14 +506,11 @@ public class mbvEstudiante implements Serializable {
         try {
 
             if (file.delete()) {
-                System.out.println(file.getName() + " is deleted!");
             } else {
-                System.out.println("Delete operation is failed.");
             }
 
         } catch (Exception e) {
 
-            e.printStackTrace();
 
         }
 
@@ -590,15 +565,11 @@ public class mbvEstudiante implements Serializable {
         facesContext.responseComplete();
     }
 
-    // Helpers (can be refactored to public utility class) ----------------------------------------
     private static void close(Closeable resource) {
         if (resource != null) {
             try {
                 resource.close();
             } catch (IOException e) {
-                // Do your thing with the exception.  Print it, log it or mail it.  It may be useful to
-                // know that this will generally only be thrown when the client aborted the download.
-                e.printStackTrace();
             }
         }
     }
@@ -623,7 +594,6 @@ public class mbvEstudiante implements Serializable {
 
     public void newEstudiante() {
         if (!login) {
-            System.out.println("Usuario NO logeado");
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
             return;
@@ -648,7 +618,6 @@ public class mbvEstudiante implements Serializable {
     public void cargarEstudiante(int estudianteid) {
         try {
             if (!login) {
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
@@ -675,7 +644,6 @@ public class mbvEstudiante implements Serializable {
     public void subirArchivos(int estudianteid) {
         try {
             if (!login) {
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
@@ -722,7 +690,6 @@ public class mbvEstudiante implements Serializable {
     public void editar() {
         try {
             if (!login) {
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
@@ -733,7 +700,6 @@ public class mbvEstudiante implements Serializable {
                             addMessage("frmEditarEstudiante:txtIdentificacion", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Identificación en uso"));
                     return;
                 }
-                System.out.println("ENTRA 8" + cicloAnterior + "es" + estudiante.getUltimoaprobado());
                 if (cicloAnterior == estudiante.getUltimoaprobado() || !matriculaEjb.tieneMatricula(estudiante)) {
                     this.estadoSelected = estadoEjb.find(estadoSelected.getEstadoEstudianteId());
                     estudiante.setEstadoEstudianteId(estadoSelected);
@@ -747,7 +713,6 @@ public class mbvEstudiante implements Serializable {
                             addMessage("frmEditarEstudiante:txtUltimo", new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "El estudiante se encuentra matriculado"));
                 }
             } else {
-                System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
@@ -759,7 +724,6 @@ public class mbvEstudiante implements Serializable {
 
     public void redirect() {
         RequestContext.getCurrentInstance().closeDialog("hola");
-        System.out.println("Entra 1");
         /* System.out.println("Entra 1");
          final ExternalContext context = FacesContext.getCurrentInstance().getExternalContext(); 
          FacesContext ctx = FacesContext.getCurrentInstance();        

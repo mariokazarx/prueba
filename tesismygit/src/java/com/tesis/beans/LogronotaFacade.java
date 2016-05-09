@@ -43,11 +43,9 @@ public class LogronotaFacade extends AbstractFacade<Logronota> {
                 return null;
             }
         } catch (PersistenceException e) {
-            //e.printStackTrace();
             return null;
         }
         catch (Exception e) {
-            //e.printStackTrace();
             return null;
         }
         
@@ -68,11 +66,9 @@ public class LogronotaFacade extends AbstractFacade<Logronota> {
                 return false;
             }
         } catch (PersistenceException e) {
-            e.printStackTrace();
             return false;
         }
         catch (Exception e) {
-            e.printStackTrace();
             return false;
         }
         

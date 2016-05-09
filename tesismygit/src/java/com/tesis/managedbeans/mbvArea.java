@@ -30,7 +30,8 @@ import org.primefaces.context.RequestContext;
  */
 @ManagedBean
 @ViewScoped
-public class mbvArea implements Serializable{
+public class mbvArea implements Serializable {
+    private static final long serialVersionUID = 2420808426741271422L;
 
     private Area area;
     private List<Area> areas;
@@ -52,11 +53,10 @@ public class mbvArea implements Serializable{
     private UsuarioRoleFacade usrRoleEjb;
     @EJB
     private AnlectivoFacade anlectivoEjb;
-    
+
     /**
      * Creates a new instance of mbvArea
      */
-    
     public mbvArea() {
     }
 
@@ -67,7 +67,7 @@ public class mbvArea implements Serializable{
     public boolean isCrear() {
         return crear;
     }
-    
+
     public Area getArea() {
         return area;
     }
@@ -115,70 +115,67 @@ public class mbvArea implements Serializable{
     public void setConfEJB(ConfiguracionFacade confEJB) {
         this.confEJB = confEJB;
     }
+
     @PostConstruct
-    public void inicioPagina(){
-        this.consultar=false;
-        this.editar=false;
-        this.eliminar=false;
-        this.crear=false;
+    public void inicioPagina() {
+        this.consultar = false;
+        this.editar = false;
+        this.eliminar = false;
+        this.crear = false;
         try {
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
-             usr = mbslogin.getUsuario();
-             this.login = mbslogin.isLogin();
-            System.out.println("usuario"+usr.getNombres()+"Login"+login);
+            usr = mbslogin.getUsuario();
+            this.login = mbslogin.isLogin();
         } catch (Exception e) {
-            System.out.println(e.toString());
             this.login = false;
         }
-        if(this.usr!=null){
-            for(UsuarioRole usrRol:usrRoleEjb.getByUser(usr)){
-                if(usrRol.getRoleId().getRecursoId().getRecursoId()==2){
-                    if(usrRol.getRoleId().getAgregar()){
-                        this.crear=true;
+        if (this.usr != null) {
+            for (UsuarioRole usrRol : usrRoleEjb.getByUser(usr)) {
+                if (usrRol.getRoleId().getRecursoId().getRecursoId() == 2) {
+                    if (usrRol.getRoleId().getAgregar()) {
+                        this.crear = true;
                     }
-                    if(usrRol.getRoleId().getConsultar()){
-                        this.consultar=true;
+                    if (usrRol.getRoleId().getConsultar()) {
+                        this.consultar = true;
                     }
-                    if(usrRol.getRoleId().getEditar()){
-                        this.editar=true;
+                    if (usrRol.getRoleId().getEditar()) {
+                        this.editar = true;
                     }
-                    if(usrRol.getRoleId().getEliminar()){
-                        this.eliminar=true;
+                    if (usrRol.getRoleId().getEliminar()) {
+                        this.eliminar = true;
                     }
                 }
             }
         }
-        if(this.usr.getTipoUsuarioId().getTipoUsuarioId()==4){
-            this.consultar=true;
-            this.editar=true;
-            this.eliminar=true;
-            this.crear=true;
+        if (this.usr.getTipoUsuarioId().getTipoUsuarioId() == 4) {
+            this.consultar = true;
+            this.editar = true;
+            this.eliminar = true;
+            this.crear = true;
         }
-        this.area=new Area();
-        this.areas=this.areaEJB.findAll();
+        this.area = new Area();
+        this.areas = this.areaEJB.findAll();
         this.configs = this.confEJB.findAll();
         this.confselected = new Configuracion();
     }
-    public void insertar(){
-        try{
-            if(!login){
-                System.out.println("Usuario NO logeado");
+
+    public void insertar() {
+        try {
+            if (!login) {
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
-            if(this.crear){
+            if (this.crear) {
                 Configuracion auxcfg = confEJB.find(confselected.getConfiguracionId());
-                if(añoEJB.configuracionEnUso(auxcfg)){
+                if (añoEJB.configuracionEnUso(auxcfg)) {
                     FacesContext.getCurrentInstance().
                             addMessage("frmcriterioeval:stlCriterio", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Esta área esta en uso"));
                     return;
                 }
-                for(Area auxarea:auxcfg.getAreaList()){
-                    System.out.print(auxarea.getNombre()+"la otra"+ area.getNombre());
-                    if(area.getNombre().trim().equals(auxarea.getNombre().trim())){
-                        System.out.println("IGUALLLL");
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Advertencia ", "Nombre en uso para esta configuración"); 
+                for (Area auxarea : areaEJB.getByConfiguracion(auxcfg)) {//auxcfg.getAreaList()
+                    if (area.getNombre().trim().equals(auxarea.getNombre().trim())) {
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Advertencia ", "Nombre en uso para esta configuración");
                         FacesContext.getCurrentInstance().addMessage(null, message);
                         return;
                     }
@@ -187,39 +184,35 @@ public class mbvArea implements Serializable{
                 RequestContext.getCurrentInstance().closeDialog(this);
                 areaEJB.create(area);
                 FacesContext.getCurrentInstance().
-                           addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Área creada satisfactoriamente"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Área creada satisfactoriamente"));
                 inicioPagina();
-            }
-            else{
-                System.out.print("error permiso denegado");
+            } else {
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
-        }catch(Exception e){
-             FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
         }
     }
-    public void actualizar(){
-        try{
-            if(!login){
-                System.out.println("Usuario NO logeado");
+
+    public void actualizar() {
+        try {
+            if (!login) {
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
-            if(this.editar){
+            if (this.editar) {
                 this.confselected = this.confEJB.find(confselected.getConfiguracionId());
-                if(añoEJB.configuracionEnUso(confselected)){
+                if (añoEJB.configuracionEnUso(confselected)) {
                     FacesContext.getCurrentInstance().
                             addMessage("frmEditarEscala:stlConfiguracion", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Esta área esta en uso"));
                     return;
                 }
-                for(Area auxarea:confselected.getAreaList()){
-                    System.out.print(auxarea.getNombre()+"la otra"+ area.getNombre());
-                    if(area.getNombre().trim().equals(auxarea.getNombre().trim()) && area.getAreaId()!= auxarea.getAreaId()){
-                        System.out.println("IGUALLLL");
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Advertencia ", "Nombre en uso para esta configuración"); 
+                for (Area auxarea : areaEJB.getByConfiguracion(confselected)) {//confselected.getAreaList()
+                    if (area.getNombre().trim().equals(auxarea.getNombre().trim()) && area.getAreaId() != auxarea.getAreaId()) {
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Advertencia ", "Nombre en uso para esta configuración");
                         FacesContext.getCurrentInstance().addMessage("frmEditarEscala:txtNombre", message);
                         return;
                     }
@@ -227,113 +220,108 @@ public class mbvArea implements Serializable{
                 area.setConfiguracionId(confselected);
                 areaEJB.edit(area);
                 FacesContext.getCurrentInstance().
-                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Área editada satisfactoriamente"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Área editada satisfactoriamente"));
                 RequestContext.getCurrentInstance().execute("PF('dialogoEditarEscala').hide()");
                 inicioPagina();
-            }
-            else{
-                System.out.print("error permiso denegado");
+            } else {
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
-            }
-        }catch(Exception e){
-            FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
-        }
-    }
-    public void cargarArea(int areaId){
-        try {
-            if(!login){
-                System.out.println("Usuario NO logeado");
-                FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
-                return;
-            }
-            if(this.editar){
-                this.area = this.areaEJB.find(areaId);
-                Configuracion auxcfg = confEJB.find(this.area.getConfiguracionId().getConfiguracionId());
-                if(añoEJB.configuracionEnUso(auxcfg)){
-                    RequestContext.getCurrentInstance().execute("PF('enUso').show()");
-                }else{
-                    this.confselected = this.confEJB.find(area.getConfiguracionId().getConfiguracionId());
-                    RequestContext.getCurrentInstance().update("frmEditarEscala:panelEditarEscala");
-                    RequestContext.getCurrentInstance().execute("PF('dialogoEditarEscala').show()");
-                }
-            }
-            else{
-                FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
-            }
-        } catch (Exception e) {
-            FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
-        }
-    }
-    public void closeDialog() {
-        inicioPagina();
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Área registrada"); 
-        FacesContext.getCurrentInstance().addMessage(null, message);
-    }
-    public void newArea(){
-        if(!login){
-            System.out.println("Usuario NO logeado");
-            FacesContext.getCurrentInstance().
-                   addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
-            return;
-        }
-        if(this.crear){
-            System.out.println("Hata AQUI!!");
-            Map<String,Object> options = new HashMap<String, Object>();
-            /*options.put("contentHeight", 340);
-            options.put("height", 400);
-            options.put("width",700);*/
-            options.put("modal", true);
-            options.put("draggable", true);
-            options.put("resizable", true);
-            RequestContext.getCurrentInstance().openDialog("newarea",options,null);
-        }
-        else{
-            FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
-        }
-    }
-     public void eliminarArea(Area area) {
-        try {
-            if(!login){
-                System.out.println("Usuario NO logeado");
-                FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
-                return;
-            }
-            if(this.eliminar){
-                //this.escala = this.escalaEjb.find(escalaid);
-                //System.out.println("ELIMINAR CRITERIO :"+criterioeval);
-                if(areaEJB.removeById(area)==true){
-                    //inicioPagina();
-                    //RequestContext.getCurrentInstance().update("frmEditarEscala"); 
-                    FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito","Área eliminada"));
-                }else{
-                    //RequestContext.getCurrentInstance().update("frmEditarEscala:mensajeGeneral");
-                    FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia","esta área esta en uso"));
-                }
-                inicioPagina();
-            }
-            else{
-                System.out.print("error permiso denegado");
-                FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
         }
     }
-     public void initRender(){
-        if(!this.consultar){
+
+    public void cargarArea(int areaId) {
+        try {
+            if (!login) {
+                FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
+                return;
+            }
+            if (this.editar) {
+                this.area = this.areaEJB.find(areaId);
+                Configuracion auxcfg = confEJB.find(this.area.getConfiguracionId().getConfiguracionId());
+                if (añoEJB.configuracionEnUso(auxcfg)) {
+                    RequestContext.getCurrentInstance().execute("PF('enUso').show()");
+                } else {
+                    this.confselected = this.confEJB.find(area.getConfiguracionId().getConfiguracionId());
+                    RequestContext.getCurrentInstance().update("frmEditarEscala:panelEditarEscala");
+                    RequestContext.getCurrentInstance().execute("PF('dialogoEditarEscala').show()");
+                }
+            } else {
+                FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
+            }
+        } catch (Exception e) {
             FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para manejar Áreas"));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
+        }
+    }
+
+    public void closeDialog() {
+        inicioPagina();
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Área registrada");
+        FacesContext.getCurrentInstance().addMessage(null, message);
+    }
+
+    public void newArea() {
+        if (!login) {
+            FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
+            return;
+        }
+        if (this.crear) {
+            Map<String, Object> options = new HashMap<String, Object>();
+            /*options.put("contentHeight", 340);
+             options.put("height", 400);
+             options.put("width",700);*/
+            options.put("modal", true);
+            options.put("draggable", true);
+            options.put("resizable", true);
+            RequestContext.getCurrentInstance().openDialog("newarea", options, null);
+        } else {
+            FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
+        }
+    }
+
+    public void eliminarArea(Area area) {
+        try {
+            if (!login) {
+                FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
+                return;
+            }
+            if (this.eliminar) {
+                //this.escala = this.escalaEjb.find(escalaid);
+                //System.out.println("ELIMINAR CRITERIO :"+criterioeval);
+                if (areaEJB.removeById(area) == true) {
+                    //inicioPagina();
+                    //RequestContext.getCurrentInstance().update("frmEditarEscala"); 
+                    FacesContext.getCurrentInstance().
+                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Área eliminada"));
+                } else {
+                    //RequestContext.getCurrentInstance().update("frmEditarEscala:mensajeGeneral");
+                    FacesContext.getCurrentInstance().
+                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "esta área esta en uso"));
+                }
+                inicioPagina();
+            } else {
+                FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
+            }
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
+        }
+    }
+
+    public void initRender() {
+        if (!this.consultar) {
+            FacesContext.getCurrentInstance().
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para manejar Áreas"));
         }
     }
 }

@@ -57,19 +57,15 @@ public class mbvMenu implements Serializable{
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
             usr = mbslogin.getUsuario();
             login = mbslogin.isLogin();
-            System.out.println("usuario"+usr.getNombres()+"Login"+login);
             
         } catch (Exception e) {
-            System.out.println(e.toString());
             //usr = null;
         }
         try {
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
              profesor = mbslogin.getProfesor();
              login = mbslogin.isLogin();
-            System.out.println(mbslogin.getProfesor().getNombre());
         } catch (Exception e) {
-            System.out.println(e.toString());
             //profesor = null;
         }
         
@@ -77,11 +73,9 @@ public class mbvMenu implements Serializable{
             aEscolar = aEscolarEjb.getIniciado();
         }
         model = new DefaultMenuModel();
-        System.out.println("usuario MENU"+usr+"PROFESOR MENU "+profesor);
         if(usr.getUsuarioId()!=null){
             //esta logueaod como usuario
             //First submenu
-            System.out.println("usuario MENU"+usr);
             DefaultSubMenu firstSubmenu = new DefaultSubMenu("Año escolar Vigente");
 
             DefaultMenuItem item = new DefaultMenuItem("Reporte de Matriculas");
@@ -176,7 +170,6 @@ public class mbvMenu implements Serializable{
         if(profesor.getProfesorId()!=null){
             //esta logueado como profesor
             //First submenu
-            System.out.println("Profesor MENU"+profesor);
             DefaultSubMenu firstSubmenu = new DefaultSubMenu("Año escolar en curso");
 
             DefaultMenuItem item = new DefaultMenuItem("Evaluar");
@@ -209,21 +202,11 @@ public class mbvMenu implements Serializable{
             //Second submenu
             DefaultSubMenu secondSubmenu = new DefaultSubMenu("Años escolares anteriores");
 
-            item = new DefaultMenuItem(aEscolar.getAnio());
-            item.setIcon("ui-icon-disk");
-            item.setCommand("#{menuView.save}");
-            //item.setUpdate("messages");
-            secondSubmenu.addElement(item);
-
+            
             item3 = new DefaultMenuItem("Reportes");
             item3.setUrl("/faces/profesores/reportes.xhtml");
             item3.setIcon("ui-icon-home");
             secondSubmenu.addElement(item3);
-
-            item = new DefaultMenuItem("Redirect");
-            item.setIcon("ui-icon-search");
-            item.setCommand("#{menuView.redirect}");
-            secondSubmenu.addElement(item);
 
             model.addElement(secondSubmenu);
             

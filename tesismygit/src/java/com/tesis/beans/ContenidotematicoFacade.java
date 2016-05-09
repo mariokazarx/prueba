@@ -57,11 +57,9 @@ public class ContenidotematicoFacade extends AbstractFacade<Contenidotematico> {
                 return null;
             }
         } catch (PersistenceException e) {
-            e.printStackTrace();
             return null;
         }
         catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }
@@ -78,11 +76,9 @@ public class ContenidotematicoFacade extends AbstractFacade<Contenidotematico> {
                 return null;
             }
         } catch (PersistenceException e) {
-            e.printStackTrace();
             return null;
         }
         catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }
@@ -99,11 +95,9 @@ public class ContenidotematicoFacade extends AbstractFacade<Contenidotematico> {
                 return null;
             }
         } catch (PersistenceException e) {
-            e.printStackTrace();
             return null;
         }
         catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }
@@ -123,11 +117,9 @@ public class ContenidotematicoFacade extends AbstractFacade<Contenidotematico> {
                 return false;
             }
         } catch (PersistenceException e) {
-            e.printStackTrace();
             return false;
         }
         catch (Exception e) {
-            e.printStackTrace();
             return false;
         }
     }
@@ -147,11 +139,9 @@ public class ContenidotematicoFacade extends AbstractFacade<Contenidotematico> {
                 return false;
             }
         } catch (PersistenceException e) {
-            e.printStackTrace();
             return false;
         }
         catch (Exception e) {
-            e.printStackTrace();
             return false;
         }
     }
@@ -171,11 +161,9 @@ public class ContenidotematicoFacade extends AbstractFacade<Contenidotematico> {
                 return false;
             }
         } catch (PersistenceException e) {
-            e.printStackTrace();
             return false;
         }
         catch (Exception e) {
-            e.printStackTrace();
             return false;
         }
     }
@@ -195,11 +183,9 @@ public class ContenidotematicoFacade extends AbstractFacade<Contenidotematico> {
                 return false;
             }
         } catch (PersistenceException e) {
-            e.printStackTrace();
             return false;
         }
         catch (Exception e) {
-            e.printStackTrace();
             return false;
         }
     }
@@ -286,11 +272,46 @@ public class ContenidotematicoFacade extends AbstractFacade<Contenidotematico> {
                 return null;
             }
         } catch (PersistenceException e) {
-            e.printStackTrace();
             return null;
         }
         catch (Exception e) {
-            e.printStackTrace();
+            return null;
+        }
+        
+    }
+    public List<Asignaturaciclo> getByPeriodoAsg(Periodo periodo){
+        try {
+            Query cq = em.createNamedQuery("Contenidotematico.findByPeriodoAsg");
+            cq.setParameter("periodo", periodo);
+            if(cq.getResultList()!=null){
+                return cq.getResultList();
+            }
+            else{
+                return null;
+            }
+        } catch (PersistenceException e) {
+            return null;
+        }
+        catch (Exception e) {
+            return null;
+        }
+        
+    }
+    public List<Asignaturaciclo> getByProfesorAsg(Profesor profesor,Anlectivo anlectivo){
+        try {
+            Query cq = em.createNamedQuery("Contenidotematico.findByProfesorAñoAsg");
+            cq.setParameter("profesor", profesor);
+            cq.setParameter("anlectivo", anlectivo);
+            if(cq.getResultList()!=null){
+                return cq.getResultList();
+            }
+            else{
+                return null;
+            }
+        } catch (PersistenceException e) {
+            return null;
+        }
+        catch (Exception e) {
             return null;
         }
         
@@ -307,11 +328,9 @@ public class ContenidotematicoFacade extends AbstractFacade<Contenidotematico> {
                 return null;
             }
         } catch (PersistenceException e) {
-            e.printStackTrace();
             return null;
         }
         catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
         
@@ -328,11 +347,9 @@ public class ContenidotematicoFacade extends AbstractFacade<Contenidotematico> {
                 return null;
             }
         } catch (PersistenceException e) {
-            e.printStackTrace();
             return null;
         }
         catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
         
@@ -349,11 +366,9 @@ public class ContenidotematicoFacade extends AbstractFacade<Contenidotematico> {
                 return null;
             }
         } catch (PersistenceException e) {
-            e.printStackTrace();
             return null;
         }
         catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
         
@@ -370,11 +385,9 @@ public class ContenidotematicoFacade extends AbstractFacade<Contenidotematico> {
                 return null;
             }
         } catch (PersistenceException e) {
-            e.printStackTrace();
             return null;
         }
         catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
         
@@ -390,11 +403,9 @@ public class ContenidotematicoFacade extends AbstractFacade<Contenidotematico> {
                 return null;
             }
         } catch (PersistenceException e) {
-            e.printStackTrace();
             return null;
         }
         catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
         
@@ -411,11 +422,9 @@ public class ContenidotematicoFacade extends AbstractFacade<Contenidotematico> {
                 return null;
             }
         } catch (PersistenceException e) {
-            e.printStackTrace();
             return null;
         }
         catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
         
@@ -432,11 +441,9 @@ public class ContenidotematicoFacade extends AbstractFacade<Contenidotematico> {
                 return null;
             }
         } catch (PersistenceException e) {
-            e.printStackTrace();
             return null;
         }
         catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
         
@@ -452,11 +459,9 @@ public class ContenidotematicoFacade extends AbstractFacade<Contenidotematico> {
                 return null;
             }
         } catch (PersistenceException e) {
-            e.printStackTrace();
             return null;
         }
         catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
         

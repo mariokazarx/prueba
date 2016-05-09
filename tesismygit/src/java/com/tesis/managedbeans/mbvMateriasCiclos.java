@@ -34,6 +34,7 @@ import org.primefaces.model.DualListModel;
 @ManagedBean
 @ViewScoped
 public class mbvMateriasCiclos implements Serializable{
+    private static final long serialVersionUID = 1583259057567607778L;
     private Configuracion configuracionSelected;
     private List<Configuracion> configuraciones;
     private Ciclo cicloselected;
@@ -201,9 +202,7 @@ public class mbvMateriasCiclos implements Serializable{
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
              usr = mbslogin.getUsuario();
              this.login = mbslogin.isLogin();
-            System.out.println("usuario"+usr.getNombres()+"Login"+login);
         } catch (Exception e) {
-            System.out.println(e.toString());
             this.login = false;
         }
         if(this.usr!=null){
@@ -238,7 +237,6 @@ public class mbvMateriasCiclos implements Serializable{
                 this.mostrarEditar=false;
                 //System.out.println(configuracionSelected.getConfiguracionId());
                 this.ciclosSlected = cicloEJB.getByConfiguracion(configuracionSelected);
-                System.out.println(this.ciclosSlected.isEmpty());
                 if(this.ciclosSlected.isEmpty()==true){
                     this.banAsig=false;
                 }
@@ -277,7 +275,6 @@ public class mbvMateriasCiclos implements Serializable{
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
                     }
                 }
-                System.out.println(cicloselected.getCicloId());
                 cicloTabla = cicloEJB.find(cicloselected.getCicloId());
                 this.banAsig = true;
                 this.configuraciones = this.configuracionEJB.findAll();
@@ -289,7 +286,6 @@ public class mbvMateriasCiclos implements Serializable{
                 this.mostrarEditar=false;
             }
         } catch (Exception e) {
-            System.err.println("mm"+e.getMessage());
             this.banAsig=false;
             this.mostrarContenido=false;
             this.mostrarEditar=false;
@@ -299,27 +295,22 @@ public class mbvMateriasCiclos implements Serializable{
     public void onTransfer(TransferEvent event) {
         try {
             if(!login){
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
             if(this.editar){
-                System.out.println("mmm"+event.isAdd()+event.isRemove()+event.getItems());
                 //isremove de izq a derecha isadd de derecha a izq
                 for(Object item : event.getItems()) {
                     //builder.append(((Theme) item).getName()).append("<br />");
-                    System.out.println(item.toString());
                     if(event.isRemove()){
                         asg = asignaturaEJB.find(Integer.parseInt(item.toString())); 
-                        System.out.println("mierda"+asg.getNombre());
                         asigCicloaEJB.removeByAsignatura(asg);
                         FacesContext.getCurrentInstance().
                                 addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Asignatura removida"));
                     }
                     if(event.isAdd()){
                         asg = asignaturaEJB.find(Integer.parseInt(item.toString())); 
-                        System.out.println("mierda"+asg.getNombre());
                         asigCiclo.setAsignaturaId(asg);
                         asigCiclo.setCicloId(cicloselected);
                         asigCicloaEJB.create(asigCiclo);
@@ -334,7 +325,6 @@ public class mbvMateriasCiclos implements Serializable{
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
         } catch (Exception e) {
-            System.out.println(",,2"+e.getMessage());
         }
         //StringBuilder builder = new StringBuilder();
          

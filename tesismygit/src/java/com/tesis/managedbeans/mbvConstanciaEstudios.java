@@ -60,6 +60,7 @@ import com.tesis.entity.UsuarioRole;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ArrayList;
@@ -82,7 +83,8 @@ import org.omnifaces.util.Faces;
  */
 @ManagedBean
 @ViewScoped
-public class mbvConstanciaEstudios {
+public class mbvConstanciaEstudios implements Serializable{
+    private static final long serialVersionUID = 1L;
 
     private String identificacion;
     private Estudiante estudiante;
@@ -96,7 +98,7 @@ public class mbvConstanciaEstudios {
     private Usuario usr;
     @EJB
     private UsuarioRoleFacade usrRoleEjb;
-    @EJB
+    @EJB 
     private AnlectivoFacade anlectivoEjb;
     @EJB
     private PeriodoFacade periodoEjb;
@@ -180,9 +182,7 @@ public class mbvConstanciaEstudios {
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
             usr = mbslogin.getUsuario();
             this.login = mbslogin.isLogin();
-            System.out.println("usuario" + usr.getNombres() + "Login" + login);
         } catch (Exception e) {
-            System.out.println(e.toString());
             this.login = false;
         }
         if (this.usr != null) {
@@ -215,7 +215,6 @@ public class mbvConstanciaEstudios {
 
     public void imprimir() {
         if (!login) {
-            System.out.println("Usuario NO logeado");
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
             return;
@@ -294,7 +293,6 @@ public class mbvConstanciaEstudios {
                 document.add(p6);
 
                 List<Matricula> matriculas = matriculaEjb.getMatriculasEstudiante(est);
-                System.out.println("MATIRCULAS " + matriculas);
                 if (!matriculas.isEmpty()) {
                     for (Matricula maticula : matriculas) {
                         /*document.newPage();
@@ -351,7 +349,6 @@ public class mbvConstanciaEstudios {
                             Asignaturaciclo asg = asiganturaCicloEjb.asignaturasCiclo(ciclo, asignatura);
                             Notafinal notafinalEst = notaFinalEjb.findNotaFinalActual(asg, est, anlectivo);
                             BigDecimal max = new BigDecimal(escala.getNotaminimaaprob());
-                            System.out.println("NMNMNM" + notafinalEst + "ESTUDIANTE " + est + "asignatura " + asg + "año escolar " + anlectivo + "MATRICULA " + maticula);
                             table.addCell(asignatura.getNombre());
                             if (notafinalEst.getRecuperacion().compareTo("SI") == 0) {
 
@@ -381,28 +378,21 @@ public class mbvConstanciaEstudios {
 
 
             } catch (Exception e) {
-                System.out.println("ENTRO 3 ");
-                System.out.println("Error " + e.getMessage());
             }
             document.close();
             FacesContext context = FacesContext.getCurrentInstance();
             Object response = context.getExternalContext().getResponse();
             if (response instanceof HttpServletResponse) {
-                System.out.println("ENTRO 4 ");
                 HttpServletResponse hsr = (HttpServletResponse) response;
                 hsr.setContentType("application/pdf");
                 hsr.setHeader("Content-disposition", "attachment; filename=report.pdf");
                 hsr.setContentLength(baos.size());
                 try {
-                    System.out.println("ENTRO 5 ");
                     ServletOutputStream out = hsr.getOutputStream();
                     baos.writeTo(out);
                     out.flush();
                 } catch (IOException ex) {
-                    System.out.println("ENTRO 6 ");
-                    System.out.println("Error:  " + ex.getMessage());
                 }
-                System.out.println("ENTRO 7 ");
                 context.responseComplete();
             }
 
@@ -452,7 +442,6 @@ public class mbvConstanciaEstudios {
              }
              */
         } else {
-            System.out.print("error permiso denegado");
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
         }
@@ -460,7 +449,6 @@ public class mbvConstanciaEstudios {
 
     public void imprimirnue() {
         if (!login) {
-            System.out.println("Usuario NO logeado");
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
             return;
@@ -539,7 +527,6 @@ public class mbvConstanciaEstudios {
                 document.add(p6);
 
                 List<Matricula> matriculas = matriculaEjb.getMatriculasEstudiante(est);
-                System.out.println("MATIRCULAS " + matriculas);
                 if (!matriculas.isEmpty()) {
                     for (Matricula maticula : matriculas) {
                         /*document.newPage();
@@ -596,7 +583,6 @@ public class mbvConstanciaEstudios {
                             Asignaturaciclo asg = asiganturaCicloEjb.asignaturasCiclo(ciclo, asignatura);
                             Notafinal notafinalEst = notaFinalEjb.findNotaFinalActual(asg, est, anlectivo);
                             BigDecimal max = new BigDecimal(escala.getNotaminimaaprob());
-                            System.out.println("NMNMNM" + notafinalEst + "ESTUDIANTE " + est + "asignatura " + asg + "año escolar " + anlectivo + "MATRICULA " + maticula);
                             table.addCell(asignatura.getNombre());
                             if (notafinalEst.getRecuperacion().compareTo("SI") == 0) {
 
@@ -681,15 +667,12 @@ public class mbvConstanciaEstudios {
 
 
             } catch (Exception e) {
-                System.out.println("ENTRO 3 ");
-                System.out.println("Error " + e.getMessage());
             }
             document.close();
             FacesContext context = FacesContext.getCurrentInstance();
             Object response = context.getExternalContext().getResponse();
             if (response instanceof HttpServletResponse) {
                 try {
-                    System.out.println("ENTRO 4 ");
                     HttpServletResponse hsr = (HttpServletResponse) response;
                     //hsr.setContentType("application/pdf");
                     //hsr.setHeader("Content-disposition", "attachment; filename=report.pdf");
@@ -699,22 +682,17 @@ public class mbvConstanciaEstudios {
 
                     Faces.sendFile(baos.toByteArray(), "cosntancia.pdf", false);
                     try {
-                        System.out.println("ENTRO 5 ");
                         ServletOutputStream out = hsr.getOutputStream();
                         baos.writeTo(out);
                         out.flush();
                     } catch (IOException ex) {
-                        System.out.println("ENTRO 6 ");
-                        System.out.println("Error:  " + ex.getMessage());
                     }
-                    System.out.println("ENTRO 7 ");
                     context.responseComplete();
                 } catch (IOException ex) {
                     Logger.getLogger(mbvConstanciaEstudios.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         } else {
-            System.out.print("error permiso denegado");
             FacesContext.getCurrentInstance().
                     addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
         }

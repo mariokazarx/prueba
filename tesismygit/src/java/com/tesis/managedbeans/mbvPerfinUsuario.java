@@ -11,10 +11,10 @@ import com.tesis.beans.TipoUsuarioFacade;
 import com.tesis.beans.UsuarioFacade;
 import com.tesis.beans.UsuarioRoleFacade;
 import com.tesis.clases.Encrypt;
-import com.tesis.entity.Recurso;
 import com.tesis.entity.Role;
 import com.tesis.entity.Usuario;
 import com.tesis.entity.UsuarioRole;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -23,7 +23,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -31,7 +30,8 @@ import org.primefaces.context.RequestContext;
  */
 @ManagedBean
 @ViewScoped
-public class mbvPerfinUsuario {
+public class mbvPerfinUsuario implements Serializable{
+    private static final long serialVersionUID = 7528211230295924824L;
 
     private Usuario usuario;
     private boolean login;
@@ -104,9 +104,7 @@ public class mbvPerfinUsuario {
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
             usuario = mbslogin.getUsuario();
             this.login = mbslogin.isLogin();
-            System.out.println("usuario" + usuario.getNombres() + "Login" + login);
         } catch (Exception e) {
-            System.out.println(e.toString());
             this.login = false;
         }
         this.rolesRecursos = new ArrayList<Role>();
@@ -124,7 +122,6 @@ public class mbvPerfinUsuario {
     public void actualizar() {
         try {
             if (!login) {
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesion"));
                 return;

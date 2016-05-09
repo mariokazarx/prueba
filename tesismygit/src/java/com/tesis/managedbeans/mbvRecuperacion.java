@@ -37,8 +37,6 @@ import com.tesis.entity.Asignatura;
 import com.tesis.entity.Asignaturaciclo;
 import com.tesis.entity.Contenidotematico;
 import com.tesis.entity.Curso;
-import com.tesis.entity.EstadoPeriodo;
-import com.tesis.entity.Estadologronota;
 import com.tesis.entity.Estudiante;
 import com.tesis.entity.Logro;
 import com.tesis.entity.Logronota;
@@ -54,7 +52,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,7 +65,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.view.facelets.FaceletContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.SystemException;
@@ -79,10 +75,7 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.omnifaces.util.Faces;
-import org.primefaces.component.datatable.DataTable;
 import org.primefaces.context.RequestContext;
-import org.primefaces.event.CellEditEvent;
-import org.primefaces.event.RowEditEvent;
 
 /**
  *
@@ -90,7 +83,8 @@ import org.primefaces.event.RowEditEvent;
  */
 @ManagedBean
 @ViewScoped
-public class mbvRecuperacion {
+public class mbvRecuperacion implements Serializable{
+    private static final long serialVersionUID = -3938297132857928451L;
 
     private List<ReporteNotasProfesor> reporte;
     private String notaxxLogro;
@@ -327,26 +321,21 @@ public class mbvRecuperacion {
     }
 
     public String getNotaxxLogro() {
-        System.out.println("GET" + notaxxLogro);
         return notaxxLogro;
     }
 
     public void setNotaxxLogro(String notaxxLogro) {
         try {
-            System.out.println("hola" + notaxxLogro);
             this.notaxxLogro = notaxxLogro;
         } catch (Exception e) {
-            System.out.println("EROR" + e.toString());
         }
 
     }
 
     public void setNotaxxLogro(Estudiante es) {
         try {
-            System.out.println("hola" + es.getNombre());
             //this.notaxxLogro = notaxxLogro;
         } catch (Exception e) {
-            System.out.println("EROR" + e.toString());
         }
 
     }
@@ -357,9 +346,7 @@ public class mbvRecuperacion {
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
             profesor = mbslogin.getProfesor();
             login = mbslogin.isLogin();
-            System.out.println(mbslogin.getProfesor().getNombre());
         } catch (Exception e) {
-            System.out.println(e.toString());
             profesor = null;
         }
         this.cursos = new ArrayList<Curso>();
@@ -379,7 +366,6 @@ public class mbvRecuperacion {
         this.mostrarRecuperacion = false;
         if (profesor != null) {
             anlectivos = anlectivoEjb.getAñosEnUso();
-            System.out.println("logueado como profesor");
             //anlectivo = anlectivoEjb.getIniciado();
             //año iniciado
             //traer el ultimo periodo dictado 
@@ -428,7 +414,6 @@ public class mbvRecuperacion {
             notas = notafEjb.findByRecuperacion(asg, profesor, anlectivo);
             if (!notas.isEmpty()) {
                 for (Notafinal notaAux : notas) {
-                    System.out.println("ESTUDIANTE " + notaAux.getEstudianteId().getNombre() + "NOTA " + notaAux.getValor());
                 }
                 this.mostrarRecuperacion = true;
             } else {
@@ -443,7 +428,6 @@ public class mbvRecuperacion {
         List<Logro> logrosaux = logroEjb.getContenidoByAll(contenido);
 
         estudiantesN.clear();
-        System.out.println("CONTENIDOOOOOO " + estudiantesN.size());
         for (Estudiante est : estudiantes) {
             EstudianteNotas estNota = new EstudianteNotas();
             estNota.setId(est.getEstudianteId());
@@ -455,7 +439,6 @@ public class mbvRecuperacion {
             for (Logro aux : logrosaux) {
                 logrosNotaAux.add(logroNotaEjb.getByLogroestudiante(est, aux));
                 notasLog.put(aux.getLogroId(), getNotaEstudiante(est, aux.getLogroId()));
-                System.out.println("CONTENIDOOOOOO 22222 " + getNotaEstudiante(est, aux.getLogroId()));
             }
             estNota.setLogros(logrosNotaAux);
             estNota.setNotasLogros(notasLog);
@@ -465,6 +448,7 @@ public class mbvRecuperacion {
     }
 
     static public class ColumnModel implements Serializable {
+        private static final long serialVersionUID = 2945165875086230540L;
 
         private String header;
         private Integer property;
@@ -521,17 +505,14 @@ public class mbvRecuperacion {
         if (notaEst != null) {
             nota = notaEst.getValor();
         }
-        System.out.println("***TABLA**" + nota);
         return nota.setScale(1, RoundingMode.HALF_EVEN);
     }
 
     public void prueba() {
-        System.out.println("PRUEBA");
         this.editable = false;
     }
 
     public void pruebaac() {
-        System.out.println("PRUEBADC");
         this.editable = true;
     }
 
@@ -549,13 +530,10 @@ public class mbvRecuperacion {
             init();
             cursoSelected.getCicloId().getNumero();
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("ooooOOOO" + e.toString());
         }
     }
 
     public void init() throws JRException {
-        System.out.println("entro init");
         JRBeanCollectionDataSource beanCollectionDataSource = new JRBeanCollectionDataSource(reporte);
         String reportpath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/notasProfesor.jasper");
         /*Map<String, Object> parametros = new HashMap<String, Object>();
@@ -579,7 +557,6 @@ public class mbvRecuperacion {
         Estudiante es = estudianteEjB.find(1);
         Double notaFinal = notaEstEJB.getNotaFinal(anlectivoAux, es, cursoSelected, contenido.getAsignaturacicloId());
         BigDecimal notaFinalDef = new BigDecimal(notaFinal);
-        System.out.println("NOTA FINAL OK" + notaFinalDef);
     }
 
     public BigDecimal getNotaPeriodo(Estudiante estudiante, Integer periodoId) {
@@ -627,18 +604,14 @@ public class mbvRecuperacion {
     }
 
     public void recuperarNota() throws IllegalStateException, IllegalStateException, SecurityException, SystemException {
-        System.out.println("NOTA RECUPERACION " + notaRecuperacion);
         try {
-            System.out.println("ENTRO 1");
             tx.begin();
             ntRecuperar.setRecuperacion("SI");
             notafEjb.edit(ntRecuperar);
             Notafinalrecuperacion notaFinalRecuAux = notaFinalREjb.getNotaFinalRecuperar(ntRecuperar);
             if (notaFinalRecuAux == null) {
-                System.out.println("ENTRO 2" + ntRecuperar.getAsignaturacicloId());
                 Asignaturaciclo asg = asignaturaCicloEjb.find(ntRecuperar.getAsignaturacicloId().getAsignaturacicloId());
                 Estudiante est = estudianteEjB.find(ntRecuperar.getEstudianteId().getEstudianteId());
-                System.out.println("ENTRO 5" + est + "vv " + asg);
                 notaFinalRecuAux = new Notafinalrecuperacion();
                 notaFinalRecuAux.setAsignaturacicloId(asg);
                 notaFinalRecuAux.setEstudianteId(est);
@@ -647,15 +620,12 @@ public class mbvRecuperacion {
                 notaFinalRecuAux.setValor(notaRecuperacion);
                 notaFinalREjb.create(notaFinalRecuAux);
             } else {
-                System.out.println("ENTRO 3");
                 notaFinalRecuAux.setProfesorId(profesor);
                 notaFinalRecuAux.setValor(notaRecuperacion);
                 notaFinalREjb.edit(notaFinalRecuAux);
             }
             tx.commit();
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("ENTRO 4" + e.getMessage());
             tx.rollback();
         }
 
@@ -663,14 +633,11 @@ public class mbvRecuperacion {
 
     public void cargarAnio() {
         try {
-            System.out.println("ENTRO 1");
             if (anlectivoselected.getAnlectivoId() != null) {
                 anlectivo = anlectivoEjb.find(anlectivoselected.getAnlectivoId());
                 if (periodoEjb.getNumeroPeriodosAño(anlectivoselected) == periodoEjb.getNumeroPeriodosTerminadosAño(anlectivoselected)) {
-                    System.out.println("ENTRO 2");
                     this.cursos.clear();
                     this.periodo = periodoEjb.getPeriodoMaxByAnio(anlectivo);
-                    System.out.println("Periodo maximo " + periodo + "numero " + periodo.getNumero());
                     this.cursos = cursoEjb.findCursosProfeso(profesor, periodo);
                     this.estudiantes = new ArrayList<Estudiante>();
                     this.notaxxLogro = new String();
@@ -693,8 +660,6 @@ public class mbvRecuperacion {
                 this.cursoSelected = new Curso();
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("ENTRO 4");
         }
 
     }
@@ -773,7 +738,6 @@ public class mbvRecuperacion {
             cellTituloNotaR.addElement(partituloNotaR);
             table.addCell(cellTituloNotaR);
             List<Periodo> periodosReporte = periodoEjb.getPeriodosByAnio(anlectivoselected);
-            System.out.println("AÑO ESCOLAR " + anlectivoselected + " PERIODOS " + periodosReporte);
             for (Notafinal ntf : notas) {
                 table.addCell(ntf.getEstudianteId().getApellido() + " " + ntf.getEstudianteId().getNombre());
 
@@ -798,28 +762,22 @@ public class mbvRecuperacion {
             document.add(parNombre);
 
         } catch (Exception e) {
-            System.out.println("ENTRO 3 ");
-            System.out.println("Error " + e.getMessage());
         }
         document.close();
         FacesContext context = FacesContext.getCurrentInstance();
         Object response = context.getExternalContext().getResponse();
         if (response instanceof HttpServletResponse) {
             try {
-                System.out.println("ENTRO 4 ");
                 HttpServletResponse hsr = (HttpServletResponse) response;
                 hsr.reset();
                 Faces.sendFile(baos.toByteArray(), "reporteRecuperaciones.pdf", false);
                 try {
-                    System.out.println("ENTRO 5 ");
                     ServletOutputStream out = hsr.getOutputStream();
                     baos.writeTo(out);
                     out.flush();
                 } catch (IOException ex) {
-                    System.out.println("ENTRO 6 ");
-                    System.out.println("Error:  " + ex.getMessage());
+                    
                 }
-                System.out.println("ENTRO 7 ");
                 context.responseComplete();
             } catch (IOException ex) {
                 Logger.getLogger(mbvConstanciaEstudios.class.getName()).log(Level.SEVERE, null, ex);

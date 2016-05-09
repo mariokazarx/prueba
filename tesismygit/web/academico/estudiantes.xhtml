@@ -208,7 +208,7 @@
                                 </p:selectOneMenu>
                                 <p:message for="selectZona"/>
                                 <p:outputLabel value="Fecha de nacimiento" for="txtFechaNacimiento"/>
-                                <p:calendar id="txtFechaNacimiento" label="Fecha de nacimiento" showOn="button" title="Ejemplo: dd/mm/yyyy" value="#{mbvEstudiante.estudiante.fechaNacimiento}" pattern="dd/MM/yyyy" required="true" requiredMessage="Fecha de nacimiento es requerido"/>
+                                <p:calendar id="txtFechaNacimiento" locale="es" navigator="true" label="Fecha de nacimiento" showOn="button" title="Ejemplo: dd/mm/yyyy" value="#{mbvEstudiante.estudiante.fechaNacimiento}" pattern="dd/MM/yyyy" required="true" requiredMessage="Fecha de nacimiento es requerido"/>
                                 <p:message for="txtFechaNacimiento"/>
                                 <p:outputLabel for="rdbSexo" value="Sexo:" />
                                 <p:selectOneRadio id="rdbSexo" value="#{mbvEstudiante.estudiante.sexo}" >

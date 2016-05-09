@@ -49,12 +49,8 @@ public class PeriodoFacade extends AbstractFacade<Periodo> {
                 return null;
             }
         } catch (PersistenceException e) {
-            System.out.println("llega b");
-            e.printStackTrace();
             return null;
         } catch (Exception e) {
-            System.out.println("llega c");
-            //e.printStackTrace();
             return null;
         }
     }
@@ -68,12 +64,8 @@ public class PeriodoFacade extends AbstractFacade<Periodo> {
                 return null;
             }
         } catch (PersistenceException e) {
-            System.out.println("llega b");
-            e.printStackTrace();
             return null;
         } catch (Exception e) {
-            System.out.println("llega c");
-            //e.printStackTrace();
             return null;
         }
     }
@@ -87,12 +79,8 @@ public class PeriodoFacade extends AbstractFacade<Periodo> {
                 return null;
             }
         } catch (PersistenceException e) {
-            System.out.println("llega b");
-            e.printStackTrace();
             return null;
         } catch (Exception e) {
-            System.out.println("llega c");
-            e.printStackTrace();
             return null;
         }
     }
@@ -106,12 +94,8 @@ public class PeriodoFacade extends AbstractFacade<Periodo> {
                 return null;
             }
         } catch (PersistenceException e) {
-            System.out.println("llega b");
-            //e.printStackTrace();
             return null;
         } catch (Exception e) {
-            System.out.println("llega c");
-            //e.printStackTrace();
             return null;
         }
     }
@@ -125,12 +109,8 @@ public class PeriodoFacade extends AbstractFacade<Periodo> {
                 return null;
             }
         } catch (PersistenceException e) {
-            System.out.println("llega b");
-            e.printStackTrace();
             return null;
         } catch (Exception e) {
-            System.out.println("llega c");
-            e.printStackTrace();
             return null;
         }
     }
@@ -150,12 +130,8 @@ public class PeriodoFacade extends AbstractFacade<Periodo> {
                 return null;
             }
         } catch (PersistenceException e) {
-            System.out.println("llega b");
-            //e.printStackTrace();
             return null;
         } catch (Exception e) {
-            System.out.println("llega c");
-            //e.printStackTrace();
             return null;
         }
     }
@@ -166,7 +142,6 @@ public class PeriodoFacade extends AbstractFacade<Periodo> {
             cq.setParameter("anlectivo", anlectivo);
             if(cq.getSingleResult()!=null){
                 result = (Long) cq.getSingleResult();
-                System.out.println("entro 1 "+result+"aaa"+anlectivo);
                 if(result>0){
                     return true;
                 }else{
@@ -174,17 +149,12 @@ public class PeriodoFacade extends AbstractFacade<Periodo> {
                 }
             }
             else{
-                System.out.println("entro 2");
                 return false;
             }
         } catch (PersistenceException e) {
-            System.out.println("entro 3");
-            e.printStackTrace();
             return false;
         }
         catch (Exception e) {
-            System.out.println("entro 4");
-            e.printStackTrace();
             return false;
         }
     }
@@ -195,21 +165,15 @@ public class PeriodoFacade extends AbstractFacade<Periodo> {
             cq.setParameter("anlectivo", anlectivo);
             if(cq.getSingleResult()!=null){
                 result = (Long) cq.getSingleResult();
-                System.out.println("entro 1 "+result+"aaa"+anlectivo);
                 return result;
             }
             else{
-                System.out.println("entro 2");
                 return result;
             }
         } catch (PersistenceException e) {
-            System.out.println("entro 3");
-            e.printStackTrace();
             return result;
         }
         catch (Exception e) {
-            System.out.println("entro 4");
-            e.printStackTrace();
             return result;
         }
     }
@@ -220,21 +184,15 @@ public class PeriodoFacade extends AbstractFacade<Periodo> {
             cq.setParameter("anlectivo", anlectivo);
             if(cq.getSingleResult()!=null){
                 result = (Long) cq.getSingleResult();
-                System.out.println("entro 1 "+result+"aaa"+anlectivo);
                 return result;
             }
             else{
-                System.out.println("entro 2");
                 return result;
             }
         } catch (PersistenceException e) {
-            System.out.println("entro 3");
-            e.printStackTrace();
             return result;
         }
         catch (Exception e) {
-            System.out.println("entro 4");
-            e.printStackTrace();
             return result;
         }
     }
@@ -262,16 +220,11 @@ public class PeriodoFacade extends AbstractFacade<Periodo> {
             if (cq.getResultList() != null) {
                 return (Periodo) cq.getSingleResult();
             } else {
-                System.out.println("llega d");
                 return null;
             }
         } catch (PersistenceException e) {
-            System.out.println("llega b");
-            e.printStackTrace();
             return null;
         } catch (Exception e) {
-            System.out.println("llega c");
-            //e.printStackTrace();
             return null;
         }
     }

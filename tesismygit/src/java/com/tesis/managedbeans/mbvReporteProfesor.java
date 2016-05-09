@@ -75,6 +75,7 @@ import org.omnifaces.util.Faces;
 @ManagedBean
 @ViewScoped
 public class mbvReporteProfesor implements Serializable {
+    private static final long serialVersionUID = 400981354441598710L;
 
     private boolean login;
     private Profesor profesor;
@@ -254,7 +255,6 @@ public class mbvReporteProfesor implements Serializable {
             login = mbslogin.isLogin();
             this.login = true;
         } catch (Exception e) {
-            System.out.println(e.toString());
             //profesor = null;
         }
         //comprobarInicio();
@@ -321,7 +321,6 @@ public class mbvReporteProfesor implements Serializable {
     public void cargarAsignatura() {
         if (this.asignaturaSelected.getAsignaturaId() != null) {
             this.asignaturaSelected = asignaturaEjb.find(this.asignaturaSelected.getAsignaturaId());
-            System.out.println("CICLO" + curso.getCicloId());
             Asignaturaciclo asg = asignaturaCicloEjb.asignaturasCiclo(curso.getCicloId(), asignaturaSelected);
             contenido = contenidoEjb.getContenidoByAll(profesor, curso, asg, periodoSelected);
         } else {
@@ -361,13 +360,10 @@ public class mbvReporteProfesor implements Serializable {
             init();
             curso.getCicloId().getNumero();
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("ooooOOOO" + e.toString());
         }
     }
 
     public void init() throws JRException {
-        System.out.println("entro init");
         JRBeanCollectionDataSource beanCollectionDataSource = new JRBeanCollectionDataSource(reporte);
         String reportpath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/notasProfesor.jasper");
         /*Map<String, Object> parametros = new HashMap<String, Object>();
@@ -395,7 +391,6 @@ public class mbvReporteProfesor implements Serializable {
         if (notaEst != null) {
             nota = notaEst.getValor();
         }
-        System.out.println("***TABLA**" + nota);
         return nota.setScale(1, RoundingMode.HALF_EVEN);
     }
 
@@ -489,7 +484,6 @@ public class mbvReporteProfesor implements Serializable {
             int tam = 2 + logrosaux.size();
             float[] ft = new float[tam];
             for (int i = 0; i < tam; i++) {
-                System.out.println(i);
                 if (i == 0) {
                     ft[i] = 80f;
                 } else if (i == tam - 1) {
@@ -530,28 +524,21 @@ public class mbvReporteProfesor implements Serializable {
             parNombre.setAlignment(Element.ALIGN_CENTER);
             document.add(parNombre);
         } catch (Exception e) {
-            System.out.println("ENTRO 3 ");
-            System.out.println("Error " + e.getMessage());
         }
         document.close();
         FacesContext context = FacesContext.getCurrentInstance();
         Object response = context.getExternalContext().getResponse();
         if (response instanceof HttpServletResponse) {
             try {
-                System.out.println("ENTRO 4 ");
                 HttpServletResponse hsr = (HttpServletResponse) response;
                 hsr.reset();
                 Faces.sendFile(baos.toByteArray(), "reporteNotas.pdf", false);
                 try {
-                    System.out.println("ENTRO 5 ");
                     ServletOutputStream out = hsr.getOutputStream();
                     baos.writeTo(out);
                     out.flush();
                 } catch (IOException ex) {
-                    System.out.println("ENTRO 6 ");
-                    System.out.println("Error:  " + ex.getMessage());
                 }
-                System.out.println("ENTRO 7 ");
                 context.responseComplete();
             } catch (IOException ex) {
                 Logger.getLogger(mbvConstanciaEstudios.class.getName()).log(Level.SEVERE, null, ex);

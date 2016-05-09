@@ -31,6 +31,7 @@ import org.primefaces.context.RequestContext;
 @ManagedBean
 @ViewScoped
 public class mbvCiclo implements Serializable{
+    private static final long serialVersionUID = -5410893735348354704L;
     private Ciclo ciclo;
     private List<Ciclo> ciclos;
     private List<Configuracion> configuraciones;
@@ -124,9 +125,7 @@ public class mbvCiclo implements Serializable{
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
              usr = mbslogin.getUsuario();
              this.login = mbslogin.isLogin();
-            System.out.println("usuario"+usr.getNombres()+"Login"+login);
         } catch (Exception e) {
-            System.out.println(e.toString());
             this.login = false;
         }
         if(this.usr!=null){
@@ -159,7 +158,6 @@ public class mbvCiclo implements Serializable{
     public void insertar(){
         try{
             if(!login){
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
@@ -173,7 +171,6 @@ public class mbvCiclo implements Serializable{
                 this.confuguracionselected = configuracionEjb.find(confuguracionselected.getConfiguracionId());
                 for(Ciclo auxciclo:cicloEjb.getByConfiguracion(confuguracionselected)){
                     if(ciclo.getNumero() == auxciclo.getNumero()){//&& area.getAreaId()!= auxarea.getAreaId()
-                        System.out.println("IGUALLLL");
                         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Advertencia ", "Numero de ciclo en uso"); 
                         FacesContext.getCurrentInstance().addMessage("frmCrearCiclo:txtNumero", message);
                         return;
@@ -187,7 +184,6 @@ public class mbvCiclo implements Serializable{
                 inicioPagina();
             }
             else{
-                System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
@@ -206,7 +202,6 @@ public class mbvCiclo implements Serializable{
     public void actualizar(){
         try{
             if(!login){
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
@@ -221,7 +216,6 @@ public class mbvCiclo implements Serializable{
                 this.confuguracionselected = configuracionEjb.find(confuguracionselected.getConfiguracionId());
                 for(Ciclo auxciclo:cicloEjb.getByConfiguracion(confuguracionselected)){
                     if(ciclo.getNumero() == auxciclo.getNumero() && ciclo.getCicloId() != auxciclo.getCicloId()){//&& area.getAreaId()!= auxarea.getAreaId()
-                        System.out.println("IGUALLLL");
                         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Advertencia ", "Numero de ciclo en uso"); 
                         FacesContext.getCurrentInstance().addMessage("frmEditarCiclo:txtNumero", message);
                         return;
@@ -236,7 +230,6 @@ public class mbvCiclo implements Serializable{
                 inicioPagina();
             }
             else{
-                System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
@@ -248,7 +241,6 @@ public class mbvCiclo implements Serializable{
     public void cargarCiclo(int cicloId){
         try {
             if(!login){
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
@@ -269,14 +261,12 @@ public class mbvCiclo implements Serializable{
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }
         } catch (Exception e) {
-            e.printStackTrace();
             FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error inesperado", "Contáctese con el administrador"));
         }
     }
     public void newCiclo(){
         if(!login){
-            System.out.println("Usuario NO logeado");
             FacesContext.getCurrentInstance().
                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
             return;
@@ -299,14 +289,12 @@ public class mbvCiclo implements Serializable{
      public void eliminarCiclo(Ciclo cicloremove) {
         try {
             if(!login){
-                System.out.println("Usuario NO logeado");
                 FacesContext.getCurrentInstance().
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Debe iniciar sesión"));
                 return;
             }
             if(this.eliminar){
                 //this.escala = this.escalaEjb.find(escalaid);
-                System.out.println("ELIMINAR CRITERIO :"+cicloremove);
                 if(cicloEjb.removeById(cicloremove)==true){
                     //inicioPagina();
                     //RequestContext.getCurrentInstance().update("frmEditarEscala"); 
@@ -321,7 +309,6 @@ public class mbvCiclo implements Serializable{
                 inicioPagina();
             }
             else{
-                System.out.print("error permiso denegado");
                 FacesContext.getCurrentInstance().
                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta acción"));
             }

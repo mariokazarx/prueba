@@ -55,7 +55,7 @@
                     </p:inputText>
                     <p:message for="txtCargo"/>
                     <p:outputLabel value="Contraseña" for="txtContrasenia"/>
-                    <p:password id="txtContrasenia" label="Contraseña: " match="txtContraseniaRepita" size="25" value="#{mbvUsuario.usuario.contraseña}">
+                    <p:password id="txtContrasenia" label="Contraseña: " validatorMessage="La contraseña debe contener una letra minuscula, mayuscula un numero o caracter especial y ser minimo de 8 caracteres" match="txtContraseniaRepita" size="25" value="#{mbvUsuario.usuario.contraseña}">
                         <f:validator validatorId="validatorVacio"/>
                         <f:validateRegex pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" />
                     </p:password>
@@ -101,19 +101,19 @@
                     </p:column>
 
                     <p:column headerText="Consultar">
-                        <h:outputText value="#{rol.consultar}" />
+                        <h:outputText value="#{mbvUsuario.traducir(rol.consultar)}" />
                     </p:column>
 
                     <p:column headerText="Editar">
-                        <h:outputText value="#{rol.editar}" />
+                        <h:outputText value="#{mbvUsuario.traducir(rol.editar)}" />
                     </p:column>
 
                     <p:column headerText="Adicionar">
-                        <h:outputText value="#{rol.agregar}" />
+                        <h:outputText value="#{mbvUsuario.traducir(rol.agregar)}" />
                     </p:column>
 
                     <p:column headerText="Eliminar">
-                        <h:outputText value="#{rol.eliminar}" />
+                        <h:outputText value="#{mbvUsuario.traducir(rol.eliminar)}" />
                     </p:column>
                 </p:dataTable>
             </h:panelGroup>
