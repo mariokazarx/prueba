@@ -46,8 +46,8 @@ import org.primefaces.model.DualListModel;
 @ManagedBean
 @ViewScoped
 public class mbvCargaAcademica implements Serializable {
-    private static final long serialVersionUID = -5294774578512452156L;
 
+    private static final long serialVersionUID = -5294774578512452156L;
     private Profesor profesor;
     private String mensajeError;
     private boolean contenidoError;
@@ -290,7 +290,7 @@ public class mbvCargaAcademica implements Serializable {
             this.crear = true;
         }
         cargarDatos(aux);
-        
+
     }
 
     public List<Profesor> completeProfesor(String query) {
@@ -442,14 +442,29 @@ public class mbvCargaAcademica implements Serializable {
                     Curso cur = cursoEjb.find(cursoSelected.getCursoId());
                     for (int i = 0; i < asignturasSelecionadas.size(); i++) {
                         Asignaturaciclo asg = asignaturaCicloEjb.asignaturasCiclo(cur.getCicloId(), asignturasSelecionadas.get(i));
-                        for (Periodo aux : periodos) {
-                            Contenidotematico con = new Contenidotematico();
-                            con.setCursoId(cursoSelected);
-                            con.setPeriodoId(aux);
-                            con.setProfesorId(profesor);
-                            con.setAsignaturacicloId(asg);
-                            con.setEstado(est);
-                            contenidoEjb.create(con);
+                        if (!contenidoEjb.tieneAsg(cur, asg)) {
+                            for (Periodo aux : periodos) {
+                                Contenidotematico con = new Contenidotematico();
+                                con.setCursoId(cursoSelected);
+                                con.setPeriodoId(aux);
+                                con.setProfesorId(profesor);
+                                con.setAsignaturacicloId(asg);
+                                con.setEstado(est);
+                                contenidoEjb.create(con);
+                            }
+                        }
+                    }
+                    for (int i = 0; i < asignturasdisponibles.size(); i++) {
+                        Asignaturaciclo asg = asignaturaCicloEjb.asignaturasCiclo(cursoSelected.getCicloId(), asignturasdisponibles.get(i));
+                        if (contenidoEjb.tieneAsg(cur, asg)) {
+                            for (Periodo aux : periodos) {
+                                if (!contenidoEjb.removeByAll(cur, asg, aux)) {
+                                    tx.rollback();
+                                    FacesContext.getCurrentInstance().
+                                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "esta asignatura esta en uso debe reajustar manualmente por cada periodo"));
+                                    return;
+                                }
+                            }
                         }
                     }
                 }
@@ -458,12 +473,12 @@ public class mbvCargaAcademica implements Serializable {
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "La operación se realizó satisfactoriamente"));
                 cargarPickList();
                 this.contenidosProfesor = contenidoEjb.getByProfesorAño(profesor, aEscolarP);
-            }
-            else{
+            } else {
                 FacesContext.getCurrentInstance().
-                       addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
             }
         } catch (Exception e) {
+            e.printStackTrace();
             tx.rollback();
         }
     }
@@ -476,9 +491,9 @@ public class mbvCargaAcademica implements Serializable {
 
     private void cargarDatos(Profesor aux) {
         if (aux != null) {
-            if(!this.editar){
+            if (!this.editar) {
                 FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "usted no tiene permisos para esta accion"));
             }
             this.profesor = aux;
             if (profesor.getEstadoProfesorId().getEstadoProfesorId() == 1) {
@@ -524,9 +539,9 @@ public class mbvCargaAcademica implements Serializable {
                      }
                      }*/
                 }
-            }else{
+            } else {
                 FacesContext.getCurrentInstance().
-                                addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Este profesor se encuentra inactivo en el sistema"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Este profesor se encuentra inactivo en el sistema"));
             }
 
             //profesor debe estar activo 
