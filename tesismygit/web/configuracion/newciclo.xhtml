@@ -17,7 +17,9 @@
             <h:panelGroup rendered="#{mbvCiclo.crear}">
                 <h:panelGrid columns="3">
                     <p:outputLabel for="txtNumero" value="Numero: " />
-                    <p:inputText id="txtNumero" value="#{mbvCiclo.ciclo.numero}" />
+                    <p:inputText id="txtNumero" value="#{mbvCiclo.ciclo.numero}" >
+                        <f:validateLongRange minimum="3" maximum="5" />
+                    </p:inputText>
                     <p:message for="txtNumero"/>
                     <p:outputLabel for="txtDescripcion" value="Descripción: " />
                     <p:inputTextarea id="txtDescripcion" value="#{mbvCiclo.ciclo.descripcion}" autoResize="false" rows="5" cols="22" />

@@ -7,6 +7,7 @@ package com.tesis.managedbeans;
 import com.tesis.beans.AnlectivoFacade;
 import com.tesis.beans.AprobacionFacade;
 import com.tesis.beans.CicloFacade;
+import com.tesis.beans.ConfiguracionFacade;
 import com.tesis.beans.CursoFacade;
 import com.tesis.beans.EstadoMatriculaFacade;
 import com.tesis.beans.EstudianteFacade;
@@ -15,6 +16,7 @@ import com.tesis.beans.UsuarioRoleFacade;
 import com.tesis.entity.Anlectivo;
 import com.tesis.entity.Aprobacion;
 import com.tesis.entity.Ciclo;
+import com.tesis.entity.Configuracion;
 import com.tesis.entity.Curso;
 import com.tesis.entity.EstadoMatricula;
 import com.tesis.entity.Estudiante;
@@ -67,6 +69,8 @@ public class mbvMatricula implements Serializable {
     private Usuario usr;
     @EJB
     private CicloFacade cicloEjb;
+    @EJB
+    private ConfiguracionFacade configuracionEjb;
     @EJB
     private MatriculaFacade matriculaEjb;
     @EJB
@@ -323,8 +327,9 @@ public class mbvMatricula implements Serializable {
                 Anlectivo auxEscolar = aEscolarEjb.getIniciado();
                 if (auxEscolar != null) {
                     //existe año iniciado
+                    Configuracion confAux = configuracionEjb.find(auxEscolar.getConfiguracionId().getConfiguracionId());
                     boolean bandera = false;
-                    for (Ciclo ciclo : auxEscolar.getConfiguracionId().getCicloList()) {
+                    for (Ciclo ciclo : cicloEjb.getByConfiguracion(confAux)) {
                         if (ciclo.getNumero() == estudiante.getUltimoaprobado()) {
                             bandera = true;
                             break;

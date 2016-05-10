@@ -381,7 +381,7 @@ public class mbvPeriodo implements Serializable {
                         for (Curso cur : cursosAux) {
                             if (asignaturaCicloEjb.countAsignaturasCiclo(cur.getCicloId()) != contenidoEjb.countAsignaturasCursoPerido(cur, periodo)) {
                                 FacesContext.getCurrentInstance().
-                                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Falta completar la asignacion academica del curso" + cur.getNombre()));
+                                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Falta completar la asignacion academica del" + cur.getNombre()));
                                 return;
                             }
                         }

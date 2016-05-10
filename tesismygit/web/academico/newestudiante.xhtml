@@ -25,7 +25,7 @@
                     </p:selectOneMenu>
                     <p:message for="selectTipo"/>
                     <p:outputLabel for="txtIdentificacion" value="Numero Identificación: " />
-                    <p:inputText id="txtIdentificacion" validatorMessage="Identificacion ivalida" type="number" value="#{mbvEstudiante.estudiante.identificiacion}" size="25" >
+                    <p:inputText id="txtIdentificacion" validatorMessage="Identificacion ivalida" value="#{mbvEstudiante.estudiante.identificiacion}" size="25" >
                         <f:validator validatorId="validatorVacio"/>
                         <f:validateLength minimum="5" maximum="25" /> 
                         <f:validateDoubleRange minimum="0"/>
@@ -82,7 +82,7 @@
                     </p:selectOneMenu>
                     <p:message for="selectZona"/>
                     <p:outputLabel value="Fecha de Nacimiento" for="txtFechaNacimiento"/>
-                    <p:calendar id="txtFechaNacimiento" locale="es" label="Fecha de nacimiento" showOn="button" title="Ejemplo: dd/mm/yyyy" value="#{mbvEstudiante.estudiante.fechaNacimiento}" pattern="dd/MM/yyyy" required="true" navigator="true" requiredMessage="Fecha de nacimiento es requerido"/>
+                    <p:calendar id="txtFechaNacimiento" locale="es" label="Fecha de nacimiento" showOn="button"  yearRange="c-100:c+1" title="Ejemplo: dd/mm/yyyy" value="#{mbvEstudiante.estudiante.fechaNacimiento}" pattern="dd/MM/yyyy" required="true" navigator="true" requiredMessage="Fecha de nacimiento es requerido"/>
                     <p:message for="txtFechaNacimiento"/>
                     <p:outputLabel for="rdbSexo" value="Sexo:" />
                     <p:selectOneRadio id="rdbSexo" value="#{mbvEstudiante.estudiante.sexo}" >

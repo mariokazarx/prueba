@@ -197,7 +197,7 @@ public class mbvEstudiante implements Serializable {
         this.estadosEstudiante = estadoEjb.findAll();
         this.documento = new Documento();
         this.estudiantes = this.estudianteEjb.getOrdenados();
-        this.foto = new DefaultUploadedFile();
+        //this.foto = new DefaultUploadedFile();
         ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
         this.ruta = (String) servletContext.getRealPath("/");
         this.consultar = false;
@@ -263,11 +263,12 @@ public class mbvEstudiante implements Serializable {
                     if (this.foto.getSize() <= 0) {
                         this.estudiante.setFoto("default.png");
                     } else {
-                        if (!this.foto.getFileName().endsWith(".png") || !this.foto.getFileName().endsWith(".jpg")) {
+                        if (!this.foto.getFileName().endsWith(".png") && !this.foto.getFileName().endsWith(".jpg")) {
                             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error:", "El archivo debe ser con extensión \".png\" o \".jpg\" "));
                             return;
                         }
                         if (this.foto.getSize() > 20971520) {
+                            System.out.println("2");
                             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error:", "El archivo no puede ser más de 20mb"));
                             return;
                         }

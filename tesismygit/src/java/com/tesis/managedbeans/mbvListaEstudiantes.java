@@ -266,7 +266,7 @@ public class mbvListaEstudiantes implements Serializable{
                     table.addCell(cellTituloNotas4);
                     List<Estudiante> est = new ArrayList<Estudiante>();
                     for (Matricula matriculasCurso : matriculaEjb.matriculasCurso(cursoSelected)) {
-                        table.addCell(matriculasCurso.getEstudianteId().getApellido() + " " + matriculasCurso.getEstudianteId().getApellido());
+                        table.addCell(matriculasCurso.getEstudianteId().getNombre() + " " + matriculasCurso.getEstudianteId().getApellido());
                         table.addCell("");
                         table.addCell("");
                         table.addCell("");

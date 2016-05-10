@@ -84,7 +84,7 @@
                                             <f:selectItem itemLabel="Seleccione."/>
                                             <f:selectItems value="#{mbvMatricula.cursos}" var="curso" itemLabel="ciclo #{curso.cicloId.numero} - #{curso.nombre} " itemValue="#{curso.cursoId}"/>
                                         </p:selectOneMenu>
-                                        <p:commandButton id="btnMatricular" value="Confirmar" ajax="true" update="frmMatricula" actionListener="#{mbvMatricula.matricularEstudiante}" style="margin-top:5px" />
+                                        <p:commandButton id="btnMatricular" value="Matricular" ajax="true" update="frmMatricula" actionListener="#{mbvMatricula.matricularEstudiante}" style="margin-top:5px" />
                                     </h:panelGrid>
                                 </p:outputPanel>         
 
@@ -99,7 +99,7 @@
                                             <f:selectItem itemLabel="Seleccione."/>
                                             <f:selectItems value="#{mbvMatricula.cursos}" var="curso" itemLabel="ciclo #{curso.cicloId.numero} - #{curso.nombre} " itemValue="#{curso.cursoId}"/>
                                         </p:selectOneMenu>
-                                        <p:commandButton id="btnCambiar" value="Confirmar" ajax="true" update="frmMatricula" actionListener="#{mbvMatricula.cambiarMatricularEstudiante}"/>
+                                        <p:commandButton id="btnCambiar" value="Cambiar matricula" ajax="true" update="frmMatricula" actionListener="#{mbvMatricula.cambiarMatricularEstudiante}"/>
                                     </h:panelGrid>
                                 </p:outputPanel>
 
