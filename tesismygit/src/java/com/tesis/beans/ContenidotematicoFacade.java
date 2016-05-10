@@ -146,6 +146,30 @@ public class ContenidotematicoFacade extends AbstractFacade<Contenidotematico> {
             return false;
         }
     }
+    public boolean tieneAsgPeriodo(Curso curso,Asignaturaciclo asg,Periodo periodo) {
+        try {
+            Query cq = em.createNamedQuery("Contenidotematico.countContenidoByAsgCursoPeriodo");
+            cq.setParameter("curso", curso);
+            cq.setParameter("asg", asg);
+            cq.setParameter("periodo", periodo);
+            if(cq.getSingleResult()!=null){
+                Long count = (Long) cq.getSingleResult();
+                if(count != 0){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+            else{
+                return false;
+            }
+        } catch (PersistenceException e) {
+            return false;
+        }
+        catch (Exception e) {
+            return false;
+        }
+    }
      public boolean removeByAll(Curso curso,Asignaturaciclo asg,Periodo periodo) {
         try {
             Query cq = em.createNamedQuery("Contenidotematico.RemoveByAll");

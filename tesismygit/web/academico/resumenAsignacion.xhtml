@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:head>
+        <title>Nueva Escala</title>
+        <style type="text/css">
+            .ui-widget {
+                font-size: 90%;
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <ui:composition template="./../plantilla.xhtml">
+            <ui:define name="content">
+                <h:form id="frmReporteMatriculas" styleClass="form-principal"  target="_blank">
+                    <h3>Resumen asignación académica</h3>
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
+                    <f:metadata>
+                        <f:event type="preRenderView" listener="#{mbvResumenAsignacion.initRender}" />
+                    </f:metadata>
+                    <h:panelGroup rendered="#{mbvResumenAsignacion.consultar}">
+                        <p:outputPanel rendered="#{mbvResumenAsignacion.mostrarPrincipal}" style="width: 90%">
+
+
+                            <h:panelGroup rendered="#{mbvResumenAsignacion.mostrarPeriodos}">
+                                <div style="margin-top: 15px">    
+                                    <p:outputLabel for="selectPeriodo" value="Periodo" styleClass="form-titulos" />
+                                </div>    
+                                <p:selectOneMenu id="selectPeriodo" value="#{mbvResumenAsignacion.periodoSelected.periodoId}" styleClass="form-select">
+                                    <p:ajax listener="#{mbvResumenAsignacion.cargarPeriodo}" update="frmReporteMatriculas"/>
+                                    <f:selectItem itemLabel="Seleccione."/>
+                                    <f:selectItems value="#{mbvResumenAsignacion.periodos}" var="periodo" itemLabel="#{periodo.numero}" itemValue="#{periodo.periodoId}"/>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+
+                            <p:outputPanel rendered="#{mbvResumenAsignacion.mostrarCursos}">
+                                <div style="margin-top: 15px">    
+                                    <p:outputLabel for="selectCourse" value="Curso" styleClass="form-titulos"/>
+                                </div>    
+                                <p:selectOneMenu id="selectCourse" value="#{mbvResumenAsignacion.cursoSelected.cursoId}" styleClass="form-select">
+                                    <p:ajax listener="#{mbvResumenAsignacion.seleccionCurso}" update="frmReporteMatriculas"/>
+                                    <f:selectItem itemLabel="Seleccione."/>
+                                    <f:selectItems value="#{mbvResumenAsignacion.cursos}" var="curso" itemLabel="ciclo #{curso.cicloId.numero} - #{curso.nombre} " itemValue="#{curso.cursoId}"/>
+                                </p:selectOneMenu>
+                            </p:outputPanel>
+                            <p:outputPanel rendered="true">
+                                <p:dataTable id="tableAsignacion" rowStyleClass="#{mbvResumenAsignacion.estado(asignaturas) == 'Asignado' ? 'coloredAsg' : 'colored'}" tableStyle="width:auto" reflow="true" emptyMessage="No hay asignaturas para este curso" var="asignaturas" rowIndexVar="index" value="#{mbvResumenAsignacion.asgCiclos}">
+                                    <p:column headerText="Numero">
+                                        <h:outputText value="#{index+1}" />
+                                    </p:column>
+
+                                    <p:column headerText="Asignatura">
+                                        <h:outputText value="#{asignaturas.asignaturaId.nombre}" />
+                                    </p:column>
+
+                                    <p:column headerText="Estado">
+                                        <h:outputText value="#{mbvResumenAsignacion.estado(asignaturas)}" />
+                                    </p:column>
+                                </p:dataTable>
+                            </p:outputPanel>
+                        </p:outputPanel>     
+                    </h:panelGroup>
+                </h:form>        
+            </ui:define>
+        </ui:composition>
+
+    </h:body>
+</html>

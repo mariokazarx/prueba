@@ -6,6 +6,14 @@
     font-family: amiri;
     src: url("#{resource['fuentes/Amiri-BoldSlanted.ttf']}");
 }
+.colored {
+    background-color: #FF0000;
+    color: #FFFFFF;
+}
+.coloredAsg {
+    background-color: #31B404;
+    color: #FFFFFF;
+}
 .top{
     display: flex;
     min-height: 100px;

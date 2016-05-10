@@ -93,6 +93,23 @@ public class AsignaturacicloFacade extends AbstractFacade<Asignaturaciclo> {
             return null;
         }
      }
+     public List<Asignaturaciclo> asignaturasCiclo(Ciclo ciclo){
+        try {
+            Query cq = em.createNamedQuery("Asignaturaciclo.findByCiclo");
+            cq.setParameter("ciclo", ciclo);
+            if(cq.getResultList()!=null){
+                return cq.getResultList();
+            }
+            else{
+                return null;
+            }
+        } catch (PersistenceException e) {
+            return null;
+        }
+        catch (Exception e) {
+            return null;
+        }
+     }
      public Long countAsignaturasCiclo(Ciclo ciclo){
         try {
             Query cq = em.createNamedQuery("Asignaturaciclo.countByCiclo");
