@@ -205,6 +205,7 @@ public class mbvcriterioevaluacion implements Serializable {
     }
 
     public void closeDialog() {
+        RequestContext.getCurrentInstance().execute("PF('tablaCriterios').clearFilters()");
         inicioPagina();
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Criterio de evaluación registrado");
         FacesContext.getCurrentInstance().addMessage(null, message);
@@ -223,6 +224,7 @@ public class mbvcriterioevaluacion implements Serializable {
                 criterioevalEjb.edit(criterioeval);
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Criterio de evaluación creado"));
+                RequestContext.getCurrentInstance().execute("PF('tablaCriterios').clearFilters()");
                 RequestContext.getCurrentInstance().execute("PF('dialogoEditarEscala').hide()");
                 inicioPagina();
             }
@@ -305,6 +307,7 @@ public class mbvcriterioevaluacion implements Serializable {
                     FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia","este criterio esta en uso"));
                 }
+                RequestContext.getCurrentInstance().execute("PF('tablaCriterios').clearFilters()");
                 inicioPagina();
             }
             else{

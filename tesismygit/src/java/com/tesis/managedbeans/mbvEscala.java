@@ -212,6 +212,7 @@ public class mbvEscala implements Serializable {
     }
 
     public void closeDialog() {
+        RequestContext.getCurrentInstance().execute("PF('tablaEscalas').clearFilters()");
         inicioPagina();
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Escala registrada");
         FacesContext.getCurrentInstance().addMessage(null, message);
@@ -243,6 +244,7 @@ public class mbvEscala implements Serializable {
                 escalaEjb.edit(escala);
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Escala editada satisfactoriamente"));
+                RequestContext.getCurrentInstance().execute("PF('tablaEscalas').clearFilters()");
                 RequestContext.getCurrentInstance().execute("PF('dialogoEditarEscala').hide()");
                 inicioPagina();
             }
@@ -326,6 +328,7 @@ public class mbvEscala implements Serializable {
                     FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia","esta escala está en uso"));
                 }
+                RequestContext.getCurrentInstance().execute("PF('tablaEscalas').clearFilters()");
                 inicioPagina();
             }
             else{

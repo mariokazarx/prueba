@@ -310,6 +310,7 @@ public class mbvProfesor implements Serializable {
     }
 
     public void closeDialog() {
+        RequestContext.getCurrentInstance().execute("PF('tablaProfesores').clearFilters()");
         inicioPagina();
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Profesor registrado satisfactorimente");
         FacesContext.getCurrentInstance().addMessage(null, message);
@@ -361,6 +362,7 @@ public class mbvProfesor implements Serializable {
                 profesorEjb.edit(profesor);
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Profesor editado"));
+                RequestContext.getCurrentInstance().execute("PF('tablaProfesores').clearFilters()");
                 RequestContext.getCurrentInstance().execute("PF('dialogoEditarProfesor').hide()");
                 inicioPagina();
                 tx.commit();

@@ -20,18 +20,18 @@
                                 <p:ajax event="dialogReturn" listener="#{mbvEstudiante.closeDialog}" update="frmListaEstudiantes" />
                             </p:commandButton>
                         </p:outputPanel>
-                        <p:dataTable id="tablaListaEstudiante" tableStyle="width:auto" var="estudiante" value="#{mbvEstudiante.estudiantes}" reflow="true" paginator="true" rows="10" selection="#{mbvEstudiante.estudiante}" selectionMode="single" lazy="true" rowKey="#{estudiante.estudianteId}" >
+                        <p:dataTable id="tablaListaEstudiante" emptyMessage="No se ha encontrado ningún registro" tableStyle="width:auto" var="estudiante" value="#{mbvEstudiante.estudiantes}" reflow="true" paginator="true" rows="10" selection="#{mbvEstudiante.estudiante}" selectionMode="single" widgetVar="tablaEstudiantes" rowKey="#{estudiante.estudianteId}" >
                             <p:ajax event="rowSelect" update=":frmListaEstudiantes:panelDetalleEstudiante" oncomplete="PF('dialogoDetalleEstudiante').show()"/>
                             <f:facet name="header">
                                 Lista de estudiantes
                             </f:facet>
-                            <p:column headerText="No identificación" filterBy="cedula">
+                            <p:column headerText="No identificación" filterBy="#{estudiante.identificiacion}" filterMatchMode="contains" >
                                 <h:outputText value="#{estudiante.identificiacion}"/>
                             </p:column>
-                            <p:column headerText="Nombres" filterBy="nombres">
+                            <p:column headerText="Nombres" filterBy="#{estudiante.nombre}" filterMatchMode="contains" sortBy="#{estudiante.nombre}">
                                 <h:outputText value="#{estudiante.nombre}"/>
                             </p:column>
-                            <p:column headerText="Apellidos" filterBy="apellidos">
+                            <p:column headerText="Apellidos" filterBy="#{estudiante.apellido}" filterMatchMode="contains" sortBy="#{estudiante.apellido}">
                                 <h:outputText value="#{estudiante.apellido}"/>
                             </p:column>
                             <p:column headerText="Ciclo" filterBy="ciclo" >

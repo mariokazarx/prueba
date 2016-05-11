@@ -20,18 +20,18 @@
                                 <p:ajax event="dialogReturn" listener="#{mbvProfesor.closeDialog}" update="frmListaProfesor" />
                             </p:commandButton>
                         </p:outputPanel>
-                        <p:dataTable id="tablaListaProfesor" tableStyle="width:auto" reflow="true" var="item" value="#{mbvProfesor.profesores}" paginator="true" rows="10" selection="#{mbvProfesor.profesor}" selectionMode="single" lazy="true" rowKey="#{item.profesorId}" >
+                        <p:dataTable id="tablaListaProfesor" emptyMessage="No se ha encontrado ningún registro" tableStyle="width:auto" widgetVar="tablaProfesores" reflow="true" var="item" value="#{mbvProfesor.profesores}" paginator="true" rows="10" selection="#{mbvProfesor.profesor}" selectionMode="single" rowKey="#{item.profesorId}" >
                             <p:ajax event="rowSelect" update=":frmListaProfesor:panelDetalleProfesor" oncomplete="PF('dialogoDetalleProfesor').show()"/>
                             <f:facet name="header">
                                 Lista de Profesores
                             </f:facet>
-                            <p:column headerText="Cedula" filterBy="cedula">
+                            <p:column headerText="Cedula" filterBy="#{item.cedula}" filterMatchMode="contains" >
                                 <h:outputText value="#{item.cedula}"/>
                             </p:column>
-                            <p:column headerText="Nombres" filterBy="nombres">
+                            <p:column headerText="Nombres" filterBy="#{item.nombre}" filterMatchMode="contains" sortBy="#{item.nombre}">
                                 <h:outputText value="#{item.nombre}"/>
                             </p:column>
-                            <p:column headerText="Apellidos" filterBy="apellidos">
+                            <p:column headerText="Apellidos" filterBy="#{item.apellido}" filterMatchMode="contains" sortBy="#{item.apellido}">
                                 <h:outputText value="#{item.apellido}"/>
                             </p:column>
                             <p:column headerText="Dirección" filterBy="direccion">
@@ -40,7 +40,7 @@
                             <p:column headerText="Teléfono" filterBy="telefono">
                                 <h:outputText value="#{item.telefono}"/>
                             </p:column>
-                            <p:column headerText="Correo" filterBy="correo">
+                            <p:column headerText="Correo" filterBy="#{item.correo}" filterMatchMode="contains">
                                 <h:outputText value="#{item.correo}"/>
                             </p:column>
                             <p:column>

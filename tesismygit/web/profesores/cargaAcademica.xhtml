@@ -141,7 +141,7 @@
                                         </p:outputLabel>
                                     </div>
                                     <div>
-                                        <p:pickList id="pickList" value="#{mbvCargaAcademica.pickList}" var="asignatura" itemLabel="#{asignatura.nombre}" itemValue="#{asignatura.asignaturaId}" rendered="#{mbvCargaAcademica.banderaAsig}">
+                                        <p:pickList id="pickList" showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" value="#{mbvCargaAcademica.pickList}" var="asignatura" itemLabel="#{asignatura.nombre}" itemValue="#{asignatura.asignaturaId}" rendered="#{mbvCargaAcademica.banderaAsig}">
                                             <f:facet name="sourceCaption">Asiganturas</f:facet>
                                             <f:facet name="targetCaption">Ciclo</f:facet>
                                             <p:ajax event="transfer" listener="#{mbvCargaAcademica.onTransfer}"  />

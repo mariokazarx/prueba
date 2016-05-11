@@ -20,7 +20,7 @@
                                 <p:ajax event="dialogReturn" listener="#{mbvConfiguracion.closeDialog}" update="frmListaConf" />
                             </p:commandButton>
                         </p:outputPanel>
-                        <p:dataTable id="tablaListaConf" var="item" value="#{mbvConfiguracion.configuraciones}" tableStyle="width:auto" reflow="true" paginator="true" rows="10" selection="#{mbvConfiguracion.configuracion}" selectionMode="single" rowKey="#{item.configuracionId}" >
+                        <p:dataTable id="tablaListaConf" emptyMessage="No se ha encontrado ningún registro" var="item" value="#{mbvConfiguracion.configuraciones}" tableStyle="width:auto" widgetVar="tablaConfiguracion" reflow="true" paginator="true" rows="10" selection="#{mbvConfiguracion.configuracion}" selectionMode="single" rowKey="#{item.configuracionId}" >
                             <p:ajax event="rowSelect" update=":frmListaConf:panelDetalleConf" oncomplete="PF('dialogoDetalleConf').show()"/>
                             <f:facet name="header">
                                 Lista de configuraciones

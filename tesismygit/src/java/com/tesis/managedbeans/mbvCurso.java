@@ -231,6 +231,7 @@ public class mbvCurso implements Serializable {
     }
 
     public void closeDialog() {
+        RequestContext.getCurrentInstance().execute("PF('tablaCursos').clearFilters()");
         inicioPagina();
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Curso registrado");
         FacesContext.getCurrentInstance().addMessage(null, message);
@@ -283,6 +284,7 @@ public class mbvCurso implements Serializable {
                     FacesContext.getCurrentInstance().
                             addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "este curso esta en uso"));
                 }
+                RequestContext.getCurrentInstance().execute("PF('tablaCursos').clearFilters()");
                 inicioPagina();
             } else {
                 FacesContext.getCurrentInstance().
@@ -343,6 +345,7 @@ public class mbvCurso implements Serializable {
                         cursoEjb.edit(curso);
                         FacesContext.getCurrentInstance().
                                 addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Curso editado satisfactoriamente"));
+                        RequestContext.getCurrentInstance().execute("PF('tablaCursos').clearFilters()");
                         RequestContext.getCurrentInstance().execute("PF('dialogoEditarCurso').hide()");
                         inicioPagina();
                     } else {

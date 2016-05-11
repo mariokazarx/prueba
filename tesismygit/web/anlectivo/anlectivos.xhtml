@@ -20,7 +20,7 @@
                                 <p:ajax event="dialogReturn" listener="#{mbvAlectivo.closeDialog}" update="frmanlectios" />
                             </p:commandButton>
                         </p:outputPanel>
-                        <p:dataTable id="tablaListaAlectivos" var="item" value="#{mbvAlectivo.anlectivos}" tableStyle="width:auto" reflow="true" paginator="true" rows="10" selection="#{mbvAlectivo.anlectivo}" selectionMode="single" lazy="true" rowKey="#{item.anlectivoId}" >
+                        <p:dataTable id="tablaListaAlectivos" emptyMessage="No se ha encontrado ningún registro" var="item" value="#{mbvAlectivo.anlectivos}" tableStyle="width:auto" widgetVar="tablaAnlectivos" reflow="true" paginator="true" rows="10" selection="#{mbvAlectivo.anlectivo}" selectionMode="single" lazy="true" rowKey="#{item.anlectivoId}" >
                             <p:ajax event="rowSelect" update=":frmanlectios:panelDetalleAlectivo" oncomplete="PF('dialogoDetalleAlectivo').show()"/>
                             <f:facet name="header">
                                 Listado Años Escolares

@@ -32,7 +32,7 @@
                         </p:outputPanel>
                         
                         
-                        <p:dataTable id="tablaListaPeriodos" tableStyle="width:auto" reflow="true" var="periodo" value="#{mbvPeriodo.periodos}" paginator="true" rows="10" selection="#{mbvPeriodo.periodo}" selectionMode="single" lazy="true" rowKey="#{periodo.periodoId}" >
+                        <p:dataTable id="tablaListaPeriodos" emptyMessage="No se ha encontrado ningún registro" tableStyle="width:auto" reflow="true" var="periodo" value="#{mbvPeriodo.periodos}" paginator="true" rows="10" selection="#{mbvPeriodo.periodo}" selectionMode="single" lazy="true" rowKey="#{periodo.periodoId}" >
                             <f:facet name="header">
                                 Periodos
                             </f:facet>

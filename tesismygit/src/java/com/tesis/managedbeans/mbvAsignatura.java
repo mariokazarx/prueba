@@ -232,6 +232,7 @@ public class mbvAsignatura implements Serializable{
         }
     }
     public void closeDialog() {
+        RequestContext.getCurrentInstance().execute("PF('tablaAsignaturas').clearFilters()");
         inicioPagina();
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Asignatura registrada"); 
         FacesContext.getCurrentInstance().addMessage(null, message);
@@ -265,6 +266,7 @@ public class mbvAsignatura implements Serializable{
                 asignaturaEjb.edit(asignatura);
                 FacesContext.getCurrentInstance().
                             addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Asignatura editada"));
+                RequestContext.getCurrentInstance().execute("PF('tablaAsignaturas').clearFilters()");
                 RequestContext.getCurrentInstance().execute("PF('dialogoEditarAsignatura').hide()");
                 inicioPagina();
             }
@@ -353,6 +355,7 @@ public class mbvAsignatura implements Serializable{
                     FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia","esta asignatura esta en uso"));
                 }
+                RequestContext.getCurrentInstance().execute("PF('tablaAsignaturas').clearFilters()");
                 inicioPagina();
             }
             else{

@@ -34,7 +34,7 @@
                         <p:outputPanel rendered="#{mbvMateriasCiclos.mostrarContenido}">
                             <p:outputPanel rendered="#{mbvMateriasCiclos.mostrarEditar==true and mbvMateriasCiclos.editar==true}">
                                 <h3>Asignaturas</h3>
-                                <p:pickList id="pickList" value="#{mbvMateriasCiclos.coso}" var="asignatura" itemLabel="#{asignatura.nombre}" itemValue="#{asignatura.asignaturaId}" rendered="#{mbvMateriasCiclos.banAsig}">
+                                <p:pickList id="pickList" showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" value="#{mbvMateriasCiclos.coso}" var="asignatura" itemLabel="#{asignatura.nombre}" itemValue="#{asignatura.asignaturaId}" rendered="#{mbvMateriasCiclos.banAsig}">
                                     <f:facet name="sourceCaption">Asiganturas</f:facet>
                                     <f:facet name="targetCaption">Ciclo</f:facet>
                                     <p:ajax event="transfer" listener="#{mbvMateriasCiclos.onTransfer}" update="tablaAsignadas"/>

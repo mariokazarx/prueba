@@ -272,6 +272,7 @@ public class mbvConfiguracion implements Serializable {
     }
 
     public void closeDialog() {
+        RequestContext.getCurrentInstance().execute("PF('tablaConfiguracion').clearFilters()");
         inicioPagina();
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Configuración registrada");
         FacesContext.getCurrentInstance().addMessage(null, message);
@@ -292,6 +293,7 @@ public class mbvConfiguracion implements Serializable {
                 this.configuracionEjb.edit(this.configuracion);
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Configuración editada satisfactoriamente"));
+                RequestContext.getCurrentInstance().execute("PF('tablaConfiguracion').clearFilters()");
                 RequestContext.getCurrentInstance().execute("PF('dialogoEditarEscala').hide()");
                 inicioPagina();
             }
@@ -378,6 +380,7 @@ public class mbvConfiguracion implements Serializable {
                     FacesContext.getCurrentInstance().
                             addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "esta configuración está en uso"));
                 }
+                RequestContext.getCurrentInstance().execute("PF('tablaConfiguracion').clearFilters()");
                 inicioPagina();
             }
             else{

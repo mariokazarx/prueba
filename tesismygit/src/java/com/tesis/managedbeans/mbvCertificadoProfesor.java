@@ -214,9 +214,9 @@ public class mbvCertificadoProfesor implements Serializable{
                 document.add(p5);
                 Paragraph p6 = new Paragraph("Que, " + prof.getApellido() + " " + prof.getNombre() + ", identificado con C.C"
                         + " No. " + prof.getCedula()
-                        + " cursó en este establecimiento educativo  "
-                        + "los ciclos relacionados a continuacion, Jornada Fines de Semana,  "
-                        + "de acuerdo al Decreto 3011 / 97. ", FontFactory.getFont("arial", 11, Font.NORMAL));
+                        + " está vinculado en esta institución como docente,"
+                        + "con una asignación académica para el año "+anlectivoEjb.getIniciado().getAnio()
+                        + " como se indica a continuación. ", FontFactory.getFont("arial", 11, Font.NORMAL));
                 p6.setAlignment(Element.ALIGN_JUSTIFIED);
                 p6.setIndentationLeft(50);
                 p6.setIndentationRight(50);

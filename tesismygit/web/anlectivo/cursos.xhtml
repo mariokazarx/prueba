@@ -22,7 +22,7 @@
                                 <p:ajax event="dialogReturn" listener="#{mbvCurso.closeDialog}" update="frmListaCursos" />
                             </p:commandButton>
                         </p:outputPanel>
-                        <p:dataTable id="tablaListaCurso" var="curso" value="#{mbvCurso.cursos}" paginator="true" rows="10" tableStyle="width:auto" reflow="true" selection="#{mbvCurso.curso}" selectionMode="single" rowKey="#{curso.cursoId}" >
+                        <p:dataTable id="tablaListaCurso" emptyMessage="No se ha encontrado ningún registro" var="curso" value="#{mbvCurso.cursos}" paginator="true" rows="10" tableStyle="width:auto" widgetVar="tablaCursos" reflow="true" selection="#{mbvCurso.curso}" selectionMode="single" rowKey="#{curso.cursoId}" >
                             <p:ajax event="rowSelect" update=":frmListaCursos:panelDetalleCurso" oncomplete="PF('dialogoDetalleCurso').show()"/>
                             <f:facet name="header">
                                 Lista de cursos

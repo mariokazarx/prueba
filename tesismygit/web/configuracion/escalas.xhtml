@@ -23,7 +23,7 @@
                         
                         <p:remoteCommand name="onCellEdit" update="testContainer" />
                         <p:outputPanel id="testContainer">
-                            <p:dataTable rendered="true" tableStyle="width:auto" id="tablaListaEscala" filteredValue="#{mbvEscala.escalasFiltradas}" reflow="true" var="item" value="#{mbvEscala.escalas}" paginator="true" rows="10" selection="#{mbvEscala.escala}" selectionMode="single" rowKey="#{item.escalaId}" >
+                            <p:dataTable rendered="true" emptyMessage="No se ha encontrado ningún registro" tableStyle="width:auto" widgetVar="tablaEscalas" id="tablaListaEscala" filteredValue="#{mbvEscala.escalasFiltradas}" reflow="true" var="item" value="#{mbvEscala.escalas}" paginator="true" rows="10" selection="#{mbvEscala.escala}" selectionMode="single" rowKey="#{item.escalaId}" >
                                 <p:ajax event="rowSelect" update=":frmListaEscala:panelDetalleEscala" oncomplete="PF('dialogoDetalleEscala').show()"/>
                                 <f:facet name="header">
                                     Lista de Escalas

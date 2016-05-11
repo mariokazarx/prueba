@@ -20,7 +20,7 @@
                                 <p:ajax event="dialogReturn" listener="#{mbvAsignatura.closeDialog}" update="frmListaAsignaturas" />
                             </p:commandButton>
                         </p:outputPanel>
-                        <p:dataTable id="tablaListaAsiganturas" var="item" value="#{mbvAsignatura.asignaturas}" tableStyle="width:auto" reflow="true" paginator="true" rows="10" selection="#{mbvAsignatura.asignatura}" selectionMode="single"  rowKey="#{item.asignaturaId}" >
+                        <p:dataTable id="tablaListaAsiganturas" emptyMessage="No se ha encontrado ningún registro" var="item" value="#{mbvAsignatura.asignaturas}" tableStyle="width:auto" widgetVar="tablaAsignaturas" reflow="true" paginator="true" rows="10" selection="#{mbvAsignatura.asignatura}" selectionMode="single"  rowKey="#{item.asignaturaId}" >
                             <p:ajax event="rowSelect" update=":frmListaAsignaturas:panelDetalleAsignatura" oncomplete="PF('dialogoDetalleAsignatura').show()"/>
                             <f:facet name="header">
                                 Lista de asignaturas

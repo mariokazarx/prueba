@@ -221,6 +221,7 @@ public class mbvArea implements Serializable {
                 areaEJB.edit(area);
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Área editada satisfactoriamente"));
+                RequestContext.getCurrentInstance().execute("PF('tablaAreas').clearFilters()");
                 RequestContext.getCurrentInstance().execute("PF('dialogoEditarEscala').hide()");
                 inicioPagina();
             } else {
@@ -261,6 +262,7 @@ public class mbvArea implements Serializable {
     }
 
     public void closeDialog() {
+        RequestContext.getCurrentInstance().execute("PF('tablaAreas').clearFilters()");
         inicioPagina();
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Exito", "Área registrada");
         FacesContext.getCurrentInstance().addMessage(null, message);
@@ -307,6 +309,7 @@ public class mbvArea implements Serializable {
                     FacesContext.getCurrentInstance().
                             addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "esta área esta en uso"));
                 }
+                RequestContext.getCurrentInstance().execute("PF('tablaAreas').clearFilters()");
                 inicioPagina();
             } else {
                 FacesContext.getCurrentInstance().

@@ -321,6 +321,7 @@ public class mbvUsuario implements Serializable {
                     FacesContext.getCurrentInstance().
                             addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Usuario editado"));
                     //tx.rollback();    
+                    RequestContext.getCurrentInstance().execute("PF('tablaUsuarios').clearFilters()");
                     RequestContext.getCurrentInstance().execute("PF('dialogoEditarUsuario').hide()");
                     inicioPagina();
                 } else {
@@ -560,6 +561,7 @@ public class mbvUsuario implements Serializable {
     }
 
     public void closeDialog() {
+        RequestContext.getCurrentInstance().execute("PF('tablaUsuarios').clearFilters()");
         inicioPagina();
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Usuario creado satisfactoriamente");
         FacesContext.getCurrentInstance().addMessage(null, message);
@@ -587,6 +589,7 @@ public class mbvUsuario implements Serializable {
             if (usuarioEjb.removeById(usuario.getUsuarioId())) {
                 tx.commit();
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Usuario eliminado"));
+                RequestContext.getCurrentInstance().execute("PF('tablaUsuarios').clearFilters()");
                 inicioPagina();
             } else {
                 tx.rollback();

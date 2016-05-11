@@ -59,7 +59,7 @@ public class Criterioevaluacion implements Serializable {
     private String descripcion;
     @Basic(optional = false)
     @NotNull
-    @Min(value=1,message="Nota maxima debe ser mayor que 0")
+    @Min(value=0,message="Nota maxima debe ser mayor que o igual 0")
     @Column(name = "minaprob", nullable = false)
     private int minaprob;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "criterioevaluacionId", fetch = FetchType.LAZY)

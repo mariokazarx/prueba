@@ -20,7 +20,7 @@
                                 <p:ajax event="dialogReturn" listener="#{mbvCiclo.closeDialog}" update="frmListaCiclos" />
                             </p:commandButton>
                         </p:outputPanel>
-                        <p:dataTable id="tablaListaCiclos" widgetVar="tableCiclos" reflow="true" var="item" tableStyle="width:auto" value="#{mbvCiclo.ciclos}" paginator="true" rows="10" selection="#{mbvCiclo.ciclo}" selectionMode="single" rowKey="#{item.cicloId}" >
+                        <p:dataTable id="tablaListaCiclos" emptyMessage="No se ha encontrado ningún registro" widgetVar="tableCiclos" reflow="true" var="item" tableStyle="width:auto" value="#{mbvCiclo.ciclos}" paginator="true" rows="10" selection="#{mbvCiclo.ciclo}" selectionMode="single" rowKey="#{item.cicloId}" >
                             <p:ajax event="rowSelect" update=":frmListaCiclos:panelDetalleCiclo" oncomplete="PF('dialogoDetalleCiclo').show()"/>
                             <f:facet name="header">
                                 Lista de Ciclos

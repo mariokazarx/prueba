@@ -355,6 +355,7 @@ public class mbvAlectivo implements Serializable {
     }
 
     public void closeDialog() {
+        RequestContext.getCurrentInstance().execute("PF('tablaAnlectivos').clearFilters()");
         inicioPagina();
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Año Registrado");
         FacesContext.getCurrentInstance().addMessage(null, message);
@@ -490,6 +491,7 @@ public class mbvAlectivo implements Serializable {
                 tx.commit();
                 FacesContext.getCurrentInstance().
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Año escolar creado satisfactoriamente"));
+                RequestContext.getCurrentInstance().execute("PF('tablaAnlectivos').clearFilters()");
                 RequestContext.getCurrentInstance().execute("PF('dialogoEditarAlectivo').hide()");
                 inicioPagina();
             } else {
@@ -612,6 +614,7 @@ public class mbvAlectivo implements Serializable {
                     FacesContext.getCurrentInstance().
                             addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "este año escolar esta en uso"));
                 }
+                RequestContext.getCurrentInstance().execute("PF('tablaAnlectivos').clearFilters()");
                 inicioPagina();
             } else {
                 this.mensage = true;
