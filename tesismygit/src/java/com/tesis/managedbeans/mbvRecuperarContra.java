@@ -138,7 +138,7 @@ public class mbvRecuperarContra implements Serializable {
                 FacesContext context = FacesContext.getCurrentInstance();
                 MimeMessage message = new MimeMessage(session);
                 message.setFrom(new InternetAddress((String) properties.get("mail.smtp.mail.sender")));
-                message.addRecipient(Message.RecipientType.TO, new InternetAddress("mariokazarx@hotmail.com"));
+                message.addRecipient(Message.RecipientType.TO, new InternetAddress(txtCorreo));
                 message.setSubject("Recuperación Contraseña sistema SAMY");
                 message.setContent(message, "text/html");
                 message.setText(this.textoCorreo(code), "utf-8", "html");

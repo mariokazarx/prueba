@@ -478,7 +478,7 @@ public class mbvEstudiante implements Serializable {
                             addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Foto actualizada"));
                 }
             }
-            inicioPagina();
+            //inicioPagina();
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error inesperado", "Contáctese con el administrador"));
         } finally {

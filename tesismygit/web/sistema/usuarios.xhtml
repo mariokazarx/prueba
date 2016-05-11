@@ -135,7 +135,7 @@
                                     <f:validator validatorId="validatorVacio"/>
                                 </p:inputText>
                                 <p:message for="txtCargo"/>
-                                
+
                                 <p:outputLabel for="stlEstado" value="Estado: " />
                                 <p:selectOneMenu id="stlEstado" value="#{mbvUsuario.estadoSelected.estadoUsuarioId}">
                                     <f:selectItems value="#{mbvUsuario.estadosUsuarios}" var="estado" itemLabel="#{estado.nombre}" itemValue="#{estado.estadoUsuarioId}"/>
@@ -149,8 +149,9 @@
                                 <h:panelGroup></h:panelGroup>
 
                                 <p:outputLabel value="Contraseña" for="txtContrasenia" rendered="#{mbvUsuario.cambiarContraseña}"/>
-                                <p:password id="txtContrasenia" label="Contraseña: " match="txtContraseniaRepita" size="25" value="#{mbvUsuario.usuario.contraseña}" rendered="#{mbvUsuario.cambiarContraseña}">
+                                <p:password id="txtContrasenia" label="Contraseña: " validatorMessage="La contraseña debe contener una letra minuscula, mayuscula un numero o caracter especial y ser minimo de 8 caracteres" match="txtContraseniaRepita" size="25" value="#{mbvUsuario.usuario.contraseña}" rendered="#{mbvUsuario.cambiarContraseña}">
                                     <f:validator validatorId="validatorVacio"/>
+                                    <f:validateRegex pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" />
                                 </p:password>
                                 <p:message for="txtContrasenia" rendered="#{mbvUsuario.cambiarContraseña}"/>
 

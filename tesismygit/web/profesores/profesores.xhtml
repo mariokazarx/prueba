@@ -89,7 +89,7 @@
                         <p:outputPanel id="panelEditarProfesor" >
                             <h:panelGrid columns="3">
                                 <p:outputLabel for="txtCedula" value="Cedula: " />
-                                <p:inputText id="txtCedula" type="number" value="#{mbvProfesor.profesor.cedula}" size="30" validatorMessage="Cedula invalida" >
+                                <p:inputText id="txtCedula" value="#{mbvProfesor.profesor.cedula}" size="30" validatorMessage="Cedula invalida" >
                                     <f:validator validatorId="validatorVacio"/>
                                     <f:validateLength minimum="5" maximum="20" /> 
                                     <f:validateDoubleRange minimum="0"/>
@@ -146,8 +146,9 @@
                                 <h:panelGroup></h:panelGroup>
 
                                 <p:outputLabel value="Contraseña" for="txtContrasenia" rendered="#{mbvProfesor.cambiarContraseña}"/>
-                                <p:password id="txtContrasenia" label="Contraseña: " rendered="#{mbvProfesor.cambiarContraseña}" match="txtContraseniaRepita" size="30" value="#{mbvProfesor.profesor.contraseña}">
+                                <p:password id="txtContrasenia" label="Contraseña: " validatorMessage="La contraseña debe contener una letra minuscula, mayuscula un numero o caracter especial y ser minimo de 8 caracteres" rendered="#{mbvProfesor.cambiarContraseña}" match="txtContraseniaRepita" size="30" value="#{mbvProfesor.profesor.contraseña}">
                                     <f:validator validatorId="validatorVacio"/>
+                                    <f:validateRegex pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" />
                                 </p:password>
                                 <p:message for="txtContrasenia" rendered="#{mbvProfesor.cambiarContraseña}"/>
                                 <p:outputLabel value="Repita contraseña" for="txtContraseniaRepita" rendered="#{mbvProfesor.cambiarContraseña}"/>

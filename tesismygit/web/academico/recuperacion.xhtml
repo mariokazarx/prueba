@@ -70,9 +70,8 @@
                             </p:dataTable>
                         </h:panelGroup>
 
-                        <p:commandButton id="Confirmar" actionListener="#{mbvRecuperacion.pruebafinal}" value="Confirmar" style="margin-top:5px" />
-                        <h:commandButton value="PDF" actionListener="#{mbvRecuperacion.imprimir}"/>
-
+                        <p:commandButton id="Confirmar" actionListener="#{mbvRecuperacion.imprimir}" ajax="false" value="Generar reporte" style="margin-top:5px" rendered="#{mbvRecuperacion.mostrarBoton}" />
+                        
 
 
 
@@ -80,7 +79,7 @@
                     </h:panelGroup>
                     <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
 
-                    <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                    <p:dialog widgetVar="statusDialog" modal="true" appendTo="@(body)" draggable="false" closable="false" resizable="false" showHeader="false">
                         <p:graphicImage library="imagenes" name="load1.gif"/>
                     </p:dialog>
                 </h:form>

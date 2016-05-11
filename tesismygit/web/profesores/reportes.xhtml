@@ -64,10 +64,11 @@
                                 <f:selectItems value="#{mbvReporteProfesor.asignaturas}" var="asignatura" itemLabel="#{asignatura.nombre}" itemValue="#{asignatura.asignaturaId}"/>
                             </p:selectOneMenu>
                         </h:panelGroup>
+                        <p:outputPanel id="panelReporteMatriculas" style="margin-top: 15px;text-align: center" rendered="#{mbvReporteProfesor.mostrarAsignatura}">
+                            <p:commandButton value="Generar reporte" ajax="false" actionListener="#{mbvReporteProfesor.imprimir}"/>         
+                        </p:outputPanel>
                     </p:outputPanel>
-                    <p:outputPanel id="panelReporteMatriculas" style="margin-top: 15px;text-align: center">
-                        <p:commandButton value="Generar reporte" ajax="false" actionListener="#{mbvReporteProfesor.imprimir}"/>         
-                    </p:outputPanel>
+
                 </h:form>        
             </ui:define>
         </ui:composition>

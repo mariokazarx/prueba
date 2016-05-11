@@ -164,6 +164,11 @@ public class mbvMenu implements Serializable{
             item12.setUrl("/faces/reportes/certificadoMatricula.xhtml");
             item12.setIcon("ui-icon-document");
             certificadosMenu.addElement(item12);
+            
+            DefaultMenuItem item13 = new DefaultMenuItem("Certificado profesores");
+            item13.setUrl("/faces/reportes/certificadoProfesor.xhtml");
+            item13.setIcon("ui-icon-document");
+            certificadosMenu.addElement(item13);
             model.addElement(certificadosMenu);
             
         } 

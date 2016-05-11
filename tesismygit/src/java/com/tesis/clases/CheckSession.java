@@ -31,6 +31,9 @@ public class CheckSession implements PhaseListener {
     private final String PATH_LOGIN = "faces/index.xhtml";
     private final String PATH_RECUPERAR = "faces/recuperarContrasenia.xhtml";
     private final String PATH_RESTABLECER = "faces/restablecerContrasenia.xhtml";
+    final List<String> urlsUsuario = Arrays.asList("faces/academico/notas.xhtml","faces/academico/rectificar.xhtml","faces/academico/recuperacion.xhtml",
+            "faces/profesores/reportesNotas.xhtml","faces/profesores/listaEstudiantes.xhtml","faces/profesores/reportes.xhtml",
+            "faces/profesores/perfilProfesor.xhtml");
     final List<String> urlsProfesor = Arrays.asList("faces/academico/estudiantes.xhtml", "faces/academico/matriculas.xhtml",
             "faces/academico/newestudiante.xhtml", "faces/anlectivo/anlectivos.xhtml", "faces/anlectivo/cursos.xhtml",
             "faces/anlectivo/newAnlectivo.xhtml", "faces/anlectivo/newPeriodo.xhtml", "faces/academico/newcurso.xhtml",
@@ -86,6 +89,17 @@ public class CheckSession implements PhaseListener {
         //si no esta logeado y no se encuentre en login
         if (profesor.getProfesorId() != null) {
             for (String urlAux : urlsProfesor) {
+                boolean enOtra = url.indexOf(urlAux) != -1;
+                //System.out.println("LOGIN PROFE " + enOtra);
+                if (enOtra) {
+                    redirect("/plantilla.xhtml");
+                    break;
+                }
+            }
+
+        }
+        if (usr.getUsuarioId()!= null) {
+            for (String urlAux : urlsUsuario) {
                 boolean enOtra = url.indexOf(urlAux) != -1;
                 //System.out.println("LOGIN PROFE " + enOtra);
                 if (enOtra) {

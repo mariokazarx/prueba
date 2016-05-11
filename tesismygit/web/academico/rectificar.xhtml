@@ -83,13 +83,13 @@
                             </p:dataTable>
                         </p:outputPanel>
                         <div style="text-align: center;margin-bottom: 20px">
-                            <p:commandButton id="Confirmar" value="Generar reporte" ajax="false" actionListener="#{mbvRectificarNota.imprimir}" style="margin-top:5px" />
+                            <p:commandButton id="Confirmar" value="Generar reporte" ajax="false" actionListener="#{mbvRectificarNota.imprimir}" style="margin-top:5px" rendered="#{mbvRectificarNota.motrarBoton}" />
                         </div>
                     </h:panelGroup>
 
                     <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
 
-                    <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                    <p:dialog widgetVar="statusDialog" modal="true" draggable="false" appendTo="@(body)" closable="false" resizable="false" showHeader="false">
                         <p:graphicImage library="imagenes" name="load1.gif"/>
                     </p:dialog>
 

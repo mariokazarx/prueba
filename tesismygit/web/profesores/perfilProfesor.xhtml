@@ -48,8 +48,9 @@
                     </div>
                     <div class="div-perfil">
                         <p:outputLabel value="Contraseña" for="txtContrasenia" rendered="#{mbvPerfilProfesor.cambiarContraseña}"/>
-                        <p:password id="txtContrasenia" label="Contraseña: " rendered="#{mbvPerfilProfesor.cambiarContraseña}" match="txtContraseniaRepita" validatorMessage="Las contraseñas no coinciden" size="30" value="#{mbvPerfilProfesor.profesor.contraseña}">
+                        <p:password id="txtContrasenia" label="Contraseña: "  rendered="#{mbvPerfilProfesor.cambiarContraseña}" match="txtContraseniaRepita" validatorMessage="La contraseña debe contener una letra minuscula, mayuscula un numero o caracter especial y ser minimo de 8 caracteres o las contraseñas no coinciden" size="30" value="#{mbvPerfilProfesor.profesor.contraseña}">
                             <f:validator validatorId="validatorVacio"/>
+                            <f:validateRegex pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" />
                         </p:password>
                         <p:message for="txtContrasenia" rendered="#{mbvPerfilProfesor.cambiarContraseña}"/>
                     </div>

@@ -86,13 +86,14 @@ import org.primefaces.event.RowEditEvent;
  */
 @ManagedBean
 @ViewScoped
-public class mbvRectificarNota implements Serializable{
-    private static final long serialVersionUID = -1953016497050704900L;
+public class mbvRectificarNota implements Serializable {
 
+    private static final long serialVersionUID = -1953016497050704900L;
     private List<ReporteNotasProfesor> reporte;
     private String notaxxLogro;
     private Map<String, Integer> datosNotas = new HashMap<String, Integer>();
     private boolean login;
+    boolean motrarBoton;
     private List<EstudianteNotas> estudiantesN;
     private Profesor profesor;
     private boolean contenidoLogros;
@@ -149,6 +150,10 @@ public class mbvRectificarNota implements Serializable{
     private JasperPrint jasperPrint;
 
     public mbvRectificarNota() {
+    }
+
+    public boolean isMotrarBoton() {
+        return motrarBoton;
     }
 
     public boolean isContenidoPrincipal() {
@@ -348,6 +353,7 @@ public class mbvRectificarNota implements Serializable{
         this.estudiantesN = new ArrayList<EstudianteNotas>();
         this.editable = true;
         this.contenidoLogros = false;
+        this.motrarBoton = false;
         this.contenidoNotas = false;
         this.logros = new ArrayList<Logro>();
         this.logro = new Logro();
@@ -405,6 +411,7 @@ public class mbvRectificarNota implements Serializable{
             contenidoNotas = false;
         }
         contenidoLogros = true;
+        this.motrarBoton = true;
         UIComponent table = FacesContext.getCurrentInstance().getViewRoot().findComponent(":frmMateriasCiclos:tablanotas");
         createDynamicColumns();
         cargarEstudiantes();
@@ -503,8 +510,8 @@ public class mbvRectificarNota implements Serializable{
     }
 
     static public class ColumnModel implements Serializable {
-        private static final long serialVersionUID = 9005520615394412702L;
 
+        private static final long serialVersionUID = 9005520615394412702L;
         private String header;
         private Integer property;
 
@@ -784,9 +791,17 @@ public class mbvRectificarNota implements Serializable{
                         addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "INFORMACION", "No tiene ninguna asignatura habilitada para corregir notas"));
             } else {
                 this.contenidoPrincipal = true;
+                this.motrarBoton = false;
+                this.contenidoLogros = false;
+                this.contenidoNotas = false;
+                this.contenidoSelected = new Contenidotematico();
             }
         } else {
             contenidoPrincipal = false;
+            this.motrarBoton = false;
+            this.contenidoLogros = false;
+            this.contenidoNotas = false;
+            this.contenidoSelected = new Contenidotematico();
         }
     }
 
@@ -826,10 +841,10 @@ public class mbvRectificarNota implements Serializable{
             table2.addCell(cell3);
             document.add(table2);
             // datos estudiante
-            Paragraph parDescrip = new Paragraph(10,"Reporte notas año escolar " + cursoSelected.getAnlectivoId().getAnio()
+            Paragraph parDescrip = new Paragraph(10, "Reporte notas año escolar " + cursoSelected.getAnlectivoId().getAnio()
                     + " " + cursoSelected.getNombre() + " ciclo " + cursoSelected.getCicloId().getNumero() + " periodo " + contenido.getPeriodoId().getNumero(), FontFactory.getFont("arial", 12, Font.NORMAL));
             document.add(parDescrip);
-            Paragraph parProf = new Paragraph(10,"Profesor: " + profesor.getApellido() + " " + profesor.getNombre(), FontFactory.getFont("arial", 12, Font.NORMAL));
+            Paragraph parProf = new Paragraph(10, "Profesor: " + profesor.getApellido() + " " + profesor.getNombre(), FontFactory.getFont("arial", 12, Font.NORMAL));
             document.add(parProf);
             document.add(new Paragraph("\n"));
 
@@ -918,7 +933,6 @@ public class mbvRectificarNota implements Serializable{
                     baos.writeTo(out);
                     out.flush();
                 } catch (IOException ex) {
-                    
                 }
                 context.responseComplete();
             } catch (IOException ex) {

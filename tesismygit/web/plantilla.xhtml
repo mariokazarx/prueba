@@ -130,29 +130,29 @@
                             <p:menuitem value="Configuración general" url="/faces/configuracion/configuracion.xhtml" />
                         </p:submenu> 
                         <p:submenu label="Plan de estudios" icon="ui-icon-gear"> 
-                            <p:menuitem value="Áreas" outcome="/configuracion/areas.xhtml" />
-                            <p:menuitem value="Asignaturas" outcome="/configuracion/asignaturas.xhtml" />
-                            <p:menuitem value="Ciclos" outcome="/configuracion/ciclos.xhtml" />
-                            <p:menuitem value="Asignaturas por ciclo" outcome="/configuracion/materiasciclos.xhtml" />
+                            <p:menuitem value="Áreas" url="/faces/configuracion/areas.xhtml" />
+                            <p:menuitem value="Asignaturas" url="/faces/configuracion/asignaturas.xhtml" />
+                            <p:menuitem value="Ciclos" url="/faces/configuracion/ciclos.xhtml" />
+                            <p:menuitem value="Asignaturas por ciclo" url="/faces/configuracion/materiasciclos.xhtml" />
 
                         </p:submenu>  
                         <p:submenu label="Año Escolar" icon="ui-icon-gear"> 
-                            <p:menuitem value="Años Escolares" outcome="/anlectivo/anlectivos.xhtml" />
-                            <p:menuitem value="Cursos" outcome="/anlectivo/cursos.xhtml" />
-                            <p:menuitem value="Periodos" outcome="/anlectivo/periodos.xhtml" />
+                            <p:menuitem value="Años Escolares" url="/faces/anlectivo/anlectivos.xhtml" />
+                            <p:menuitem value="Cursos" url="/faces/anlectivo/cursos.xhtml" />
+                            <p:menuitem value="Periodos" url="/faces/anlectivo/periodos.xhtml" />
                         </p:submenu>
                         <p:submenu label="Académico" icon="ui-icon-gear"> 
                             <p:menuitem value="Estudiantes" url="/faces/academico/estudiantes.xhtml" />
-                            <p:menuitem value="Matriculas" outcome="/academico/matriculas.xhtml" />
-                            <p:menuitem value="Profesores" outcome="/profesores/profesores.xhtml" />
-                            <p:menuitem value="Asignación académica" outcome="/profesores/cargaAcademica.xhtml" />
-                            <p:menuitem value="Rectificar nota" outcome="/profesores/rectificarNotas.xhtml" />
+                            <p:menuitem value="Matriculas" url="/faces/academico/matriculas.xhtml" />
+                            <p:menuitem value="Profesores" url="/faces/profesores/profesores.xhtml" />
+                            <p:menuitem value="Asignación académica" url="/faces/profesores/cargaAcademica.xhtml" />
+                            <p:menuitem value="Detalle asignación" url="/faces/academico/resumenAsignacion.xhtml" />
+                            <p:menuitem value="Rectificar nota" url="/faces/profesores/rectificarNotas.xhtml" />
                         </p:submenu>
                         <p:submenu label="Configuracion" icon="ui-icon-gear"> 
                             <p:menuitem value="Usuarios" url="/faces/sistema/usuarios.xhtml" />
                             <p:separator />  
-                            <p:menuitem value="Editar Perfil" outcome="/anlectivo/anlectivos.xhtml" />
-                            <p:menuitem value="Seguridad Perfil" url="../anlectivo/anlectivos.xhtml"/>  
+                            <p:menuitem value="Editar Perfil" url="/faces/sistema/perfilUsuario.xhtml" />
                         </p:submenu>
 
                         <p:menuitem value="Cerrar sesión" actionListener="#{mbsLogin.cerrarSession}"/>  

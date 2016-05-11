@@ -90,6 +90,7 @@ public class mbvRecuperacion implements Serializable{
     private String notaxxLogro;
     private Map<String, Integer> datosNotas = new HashMap<String, Integer>();
     private boolean login;
+    private boolean mostrarBoton;
     private List<EstudianteNotas> estudiantesN;
     private Profesor profesor;
     private boolean contenidoLogros;
@@ -150,6 +151,10 @@ public class mbvRecuperacion implements Serializable{
     private JasperPrint jasperPrint;
 
     public mbvRecuperacion() {
+    }
+
+    public boolean isMostrarBoton() {
+        return mostrarBoton;
     }
 
     public boolean isMostrarRecuperacion() {
@@ -364,6 +369,7 @@ public class mbvRecuperacion implements Serializable{
         this.anlectivos = new ArrayList<Anlectivo>();
         this.contenidPrincipal = false;
         this.mostrarRecuperacion = false;
+        this.mostrarBoton = false;
         if (profesor != null) {
             anlectivos = anlectivoEjb.getAñosEnUso();
             //anlectivo = anlectivoEjb.getIniciado();
@@ -397,10 +403,11 @@ public class mbvRecuperacion implements Serializable{
             } else {
                 this.mostrarRecuperacion = false;
             }
-
+            this.mostrarBoton = false;
 
         } else {
             this.asignaturas.clear();
+            this.mostrarBoton = false;
             this.asignaturaSelected = new Asignatura();
             this.mostrarRecuperacion = false;
         }
@@ -416,10 +423,13 @@ public class mbvRecuperacion implements Serializable{
                 for (Notafinal notaAux : notas) {
                 }
                 this.mostrarRecuperacion = true;
+                this.mostrarBoton = true;
             } else {
+                this.mostrarBoton = false;
                 this.mostrarRecuperacion = false;
             }
         } else {
+            this.mostrarBoton = false;
             this.mostrarRecuperacion = false;
         }
     }
@@ -646,7 +656,9 @@ public class mbvRecuperacion implements Serializable{
                     } else {
                         this.contenidPrincipal = false;
                     }
+                    this.mostrarBoton = false;
                 } else {
+                    this.mostrarBoton = false;
                     this.contenidPrincipal = false;
                     FacesContext.getCurrentInstance().
                             addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Se debe terminar todos los periodos del año escolar"));
