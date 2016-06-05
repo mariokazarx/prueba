@@ -42,6 +42,7 @@ public class mbvPrueba implements Serializable {
     private boolean login;
     private boolean loginProfesor;
     private boolean loginUsuario;
+    private boolean mostrarBackup;
     @EJB
     private ProfesorFacade profesorEjb;
     @EJB
@@ -51,6 +52,10 @@ public class mbvPrueba implements Serializable {
      * Creates a new instance of mbvPrueba
      */
     public mbvPrueba() {
+    }
+
+    public boolean isMostrarBackup() {
+        return mostrarBackup;
     }
 
     public boolean isLoginProfesor() {
@@ -104,7 +109,7 @@ public class mbvPrueba implements Serializable {
     @PostConstruct
     public void inicio() {
         this.prof = new Profesor();
-
+        this.mostrarBackup = false;
 
         try {
             mbsLogin mbslogin = (mbsLogin) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("mbsLogin");
@@ -126,6 +131,11 @@ public class mbvPrueba implements Serializable {
             this.loginProfesor = false;
             if (usuario.getUsuarioId() != null) {
                 this.loginUsuario = true;
+                if(this.usuario.getTipoUsuarioId().getTipoUsuarioId()==4){
+                    this.mostrarBackup = true;
+                }else{
+                    this.mostrarBackup = false;
+                }
             } else {
                 this.loginUsuario = false;
             }

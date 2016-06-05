@@ -153,6 +153,7 @@
                             <p:menuitem value="Usuarios" url="/faces/sistema/usuarios.xhtml" />
                             <p:separator />  
                             <p:menuitem value="Editar Perfil" url="/faces/sistema/perfilUsuario.xhtml" />
+                            <p:menuitem value="Copias de seguridad" url="/faces/sistema/backup.xhtml" rendered="#{mbvPrueba.mostrarBackup}"/>
                         </p:submenu>
 
                         <p:menuitem value="Cerrar sesión" actionListener="#{mbsLogin.cerrarSession}"/>  

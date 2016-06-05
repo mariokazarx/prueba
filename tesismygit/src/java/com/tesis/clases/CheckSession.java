@@ -47,7 +47,8 @@ public class CheckSession implements PhaseListener {
             "faces/reportes/consolidadoPeriodo.xhtml", "faces/reportes/consolidadoPeriodoAñosAnteriores.xhtml", "faces/reportes/consolidadofinal.xhtml",
             "faces/reportes/consolidadofinalAnterior.xhtml", "faces/reportes/constanciaEstudios.xhtml", "faces/reportes/estadisticas.xhtml",
             "faces/reportes/reporteAsignacionAcademica.xhtml", "faces/reportes/reporteAsignacionAñosAnteriores.xhtml", "faces/reportes/reporteMatriculaAñosAnteriores.xhtml",
-            "faces/reportes/reporteMatriculas.xhtml", "faces/sistema/newusuario.xhtml", "faces/sistema/perfilUsuario.xhtml", "faces/sistema/usuarios.xhtml");
+            "faces/reportes/reporteMatriculas.xhtml", "faces/sistema/newusuario.xhtml", "faces/sistema/perfilUsuario.xhtml", "faces/sistema/usuarios.xhtml",
+            "faces/sistema/backup.xhtml");
 
     @Override
     public void afterPhase(PhaseEvent event) {
